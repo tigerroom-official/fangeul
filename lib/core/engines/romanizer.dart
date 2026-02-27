@@ -1,4 +1,5 @@
 import 'package:fangeul/core/engines/hangul_engine.dart';
+import 'package:fangeul/core/engines/hangul_tables.dart';
 
 /// 한글 → 로마자 발음 변환기.
 ///
@@ -38,15 +39,6 @@ class Romanizer {
     'ㅂ': 'p', 'ㅄ': 'p', 'ㅅ': 't', 'ㅆ': 't',
     'ㅇ': 'ng', 'ㅈ': 't', 'ㅊ': 't', 'ㅋ': 'k',
     'ㅌ': 't', 'ㅍ': 'p', 'ㅎ': 't',
-  };
-
-  // ── 겹받침 분리 테이블 ──
-
-  static const Map<String, List<String>> _doubleFinalSplit = {
-    'ㄳ': ['ㄱ', 'ㅅ'], 'ㄵ': ['ㄴ', 'ㅈ'], 'ㄶ': ['ㄴ', 'ㅎ'],
-    'ㄺ': ['ㄹ', 'ㄱ'], 'ㄻ': ['ㄹ', 'ㅁ'], 'ㄼ': ['ㄹ', 'ㅂ'],
-    'ㄽ': ['ㄹ', 'ㅅ'], 'ㄾ': ['ㄹ', 'ㅌ'], 'ㄿ': ['ㄹ', 'ㅍ'],
-    'ㅀ': ['ㄹ', 'ㅎ'], 'ㅄ': ['ㅂ', 'ㅅ'],
   };
 
   // ── 발음 변화 규칙 테이블 (테이블 드리븐) ──
@@ -172,11 +164,45 @@ class Romanizer {
   ///
   /// 이동된 자음에 대해 구개음화도 함께 처리한다.
   /// 예: 같이(ㅌ+ㅇㅣ) → 연음 후 ㅌ+ㅣ → 구개음화 → ㅊ+ㅣ = gachi
+  ///
+  /// 예외:
+  /// - ㅇ종성[ŋ]은 비음이므로 연음 불가 (강아지→gangaji)
+  /// - ㅎ종성 + ㅇ초성 → ㅎ탈락 (좋아→joa)
+  /// - 겹받침 ㄶ/ㅀ + ㅇ초성 → ㅎ탈락, 첫 자음이 연음 (많이→mani)
   static bool _applyLiaison(_SyllableInfo curr, _SyllableInfo next) {
     if (next.initial != 'ㅇ') return false;
 
+    // 예외 1: ㅇ종성[ŋ]은 비음 — 연음 불가
+    if (curr.final_ == 'ㅇ') return false;
+
+    // 예외 2: ㅎ종성 + ㅇ → ㅎ탈락 (ㅎ이 사라지고 초성은 ㅇ 유지)
+    if (curr.final_ == 'ㅎ') {
+      curr.final_ = '';
+      return true;
+    }
+
+    // 예외 3: 겹받침에서 둘째 자음이 ㅎ인 경우 (ㄶ, ㅀ)
+    final split = HangulTables.doubleFinalSplit[curr.final_];
+    if (split != null && split[1] == 'ㅎ') {
+      // ㅎ탈락, 첫 자음이 연음
+      final movedConsonant = split[0];
+      curr.final_ = '';
+
+      // post-liaison 구개음화
+      if (next.medial == 'ㅣ') {
+        final palatalized = _palatalization[movedConsonant];
+        if (palatalized != null) {
+          next.initial = palatalized;
+          return true;
+        }
+      }
+
+      next.initial = movedConsonant;
+      return true;
+    }
+
+    // 일반 연음
     String movedConsonant;
-    final split = _doubleFinalSplit[curr.final_];
     if (split != null) {
       // 겹받침: 첫 자음은 종성, 둘째 자음은 연음
       curr.final_ = split[0];
@@ -234,7 +260,7 @@ class Romanizer {
     if (aspirated == null) return false;
 
     // 겹받침이면 첫 자음만 남김
-    final split = _doubleFinalSplit[curr.final_];
+    final split = HangulTables.doubleFinalSplit[curr.final_];
     if (split != null) {
       curr.final_ = split[0];
     } else {

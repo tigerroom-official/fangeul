@@ -91,6 +91,38 @@ void main() {
     });
   });
 
+  group('KeyboardConverter.korToEng — 복합 모음', () {
+    test('should convert 와 to dhk when compound vowel ㅘ', () {
+      expect(KeyboardConverter.korToEng('와'), equals('dhk'));
+    });
+
+    test('should convert 의 to dml when compound vowel ㅢ', () {
+      expect(KeyboardConverter.korToEng('의'), equals('dml'));
+    });
+
+    test('should convert 뭐 to anj when compound vowel ㅝ', () {
+      expect(KeyboardConverter.korToEng('뭐'), equals('anj'));
+    });
+
+    test('should convert 위 to dnl when compound vowel ㅟ', () {
+      expect(KeyboardConverter.korToEng('위'), equals('dnl'));
+    });
+
+    test('should round-trip 화이팅 through korToEng→engToKor', () {
+      const original = '화이팅';
+      final eng = KeyboardConverter.korToEng(original);
+      final back = KeyboardConverter.engToKor(eng);
+      expect(back, equals(original));
+    });
+
+    test('should round-trip 의사 through korToEng→engToKor', () {
+      const original = '의사';
+      final eng = KeyboardConverter.korToEng(original);
+      final back = KeyboardConverter.engToKor(eng);
+      expect(back, equals(original));
+    });
+  });
+
   group('KeyboardConverter round-trip', () {
     test('should round-trip eng→kor→eng', () {
       const original = 'gksrmf';

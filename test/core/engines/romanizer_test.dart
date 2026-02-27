@@ -141,6 +141,38 @@ void main() {
     });
   });
 
+  group('Romanizer — ㅇ종성 연음 예외', () {
+    test('should not liaison ㅇ final: 강아지 → gangaji', () {
+      expect(Romanizer.romanize('강아지'), equals('gangaji'));
+    });
+
+    test('should not liaison ㅇ final: 영어 → yeongeo', () {
+      expect(Romanizer.romanize('영어'), equals('yeongeo'));
+    });
+  });
+
+  group('Romanizer — ㅎ탈락', () {
+    test('should drop ㅎ before ㅇ: 좋아 → joa', () {
+      expect(Romanizer.romanize('좋아'), equals('joa'));
+    });
+
+    test('should drop ㅎ before ㅇ: 놓아 → noa', () {
+      expect(Romanizer.romanize('놓아'), equals('noa'));
+    });
+
+    test('should drop ㅎ in ㄶ before ㅇ: 많이 → mani', () {
+      expect(Romanizer.romanize('많이'), equals('mani'));
+    });
+
+    test('should drop ㅎ in ㅀ before ㅇ: 잃어 → ireo', () {
+      expect(Romanizer.romanize('잃어'), equals('ireo'));
+    });
+
+    test('should drop ㅎ in ㄶ before ㅇ: 않아 → ana', () {
+      expect(Romanizer.romanize('않아'), equals('ana'));
+    });
+  });
+
   group('Romanizer — 실사용 문구', () {
     test('should romanize 사랑해요 → saranghaeyo', () {
       expect(Romanizer.romanize('사랑해요'), equals('saranghaeyo'));
