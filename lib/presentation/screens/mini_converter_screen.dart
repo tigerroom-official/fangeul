@@ -10,6 +10,12 @@ import 'package:fangeul/presentation/widgets/compact_phrase_list.dart';
 import 'package:fangeul/presentation/widgets/converter_input.dart';
 import 'package:fangeul/presentation/widgets/korean_keyboard.dart';
 
+/// 미니 변환기 간편/확장 모드 상태.
+///
+/// `true` = 간편모드(기본), `false` = 확장모드(변환기).
+final miniConverterCompactProvider =
+    AutoDisposeStateProvider<bool>((ref) => true);
+
 /// 미니 변환기 팝업 화면.
 ///
 /// FloatingBubbleService에서 버블 탭 시 열리는 Flutter Activity 화면.
@@ -25,8 +31,6 @@ class MiniConverterScreen extends ConsumerStatefulWidget {
 
 class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
     with TickerProviderStateMixin {
-  bool _isCompact = true;
-
   late final TabController _compactTabController;
   late final TabController _converterTabController;
   final _textController = TextEditingController();
@@ -71,12 +75,12 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
   }
 
   void _expandToConverter() {
-    setState(() => _isCompact = false);
+    ref.read(miniConverterCompactProvider.notifier).state = false;
   }
 
   void _collapseToCompact() {
     _clearConverter();
-    setState(() => _isCompact = true);
+    ref.read(miniConverterCompactProvider.notifier).state = true;
   }
 
   void _updateText(String text) {
@@ -137,6 +141,8 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
 
   @override
   Widget build(BuildContext context) {
+    final isCompact = ref.watch(miniConverterCompactProvider);
+
     return Scaffold(
       backgroundColor: Colors.black54,
       body: GestureDetector(
@@ -148,7 +154,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
-              height: _isCompact
+              height: isCompact
                   ? MediaQuery.of(context).size.height * 0.30
                   : MediaQuery.of(context).size.height * 0.75,
               decoration: BoxDecoration(
@@ -161,7 +167,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(20),
                 ),
-                child: _isCompact ? _buildCompactMode() : _buildExpandedMode(),
+                child: isCompact ? _buildCompactMode() : _buildExpandedMode(),
               ),
             ),
           ),
