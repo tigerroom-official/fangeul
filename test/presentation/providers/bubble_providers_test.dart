@@ -6,8 +6,7 @@ import 'package:fangeul/platform/bubble_state.dart';
 import 'package:fangeul/platform/floating_bubble_channel.dart';
 import 'package:fangeul/presentation/providers/bubble_providers.dart';
 
-class MockFloatingBubbleChannel extends Mock
-    implements FloatingBubbleChannel {}
+class MockFloatingBubbleChannel extends Mock implements FloatingBubbleChannel {}
 
 void main() {
   group('BubbleNotifier', () {
@@ -71,9 +70,7 @@ void main() {
       when(() => mockChannel.requestOverlayPermission())
           .thenAnswer((_) async {});
 
-      await container
-          .read(bubbleNotifierProvider.notifier)
-          .requestPermission();
+      await container.read(bubbleNotifierProvider.notifier).requestPermission();
 
       verify(() => mockChannel.requestOverlayPermission()).called(1);
     });

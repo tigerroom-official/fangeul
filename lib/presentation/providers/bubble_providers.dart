@@ -20,8 +20,7 @@ class BubbleNotifier extends _$BubbleNotifier {
   @override
   BubbleState build() => BubbleState.off;
 
-  FloatingBubbleChannel get _channel =>
-      ref.read(floatingBubbleChannelProvider);
+  FloatingBubbleChannel get _channel => ref.read(floatingBubbleChannelProvider);
 
   /// 버블을 표시한다.
   ///

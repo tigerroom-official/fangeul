@@ -10,8 +10,7 @@ import 'package:fangeul/presentation/providers/bubble_providers.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
 import 'package:fangeul/presentation/screens/settings_screen.dart';
 
-class MockFloatingBubbleChannel extends Mock
-    implements FloatingBubbleChannel {}
+class MockFloatingBubbleChannel extends Mock implements FloatingBubbleChannel {}
 
 void main() {
   late MockFloatingBubbleChannel mockChannel;

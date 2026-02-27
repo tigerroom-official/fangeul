@@ -60,8 +60,7 @@ abstract final class UiStrings {
   static const bubbleLabel = '플로팅 버블';
   static const bubbleDescription = '앱 밖에서도 변환기를 사용합니다';
   static const bubblePermissionTitle = '오버레이 권한 필요';
-  static const bubblePermissionMessage =
-      '플로팅 버블을 표시하려면 다른 앱 위에 표시 권한이 필요합니다.';
+  static const bubblePermissionMessage = '플로팅 버블을 표시하려면 다른 앱 위에 표시 권한이 필요합니다.';
   static const bubblePermissionAllow = '허용';
   static const bubblePermissionDeny = '취소';
   static const bubblePermissionDenied = '앱 내에서도 모든 기능을 사용할 수 있습니다';

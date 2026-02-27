@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -52,8 +50,7 @@ void main() {
       expect(find.text(UiStrings.miniFavoritesEmpty), findsOneWidget);
     });
 
-    testWidgets('should switch to expanded mode on button tap',
-        (tester) async {
+    testWidgets('should switch to expanded mode on button tap', (tester) async {
       await setPhoneSize(tester);
       addTearDown(() => resetSize(tester));
 

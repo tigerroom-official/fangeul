@@ -133,8 +133,7 @@ void main() {
 
     test('should compose multiple syllables', () {
       expect(
-        KeyboardConverter.assembleJamos(
-            ['ㅎ', 'ㅏ', 'ㄴ', 'ㄱ', 'ㅡ', 'ㄹ']),
+        KeyboardConverter.assembleJamos(['ㅎ', 'ㅏ', 'ㄴ', 'ㄱ', 'ㅡ', 'ㄹ']),
         '한글',
       );
     });
@@ -176,8 +175,7 @@ void main() {
 
     test('should pass through non-jamo characters', () {
       expect(
-        KeyboardConverter.assembleJamos(
-            ['ㅎ', 'ㅏ', 'ㄴ', ' ', 'ㄱ', 'ㅡ', 'ㄹ']),
+        KeyboardConverter.assembleJamos(['ㅎ', 'ㅏ', 'ㄴ', ' ', 'ㄱ', 'ㅡ', 'ㄹ']),
         '한 글',
       );
     });
