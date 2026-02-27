@@ -11,22 +11,22 @@ abstract final class FangeulTextStyles {
   static const TextTheme textTheme = TextTheme(
     displayLarge: TextStyle(
       fontFamily: _fontFamily,
-      fontWeight: FontWeight.w700,
+      fontWeight: FontWeight.w500,
       fontSize: 32,
     ),
     displayMedium: TextStyle(
       fontFamily: _fontFamily,
-      fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w500,
       fontSize: 28,
     ),
     displaySmall: TextStyle(
       fontFamily: _fontFamily,
-      fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w500,
       fontSize: 24,
     ),
     headlineLarge: TextStyle(
       fontFamily: _fontFamily,
-      fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w500,
       fontSize: 22,
     ),
     headlineMedium: TextStyle(
@@ -89,7 +89,7 @@ abstract final class FangeulTextStyles {
   /// 한글 대형 디스플레이 — 데일리 카드, 공유 카드 중앙 텍스트.
   static const koreanDisplay = TextStyle(
     fontFamily: _fontFamily,
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.w500,
     fontSize: 40,
     height: 1.3,
   );

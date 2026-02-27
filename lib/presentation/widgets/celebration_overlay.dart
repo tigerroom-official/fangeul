@@ -26,6 +26,7 @@ class CelebrationOverlay extends StatefulWidget {
 class _CelebrationOverlayState extends State<CelebrationOverlay>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
+  bool _completed = false;
 
   @override
   void initState() {
@@ -39,14 +40,20 @@ class _CelebrationOverlayState extends State<CelebrationOverlay>
     super.dispose();
   }
 
+  void _fireOnComplete() {
+    if (_completed) return;
+    _completed = true;
+    widget.onComplete();
+  }
+
   @override
   Widget build(BuildContext context) {
     // 접근성: 축소 모션 설정 시 애니메이션 미표시
     final reduceMotion = MediaQuery.of(context).disableAnimations;
     if (reduceMotion) {
-      // 바로 완료 처리
+      // 바로 완료 처리 (guard로 중복 호출 방지)
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        widget.onComplete();
+        _fireOnComplete();
       });
       return const SizedBox.shrink();
     }
@@ -59,7 +66,7 @@ class _CelebrationOverlayState extends State<CelebrationOverlay>
           onLoaded: (composition) {
             _controller
               ..duration = composition.duration
-              ..forward().then((_) => widget.onComplete());
+              ..forward().then((_) => _fireOnComplete());
           },
           fit: BoxFit.cover,
         ),

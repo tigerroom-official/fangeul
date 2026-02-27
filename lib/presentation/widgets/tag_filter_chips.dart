@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:fangeul/presentation/constants/ui_strings.dart';
+
 /// 태그 필터 칩 -- 문구 카테고리 필터링.
 ///
 /// 수평 스크롤 칩 목록으로, '전체' + 개별 태그를 선택할 수 있다.
@@ -22,21 +24,21 @@ class TagFilterChips extends StatelessWidget {
   final ValueChanged<String?> onTagSelected;
 
   static const _tagLabels = {
-    'love': '사랑',
-    'cheer': '응원',
-    'daily': '일상',
-    'greeting': '인사',
-    'emotional': '감정',
-    'praise': '칭찬',
-    'fandom': '팬덤',
-    'birthday': '생일',
-    'comeback': '컴백',
+    'love': UiStrings.tagLove,
+    'cheer': UiStrings.tagCheer,
+    'daily': UiStrings.tagDaily,
+    'greeting': UiStrings.tagGreeting,
+    'emotional': UiStrings.tagEmotional,
+    'praise': UiStrings.tagPraise,
+    'fandom': UiStrings.tagFandom,
+    'birthday': UiStrings.tagBirthday,
+    'comeback': UiStrings.tagComeback,
   };
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 40,
+      height: 48,
       child: ListView(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -44,7 +46,7 @@ class TagFilterChips extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: FilterChip(
-              label: const Text('전체'),
+              label: const Text(UiStrings.tagAll),
               selected: selectedTag == null,
               onSelected: (_) => onTagSelected(null),
             ),

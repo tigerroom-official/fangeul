@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/theme/fangeul_text_styles.dart';
 
 /// 변환기 입출력 위젯 -- 입력 TextField + 결과 표시.
@@ -80,11 +81,11 @@ class ConverterInput extends StatelessWidget {
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: output));
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('복사되었습니다')),
+                          const SnackBar(content: Text(UiStrings.copied)),
                         );
                       },
                       icon: const Icon(Icons.copy_outlined),
-                      tooltip: '복사',
+                      tooltip: UiStrings.copyTooltip,
                     ),
                   ],
                 ),

@@ -6,7 +6,7 @@ part of 'converter_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$converterNotifierHash() => r'20fd2bb2a7183fbee458bb998de8021f4ac9f73c';
+String _$converterNotifierHash() => r'94085a0a6e03879d4f97e180154a071eb4a2f89c';
 
 /// 변환기 상태 관리.
 ///

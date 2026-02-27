@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:fangeul/core/entities/phrase.dart';
 import 'package:fangeul/core/entities/phrase_pack.dart';
+import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/phrase_providers.dart';
 import 'package:fangeul/presentation/widgets/phrase_card.dart';
 import 'package:fangeul/presentation/widgets/tag_filter_chips.dart';
@@ -34,7 +35,7 @@ class PhrasesScreen extends ConsumerWidget {
     final selectedTag = ref.watch(selectedTagProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('문구')),
+      appBar: AppBar(title: const Text(UiStrings.phrasesTitle)),
       body: Column(
         children: [
           // 태그 필터
@@ -64,18 +65,18 @@ class PhrasesScreen extends ConsumerWidget {
       data: (packs) {
         final phrases = _flattenPacks(packs);
         if (phrases.isEmpty) {
-          return const Center(child: Text('문구가 없습니다'));
+          return const Center(child: Text(UiStrings.phrasesEmpty));
         }
         return ListView.builder(
           itemCount: phrases.length,
           itemBuilder: (context, index) => PhraseCard(
             phrase: phrases[index],
-            translationLang: 'en',
+            translationLang: UiStrings.defaultTranslationLang,
           ),
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('오류: $e')),
+      error: (e, _) => Center(child: Text('${UiStrings.errorPrefix} $e')),
     );
   }
 
@@ -86,18 +87,18 @@ class PhrasesScreen extends ConsumerWidget {
     return phrasesAsync.when(
       data: (phrases) {
         if (phrases.isEmpty) {
-          return const Center(child: Text('문구가 없습니다'));
+          return const Center(child: Text(UiStrings.phrasesEmpty));
         }
         return ListView.builder(
           itemCount: phrases.length,
           itemBuilder: (context, index) => PhraseCard(
             phrase: phrases[index],
-            translationLang: 'en',
+            translationLang: UiStrings.defaultTranslationLang,
           ),
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('오류: $e')),
+      error: (e, _) => Center(child: Text('${UiStrings.errorPrefix} $e')),
     );
   }
 

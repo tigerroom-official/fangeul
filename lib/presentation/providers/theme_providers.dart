@@ -20,7 +20,7 @@ SharedPreferences sharedPreferences(SharedPreferencesRef ref) {
 class ThemeModeNotifier extends _$ThemeModeNotifier {
   @override
   ThemeMode build() {
-    final prefs = ref.read(sharedPreferencesProvider);
+    final prefs = ref.watch(sharedPreferencesProvider);
     final saved = prefs.getString('theme_mode');
     if (saved == null) return ThemeMode.dark;
 

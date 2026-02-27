@@ -24,8 +24,8 @@ void main() {
           .convert('gksrmf', ConvertMode.engToKor);
 
       final state = container.read(converterNotifierProvider);
-      expect(state, isA<ConverterResult>());
-      final result = state as ConverterResult;
+      expect(state, isA<ConverterSuccess>());
+      final result = state as ConverterSuccess;
       expect(result.output, '한글');
       expect(result.mode, ConvertMode.engToKor);
       expect(result.input, 'gksrmf');
@@ -37,8 +37,8 @@ void main() {
           .convert('한글', ConvertMode.korToEng);
 
       final state = container.read(converterNotifierProvider);
-      expect(state, isA<ConverterResult>());
-      expect((state as ConverterResult).output, 'gksrmf');
+      expect(state, isA<ConverterSuccess>());
+      expect((state as ConverterSuccess).output, 'gksrmf');
     });
 
     test('should romanize korean text', () {
@@ -47,8 +47,8 @@ void main() {
           .convert('사랑해요', ConvertMode.romanize);
 
       final state = container.read(converterNotifierProvider);
-      expect(state, isA<ConverterResult>());
-      expect((state as ConverterResult).output, 'saranghaeyo');
+      expect(state, isA<ConverterSuccess>());
+      expect((state as ConverterSuccess).output, 'saranghaeyo');
     });
 
     test('should return initial state for empty input', () {
@@ -83,9 +83,9 @@ void main() {
           .convert('hello', ConvertMode.romanize);
 
       final state = container.read(converterNotifierProvider);
-      expect(state, isA<ConverterResult>());
+      expect(state, isA<ConverterSuccess>());
       // Romanizer passes through non-Korean text
-      expect((state as ConverterResult).output, 'hello');
+      expect((state as ConverterSuccess).output, 'hello');
     });
   });
 }

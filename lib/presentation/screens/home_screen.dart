@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/phrase_providers.dart';
 import 'package:fangeul/presentation/providers/progress_providers.dart';
 import 'package:fangeul/presentation/widgets/celebration_overlay.dart';
@@ -9,43 +10,36 @@ import 'package:fangeul/presentation/widgets/daily_card_widget.dart';
 import 'package:fangeul/presentation/widgets/share_card_painter.dart';
 import 'package:fangeul/presentation/widgets/streak_banner.dart';
 
+/// 축하 애니메이션 표시 여부 Provider.
+///
+/// 스트릭 완료 시 true, 애니메이션 종료 시 false.
+final showCelebrationProvider = StateProvider.autoDispose<bool>((ref) => false);
+
+/// 오늘 날짜를 'yyyy-MM-dd' 형식으로 반환한다.
+String _todayString() {
+  final now = DateTime.now();
+  final y = now.year.toString();
+  final m = now.month.toString().padLeft(2, '0');
+  final d = now.day.toString().padLeft(2, '0');
+  return '$y-$m-$d';
+}
+
 /// 홈 화면 — 데일리 카드 + 스트릭.
-class HomeScreen extends ConsumerStatefulWidget {
+class HomeScreen extends ConsumerWidget {
   /// Creates the [HomeScreen] widget.
   const HomeScreen({super.key});
 
   @override
-  ConsumerState<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends ConsumerState<HomeScreen> {
-  bool _showCelebration = false;
-
-  String _todayString() {
-    final now = DateTime.now();
-    final y = now.year.toString();
-    final m = now.month.toString().padLeft(2, '0');
-    final d = now.day.toString().padLeft(2, '0');
-    return '$y-$m-$d';
-  }
-
-  Future<void> _completeDailyCard() async {
-    final useCase = ref.read(updateStreakUseCaseProvider);
-    await useCase.execute(now: DateTime.now());
-    ref.invalidate(userProgressProvider);
-    setState(() => _showCelebration = true);
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final today = _todayString();
     final dailyCard = ref.watch(dailyCardProvider(today));
     final progress = ref.watch(userProgressProvider);
+    final showCelebration = ref.watch(showCelebrationProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Fangeul'),
+        title: const Text(UiStrings.appName),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
@@ -72,35 +66,46 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   data: (card) {
                     if (card == null) {
                       return const Center(
-                        child: Text('오늘의 카드를 불러올 수 없습니다'),
+                        child: Text(UiStrings.dailyCardLoadError),
                       );
                     }
                     final isCompleted =
                         progress.valueOrNull?.lastCompletedDate == today;
                     return DailyCardWidget(
                       card: card,
-                      translationLang: 'en',
+                      translationLang: UiStrings.defaultTranslationLang,
                       isCompleted: isCompleted,
-                      onComplete: isCompleted ? null : _completeDailyCard,
+                      onComplete: isCompleted
+                          ? null
+                          : () async {
+                              final useCase =
+                                  ref.read(updateStreakUseCaseProvider);
+                              await useCase.execute(now: DateTime.now());
+                              ref.invalidate(userProgressProvider);
+                              ref.read(showCelebrationProvider.notifier).state =
+                                  true;
+                            },
                       onShare: () => shareCard(
                         card: card,
                         isDark: theme.brightness == Brightness.dark,
-                        translationLang: 'en',
+                        translationLang: UiStrings.defaultTranslationLang,
                       ),
                     );
                   },
                   loading: () =>
                       const Center(child: CircularProgressIndicator()),
-                  error: (e, _) => Center(child: Text('오류: $e')),
+                  error: (e, _) =>
+                      Center(child: Text('${UiStrings.errorPrefix} $e')),
                 ),
               ),
             ],
           ),
           // Lottie 축하 오버레이
-          if (_showCelebration)
+          if (showCelebration)
             CelebrationOverlay(
               assetPath: 'assets/lottie/confetti.json',
-              onComplete: () => setState(() => _showCelebration = false),
+              onComplete: () =>
+                  ref.read(showCelebrationProvider.notifier).state = false,
             ),
         ],
       ),

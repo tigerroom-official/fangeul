@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -51,7 +52,7 @@ class ShareCardPainter extends CustomPainter {
       offset: Offset(size.width / 2, size.height * 0.35),
       fontSize: 80,
       color: textColor,
-      fontWeight: FontWeight.w700,
+      fontWeight: FontWeight.w500,
       maxWidth: size.width - 120,
       textAlign: TextAlign.center,
     );
@@ -110,11 +111,13 @@ class ShareCardPainter extends CustomPainter {
       textAlign: textAlign,
       fontSize: fontSize,
       fontWeight: fontWeight,
+      fontFamily: 'NotoSansKR',
     );
     final textStyle = ui.TextStyle(
       color: color,
       fontSize: fontSize,
       fontWeight: fontWeight,
+      fontFamily: 'NotoSansKR',
     );
     final builder = ui.ParagraphBuilder(paragraphStyle)
       ..pushStyle(textStyle)
@@ -134,6 +137,9 @@ class ShareCardPainter extends CustomPainter {
 }
 
 /// 공유 카드를 PNG로 내보내고 시스템 공유를 실행한다.
+///
+/// 렌더링 실패, 디스크 쓰기 실패 등 예외 시 조용히 실패하고
+/// [debugPrint]로 에러를 출력한다. 네이티브 리소스는 항상 해제된다.
 Future<void> shareCard({
   required DailyCard card,
   required bool isDark,
@@ -142,27 +148,37 @@ Future<void> shareCard({
   const width = 1080;
   const height = 1920;
 
-  final recorder = ui.PictureRecorder();
-  final canvas = Canvas(recorder);
-  final painter = ShareCardPainter(
-    card: card,
-    isDark: isDark,
-    translationLang: translationLang,
-  );
-  painter.paint(canvas, const Size(1080, 1920));
+  ui.Picture? picture;
+  ui.Image? image;
 
-  final picture = recorder.endRecording();
-  final image = await picture.toImage(width, height);
-  final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+  try {
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
+    final painter = ShareCardPainter(
+      card: card,
+      isDark: isDark,
+      translationLang: translationLang,
+    );
+    painter.paint(canvas, const Size(1080, 1920));
 
-  if (byteData == null) return;
+    picture = recorder.endRecording();
+    image = await picture.toImage(width, height);
+    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
 
-  final tempDir = await getTemporaryDirectory();
-  final file = File('${tempDir.path}/fangeul_card_${card.date}.png');
-  await file.writeAsBytes(byteData.buffer.asUint8List());
+    if (byteData == null) return;
 
-  await Share.shareXFiles(
-    [XFile(file.path)],
-    text: '${card.phrase.ko} — Fangeul',
-  );
+    final tempDir = await getTemporaryDirectory();
+    final file = File('${tempDir.path}/fangeul_card_${card.date}.png');
+    await file.writeAsBytes(byteData.buffer.asUint8List());
+
+    await Share.shareXFiles(
+      [XFile(file.path)],
+      text: '${card.phrase.ko} — Fangeul',
+    );
+  } catch (e) {
+    debugPrint('Share card failed: $e');
+  } finally {
+    image?.dispose();
+    picture?.dispose();
+  }
 }

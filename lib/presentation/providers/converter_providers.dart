@@ -20,17 +20,25 @@ enum ConvertMode {
 }
 
 /// 변환기 상태.
+///
+/// 프로젝트 규칙에 따라 initial/loading/success/error 4개 상태를 모두 정의한다.
 @freezed
 sealed class ConverterState with _$ConverterState {
   /// 초기 상태 (입력 없음)
   const factory ConverterState.initial() = ConverterInitial;
 
-  /// 변환 결과
-  const factory ConverterState.result({
+  /// 변환 중 (현재 동기 엔진이므로 미사용, 향후 TTS 연동 대비)
+  const factory ConverterState.loading() = ConverterLoading;
+
+  /// 변환 성공
+  const factory ConverterState.success({
     required String input,
     required String output,
     required ConvertMode mode,
-  }) = ConverterResult;
+  }) = ConverterSuccess;
+
+  /// 변환 에러
+  const factory ConverterState.error(String message) = ConverterError;
 }
 
 /// 변환기 상태 관리.
@@ -49,17 +57,21 @@ class ConverterNotifier extends _$ConverterNotifier {
       return;
     }
 
-    final output = switch (mode) {
-      ConvertMode.engToKor => KeyboardConverter.engToKor(input),
-      ConvertMode.korToEng => KeyboardConverter.korToEng(input),
-      ConvertMode.romanize => Romanizer.romanize(input),
-    };
+    try {
+      final output = switch (mode) {
+        ConvertMode.engToKor => KeyboardConverter.engToKor(input),
+        ConvertMode.korToEng => KeyboardConverter.korToEng(input),
+        ConvertMode.romanize => Romanizer.romanize(input),
+      };
 
-    state = ConverterState.result(
-      input: input,
-      output: output,
-      mode: mode,
-    );
+      state = ConverterState.success(
+        input: input,
+        output: output,
+        mode: mode,
+      );
+    } catch (e) {
+      state = ConverterState.error(e.toString());
+    }
   }
 
   /// 상태를 초기화한다.

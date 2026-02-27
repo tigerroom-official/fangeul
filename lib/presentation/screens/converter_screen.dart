@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/converter_providers.dart';
 import 'package:fangeul/presentation/widgets/converter_input.dart';
 
@@ -20,13 +23,18 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
   final _textController = TextEditingController();
+  Timer? _debounce;
 
   static const _modes = ConvertMode.values;
-  static const _labels = ['영->한', '한->영', '발음'];
+  static const _labels = [
+    UiStrings.converterTabEngToKor,
+    UiStrings.converterTabKorToEng,
+    UiStrings.converterTabRomanize,
+  ];
   static const _hints = [
-    '영문을 입력하세요 (예: gksrmf)',
-    '한글을 입력하세요 (예: 한글)',
-    '한글을 입력하세요 (예: 사랑해요)',
+    UiStrings.converterHintEngToKor,
+    UiStrings.converterHintKorToEng,
+    UiStrings.converterHintRomanize,
   ];
 
   @override
@@ -38,6 +46,7 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _tabController.removeListener(_onTabChanged);
     _tabController.dispose();
     _textController.dispose();
@@ -46,7 +55,7 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
 
   void _onTabChanged() {
     if (_tabController.indexIsChanging) return;
-    // 탭 전환 시 현재 입력으로 재변환
+    // 탭 전환 시 현재 입력으로 즉시 재변환 (디바운스 없이)
     final input = _textController.text;
     if (input.isNotEmpty) {
       ref
@@ -56,9 +65,12 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
   }
 
   void _onTextChanged(String value) {
-    ref
-        .read(converterNotifierProvider.notifier)
-        .convert(value, _modes[_tabController.index]);
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      ref
+          .read(converterNotifierProvider.notifier)
+          .convert(value, _modes[_tabController.index]);
+    });
   }
 
   @override
@@ -67,12 +79,14 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
 
     final output = switch (state) {
       ConverterInitial() => '',
-      ConverterResult(:final output) => output,
+      ConverterLoading() => '',
+      ConverterSuccess(:final output) => output,
+      ConverterError(:final message) => message,
     };
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('변환기'),
+        title: const Text(UiStrings.converterTitle),
         bottom: TabBar(
           controller: _tabController,
           tabs: _labels.map((l) => Tab(text: l)).toList(),

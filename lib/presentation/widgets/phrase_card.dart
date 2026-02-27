@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:fangeul/core/entities/phrase.dart';
+import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/theme/fangeul_colors.dart';
 
 /// 문구 카드 -- 한글 원문 + 발음 + 번역.
@@ -44,7 +45,7 @@ class PhraseCard extends StatelessWidget {
           Text(
             phrase.ko,
             style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(height: 4),
@@ -73,11 +74,10 @@ class PhraseCard extends StatelessWidget {
                 onPressed: () {
                   Clipboard.setData(ClipboardData(text: phrase.ko));
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('복사되었습니다')),
+                    const SnackBar(content: Text(UiStrings.copied)),
                   );
                 },
-                tooltip: '복사',
-                visualDensity: VisualDensity.compact,
+                tooltip: UiStrings.copyTooltip,
               ),
               // TODO(fangeul): TTS 버튼 (Phase 5 서비스 연동)
             ],
