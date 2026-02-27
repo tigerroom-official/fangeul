@@ -21,6 +21,8 @@ enum CapsMode {
 /// 키보드 상태.
 ///
 /// CAPS 모드를 포함하며, 향후 키보드 관련 상태를 확장할 수 있다.
+/// 동기 토글 상태이므로 sealed class (initial/loading/success/error)
+/// 패턴 대신 단순 freezed data class를 사용한다.
 @freezed
 class KeyboardState with _$KeyboardState {
   /// Creates a [KeyboardState].

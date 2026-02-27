@@ -58,7 +58,6 @@ class KeyboardKey extends StatelessWidget {
     this.isShifted = false,
     this.isCapsLocked = false,
     this.isEngToKor = true,
-    this.widthMultiplier = 1.0,
     this.onLongPressStart,
     this.onLongPressEnd,
     super.key,
@@ -84,9 +83,6 @@ class KeyboardKey extends StatelessWidget {
 
   /// 영->한 모드 여부. true이면 영문이 주 라벨, false이면 한글이 주 라벨.
   final bool isEngToKor;
-
-  /// 키 너비 배수. 기본 1.0, 스페이스 등 넓은 키에 사용.
-  final double widthMultiplier;
 
   /// 길게 누르기 시작 콜백 (백스페이스 연속 삭제 등).
   final VoidCallback? onLongPressStart;
@@ -125,40 +121,36 @@ class KeyboardKey extends StatelessWidget {
         ? FangeulColors.darkOnSurfaceVariant
         : FangeulColors.lightOnSurfaceVariant;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SizedBox(
-          height: 48,
-          child: Padding(
-            padding: const EdgeInsets.all(2),
-            child: Material(
-              color: bgColor,
-              borderRadius: BorderRadius.circular(8),
-              child: GestureDetector(
-                onLongPressStart: onLongPressStart != null
-                    ? (_) {
-                        _triggerHaptic();
-                        onLongPressStart!();
-                      }
-                    : null,
-                onLongPressEnd:
-                    onLongPressEnd != null ? (_) => onLongPressEnd!() : null,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(8),
-                  splashColor: FangeulColors.primary.withValues(alpha: 0.2),
-                  onTap: () {
+    return SizedBox(
+      height: 48,
+      child: Padding(
+        padding: const EdgeInsets.all(2),
+        child: Material(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(8),
+          child: GestureDetector(
+            onLongPressStart: onLongPressStart != null
+                ? (_) {
                     _triggerHaptic();
-                    onTap();
-                  },
-                  child: Center(
-                    child: _buildContent(subColor),
-                  ),
-                ),
+                    onLongPressStart!();
+                  }
+                : null,
+            onLongPressEnd:
+                onLongPressEnd != null ? (_) => onLongPressEnd!() : null,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(8),
+              splashColor: FangeulColors.primary.withValues(alpha: 0.2),
+              onTap: () {
+                _triggerHaptic();
+                onTap();
+              },
+              child: Center(
+                child: _buildContent(subColor),
               ),
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
