@@ -469,10 +469,22 @@ class Romanizer {
           buffer.write(_finalRoman[token.final_] ?? '');
         }
       } else if (token is _LiteralToken) {
-        buffer.write(token.value);
+        if (!_isJamo(token.value)) {
+          buffer.write(token.value);
+        }
       }
     }
     return buffer.toString();
+  }
+
+  /// 호환 자모(ㄱ~ㅎ, ㅏ~ㅣ) 여부를 판정한다.
+  ///
+  /// 완성 음절이 아닌 낱자모는 로마자 변환 대상이 아니므로
+  /// 출력에서 제외한다. (U+3131 ㄱ ~ U+3163 ㅣ)
+  static bool _isJamo(String char) {
+    if (char.isEmpty) return false;
+    final code = char.codeUnitAt(0);
+    return code >= 0x3131 && code <= 0x3163;
   }
 
   /// 종성의 대표음을 반환한다.

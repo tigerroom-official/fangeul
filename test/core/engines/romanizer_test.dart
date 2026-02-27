@@ -194,4 +194,34 @@ void main() {
       expect(Romanizer.romanize('보고 싶어요'), equals('bogo sipeoyo'));
     });
   });
+
+  group('Romanizer — 낱자모 필터링', () {
+    test('should return empty for standalone consonants', () {
+      expect(Romanizer.romanize('ㅎㅎㅎㅎ'), equals(''));
+    });
+
+    test('should return empty for standalone vowels', () {
+      expect(Romanizer.romanize('ㅣㅣㅣ'), equals(''));
+    });
+
+    test('should return empty for mixed standalone jamo', () {
+      expect(Romanizer.romanize('ㅏㅏㅏㅏ'), equals(''));
+    });
+
+    test('should romanize complete syllables and skip trailing jamo', () {
+      expect(Romanizer.romanize('사랑ㅎ'), equals('sarang'));
+    });
+
+    test('should romanize complete syllables and skip leading jamo', () {
+      expect(Romanizer.romanize('ㅎ사랑'), equals('sarang'));
+    });
+
+    test('should keep non-Korean literals while skipping jamo', () {
+      expect(Romanizer.romanize('ㅎhello'), equals('hello'));
+    });
+
+    test('should handle mixed syllables and jamo in sequence', () {
+      expect(Romanizer.romanize('한ㅎ글'), equals('hangeul'));
+    });
+  });
 }
