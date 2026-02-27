@@ -91,10 +91,12 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
 
   Timer? _deleteTimer;
   bool _isAccelerated = false;
+  bool _isDisposed = false;
   DateTime? _longPressStart;
 
   @override
   void dispose() {
+    _isDisposed = true;
     _deleteTimer?.cancel();
     super.dispose();
   }
@@ -122,15 +124,26 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
     _deleteTimer = Timer.periodic(
       const Duration(milliseconds: 150),
       (timer) {
+        if (_isDisposed) {
+          timer.cancel();
+          return;
+        }
         widget.onBackspace();
         final elapsed = DateTime.now().difference(_longPressStart!);
         if (!_isAccelerated && elapsed.inMilliseconds > 1500) {
           _isAccelerated = true;
           HapticFeedback.heavyImpact();
           timer.cancel();
+          if (_isDisposed) return;
           _deleteTimer = Timer.periodic(
             const Duration(milliseconds: 50),
-            (_) => widget.onBackspace(),
+            (t) {
+              if (_isDisposed) {
+                t.cancel();
+                return;
+              }
+              widget.onBackspace();
+            },
           );
         }
       },

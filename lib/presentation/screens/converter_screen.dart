@@ -74,6 +74,17 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
     _clear();
   }
 
+  // ── 텍스트 업데이트 ──
+
+  /// 컨트롤러 텍스트를 갱신하고 커서를 끝으로 이동한다.
+  ///
+  /// `controller.text = ...` 만 하면 커서가 position 0으로 리셋되므로,
+  /// 반드시 이 메서드를 통해 selection도 함께 설정한다.
+  void _updateText(String text) {
+    _textController.text = text;
+    _textController.selection = TextSelection.collapsed(offset: text.length);
+  }
+
   // ── 키보드 입력 핸들러 ──
 
   /// 문자 키 입력 처리.
@@ -83,10 +94,10 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
   void _onCharacterTap(String eng, String kor) {
     if (_isEngToKor) {
       _engBuffer += eng;
-      _textController.text = _engBuffer;
+      _updateText(_engBuffer);
     } else {
       _jamoList = [..._jamoList, kor];
-      _textController.text = KeyboardConverter.assembleJamos(_jamoList);
+      _updateText(KeyboardConverter.assembleJamos(_jamoList));
     }
     _convert();
   }
@@ -99,11 +110,11 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
     if (_isEngToKor) {
       if (_engBuffer.isEmpty) return;
       _engBuffer = _engBuffer.substring(0, _engBuffer.length - 1);
-      _textController.text = _engBuffer;
+      _updateText(_engBuffer);
     } else {
       if (_jamoList.isEmpty) return;
       _jamoList = _jamoList.sublist(0, _jamoList.length - 1);
-      _textController.text = KeyboardConverter.assembleJamos(_jamoList);
+      _updateText(KeyboardConverter.assembleJamos(_jamoList));
     }
     _convert();
   }
@@ -112,10 +123,10 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
   void _onSpace() {
     if (_isEngToKor) {
       _engBuffer += ' ';
-      _textController.text = _engBuffer;
+      _updateText(_engBuffer);
     } else {
       _jamoList = [..._jamoList, ' '];
-      _textController.text = KeyboardConverter.assembleJamos(_jamoList);
+      _updateText(KeyboardConverter.assembleJamos(_jamoList));
     }
     _convert();
   }
