@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:fangeul/presentation/screens/converter_screen.dart';
 import 'package:fangeul/presentation/screens/home_screen.dart';
+import 'package:fangeul/presentation/screens/mini_converter_screen.dart';
 import 'package:fangeul/presentation/screens/phrases_screen.dart';
 import 'package:fangeul/presentation/screens/settings_screen.dart';
 import 'package:fangeul/presentation/widgets/shell_scaffold.dart';
@@ -52,6 +53,10 @@ GoRouter appRouter(AppRouterRef ref) {
       GoRoute(
         path: '/settings',
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/mini-converter',
+        builder: (context, state) => const MiniConverterScreen(),
       ),
     ],
   );
