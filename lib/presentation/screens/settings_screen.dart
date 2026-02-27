@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:fangeul/platform/bubble_state.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/presentation/providers/bubble_providers.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
 
 /// 설정 화면 — 테마 모드 전환, 앱 정보.
@@ -55,6 +57,9 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
           const Divider(),
+          // 플로팅 버블
+          const _BubbleToggleTile(),
+          const Divider(),
           // 앱 정보
           ListTile(
             leading: const Icon(Icons.info_outline),
@@ -72,5 +77,63 @@ class SettingsScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+}
+
+/// 플로팅 버블 온오프 토글 타일.
+class _BubbleToggleTile extends ConsumerWidget {
+  const _BubbleToggleTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bubbleState = ref.watch(bubbleNotifierProvider);
+    final isOn = bubbleState != BubbleState.off;
+
+    return SwitchListTile(
+      secondary: const Icon(Icons.bubble_chart_outlined),
+      title: const Text(UiStrings.bubbleLabel),
+      subtitle: const Text(UiStrings.bubbleDescription),
+      value: isOn,
+      onChanged: (value) async {
+        if (value) {
+          await _enableBubble(context, ref);
+        } else {
+          await ref.read(bubbleNotifierProvider.notifier).hide();
+        }
+      },
+    );
+  }
+
+  Future<void> _enableBubble(BuildContext context, WidgetRef ref) async {
+    final notifier = ref.read(bubbleNotifierProvider.notifier);
+    final hasPermission = await notifier.checkPermission();
+
+    if (hasPermission) {
+      await notifier.show();
+      return;
+    }
+
+    if (!context.mounted) return;
+    final shouldRequest = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text(UiStrings.bubblePermissionTitle),
+        content: const Text(UiStrings.bubblePermissionMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text(UiStrings.bubblePermissionDeny),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text(UiStrings.bubblePermissionAllow),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldRequest == true) {
+      await notifier.requestPermission();
+    }
   }
 }
