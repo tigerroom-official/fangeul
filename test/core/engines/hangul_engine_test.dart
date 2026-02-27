@@ -7,34 +7,41 @@ void main() {
   group('HangulEngine.decompose', () {
     test('should decompose 가 into ㄱ, ㅏ, (없음)', () {
       final result = HangulEngine.decompose('가');
-      expect(result, equals([const Jamo(initial: 'ㄱ', medial: 'ㅏ', final_: '')]));
+      expect(
+          result, equals([const Jamo(initial: 'ㄱ', medial: 'ㅏ', final_: '')]));
     });
 
     test('should decompose 한 into ㅎ, ㅏ, ㄴ', () {
       final result = HangulEngine.decompose('한');
-      expect(result, equals([const Jamo(initial: 'ㅎ', medial: 'ㅏ', final_: 'ㄴ')]));
+      expect(
+          result, equals([const Jamo(initial: 'ㅎ', medial: 'ㅏ', final_: 'ㄴ')]));
     });
 
     test('should decompose 글 into ㄱ, ㅡ, ㄹ', () {
       final result = HangulEngine.decompose('글');
-      expect(result, equals([const Jamo(initial: 'ㄱ', medial: 'ㅡ', final_: 'ㄹ')]));
+      expect(
+          result, equals([const Jamo(initial: 'ㄱ', medial: 'ㅡ', final_: 'ㄹ')]));
     });
 
     test('should decompose multi-char 한글 into two Jamo', () {
       final result = HangulEngine.decompose('한글');
       expect(result.length, equals(2));
-      expect(result[0], equals(const Jamo(initial: 'ㅎ', medial: 'ㅏ', final_: 'ㄴ')));
-      expect(result[1], equals(const Jamo(initial: 'ㄱ', medial: 'ㅡ', final_: 'ㄹ')));
+      expect(result[0],
+          equals(const Jamo(initial: 'ㅎ', medial: 'ㅏ', final_: 'ㄴ')));
+      expect(result[1],
+          equals(const Jamo(initial: 'ㄱ', medial: 'ㅡ', final_: 'ㄹ')));
     });
 
     test('should handle double final consonant ㄺ (닭)', () {
       final result = HangulEngine.decompose('닭');
-      expect(result, equals([const Jamo(initial: 'ㄷ', medial: 'ㅏ', final_: 'ㄺ')]));
+      expect(
+          result, equals([const Jamo(initial: 'ㄷ', medial: 'ㅏ', final_: 'ㄺ')]));
     });
 
     test('should handle double final consonant ㄳ (몫)', () {
       final result = HangulEngine.decompose('몫');
-      expect(result, equals([const Jamo(initial: 'ㅁ', medial: 'ㅗ', final_: 'ㄳ')]));
+      expect(
+          result, equals([const Jamo(initial: 'ㅁ', medial: 'ㅗ', final_: 'ㄳ')]));
     });
 
     test('should return empty list for empty string', () {

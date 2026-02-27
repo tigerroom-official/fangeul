@@ -144,9 +144,11 @@ class KeyboardConverter {
       i += 2;
 
       // 복합 모음 확인
-      if (i < jamos.length && HangulTables.compoundVowelCombine.containsKey(medialJamo)) {
+      if (i < jamos.length &&
+          HangulTables.compoundVowelCombine.containsKey(medialJamo)) {
         final nextChar = jamos[i];
-        final compound = HangulTables.compoundVowelCombine[medialJamo]?[nextChar];
+        final compound =
+            HangulTables.compoundVowelCombine[medialJamo]?[nextChar];
         if (compound != null) {
           medialJamo = compound;
           i++;
@@ -165,7 +167,8 @@ class KeyboardConverter {
 
       if (i < jamos.length && _initialConsonants.contains(jamos[i])) {
         final possibleFinal = jamos[i];
-        final possibleFinalIdx = HangulTables.finalConsonantIndex[possibleFinal];
+        final possibleFinalIdx =
+            HangulTables.finalConsonantIndex[possibleFinal];
 
         if (possibleFinalIdx != null) {
           if (i + 1 < jamos.length && _vowels.contains(jamos[i + 1])) {
@@ -178,10 +181,10 @@ class KeyboardConverter {
                 HangulTables.doubleFinalCombine[possibleFinal]?[nextConsonant];
 
             if (doubleFinal != null) {
-              final doubleFinalIdx = HangulTables.finalConsonantIndex[doubleFinal];
+              final doubleFinalIdx =
+                  HangulTables.finalConsonantIndex[doubleFinal];
               if (doubleFinalIdx != null) {
-                if (i + 2 < jamos.length &&
-                    _vowels.contains(jamos[i + 2])) {
+                if (i + 2 < jamos.length && _vowels.contains(jamos[i + 2])) {
                   // 겹받침 다음에 모음 → 첫 자음만 종성
                   finalIdx = possibleFinalIdx;
                   i++;

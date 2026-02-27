@@ -1,1 +1,428 @@
-{"packs":[]}
+{
+  "id": "basic_love",
+  "name": "Love & Support",
+  "name_ko": "사랑 & 응원",
+  "is_free": true,
+  "phrases": [
+    {
+      "ko": "사랑해요",
+      "roman": "saranghaeyo",
+      "context": "General love expression, polite form",
+      "tags": ["love", "daily"],
+      "translations": {
+        "en": "I love you",
+        "id": "Aku cinta kamu",
+        "th": "ฉันรักคุณ",
+        "pt": "Eu te amo",
+        "es": "Te quiero",
+        "vi": "Tôi yêu bạn"
+      }
+    },
+    {
+      "ko": "오늘도 화이팅!",
+      "roman": "oneuldo hwaiting!",
+      "context": "Daily encouragement, very common in fan culture",
+      "tags": ["cheer", "daily"],
+      "translations": {
+        "en": "Fighting today too!",
+        "id": "Semangat hari ini juga!",
+        "th": "สู้ๆ วันนี้ด้วยนะ!",
+        "pt": "Força hoje também!",
+        "es": "¡Ánimo hoy también!",
+        "vi": "Hôm nay cũng cố lên nhé!"
+      }
+    },
+    {
+      "ko": "보고 싶어요",
+      "roman": "bogo sipeoyo",
+      "context": "Expression of missing someone, polite form",
+      "tags": ["love", "emotional"],
+      "translations": {
+        "en": "I miss you",
+        "id": "Aku merindukanmu",
+        "th": "คิดถึงนะ",
+        "pt": "Sinto sua falta",
+        "es": "Te extraño",
+        "vi": "Nhớ bạn lắm"
+      }
+    },
+    {
+      "ko": "항상 응원해요",
+      "roman": "hangsang eungwonhaeyo",
+      "context": "Always supporting you, common fan expression",
+      "tags": ["cheer", "love"],
+      "translations": {
+        "en": "I always support you",
+        "id": "Selalu mendukungmu",
+        "th": "เป็นกำลังใจให้เสมอ",
+        "pt": "Sempre te apoio",
+        "es": "Siempre te apoyo",
+        "vi": "Luôn ủng hộ bạn"
+      }
+    },
+    {
+      "ko": "최고예요!",
+      "roman": "choegoyeyo!",
+      "context": "You're the best! Common praise expression",
+      "tags": ["praise", "daily"],
+      "translations": {
+        "en": "You're the best!",
+        "id": "Kamu yang terbaik!",
+        "th": "เยี่ยมที่สุด!",
+        "pt": "Você é o melhor!",
+        "es": "¡Eres el/la mejor!",
+        "vi": "Bạn là tuyệt nhất!"
+      }
+    },
+    {
+      "ko": "너무 멋있어요",
+      "roman": "neomu meosisseoyo",
+      "context": "You're so cool/awesome, polite form",
+      "tags": ["praise", "daily"],
+      "translations": {
+        "en": "You're so cool",
+        "id": "Kamu sangat keren",
+        "th": "เท่มากเลย",
+        "pt": "Você é muito legal",
+        "es": "Eres muy genial",
+        "vi": "Bạn thật tuyệt vời"
+      }
+    },
+    {
+      "ko": "행복하세요",
+      "roman": "haengbokaseyo",
+      "context": "Be happy, polite wish",
+      "tags": ["love", "daily"],
+      "translations": {
+        "en": "Be happy",
+        "id": "Berbahagialah",
+        "th": "มีความสุขนะ",
+        "pt": "Seja feliz",
+        "es": "Sé feliz",
+        "vi": "Hãy hạnh phúc nhé"
+      }
+    },
+    {
+      "ko": "건강하세요",
+      "roman": "geonganghaseyo",
+      "context": "Stay healthy, common caring expression",
+      "tags": ["love", "daily"],
+      "translations": {
+        "en": "Stay healthy",
+        "id": "Jaga kesehatanmu",
+        "th": "รักษาสุขภาพด้วยนะ",
+        "pt": "Cuide-se",
+        "es": "Cuídate",
+        "vi": "Giữ gìn sức khỏe nhé"
+      }
+    },
+    {
+      "ko": "잘했어요!",
+      "roman": "jalhaesseoyo!",
+      "context": "Good job! Well done! Common praise after performance",
+      "tags": ["praise", "cheer"],
+      "translations": {
+        "en": "Good job!",
+        "id": "Kerja bagus!",
+        "th": "ทำได้ดีมาก!",
+        "pt": "Bom trabalho!",
+        "es": "¡Buen trabajo!",
+        "vi": "Làm tốt lắm!"
+      }
+    },
+    {
+      "ko": "자랑스러워요",
+      "roman": "jarangseureowoyo",
+      "context": "I'm proud of you, emotional praise",
+      "tags": ["praise", "emotional"],
+      "translations": {
+        "en": "I'm proud of you",
+        "id": "Aku bangga padamu",
+        "th": "ภูมิใจในตัวเธอนะ",
+        "pt": "Tenho orgulho de você",
+        "es": "Estoy orgulloso/a de ti",
+        "vi": "Tự hào về bạn lắm"
+      }
+    },
+    {
+      "ko": "힘내세요!",
+      "roman": "himnaeseyo!",
+      "context": "Cheer up! Stay strong! Very common encouragement",
+      "tags": ["cheer", "daily"],
+      "translations": {
+        "en": "Cheer up!",
+        "id": "Semangat!",
+        "th": "สู้ๆ นะ!",
+        "pt": "Força!",
+        "es": "¡Ánimo!",
+        "vi": "Cố lên nhé!"
+      }
+    },
+    {
+      "ko": "고마워요",
+      "roman": "gomawoyo",
+      "context": "Thank you, casual polite form",
+      "tags": ["daily", "love"],
+      "translations": {
+        "en": "Thank you",
+        "id": "Terima kasih",
+        "th": "ขอบคุณนะ",
+        "pt": "Obrigado(a)",
+        "es": "Gracias",
+        "vi": "Cảm ơn bạn"
+      }
+    },
+    {
+      "ko": "수고했어요",
+      "roman": "sugohaesseoyo",
+      "context": "You worked hard, common after schedules/performances",
+      "tags": ["praise", "daily"],
+      "translations": {
+        "en": "You worked hard",
+        "id": "Kamu sudah bekerja keras",
+        "th": "เหนื่อยมากเลยนะ",
+        "pt": "Você se esforçou muito",
+        "es": "Te has esforzado mucho",
+        "vi": "Bạn đã vất vả rồi"
+      }
+    },
+    {
+      "ko": "너무 예뻐요",
+      "roman": "neomu yeppeoyo",
+      "context": "You're so pretty/beautiful",
+      "tags": ["praise", "love"],
+      "translations": {
+        "en": "You're so pretty",
+        "id": "Kamu sangat cantik",
+        "th": "สวยมากเลย",
+        "pt": "Você é tão linda",
+        "es": "Eres muy linda",
+        "vi": "Bạn đẹp quá"
+      }
+    },
+    {
+      "ko": "너무 귀여워요",
+      "roman": "neomu gwiyeowoyo",
+      "context": "You're so cute, very common fan expression",
+      "tags": ["praise", "love"],
+      "translations": {
+        "en": "You're so cute",
+        "id": "Kamu sangat lucu",
+        "th": "น่ารักมากเลย",
+        "pt": "Você é tão fofo(a)",
+        "es": "Eres muy lindo/a",
+        "vi": "Bạn dễ thương quá"
+      }
+    },
+    {
+      "ko": "우리가 있잖아요",
+      "roman": "uriga itjanhayo",
+      "context": "We're here for you, emotional support",
+      "tags": ["cheer", "emotional"],
+      "translations": {
+        "en": "We're here for you",
+        "id": "Kami ada untukmu",
+        "th": "พวกเราอยู่ตรงนี้นะ",
+        "pt": "Nós estamos aqui por você",
+        "es": "Estamos aquí para ti",
+        "vi": "Chúng tôi ở đây vì bạn"
+      }
+    },
+    {
+      "ko": "영원히 함께해요",
+      "roman": "yeongwonhi hamkkehaeyo",
+      "context": "Let's be together forever, fan devotion",
+      "tags": ["love", "emotional"],
+      "translations": {
+        "en": "Let's be together forever",
+        "id": "Mari bersama selamanya",
+        "th": "อยู่ด้วยกันตลอดไปนะ",
+        "pt": "Vamos ficar juntos para sempre",
+        "es": "Estemos juntos para siempre",
+        "vi": "Hãy bên nhau mãi mãi nhé"
+      }
+    },
+    {
+      "ko": "꿈을 응원해요",
+      "roman": "kkumeul eungwonhaeyo",
+      "context": "I support your dreams",
+      "tags": ["cheer", "love"],
+      "translations": {
+        "en": "I support your dreams",
+        "id": "Aku mendukung impianmu",
+        "th": "เป็นกำลังใจให้ความฝันของเธอ",
+        "pt": "Apoio seus sonhos",
+        "es": "Apoyo tus sueños",
+        "vi": "Ủng hộ ước mơ của bạn"
+      }
+    },
+    {
+      "ko": "많이 사랑해요",
+      "roman": "mani saranghaeyo",
+      "context": "I love you a lot, intensified form",
+      "tags": ["love", "emotional"],
+      "translations": {
+        "en": "I love you so much",
+        "id": "Aku sangat mencintaimu",
+        "th": "รักมากนะ",
+        "pt": "Te amo muito",
+        "es": "Te quiero mucho",
+        "vi": "Yêu bạn nhiều lắm"
+      }
+    },
+    {
+      "ko": "웃는 모습이 예뻐요",
+      "roman": "unneun moseubi yeppeoyo",
+      "context": "Your smile is beautiful",
+      "tags": ["praise", "love"],
+      "translations": {
+        "en": "Your smile is beautiful",
+        "id": "Senyummu indah",
+        "th": "รอยยิ้มของเธอสวยมาก",
+        "pt": "Seu sorriso é lindo",
+        "es": "Tu sonrisa es hermosa",
+        "vi": "Nụ cười của bạn thật đẹp"
+      }
+    },
+    {
+      "ko": "오빠 사랑해요",
+      "roman": "oppa saranghaeyo",
+      "context": "I love you oppa, female fan to male idol",
+      "tags": ["love", "fandom"],
+      "translations": {
+        "en": "I love you oppa",
+        "id": "Aku cinta oppa",
+        "th": "รักโอปป้า",
+        "pt": "Eu te amo oppa",
+        "es": "Te quiero oppa",
+        "vi": "Em yêu oppa"
+      }
+    },
+    {
+      "ko": "언니 사랑해요",
+      "roman": "eonni saranghaeyo",
+      "context": "I love you unnie, female fan to female idol",
+      "tags": ["love", "fandom"],
+      "translations": {
+        "en": "I love you unnie",
+        "id": "Aku cinta unnie",
+        "th": "รักอันนี่",
+        "pt": "Eu te amo unnie",
+        "es": "Te quiero unnie",
+        "vi": "Em yêu unnie"
+      }
+    },
+    {
+      "ko": "무대 찢었어요!",
+      "roman": "mudae jjijeosseoyo!",
+      "context": "You killed it on stage! Slang for amazing performance",
+      "tags": ["praise", "fandom"],
+      "translations": {
+        "en": "You killed it on stage!",
+        "id": "Penampilanmu luar biasa!",
+        "th": "แสดงเวทีเจ๋งมาก!",
+        "pt": "Arrasou no palco!",
+        "es": "¡Lo rompiste en el escenario!",
+        "vi": "Bạn quá đỉnh trên sân khấu!"
+      }
+    },
+    {
+      "ko": "목소리가 너무 좋아요",
+      "roman": "moksoriga neomu joayo",
+      "context": "Your voice is so good",
+      "tags": ["praise", "daily"],
+      "translations": {
+        "en": "Your voice is so good",
+        "id": "Suaramu sangat bagus",
+        "th": "เสียงดีมากเลย",
+        "pt": "Sua voz é muito boa",
+        "es": "Tu voz es muy buena",
+        "vi": "Giọng bạn hay quá"
+      }
+    },
+    {
+      "ko": "덕분에 행복해요",
+      "roman": "deokbune haengbokhaeyo",
+      "context": "I'm happy because of you",
+      "tags": ["love", "emotional"],
+      "translations": {
+        "en": "I'm happy because of you",
+        "id": "Aku bahagia karena kamu",
+        "th": "มีความสุขเพราะเธอ",
+        "pt": "Sou feliz por sua causa",
+        "es": "Soy feliz gracias a ti",
+        "vi": "Hạnh phúc nhờ có bạn"
+      }
+    },
+    {
+      "ko": "항상 건강하세요",
+      "roman": "hangsang geonganghaseyo",
+      "context": "Always stay healthy, caring expression",
+      "tags": ["love", "daily"],
+      "translations": {
+        "en": "Always stay healthy",
+        "id": "Selalu jaga kesehatanmu",
+        "th": "รักษาสุขภาพด้วยเสมอนะ",
+        "pt": "Sempre cuide da saúde",
+        "es": "Siempre cuida tu salud",
+        "vi": "Luôn giữ gìn sức khỏe nhé"
+      }
+    },
+    {
+      "ko": "잘 먹고 잘 자요",
+      "roman": "jal meokgo jal jayo",
+      "context": "Eat well and sleep well, caring",
+      "tags": ["love", "daily"],
+      "translations": {
+        "en": "Eat well and sleep well",
+        "id": "Makan yang banyak dan tidur yang nyenyak",
+        "th": "กินให้อร่อยนอนให้สบายนะ",
+        "pt": "Coma bem e durma bem",
+        "es": "Come bien y duerme bien",
+        "vi": "Ăn ngon ngủ ngon nhé"
+      }
+    },
+    {
+      "ko": "팬이어서 행복해요",
+      "roman": "paenieoseo haengbokhaeyo",
+      "context": "I'm happy to be a fan",
+      "tags": ["love", "fandom"],
+      "translations": {
+        "en": "I'm happy to be your fan",
+        "id": "Aku bahagia menjadi fansmu",
+        "th": "มีความสุขที่ได้เป็นแฟน",
+        "pt": "Sou feliz por ser seu fã",
+        "es": "Soy feliz de ser tu fan",
+        "vi": "Hạnh phúc vì được làm fan"
+      }
+    },
+    {
+      "ko": "노래 너무 좋아요",
+      "roman": "norae neomu joayo",
+      "context": "The song is so good, common music praise",
+      "tags": ["praise", "daily"],
+      "translations": {
+        "en": "The song is so good",
+        "id": "Lagunya sangat bagus",
+        "th": "เพลงดีมากเลย",
+        "pt": "A música é muito boa",
+        "es": "La canción es muy buena",
+        "vi": "Bài hát hay quá"
+      }
+    },
+    {
+      "ko": "한국에서 꼭 보고 싶어요",
+      "roman": "hangugeseo kkok bogo sipeoyo",
+      "context": "I really want to see you in Korea, fan's wish",
+      "tags": ["love", "emotional"],
+      "translations": {
+        "en": "I really want to see you in Korea",
+        "id": "Aku ingin sekali bertemu di Korea",
+        "th": "อยากเจอที่เกาหลีจังเลย",
+        "pt": "Quero muito te ver na Coreia",
+        "es": "Quiero verte en Corea",
+        "vi": "Muốn gặp bạn ở Hàn Quốc quá"
+      }
+    }
+  ]
+}

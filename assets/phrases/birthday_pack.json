@@ -1,0 +1,219 @@
+{
+  "id": "birthday_pack",
+  "name": "Birthday Messages",
+  "name_ko": "생일 축하",
+  "is_free": false,
+  "unlock_type": "rewarded_ad",
+  "phrases": [
+    {
+      "ko": "생일 축하해요!",
+      "roman": "saengil chukahaeyo!",
+      "context": "Happy birthday, polite form",
+      "tags": ["birthday"],
+      "translations": {
+        "en": "Happy birthday!",
+        "id": "Selamat ulang tahun!",
+        "th": "สุขสันต์วันเกิด!",
+        "pt": "Feliz aniversário!",
+        "es": "¡Feliz cumpleaños!",
+        "vi": "Chúc mừng sinh nhật!"
+      }
+    },
+    {
+      "ko": "태어나줘서 고마워요",
+      "roman": "taeeona jwoseo gomawoyo",
+      "context": "Thank you for being born, very popular among fans",
+      "tags": ["birthday", "emotional"],
+      "translations": {
+        "en": "Thank you for being born",
+        "id": "Terima kasih sudah terlahir",
+        "th": "ขอบคุณที่เกิดมานะ",
+        "pt": "Obrigado(a) por ter nascido",
+        "es": "Gracias por haber nacido",
+        "vi": "Cảm ơn vì đã được sinh ra"
+      }
+    },
+    {
+      "ko": "올해도 건강하고 행복하세요",
+      "roman": "olhaedo geonganghago haengbokaseyo",
+      "context": "Be healthy and happy this year too",
+      "tags": ["birthday", "love"],
+      "translations": {
+        "en": "Be healthy and happy this year too",
+        "id": "Tetap sehat dan bahagia tahun ini juga",
+        "th": "ขอให้สุขภาพดีและมีความสุขปีนี้ด้วยนะ",
+        "pt": "Tenha saúde e felicidade neste ano também",
+        "es": "Sé saludable y feliz este año también",
+        "vi": "Năm nay cũng khỏe mạnh và hạnh phúc nhé"
+      }
+    },
+    {
+      "ko": "생일 축하합니다!",
+      "roman": "saengil chukahamnida!",
+      "context": "Happy birthday, formal form",
+      "tags": ["birthday"],
+      "translations": {
+        "en": "Happy birthday! (formal)",
+        "id": "Selamat ulang tahun! (formal)",
+        "th": "สุขสันต์วันเกิดค่ะ/ครับ!",
+        "pt": "Feliz aniversário! (formal)",
+        "es": "¡Feliz cumpleaños! (formal)",
+        "vi": "Chúc mừng sinh nhật ạ!"
+      }
+    },
+    {
+      "ko": "오늘 하루 행복하세요",
+      "roman": "oneul haru haengbokaseyo",
+      "context": "Have a happy day today, birthday wish",
+      "tags": ["birthday", "love"],
+      "translations": {
+        "en": "Have a happy day today",
+        "id": "Semoga hari ini bahagia",
+        "th": "ขอให้มีความสุขวันนี้นะ",
+        "pt": "Tenha um dia feliz hoje",
+        "es": "Que tengas un día feliz hoy",
+        "vi": "Hôm nay hãy hạnh phúc nhé"
+      }
+    },
+    {
+      "ko": "세상에서 제일 빛나는 사람",
+      "roman": "sesangeseo jeil binnaneun saram",
+      "context": "The most shining person in the world",
+      "tags": ["birthday", "praise"],
+      "translations": {
+        "en": "The most shining person in the world",
+        "id": "Orang paling bersinar di dunia",
+        "th": "คนที่เปล่งประกายที่สุดในโลก",
+        "pt": "A pessoa mais brilhante do mundo",
+        "es": "La persona más brillante del mundo",
+        "vi": "Người tỏa sáng nhất thế giới"
+      }
+    },
+    {
+      "ko": "생일에 모든 소원이 이루어지길",
+      "roman": "saengire modeun sowoni irueojigil",
+      "context": "May all your birthday wishes come true",
+      "tags": ["birthday", "love"],
+      "translations": {
+        "en": "May all your birthday wishes come true",
+        "id": "Semoga semua harapanmu di hari ulang tahun terwujud",
+        "th": "ขอให้ทุกความปรารถนาในวันเกิดเป็นจริง",
+        "pt": "Que todos os desejos de aniversário se realizem",
+        "es": "Que todos tus deseos de cumpleaños se cumplan",
+        "vi": "Mong mọi điều ước sinh nhật đều thành hiện thực"
+      }
+    },
+    {
+      "ko": "생일 선물은 우리 사랑이에요",
+      "roman": "saengil seonmureun uri sarangieyo",
+      "context": "Our love is the birthday gift, fans' collective expression",
+      "tags": ["birthday", "fandom"],
+      "translations": {
+        "en": "Our love is your birthday gift",
+        "id": "Cinta kami adalah hadiah ulang tahunmu",
+        "th": "ของขวัญวันเกิดคือความรักของพวกเรา",
+        "pt": "Nosso amor é o presente de aniversário",
+        "es": "Nuestro amor es tu regalo de cumpleaños",
+        "vi": "Tình yêu của chúng tôi là quà sinh nhật"
+      }
+    },
+    {
+      "ko": "앞으로도 행복한 일만 가득하길",
+      "roman": "apeurodo haengbokan ilman gadeukagil",
+      "context": "May only happy things fill your future",
+      "tags": ["birthday", "love"],
+      "translations": {
+        "en": "May only happy things fill your future",
+        "id": "Semoga masa depanmu penuh kebahagiaan",
+        "th": "ขอให้มีแต่เรื่องดีๆ ต่อจากนี้",
+        "pt": "Que só coisas boas preencham seu futuro",
+        "es": "Que solo cosas felices llenen tu futuro",
+        "vi": "Mong tương lai chỉ toàn những điều hạnh phúc"
+      }
+    },
+    {
+      "ko": "특별한 날 축하드려요",
+      "roman": "teukbyeolhan nal chukadeuryeoyo",
+      "context": "Congratulations on this special day, very polite",
+      "tags": ["birthday"],
+      "translations": {
+        "en": "Congratulations on this special day",
+        "id": "Selamat di hari spesial ini",
+        "th": "ขอแสดงความยินดีในวันพิเศษ",
+        "pt": "Parabéns neste dia especial",
+        "es": "Felicidades en este día especial",
+        "vi": "Chúc mừng ngày đặc biệt"
+      }
+    },
+    {
+      "ko": "오래오래 건강하세요",
+      "roman": "oraerae geonganghaseyo",
+      "context": "Stay healthy for a long, long time",
+      "tags": ["birthday", "love"],
+      "translations": {
+        "en": "Stay healthy for a long, long time",
+        "id": "Tetap sehat selama-lamanya",
+        "th": "ขอให้แข็งแรงไปนานๆ นะ",
+        "pt": "Tenha saúde por muito, muito tempo",
+        "es": "Mantente saludable por mucho tiempo",
+        "vi": "Khỏe mạnh thật lâu nhé"
+      }
+    },
+    {
+      "ko": "나이는 숫자일 뿐이에요",
+      "roman": "naineun sutjail ppunieyo",
+      "context": "Age is just a number, playful birthday message",
+      "tags": ["birthday"],
+      "translations": {
+        "en": "Age is just a number",
+        "id": "Umur hanyalah angka",
+        "th": "อายุเป็นแค่ตัวเลข",
+        "pt": "Idade é só um número",
+        "es": "La edad es solo un número",
+        "vi": "Tuổi chỉ là con số"
+      }
+    },
+    {
+      "ko": "케이크 맛있게 드세요",
+      "roman": "keikeu masitge deuseyo",
+      "context": "Enjoy the cake, lighthearted birthday message",
+      "tags": ["birthday", "daily"],
+      "translations": {
+        "en": "Enjoy the cake",
+        "id": "Nikmati kuenya",
+        "th": "ทานเค้กให้อร่อยนะ",
+        "pt": "Aproveite o bolo",
+        "es": "Disfruta el pastel",
+        "vi": "Ăn bánh ngon nhé"
+      }
+    },
+    {
+      "ko": "세상의 모든 축복이 함께하길",
+      "roman": "sesangui modeun chukbogi hamkkehagil",
+      "context": "May all the blessings in the world be with you",
+      "tags": ["birthday", "emotional"],
+      "translations": {
+        "en": "May all the blessings in the world be with you",
+        "id": "Semoga semua berkah di dunia menyertaimu",
+        "th": "ขอให้พรทุกอย่างในโลกอยู่กับเธอ",
+        "pt": "Que todas as bênçãos do mundo estejam com você",
+        "es": "Que todas las bendiciones del mundo te acompañen",
+        "vi": "Mong mọi phước lành trên thế giới ở bên bạn"
+      }
+    },
+    {
+      "ko": "내년에도 같이 축하해요",
+      "roman": "naenyeonedo gachi chukahaeyo",
+      "context": "Let's celebrate together next year too",
+      "tags": ["birthday", "fandom"],
+      "translations": {
+        "en": "Let's celebrate together next year too",
+        "id": "Tahun depan juga mari rayakan bersama",
+        "th": "ปีหน้าก็ฉลองด้วยกันนะ",
+        "pt": "Vamos comemorar juntos no ano que vem também",
+        "es": "Celebremos juntos el próximo año también",
+        "vi": "Năm sau cũng cùng nhau chúc mừng nhé"
+      }
+    }
+  ]
+}

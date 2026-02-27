@@ -1,0 +1,288 @@
+{
+  "id": "daily_pack",
+  "name": "Daily Expressions",
+  "name_ko": "일상 표현",
+  "is_free": true,
+  "phrases": [
+    {
+      "ko": "안녕하세요",
+      "roman": "annyeonghaseyo",
+      "context": "Hello, standard polite greeting",
+      "tags": ["greeting", "daily"],
+      "translations": {
+        "en": "Hello",
+        "id": "Halo",
+        "th": "สวัสดีค่ะ/ครับ",
+        "pt": "Olá",
+        "es": "Hola",
+        "vi": "Xin chào"
+      }
+    },
+    {
+      "ko": "잘 자요",
+      "roman": "jal jayo",
+      "context": "Good night, casual polite",
+      "tags": ["greeting", "daily"],
+      "translations": {
+        "en": "Good night",
+        "id": "Selamat tidur",
+        "th": "ราตรีสวัสดิ์",
+        "pt": "Boa noite",
+        "es": "Buenas noches",
+        "vi": "Ngủ ngon nhé"
+      }
+    },
+    {
+      "ko": "좋은 아침이에요",
+      "roman": "joeun achimieyo",
+      "context": "Good morning, polite form",
+      "tags": ["greeting", "daily"],
+      "translations": {
+        "en": "Good morning",
+        "id": "Selamat pagi",
+        "th": "สวัสดีตอนเช้า",
+        "pt": "Bom dia",
+        "es": "Buenos días",
+        "vi": "Chào buổi sáng"
+      }
+    },
+    {
+      "ko": "밥 먹었어요?",
+      "roman": "bap meogeosseoyo?",
+      "context": "Have you eaten? Korean way of showing care",
+      "tags": ["greeting", "daily"],
+      "translations": {
+        "en": "Have you eaten?",
+        "id": "Sudah makan?",
+        "th": "กินข้าวหรือยัง?",
+        "pt": "Já comeu?",
+        "es": "¿Ya comiste?",
+        "vi": "Ăn cơm chưa?"
+      }
+    },
+    {
+      "ko": "오늘 뭐 했어요?",
+      "roman": "oneul mwo haesseoyo?",
+      "context": "What did you do today?",
+      "tags": ["daily"],
+      "translations": {
+        "en": "What did you do today?",
+        "id": "Hari ini ngapain?",
+        "th": "วันนี้ทำอะไรบ้าง?",
+        "pt": "O que você fez hoje?",
+        "es": "¿Qué hiciste hoy?",
+        "vi": "Hôm nay làm gì vậy?"
+      }
+    },
+    {
+      "ko": "좋은 하루 보내세요",
+      "roman": "joeun haru bonaeseyo",
+      "context": "Have a good day",
+      "tags": ["greeting", "daily"],
+      "translations": {
+        "en": "Have a good day",
+        "id": "Semoga harimu menyenangkan",
+        "th": "ขอให้เป็นวันที่ดีนะ",
+        "pt": "Tenha um bom dia",
+        "es": "Que tengas un buen día",
+        "vi": "Chúc một ngày tốt lành"
+      }
+    },
+    {
+      "ko": "오늘도 수고했어요",
+      "roman": "oneuldo sugohaesseoyo",
+      "context": "You worked hard today too, daily encouragement",
+      "tags": ["daily", "cheer"],
+      "translations": {
+        "en": "You worked hard today too",
+        "id": "Hari ini juga kerja keras ya",
+        "th": "วันนี้ก็เหนื่อยมากนะ",
+        "pt": "Hoje também se esforçou muito",
+        "es": "Hoy también te esforzaste mucho",
+        "vi": "Hôm nay cũng vất vả rồi"
+      }
+    },
+    {
+      "ko": "맛있게 드세요",
+      "roman": "masitge deuseyo",
+      "context": "Enjoy your meal, polite form",
+      "tags": ["daily"],
+      "translations": {
+        "en": "Enjoy your meal",
+        "id": "Selamat makan",
+        "th": "ทานให้อร่อยนะ",
+        "pt": "Bom apetite",
+        "es": "Buen provecho",
+        "vi": "Ăn ngon nhé"
+      }
+    },
+    {
+      "ko": "기분이 어때요?",
+      "roman": "gibuni eottaeyo?",
+      "context": "How are you feeling?",
+      "tags": ["daily", "emotional"],
+      "translations": {
+        "en": "How are you feeling?",
+        "id": "Bagaimana perasaanmu?",
+        "th": "รู้สึกยังไงบ้าง?",
+        "pt": "Como você está se sentindo?",
+        "es": "¿Cómo te sientes?",
+        "vi": "Cảm thấy thế nào?"
+      }
+    },
+    {
+      "ko": "푹 쉬세요",
+      "roman": "puk swiseyo",
+      "context": "Rest well, caring expression",
+      "tags": ["daily", "love"],
+      "translations": {
+        "en": "Rest well",
+        "id": "Istirahat yang cukup ya",
+        "th": "พักผ่อนให้เต็มที่นะ",
+        "pt": "Descanse bastante",
+        "es": "Descansa bien",
+        "vi": "Nghỉ ngơi cho đầy đủ nhé"
+      }
+    },
+    {
+      "ko": "오늘 날씨가 좋아요",
+      "roman": "oneul nalssiga joayo",
+      "context": "The weather is nice today, casual conversation",
+      "tags": ["daily"],
+      "translations": {
+        "en": "The weather is nice today",
+        "id": "Cuacanya bagus hari ini",
+        "th": "วันนี้อากาศดีนะ",
+        "pt": "O tempo está bom hoje",
+        "es": "El clima está lindo hoy",
+        "vi": "Hôm nay thời tiết đẹp quá"
+      }
+    },
+    {
+      "ko": "오늘 기분 좋아 보여요",
+      "roman": "oneul gibun joa boyeoyo",
+      "context": "You look like you're in a good mood today",
+      "tags": ["daily", "praise"],
+      "translations": {
+        "en": "You look like you're in a good mood today",
+        "id": "Kamu terlihat senang hari ini",
+        "th": "วันนี้ดูอารมณ์ดีนะ",
+        "pt": "Você parece estar de bom humor hoje",
+        "es": "Pareces estar de buen humor hoy",
+        "vi": "Hôm nay trông vui quá"
+      }
+    },
+    {
+      "ko": "재미있었어요",
+      "roman": "jaemiisseosseoyo",
+      "context": "It was fun, reaction to content/vlive",
+      "tags": ["daily"],
+      "translations": {
+        "en": "It was fun",
+        "id": "Seru banget",
+        "th": "สนุกมากเลย",
+        "pt": "Foi divertido",
+        "es": "Fue divertido",
+        "vi": "Vui lắm"
+      }
+    },
+    {
+      "ko": "조심히 다녀오세요",
+      "roman": "josimhi danyeooseyo",
+      "context": "Have a safe trip, said before someone goes out",
+      "tags": ["daily", "love"],
+      "translations": {
+        "en": "Have a safe trip",
+        "id": "Hati-hati di jalan",
+        "th": "ระวังตัวด้วยนะ",
+        "pt": "Vá com cuidado",
+        "es": "Ve con cuidado",
+        "vi": "Đi cẩn thận nhé"
+      }
+    },
+    {
+      "ko": "기다리고 있을게요",
+      "roman": "gidarigo isseulgeyo",
+      "context": "I'll be waiting, fan patience expression",
+      "tags": ["daily", "love"],
+      "translations": {
+        "en": "I'll be waiting",
+        "id": "Aku akan menunggu",
+        "th": "จะรออยู่นะ",
+        "pt": "Vou estar esperando",
+        "es": "Estaré esperando",
+        "vi": "Sẽ đợi bạn"
+      }
+    },
+    {
+      "ko": "오늘도 고생했어요",
+      "roman": "oneuldo gosaenghaesseoyo",
+      "context": "You had a hard day today too, empathy",
+      "tags": ["daily", "cheer"],
+      "translations": {
+        "en": "You had a tough day today too",
+        "id": "Hari ini juga capek ya",
+        "th": "วันนี้ก็ลำบากมากนะ",
+        "pt": "Hoje também foi difícil",
+        "es": "Hoy también fue un día duro",
+        "vi": "Hôm nay cũng mệt rồi nhỉ"
+      }
+    },
+    {
+      "ko": "행복한 하루 되세요",
+      "roman": "haengbokan haru doeseyo",
+      "context": "Have a happy day",
+      "tags": ["greeting", "daily"],
+      "translations": {
+        "en": "Have a happy day",
+        "id": "Semoga hari ini menyenangkan",
+        "th": "ขอให้เป็นวันที่มีความสุข",
+        "pt": "Tenha um dia feliz",
+        "es": "Que tengas un día feliz",
+        "vi": "Chúc một ngày vui vẻ"
+      }
+    },
+    {
+      "ko": "감사합니다",
+      "roman": "gamsahamnida",
+      "context": "Thank you, formal polite",
+      "tags": ["daily", "greeting"],
+      "translations": {
+        "en": "Thank you (formal)",
+        "id": "Terima kasih (formal)",
+        "th": "ขอบคุณค่ะ/ครับ",
+        "pt": "Obrigado(a) (formal)",
+        "es": "Gracias (formal)",
+        "vi": "Cảm ơn ạ"
+      }
+    },
+    {
+      "ko": "또 만나요",
+      "roman": "tto mannayo",
+      "context": "See you again, casual farewell",
+      "tags": ["greeting", "daily"],
+      "translations": {
+        "en": "See you again",
+        "id": "Sampai jumpa lagi",
+        "th": "แล้วเจอกันใหม่",
+        "pt": "Até mais",
+        "es": "Hasta la próxima",
+        "vi": "Hẹn gặp lại"
+      }
+    },
+    {
+      "ko": "내일 봐요",
+      "roman": "naeil bwayo",
+      "context": "See you tomorrow",
+      "tags": ["greeting", "daily"],
+      "translations": {
+        "en": "See you tomorrow",
+        "id": "Sampai besok",
+        "th": "พรุ่งนี้เจอกัน",
+        "pt": "Até amanhã",
+        "es": "Hasta mañana",
+        "vi": "Mai gặp nhé"
+      }
+    }
+  ]
+}

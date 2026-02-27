@@ -1,6 +1,6 @@
 # Fangeul — Hard Rules (위반 금지)
 
-> CLAUDE.md가 마스터 문서. 이 파일은 절대 위반하면 안 되는 규칙만 모은 가드레일.
+> 절대 위반하면 안 되는 가드레일. 코드 스타일/패턴은 `01-code-conventions.md` 참조.
 
 ## 절대 금지 (DO NOT)
 - `setState()` 사용 금지 → Riverpod Provider만
@@ -22,23 +22,13 @@ core/         → data/  ❌
 core/         → presentation/ ❌
 ```
 
-## Provider 규칙
+## Riverpod 규칙
 - `ref.watch` → `build()` 메서드에서만
 - `ref.read` → 이벤트 핸들러에서만
 - State는 freezed sealed class (initial/loading/success/error)
 
-## 파일 규칙
-- 한 파일에 하나의 public 클래스
-- 모든 public 클래스/메서드에 dartdoc (`///`) 필수
-- import 순서: Dart SDK → Flutter SDK → 외부 패키지 → 프로젝트 내부
-
-## 테스트
-- `core/engines/` 유닛 테스트 100% 커버리지
-- 네이밍: `'should [동작] when [조건]'`
-- `mocktail` 사용 (mockito 아님)
-
-## 커밋
-- `feat:` / `fix:` / `test:` / `refactor:` / `docs:` / `chore:` 접두사
+## 읽지 않는 디렉토리
+- `docs/raw-transcripts/` — 대화 원본 아카이브. 참조하지 않음. 정리본은 `docs/discussions/`.
 
 ## 플랫폼
 - Android only (minSdk 26, targetSdk 34)

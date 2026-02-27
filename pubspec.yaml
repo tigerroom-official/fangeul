@@ -23,6 +23,10 @@ dependencies:
 
   # 로컬 저장소
   shared_preferences: ^2.3.3
+  flutter_secure_storage: ^9.2.2
+
+  # 암호화
+  crypto: ^3.0.3
 
   # 유틸리티
   path_provider: ^2.1.4
