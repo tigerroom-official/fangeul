@@ -55,4 +55,23 @@ abstract final class UiStrings {
 
   // 기본 번역 언어
   static const defaultTranslationLang = 'en';
+
+  // 플로팅 버블
+  static const bubbleLabel = '플로팅 버블';
+  static const bubbleDescription = '앱 밖에서도 변환기를 사용합니다';
+  static const bubblePermissionTitle = '오버레이 권한 필요';
+  static const bubblePermissionMessage =
+      '플로팅 버블을 표시하려면 다른 앱 위에 표시 권한이 필요합니다.';
+  static const bubblePermissionAllow = '허용';
+  static const bubblePermissionDeny = '취소';
+  static const bubblePermissionDenied = '앱 내에서도 모든 기능을 사용할 수 있습니다';
+
+  // 미니 변환기
+  static const miniConverterTitle = 'Fangeul';
+  static const miniTabFavorites = '즐겨찾기';
+  static const miniTabRecent = '최근';
+  static const miniOpenConverter = '변환기 열기';
+  static const miniBackToCompact = '간편모드';
+  static const miniFavoritesEmpty = '문구 화면에서 ⭐ 탭하여\n즐겨찾기를 추가하세요';
+  static const miniRecentEmpty = '아직 복사한 텍스트가 없습니다';
 }
