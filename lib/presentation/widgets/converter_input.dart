@@ -17,6 +17,7 @@ class ConverterInput extends StatelessWidget {
     required this.output,
     required this.hintText,
     required this.onClear,
+    this.onCopied,
   });
 
   /// 입력 필드 컨트롤러.
@@ -30,6 +31,12 @@ class ConverterInput extends StatelessWidget {
 
   /// 지우기 콜백. 부모의 버퍼 + 컨트롤러 + 변환 상태를 모두 초기화한다.
   final VoidCallback onClear;
+
+  /// 복사 완료 콜백. 클립보드에 텍스트가 복사된 뒤 호출된다.
+  ///
+  /// MiniConverterScreen 등에서 복사 이력(copy history)을 추적할 때 사용한다.
+  /// `null`이면 아무 동작도 하지 않는다(기존 호출부 호환).
+  final void Function(String text)? onCopied;
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +86,7 @@ class ConverterInput extends StatelessWidget {
                     IconButton(
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: output));
+                        onCopied?.call(output);
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text(UiStrings.copied)),
                         );
