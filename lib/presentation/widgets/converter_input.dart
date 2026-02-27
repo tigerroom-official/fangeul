@@ -4,10 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/theme/fangeul_text_styles.dart';
 
-/// 변환기 입출력 위젯 -- 입력 TextField + 결과 표시.
+/// 변환기 입출력 위젯 -- 읽기 전용 TextField + 결과 표시.
 ///
-/// 입력값이 변경되면 [onChanged] 콜백을 통해 부모에게 전달하고,
-/// [output]으로 변환 결과를 표시한다.
+/// 커스텀 한글 키보드와 함께 사용되므로 시스템 키보드를 띄우지 않는다.
+/// [readOnly]가 true이고, 텍스트 입력은 부모가 [controller]를 통해 직접 제어한다.
+/// 지우기 버튼은 [onClear] 콜백을 호출하여 부모의 버퍼까지 함께 초기화한다.
 class ConverterInput extends StatelessWidget {
   /// Creates the [ConverterInput] widget.
   const ConverterInput({
@@ -15,7 +16,7 @@ class ConverterInput extends StatelessWidget {
     required this.controller,
     required this.output,
     required this.hintText,
-    required this.onChanged,
+    required this.onClear,
   });
 
   /// 입력 필드 컨트롤러.
@@ -27,8 +28,8 @@ class ConverterInput extends StatelessWidget {
   /// 입력 필드 힌트.
   final String hintText;
 
-  /// 텍스트 변경 콜백.
-  final ValueChanged<String> onChanged;
+  /// 지우기 콜백. 부모의 버퍼 + 컨트롤러 + 변환 상태를 모두 초기화한다.
+  final VoidCallback onClear;
 
   @override
   Widget build(BuildContext context) {
@@ -37,20 +38,18 @@ class ConverterInput extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // 입력 필드
+        // 입력 필드 (읽기 전용 — 시스템 키보드 숨김)
         TextField(
           controller: controller,
-          onChanged: onChanged,
+          readOnly: true,
+          showCursor: true,
           style: theme.textTheme.bodyLarge,
           decoration: InputDecoration(
             hintText: hintText,
             suffixIcon: controller.text.isNotEmpty
                 ? IconButton(
                     icon: const Icon(Icons.clear),
-                    onPressed: () {
-                      controller.clear();
-                      onChanged('');
-                    },
+                    onPressed: onClear,
                   )
                 : null,
           ),
