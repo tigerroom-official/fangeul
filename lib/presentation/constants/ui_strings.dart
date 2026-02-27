@@ -50,6 +50,9 @@ abstract final class UiStrings {
   static const tagBirthday = '생일';
   static const tagComeback = '컴백';
 
+  // 키보드
+  static const keyboardSpace = 'Space';
+
   // 기본 번역 언어
   static const defaultTranslationLang = 'en';
 }
