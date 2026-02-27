@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:fangeul/presentation/providers/phrase_providers.dart';
 import 'package:fangeul/presentation/providers/progress_providers.dart';
 import 'package:fangeul/presentation/widgets/daily_card_widget.dart';
+import 'package:fangeul/presentation/widgets/share_card_painter.dart';
 import 'package:fangeul/presentation/widgets/streak_banner.dart';
 
 /// 홈 화면 -- 데일리 카드 + 스트릭.
@@ -66,9 +67,11 @@ class HomeScreen extends ConsumerWidget {
                   isCompleted: isCompleted,
                   onComplete:
                       isCompleted ? null : () => _completeDailyCard(ref),
-                  onShare: () {
-                    // TODO(fangeul): Task 11에서 공유 카드 구현
-                  },
+                  onShare: () => shareCard(
+                    card: card,
+                    isDark: Theme.of(context).brightness == Brightness.dark,
+                    translationLang: 'en',
+                  ),
                 );
               },
               loading: () =>
