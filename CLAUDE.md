@@ -53,6 +53,6 @@ dart format --set-exit-if-changed .  # 포맷 검증
 | `docs/HANDOFF.md` | 세션 핸드오프 (최신 작업 상태) |
 
 ## 현재 작업 상태
-> 마지막 핸드오프: 2026-02-27
+> 마지막 핸드오프: 2026-02-28 02:52
 > 상세: `docs/HANDOFF.md` 참조
-> 요약: Phase 4 UI 레이어 전체 구현 완료. 151개 테스트 pass. 다음: Phase 4.5 변환기 UX 개선 또는 Phase 5 플로팅 버블.
+> 요약: 커스텀 키보드 + Romanizer 버그 수정 + 문서 정리 완료. 179개 테스트 pass. 다음: 플로팅 버블 수익화 패널 토론 → Phase 5 버블 구현.
