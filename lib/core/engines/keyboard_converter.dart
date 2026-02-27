@@ -59,7 +59,7 @@ class KeyboardConverter {
       }
     }
 
-    return _assembleJamos(jamos);
+    return assembleJamos(jamos);
   }
 
   /// 한글 입력을 영문으로 변환한다.
@@ -105,7 +105,14 @@ class KeyboardConverter {
 
   // ── 자모 → 음절 조합 FSM ──
 
-  static String _assembleJamos(List<String> jamos) {
+  /// 자모 리스트를 한글 음절로 조합한다.
+  ///
+  /// 두벌식 표준 자판의 FSM 기반 조합 알고리즘.
+  /// [jamos]에 초성·중성·종성 자모를 순서대로 전달하면
+  /// 복합모음, 겹받침, 음절 경계를 자동 처리하여 조합된 한글을 반환한다.
+  ///
+  /// 비자모 문자(공백, 숫자 등)는 그대로 통과한다.
+  static String assembleJamos(List<String> jamos) {
     final buffer = StringBuffer();
     var i = 0;
 

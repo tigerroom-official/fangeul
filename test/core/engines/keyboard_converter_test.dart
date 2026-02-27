@@ -123,6 +123,74 @@ void main() {
     });
   });
 
+  group('assembleJamos', () {
+    test('should compose basic syllable from jamo list', () {
+      expect(
+        KeyboardConverter.assembleJamos(['ㅎ', 'ㅏ', 'ㄴ']),
+        '한',
+      );
+    });
+
+    test('should compose multiple syllables', () {
+      expect(
+        KeyboardConverter.assembleJamos(
+            ['ㅎ', 'ㅏ', 'ㄴ', 'ㄱ', 'ㅡ', 'ㄹ']),
+        '한글',
+      );
+    });
+
+    test('should handle compound vowel', () {
+      expect(
+        KeyboardConverter.assembleJamos(['ㅎ', 'ㅗ', 'ㅏ']),
+        '화',
+      );
+    });
+
+    test('should handle double final', () {
+      expect(
+        KeyboardConverter.assembleJamos(['ㄱ', 'ㅏ', 'ㄹ', 'ㄱ']),
+        '갉',
+      );
+    });
+
+    test('should split double final when followed by vowel', () {
+      expect(
+        KeyboardConverter.assembleJamos(['ㄱ', 'ㅏ', 'ㄹ', 'ㄱ', 'ㅏ']),
+        '갈가',
+      );
+    });
+
+    test('should handle standalone consonant', () {
+      expect(
+        KeyboardConverter.assembleJamos(['ㄱ']),
+        'ㄱ',
+      );
+    });
+
+    test('should handle standalone vowel', () {
+      expect(
+        KeyboardConverter.assembleJamos(['ㅏ']),
+        'ㅏ',
+      );
+    });
+
+    test('should pass through non-jamo characters', () {
+      expect(
+        KeyboardConverter.assembleJamos(
+            ['ㅎ', 'ㅏ', 'ㄴ', ' ', 'ㄱ', 'ㅡ', 'ㄹ']),
+        '한 글',
+      );
+    });
+
+    test('should handle consonant that cannot be final', () {
+      // ㄸ은 종성이 될 수 없음
+      expect(
+        KeyboardConverter.assembleJamos(['ㄱ', 'ㅏ', 'ㄸ', 'ㅏ']),
+        '가따',
+      );
+    });
+  });
+
   group('KeyboardConverter round-trip', () {
     test('should round-trip eng→kor→eng', () {
       const original = 'gksrmf';
