@@ -78,6 +78,27 @@ sealed class ConverterState with _$ConverterState {
 - 발음 규칙별 최소 3개 이상 테스트 케이스. 규칙 중첩 케이스 포함.
 - Provider 테스트: `ProviderContainer` 격리 테스트
 
+## 보안 패턴
+
+### HMAC 서명 (게임/보상 상태 저장)
+
+```dart
+// 저장 시
+final data = jsonEncode({'streak': 15, 'cards': [...]});
+final hmac = Hmac(sha256, appKey).convert(utf8.encode(data));
+await secureStorage.write(key: 'game_state', value: data);
+await secureStorage.write(key: 'game_state_sig', value: hmac.toString());
+
+// 로드 시: 서명 불일치 → 데이터 변조 감지 → 초기화
+```
+
+### 솔트+해시 일일 인덱스 (예측 불가능한 데일리 선택)
+
+```dart
+final seed = sha256.convert(utf8.encode('fangeul_daily_${dateString}_$appSecret'));
+final index = seed.bytes.fold<int>(0, (a, b) => a ^ b).abs() % pool.length;
+```
+
 ## 커밋 컨벤션
 
 ```

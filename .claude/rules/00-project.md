@@ -12,7 +12,9 @@
 - 하드코딩 문자열 금지 → JSON 또는 상수 파일
 - 테스트 없이 `core/engines/` 코드 수정 금지
 - `any`, `dynamic` 타입 최소화
-- MVP에서 SQLite/Hive 사용 금지 → shared_preferences만
+- MVP에서 SQLite/Hive 사용 금지
+- 앱 설정: `shared_preferences` 사용
+- 게임/보상 상태: `flutter_secure_storage` + HMAC 필수 (§보안 참조)
 
 ## 의존성 방향
 ```
@@ -29,6 +31,24 @@ core/         → presentation/ ❌
 
 ## 읽지 않는 디렉토리
 - `docs/raw-transcripts/` — 대화 원본 아카이브. 참조하지 않음. 정리본은 `docs/discussions/`.
+
+## 법적/IP 제한 (위반 시 DMCA/소송 리스크)
+- 가사 표시 금지 → KOMCA 저작권 라이선스 필요, 로열티 정산 의무
+- 아이돌 이름/이미지/로고 직접 사용 금지 → 초상권 + 상표권
+- 팬덤명 직접 사용 금지 (ARMY, BLINK 등) → 일부 상표 등록됨
+- 대안: 컬러 테마로 우회 ("퍼플 드림", "민트 프레시" 등)
+- 앱 메인 액센트에 특정 K-pop 그룹 공식 컬러 사용 금지 (팬덤 편향 방지)
+
+## 보안 & 어뷰징 방어
+- 게임/보상 상태는 `flutter_secure_storage` + HMAC-SHA256 서명 필수
+- 서명 불일치 시 데이터 초기화 (변조 감지)
+- 시간 기반 보상: 단조증가 타임스탬프 검증 필수
+- 보상형 광고: 중복 지급 방지 + 5분 쿨다운 + 하루 10회 제한
+- 상세 위협 모델/방어 전략: `docs/fangeul-future-reference.md` §2 참조
+
+## 광고 정책
+- 퍼즐/게임 플레이 중 배너 광고 표시 금지 (UX 최우선)
+- 배너: 결과 화면, 카드 획득 화면, 캘린더 하단만
 
 ## 플랫폼
 - Android only (minSdk 26, targetSdk 34)

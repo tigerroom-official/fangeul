@@ -58,7 +58,7 @@ Phase 4 UI 레이어 전체 구현 완료. 디자인 시스템(컬러/텍스트/
 ### P1: Phase 5 — 플로팅 버블 + 한글 키패드
 - Platform Channel (Kotlin): `com.tigerroom.fangeul/floating_bubble`
 - 커스텀 한글 키패드 UI (버블 오버레이 위)
-- 참조: `docs/fangeul-product-spec.md`
+- 참조: `docs/fangeul-future-reference.md` §1.1
 
 ### P2: 누락 기능 (Phase 4 리뷰에서 발견)
 - Quick access chips (홈 화면)
@@ -118,11 +118,10 @@ bfea2a5 feat: 한글 엔진 자모 분해/조합 구현 (TDD)
 
 | 문서 | 경로 |
 |------|------|
-| 전체 기획서 | `docs/fangeul-product-spec.md` |
+| 통합 참조 문서 | `docs/fangeul-future-reference.md` |
 | Phase 4 설계서 | `docs/plans/2026-02-27-phase4-ui-design.md` |
 | Phase 4 구현 계획 | `docs/plans/2026-02-27-phase4-ui-implementation.md` |
 | 비주얼 정체성 토론 | `docs/discussions/2026-02-27-visual-identity.md` |
-| 엔진 가이드 | `docs/engine-guide.md` |
 
 ---
 

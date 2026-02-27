@@ -20,7 +20,7 @@ lib/
 
 ## 데이터 관리
 
-- 문구: `assets/phrases/*.json` (스키마 → `docs/fangeul-product-spec.md` 6.3절)
+- 문구: `assets/phrases/*.json` (스키마 → `docs/fangeul-future-reference.md` §1.4)
 - TTS: `assets/audio/*.mp3` + Cloudflare R2 캐싱, `just_audio` 재생
 - 로컬 저장소: `shared_preferences`만 (SQLite/Hive 금지)
 
@@ -48,8 +48,7 @@ dart format --set-exit-if-changed .  # 포맷 검증
 
 | 문서 | 내용 |
 |------|------|
-| `docs/fangeul-product-spec.md` | 전체 기획서, 매핑 테이블, 발음 규칙, JSON 스키마 |
-| `docs/engine-guide.md` | 엔진 구현 상세 가이드 |
+| `docs/fangeul-future-reference.md` | 미구현 스펙(버블, TTS), 보안, 수익화, KPI, 로드맵 |
 | `docs/plans/` | Phase별 구현 계획서 |
 | `docs/HANDOFF.md` | 세션 핸드오프 (최신 작업 상태) |
 
