@@ -1,7 +1,7 @@
 name: fangeul
-description: "fangeul project."
+description: "Korean utility app for K-pop fans — Hangul keypad, keyboard converter, romanizer, fan phrases."
 publish_to: 'none'
-version: 0.1.0
+version: 0.1.0+1
 
 environment:
   sdk: ^3.6.0
@@ -10,10 +10,43 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # 상태관리
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  # Immutable 모델
+  freezed_annotation: ^2.4.4
+  json_annotation: ^4.9.0
+
+  # 오디오 재생
+  just_audio: ^0.9.40
+
+  # 로컬 저장소
+  shared_preferences: ^2.3.3
+
+  # 유틸리티
+  path_provider: ^2.1.4
+  http: ^1.2.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  # 코드 생성
+  build_runner: ^2.4.13
+  riverpod_generator: ^2.6.2
+  freezed: ^2.5.7
+  json_serializable: ^6.8.0
+
+  # 린트
   flutter_lints: ^5.0.0
+
+  # 테스트
+  mocktail: ^1.0.4
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/phrases/
+    - assets/audio/
