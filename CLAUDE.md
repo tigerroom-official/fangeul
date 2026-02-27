@@ -28,7 +28,7 @@ lib/
 
 ```
 Phase 1: 셋업 ✅ | Phase 2: Core 엔진 ✅ | Phase 3: 데이터 레이어 ✅
-Phase 4: UI     | Phase 5: 버블       | Phase 6: 수익화 | Phase 7: 릴리즈
+Phase 4: UI ✅   | Phase 5: 버블       | Phase 6: 수익화 | Phase 7: 릴리즈
 ```
 
 ## 검증 명령어
@@ -51,3 +51,9 @@ dart format --set-exit-if-changed .  # 포맷 검증
 | `docs/fangeul-product-spec.md` | 전체 기획서, 매핑 테이블, 발음 규칙, JSON 스키마 |
 | `docs/engine-guide.md` | 엔진 구현 상세 가이드 |
 | `docs/plans/` | Phase별 구현 계획서 |
+| `docs/HANDOFF.md` | 세션 핸드오프 (최신 작업 상태) |
+
+## 현재 작업 상태
+> 마지막 핸드오프: 2026-02-27
+> 상세: `docs/HANDOFF.md` 참조
+> 요약: Phase 4 UI 레이어 전체 구현 완료. 151개 테스트 pass. 다음: Phase 4.5 변환기 UX 개선 또는 Phase 5 플로팅 버블.
