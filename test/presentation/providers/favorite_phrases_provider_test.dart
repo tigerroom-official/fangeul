@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -54,6 +56,46 @@ void main() {
       final favorites = container.read(favoritePhrasesNotifierProvider);
       expect(favorites, hasLength(3));
       expect(favorites, containsAll(['사랑해요', '화이팅', '보고싶어']));
+    });
+
+    group('persistence', () {
+      test('should load saved favorites on build', () async {
+        SharedPreferences.setMockInitialValues({
+          'favorite_phrases': jsonEncode(['사랑해요', '화이팅']),
+        });
+        final c = ProviderContainer();
+        addTearDown(c.dispose);
+
+        // listen()으로 auto-dispose 방지
+        c.listen(favoritePhrasesNotifierProvider, (_, __) {});
+        // microtask 대기 — async _loadFromPrefs 완료
+        await Future<void>.delayed(Duration.zero);
+
+        final favorites = c.read(favoritePhrasesNotifierProvider);
+        expect(favorites, containsAll(['사랑해요', '화이팅']));
+        expect(favorites, hasLength(2));
+      });
+
+      test('should merge loaded data with in-flight toggles', () async {
+        SharedPreferences.setMockInitialValues({
+          'favorite_phrases': jsonEncode(['사랑해요']),
+        });
+        final c = ProviderContainer();
+        addTearDown(c.dispose);
+
+        c.listen(favoritePhrasesNotifierProvider, (_, __) {});
+
+        // 로드 완료 전에 toggle 호출
+        final notifier = c.read(favoritePhrasesNotifierProvider.notifier);
+        notifier.toggle('화이팅');
+
+        // 로드 완료 대기
+        await Future<void>.delayed(Duration.zero);
+
+        final favorites = c.read(favoritePhrasesNotifierProvider);
+        // 저장된 '사랑해요' + 새로 추가된 '화이팅' 모두 존재해야 함
+        expect(favorites, containsAll(['사랑해요', '화이팅']));
+      });
     });
   });
 }

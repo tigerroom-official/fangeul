@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -13,9 +14,12 @@ part 'favorite_phrases_provider.g.dart';
 class FavoritePhrasesNotifier extends _$FavoritePhrasesNotifier {
   static const _key = 'favorite_phrases';
 
+  /// 초기 로드 완료 future. save가 로드 완료 후에만 실행되도록 게이트 역할.
+  late final Future<void> _loaded;
+
   @override
   Set<String> build() {
-    _loadFromPrefs();
+    _loaded = _loadFromPrefs();
     return {};
   }
 
@@ -38,12 +42,15 @@ class FavoritePhrasesNotifier extends _$FavoritePhrasesNotifier {
     final prefs = await SharedPreferences.getInstance();
     final json = prefs.getString(_key);
     if (json != null) {
-      final list = (jsonDecode(json) as List).cast<String>();
-      state = list.toSet();
+      final saved = (jsonDecode(json) as List).cast<String>().toSet();
+      // merge: 저장된 데이터 + 로드 중 발생한 mutation 보존
+      state = {...saved, ...state};
     }
   }
 
   Future<void> _saveToPrefs() async {
+    // 로드 완료 대기 — 로드 전 save가 원본 데이터를 덮어쓰는 것을 방지
+    await _loaded;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_key, jsonEncode(state.toList()));
   }
