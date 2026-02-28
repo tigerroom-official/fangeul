@@ -61,9 +61,8 @@ class CopyHistoryNotifier extends _$CopyHistoryNotifier {
           merged.add(item);
         }
       }
-      state = merged.length > _maxEntries
-          ? merged.sublist(0, _maxEntries)
-          : merged;
+      state =
+          merged.length > _maxEntries ? merged.sublist(0, _maxEntries) : merged;
     }
   }
 
