@@ -7,6 +7,7 @@ import 'package:fangeul/core/engines/keyboard_converter.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/converter_providers.dart';
 import 'package:fangeul/presentation/providers/copy_history_provider.dart';
+import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
 import 'package:fangeul/presentation/widgets/compact_phrase_list.dart';
 import 'package:fangeul/presentation/widgets/converter_input.dart';
 import 'package:fangeul/presentation/widgets/korean_keyboard.dart';
@@ -31,7 +32,7 @@ class MiniConverterScreen extends ConsumerStatefulWidget {
 }
 
 class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   late final TabController _compactTabController;
   late final TabController _converterTabController;
   final _textController = TextEditingController();
@@ -56,6 +57,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _compactTabController = TabController(length: 2, vsync: this);
     _converterTabController = TabController(length: 3, vsync: this);
     _converterTabController.addListener(_onConverterTabChanged);
@@ -63,11 +65,21 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _compactTabController.dispose();
     _converterTabController.removeListener(_onConverterTabChanged);
     _converterTabController.dispose();
     _textController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // 별도 엔진이므로 메인 앱에서 변경된 데이터를 다시 로드
+      ref.invalidate(favoritePhrasesNotifierProvider);
+      ref.invalidate(copyHistoryNotifierProvider);
+    }
   }
 
   void _onConverterTabChanged() {
