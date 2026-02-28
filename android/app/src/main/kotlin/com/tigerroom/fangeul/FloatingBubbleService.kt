@@ -2,7 +2,10 @@ package com.tigerroom.fangeul
 
 import android.animation.ValueAnimator
 import android.app.Service
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import android.graphics.PixelFormat
 import android.graphics.Typeface
@@ -32,6 +35,10 @@ class FloatingBubbleService : Service() {
         private const val CLOSE_ZONE_SIZE_DP = 56
         private const val CLOSE_ZONE_MARGIN_BOTTOM_DP = 80
         private const val TAP_THRESHOLD_PX = 10
+
+        /// 버블 서비스 실행 상태. MainActivity에서 참조.
+        var isRunning: Boolean = false
+            private set
     }
 
     private lateinit var windowManager: WindowManager
@@ -47,6 +54,9 @@ class FloatingBubbleService : Service() {
     private var isDragging = false
     private var isInCloseZone = false
 
+    // 화면 회전 감지
+    private var configReceiver: BroadcastReceiver? = null
+
     // 화면 크기
     private var screenWidth = 0
     private var screenHeight = 0
@@ -57,6 +67,7 @@ class FloatingBubbleService : Service() {
         super.onCreate()
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         updateScreenSize()
+        registerConfigReceiver()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -67,6 +78,8 @@ class FloatingBubbleService : Service() {
             }
             ACTION_HIDE -> {
                 removeBubble()
+                removeCloseZone()
+                isRunning = false
                 BubbleEventBroadcaster.send("off")
                 return START_STICKY
             }
@@ -83,11 +96,15 @@ class FloatingBubbleService : Service() {
             createCloseZoneView()
         }
 
+        isRunning = true
         BubbleEventBroadcaster.send("showing")
         return START_STICKY
     }
 
     override fun onDestroy() {
+        configReceiver?.let { unregisterReceiver(it) }
+        configReceiver = null
+        isRunning = false
         removeBubble()
         removeCloseZone()
         BubbleEventBroadcaster.send("off")
@@ -349,5 +366,22 @@ class FloatingBubbleService : Service() {
         val metrics = resources.displayMetrics
         screenWidth = metrics.widthPixels
         screenHeight = metrics.heightPixels
+    }
+
+    /// 화면 회전 시 screenWidth/screenHeight를 갱신하고 버블을 재스냅한다.
+    private fun registerConfigReceiver() {
+        configReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                val oldWidth = screenWidth
+                updateScreenSize()
+                if (oldWidth != screenWidth) {
+                    snapToEdge()
+                }
+            }
+        }
+        registerReceiver(
+            configReceiver,
+            IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED),
+        )
     }
 }

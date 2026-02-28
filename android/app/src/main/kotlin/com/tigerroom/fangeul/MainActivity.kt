@@ -1,6 +1,5 @@
 package com.tigerroom.fangeul
 
-import android.app.ActivityManager
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -105,10 +104,5 @@ class MainActivity : FlutterActivity() {
     }
 
     /// FloatingBubbleService 실행 여부 확인.
-    private fun isServiceRunning(): Boolean {
-        val manager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
-        @Suppress("DEPRECATION")
-        return manager.getRunningServices(Int.MAX_VALUE)
-            .any { it.service.className == FloatingBubbleService::class.java.name }
-    }
+    private fun isServiceRunning(): Boolean = FloatingBubbleService.isRunning
 }
