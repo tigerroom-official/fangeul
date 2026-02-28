@@ -1,137 +1,127 @@
 # Fangeul — Session Handoff
 
 BASE_COMMIT: c3f7167e2c035827195fdd5a92a74b358bffa862
-HANDOFF_COMMIT: 68b6d796448c87fa042d891cab9273806a876b0d
+HANDOFF_COMMIT: 5934a20
 BRANCH: main
-DATE: 2026-02-28
 
 ---
 
 ## 작업 요약
 
-S4: 플로팅 버블 수익화 전략 패널 토론 (5명 전문가, 5개 토픽 + 심화 3개 쟁점). 감성 컬러 팩 IAP 모델 확정. 수익화 결정사항을 rules + future-reference에 반영. 179개 테스트 pass (코드 변경 없음, 문서 전용 세션).
-
----
+Phase 5 플로팅 버블 구현 완료 후, Claude+Codex 통합 코드 리뷰를 수행하고
+CRITICAL 3건 + HIGH 4건 이슈를 수정했다. 215개 테스트 전체 통과.
 
 ## 완료된 작업
 
-- [x] Phase 1: 프로젝트 셋업 (`96e072a`)
-- [x] Phase 2: Core 엔진 (`bfea2a5`~`7317083`)
-- [x] Phase 3: 데이터 레이어 (`807bc3a`)
-- [x] Phase 4: UI 레이어 (`6dab1ab`~`a03e6c9`)
-- [x] Phase 4.5: 커스텀 한글 키보드 + Romanizer 수정 + 문서 정리 (`5d510ed`~`c3f7167`)
-- [x] 플로팅 버블 수익화 패널 토론 (`68b6d79`)
-  - [x] 5명 전문가 × 5개 토픽 토론 (버블 게이팅, 보상형 광고, 구독/가격, 배너, 전환 퍼널)
-  - [x] 심화 토론 3개 쟁점 (MVP=IAP, 해금시간=4h, 감성 컬러 팩 IP 안전 구조)
-  - [x] 토론 기록 저장 `docs/discussions/2026-02-28-bubble-monetization.md`
-  - [x] 수익화 규칙 `.claude/rules/00-project.md` 반영
-  - [x] `docs/fangeul-future-reference.md` §3.1 수익 구조 업데이트
-
----
+- [x] Phase 5 플로팅 버블 전체 구현 (16 tasks) — `86b39a0`~`15a0260`
+- [x] 코드 리뷰: Claude 자체 리뷰 + Codex GPT-5.3 독립 리뷰 + 에뮬레이터 앱 테스트
+- [x] **C1** GoRouter + setInitialRoute 충돌 수정 — `d263360`
+  - `app_router.dart`: `PlatformDispatcher.defaultRouteName` 읽어 미니 엔진 → `/mini-converter` 라우팅
+- [x] **C2** MiniConverterActivity `super.configureFlutterEngine()` 추가 — `d263360`
+- [x] **C3** PhraseCard 즐겨찾기 토글 버튼 추가 — `d263360`
+  - `phrase_card.dart`: StatelessWidget → ConsumerWidget, 별 아이콘 + FavoritePhrasesNotifier 연동
+- [x] **H1** EventChannel 구현 — `5934a20`
+  - `BubbleEventBroadcaster.kt` (싱글턴), `FloatingBubbleService` → send(), `floating_bubble_channel.dart` stateStream
+- [x] **H2** MiniConverterActivity 엔진 캐시 null 폴백 — `5934a20`
+- [x] **H3** `requestOverlayPermission` → `startActivityForResult` + 권한 복귀 시 자동 버블 표시 — `5934a20`
+- [x] **H4** BubbleNotifier.build()에서 `_syncFromNative()` + `_listenToEvents()` — `5934a20`
+- [x] 리뷰 반영: setState 제거 + 권한 거부 피드백 — `3849f56`
 
 ## 진행 중인 작업
 
-없음. 모든 작업 커밋 완료.
-
----
-
-## 핵심 교훈
-
-- ★ 버블 기본 기능(변환, 키보드, 띄우기)은 전면 무료 — 핵심 엣지를 페이월 뒤에 두면 입소문/성장 차단
-- ★ MVP 수익화 = IAP 단일 (구독은 Phase 7+) — 동남아 신용카드 6~7%, 구독 피로, K-pop 시즌 소비 패턴
-- ★ "감성 컬러 팩" IP 안전 구조: 색상+감성 이름(퍼플 드림, 골든 아워), 아이돌/팬덤명 절대 금지
-- ★ 보상형 광고 "팬 패스": 4시간 해금("4h or 자정 중 빠른 것"), 하루 3회, 보상 프레이밍
-- ★ 전환 퍼널: 7일 무료 → Day 4~ 보상형 → Day 7+ 광고 3회 소진 시 단일 IAP 트리거
-
----
+없음. CRITICAL/HIGH 이슈 모두 수정 완료.
 
 ## 다음 단계
 
-### P0: Phase 5 — 플로팅 버블 구현
-- 스펙: `docs/fangeul-future-reference.md` §1.1
-- Kotlin FloatingBubbleService + Platform Channel
-- SYSTEM_ALERT_WINDOW 권한 플로우
+### 1순위: MEDIUM 이슈 수정 (Phase 5.1)
+- **M1** Provider `build()`에서 async `_loadFromPrefs()` 호출 레이스 컨디션 — `favorite_phrases_provider.dart`, `copy_history_provider.dart`
+- **M3** `ACTION_HIDE`에서 close-zone 오버레이 리크 — `FloatingBubbleService.kt` `removeBubble()` 시 `removeCloseZone()`도 호출
+- **M4** 화면 회전 시 bubble 위치 초기화 — `FloatingBubbleService.kt` `onConfigurationChanged`
+- **M5** `getRunningServices()` deprecated API → `ActivityManager.getRunningServiceControlPanel()` 또는 바인드 패턴
 
-### P1: Phase 6 — 수익화 구현
-- AdMob 통합 (배너 조건부 + 보상형 "팬 패스")
-- 감성 컬러 팩 IAP (Google Play Billing, 일회성)
-- 보상형 광고 시간제 해금 로직 (4h / 자정 만료)
-- 전환 퍼널 UX 플로우
+### 2순위: LOW/UX 이슈
+- **L1** 간편/확장 모드 비율 30%/75% → 25%/70% (설계서 기준)
+- **L2** 탭 선택 persistence
+- **L3** 자동 닫기 타이밍 하드코딩 → 설정 가능하게
+- **L4** 버블 펄스 애니메이션
+- **L5** 복사 기록 평문 저장 → 프라이버시 고려
 
-### P2: 누락 기능 (Phase 4 리뷰)
-- Quick access chips, AnimatedList 트랜지션
-- 번역 언어 선택, 잠긴 팩 표시
-- 변환기 공유 버튼, 라이선스 페이지
+### 3순위: Phase 4 UI 진행
+- 홈 화면 데일리 카드 공유 기능
+- 스트릭 배너 비주얼 개선
+- celebration_overlay.dart (이미 파일 존재, 내용 구현 필요)
 
----
+## 핵심 교훈
 
-## 커밋 히스토리 (이번 세션)
+- ★ GoRouter는 `initialLocation` 파라미터만 사용하고 `window.defaultRouteName`을 무시한다. 별도 FlutterEngine에서 `setInitialRoute()`를 쓰려면 `PlatformDispatcher.instance.defaultRouteName`을 직접 읽어 GoRouter에 전달해야 한다.
+- ★ FlutterActivity의 `configureFlutterEngine()`을 override할 때 반드시 `super` 호출. 안 하면 플러그인 미등록 → `MissingPluginException`.
+- ★ Kotlin Service → Dart 이벤트 전송: `EventChannel.StreamHandler`를 싱글턴 object로 구현하고, Service에서 `mainHandler.post { eventSink?.success() }`로 메인 스레드 보장.
+- ★ Riverpod auto-dispose provider 테스트 시 `container.read()`가 아닌 `container.listen()`으로 provider를 유지해야 비동기 상태 변경이 반영된다.
+- `requestOverlayPermission`에서 `startActivityForResult` 사용 시 `@Suppress("DEPRECATION")` 필요 (Activity Result API 대안 있지만 FlutterActivity에서는 이 방식이 간단).
+
+## 커밋 히스토리
 
 ```
-68b6d79 docs: 플로팅 버블 수익화 패널 토론 — 감성 컬러 팩 IAP 모델 확정
-faee240 chore: session handoff - 커스텀 키보드 + Romanizer 수정 + 문서 정리
+5934a20 fix: HIGH 리뷰 이슈 4건 수정 (H1~H4)
+d263360 fix: 크리티컬 리뷰 이슈 3건 수정 (C1~C3)
+3849f56 fix: 리뷰 반영 — setState() 제거 + 권한 거부 피드백 추가
+15a0260 chore: Phase 5 최종 검증 — 포맷 수정 + unnecessary_import 제거
+6cc3842 feat(bubble): MiniConverterScreen — 간편모드 + 확장모드 2단 팝업 (TDD)
+2011bc8 feat(bubble): /mini-converter 라우트 추가
+da5600e feat(bubble): Settings — 버블 토글 + 권한 다이얼로그
+7f29583 feat(bubble): UI strings + 간편모드 위젯 (타일, 리스트)
+a8e7c32 feat(bubble): BubbleNotifier — 상태 관리 Provider (TDD)
+4488628 feat(bubble): ConverterInput — onCopied 콜백 추가
+5728480 feat(bubble): FavoritePhrasesNotifier — 즐겨찾기 토글/persist (TDD)
+ceb91cb feat(bubble): CopyHistoryNotifier — 복사 이력 20개 제한 (TDD)
+d008c80 feat(bubble): FloatingBubbleChannel — MethodChannel 래퍼 (TDD)
+b6aa1c2 feat(bubble): MainActivity — FlutterEngine 프리워밍 + MethodChannel
+0bdcd51 feat(bubble): BubbleState enum — off/showing/popup (TDD)
+3e1a6f6 feat(bubble): MiniConverterActivity — 캐시 엔진 Flutter Activity
+42a76c8 feat(bubble): FloatingBubbleService — 오버레이, 드래그, 스냅, 닫기 존
+7d6ae72 feat(bubble): BubbleNotificationHelper — 알림 채널/빌더
+86b39a0 feat(bubble): AndroidManifest + TranslucentTheme 설정
 ```
-
----
 
 ## 수정한 파일 (이번 세션)
 
 ```
- .claude/rules/00-project.md                        |  12 +-   (수익화 규칙 추가)
- CLAUDE.md                                          |   4 +-   (포인터 갱신)
- docs/HANDOFF.md                                    | 173 +-   (S3 핸드오프)
- docs/discussions/2026-02-28-bubble-monetization.md  | 142 +    (신규 — 수익화 패널 토론 기록)
- docs/fangeul-future-reference.md                   |  38 +-   (§3.1 수익 구조 패널 결과 반영)
+android/.../BubbleEventBroadcaster.kt     (NEW) — EventChannel 싱글턴
+android/.../FloatingBubbleService.kt      — 이벤트 전송 추가
+android/.../MainActivity.kt              — EventChannel 등록, startActivityForResult
+android/.../MiniConverterActivity.kt      — super 호출 + null 폴백
+lib/platform/floating_bubble_channel.dart — stateStream, requestOverlayPermission 반환
+lib/presentation/constants/ui_strings.dart — favoriteTooltip
+lib/presentation/providers/bubble_providers.dart — syncFromNative, listenToEvents
+lib/presentation/router/app_router.dart   — PlatformDispatcher.defaultRouteName
+lib/presentation/screens/settings_screen.dart — 권한 허용 시 자동 버블 표시
+lib/presentation/widgets/phrase_card.dart — ConsumerWidget + 즐겨찾기 토글
+test/.../bubble_providers_test.dart       — EventChannel 스트림 테스트
+test/.../settings_bubble_toggle_test.dart — stateStream mock 추가
+test_driver/driver_main.dart              — lib/에서 이동
 ```
-
----
 
 ## 핵심 결정사항
 
 | 결정 | 이유 |
 |------|------|
-| 버블 기본 기능 = 전면 무료 | A조(게이팅 지지) → B조 반론(Weverse 실시간 마찰, 인니 결제 인프라)에 동의 |
-| MVP = IAP 단일 (구독 X) | 동남아 신용카드 6~7%, 구독 피로, K-pop 시즌별 소비 패턴에 IAP 적합 |
-| 감성 컬러 팩 (IP 안전) | 색상+감성 이름으로 팬 자발적 연상 유도, 아이돌/팬덤명 DMCA 리스크 회피 |
-| 보상형 4시간 해금 | 윤넛지 제안. 2시간(잭그로)은 '빌려 쓰는 느낌' 강함. 4/5 동의 |
-| "4h or 자정" 만료 규칙 | 다음 날 첫 광고 시청 유도 → DAU 유지 + 보상형 습관 형성 |
-| 배너 조건부 유지 | 보상형 1회 시청 시 세션 배너 제거 → DAU 15% 전환 시 전면 종료 |
-
----
+| GoRouter에서 `PlatformDispatcher.defaultRouteName` 사용 | `setInitialRoute()`와 GoRouter 호환을 위해. 유효한 경로만 허용하는 allowlist 방식 |
+| EventChannel을 싱글턴 object로 구현 | Service는 Activity와 생명주기가 다르므로, static EventSink로 브릿지 |
+| `startActivityForResult` 사용 (deprecated지만) | FlutterActivity에서 Activity Result API 적용이 복잡. MVP에서는 충분 |
+| PhraseCard를 ConsumerWidget으로 전환 | 즐겨찾기 상태를 실시간 반영하려면 ref.watch 필요 |
 
 ## 참고 컨텍스트
 
-| 문서 | 경로 |
-|------|------|
-| 수익화 패널 토론 기록 | `docs/discussions/2026-02-28-bubble-monetization.md` |
-| 수익화 패널 원본 대화 | `docs/raw-transcripts/2026-02-28-monetization-panel-raw.md` |
-| 통합 참조 문서 (버블 §1.1, 수익 §3.1) | `docs/fangeul-future-reference.md` |
-| 비주얼 정체성 토론 | `docs/discussions/2026-02-27-visual-identity.md` |
-| MVP 엣지 전략 토론 | `docs/discussions/2026-02-27-fangeul-edge-strategy.md` |
-| Phase 4 설계/구현 | `docs/plans/2026-02-27-phase4-*.md` |
-| 키보드 설계/구현 | `docs/plans/2026-02-28-converter-custom-keyboard-*.md` |
-
----
-
-## 테스트 현황
-
-| 영역 | 테스트 수 | 상태 |
-|------|-----------|------|
-| core/engines | 106 (hangul 17 + tables 6 + keyboard 34 + romanizer 49) | pass |
-| core/entities | 14 | pass |
-| core/usecases | 14 | pass |
-| data/repositories | 12 | pass |
-| presentation/providers | 19 (converter 7 + theme 5 + keyboard 7) | pass |
-| presentation/widgets | 4 (keyboard 4) | pass |
-| **총계** | **179** | **all pass** |
-
----
+- 리뷰 기준 문서: `docs/plans/2026-02-28-phase5-floating-bubble-design.md`
+- 수익화 패널 토론: `docs/discussions/2026-02-28-bubble-monetization.md`
+- 에뮬레이터 테스트: Home/Converter/Phrases 정상, Settings는 Driver 접근 실패 (IconButton tooltip 없음)
+- 전체 테스트: 215개 통과 (기존 214 + EventChannel 1)
 
 ## 세션 히스토리
 
-| 세션 | 날짜 | 주요 작업 |
-|------|------|----------|
-| S1 | 2026-02-27 | Phase 1~3 구현, 패널 토론 2건 |
-| S2 | 2026-02-27 | Phase 4 UI 전체, 코드 리뷰 |
-| S3 | 2026-02-28 | 커스텀 키보드, Romanizer 버그 수정, 문서 정리 |
-| S4 | 2026-02-28 | 수익화 패널 토론, 감성 컬러 팩 IAP 모델 확정 |
+| 세션 | 요약 |
+|------|------|
+| P1~P3 | Core 엔진 + 데이터 레이어 완료 |
+| P5-구현 | Phase 5 플로팅 버블 16 tasks 구현 (86b39a0~15a0260) |
+| P5-리뷰 (이전) | Claude+Codex 통합 리뷰, setState 수정 |
+| **P5-수정 (이번)** | C1~C3 크리티컬 + H1~H4 하이 이슈 수정 → 215 tests |

@@ -28,7 +28,7 @@ lib/
 
 ```
 Phase 1: 셋업 ✅ | Phase 2: Core 엔진 ✅ | Phase 3: 데이터 레이어 ✅
-Phase 4: UI ✅   | Phase 5: 버블       | Phase 6: 수익화 | Phase 7: 릴리즈
+Phase 4: UI ✅   | Phase 5: 버블 ✅    | Phase 6: 수익화 | Phase 7: 릴리즈
 ```
 
 ## 검증 명령어
@@ -53,6 +53,6 @@ dart format --set-exit-if-changed .  # 포맷 검증
 | `docs/HANDOFF.md` | 세션 핸드오프 (최신 작업 상태) |
 
 ## 현재 작업 상태
-> 마지막 핸드오프: 2026-02-28
+> 마지막 핸드오프: 2026-02-28 21:30
 > 상세: `docs/HANDOFF.md` 참조
-> 요약: 수익화 패널 토론 완료 (감성 컬러 팩 IAP 모델 확정). 179개 테스트 pass. 다음: Phase 5 플로팅 버블 구현.
+> 요약: Phase 5 플로팅 버블 완료 + C1~C3/H1~H4 리뷰 수정. 215개 테스트 pass. 다음: MEDIUM/LOW 잔여 이슈 → Phase 6 수익화.
