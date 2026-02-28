@@ -104,5 +104,5 @@ class MainActivity : FlutterActivity() {
     }
 
     /// FloatingBubbleService 실행 여부 확인.
-    private fun isServiceRunning(): Boolean = FloatingBubbleService.isRunning
+    private fun isServiceRunning(): Boolean = FloatingBubbleService.isBubbleShowing
 }

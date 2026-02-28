@@ -36,8 +36,8 @@ class FloatingBubbleService : Service() {
         private const val CLOSE_ZONE_MARGIN_BOTTOM_DP = 80
         private const val TAP_THRESHOLD_PX = 10
 
-        /// 버블 서비스 실행 상태. MainActivity에서 참조.
-        var isRunning: Boolean = false
+        /// 버블 표시 상태. MainActivity에서 참조.
+        var isBubbleShowing: Boolean = false
             private set
     }
 
@@ -79,7 +79,7 @@ class FloatingBubbleService : Service() {
             ACTION_HIDE -> {
                 removeBubble()
                 removeCloseZone()
-                isRunning = false
+                isBubbleShowing = false
                 BubbleEventBroadcaster.send("off")
                 return START_STICKY
             }
@@ -96,7 +96,7 @@ class FloatingBubbleService : Service() {
             createCloseZoneView()
         }
 
-        isRunning = true
+        isBubbleShowing = true
         BubbleEventBroadcaster.send("showing")
         return START_STICKY
     }
@@ -104,7 +104,7 @@ class FloatingBubbleService : Service() {
     override fun onDestroy() {
         configReceiver?.let { unregisterReceiver(it) }
         configReceiver = null
-        isRunning = false
+        isBubbleShowing = false
         removeBubble()
         removeCloseZone()
         BubbleEventBroadcaster.send("off")
@@ -382,6 +382,7 @@ class FloatingBubbleService : Service() {
         registerReceiver(
             configReceiver,
             IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED),
+            Context.RECEIVER_NOT_EXPORTED,
         )
     }
 }
