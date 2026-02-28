@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -146,7 +147,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
     return Scaffold(
       backgroundColor: Colors.black54,
       body: GestureDetector(
-        onTap: () => Navigator.of(context).pop(),
+        onTap: () => SystemNavigator.pop(),
         child: Align(
           alignment: Alignment.bottomCenter,
           child: GestureDetector(
@@ -183,7 +184,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
         Expanded(
           child: CompactPhraseList(
             tabController: _compactTabController,
-            onCopied: () => Navigator.of(context).pop(),
+            onCopied: () => SystemNavigator.pop(),
           ),
         ),
         _buildOpenConverterButton(),
@@ -281,7 +282,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
           const SizedBox(width: 8),
           IconButton(
             icon: const Icon(Icons.close_rounded),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => SystemNavigator.pop(),
           ),
         ],
       ),
