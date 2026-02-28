@@ -352,6 +352,7 @@ class FloatingBubbleService : Service() {
             } catch (_: Exception) {}
             bubbleView = null
         }
+        bubbleParams = null
     }
 
     private fun removeCloseZone() {
@@ -379,15 +380,16 @@ class FloatingBubbleService : Service() {
         screenHeight = metrics.heightPixels
     }
 
-    /// 화면 회전 시 screenWidth/screenHeight를 갱신하고 버블을 재스냅한다.
+    /// 화면 회전/폴더블 접힘 시 screenWidth/screenHeight를 갱신하고 버블을 재스냅한다.
     private fun registerConfigReceiver() {
         configReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 // post로 지연 — 일부 OEM에서 metrics 갱신이 브로드캐스트보다 늦을 수 있음
                 Handler(Looper.getMainLooper()).post {
                     val oldWidth = screenWidth
+                    val oldHeight = screenHeight
                     updateScreenSize()
-                    if (oldWidth != screenWidth) {
+                    if (oldWidth != screenWidth || oldHeight != screenHeight) {
                         snapToEdge()
                     }
                 }
