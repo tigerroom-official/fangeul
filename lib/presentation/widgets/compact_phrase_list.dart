@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -72,7 +73,10 @@ class CompactPhraseList extends ConsumerWidget {
           text: ko,
           onCopied: () {
             ref.read(copyHistoryNotifierProvider.notifier).addEntry(ko);
-            onCopied?.call();
+            // addEntry가 rebuild을 트리거하므로 프레임 완료 후 close
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              onCopied?.call();
+            });
           },
         );
       },

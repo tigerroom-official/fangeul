@@ -38,6 +38,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
   final _textController = TextEditingController();
   String _engBuffer = '';
   List<String> _jamoList = [];
+  bool _hasInitialized = false;
 
   static const _modes = ConvertMode.values;
   static const _modeLabels = [
@@ -76,9 +77,12 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      // 별도 엔진이므로 메인 앱에서 변경된 데이터를 다시 로드
-      ref.invalidate(favoritePhrasesNotifierProvider);
-      ref.invalidate(copyHistoryNotifierProvider);
+      if (_hasInitialized) {
+        // 재열기 시 메인 앱에서 변경된 데이터를 다시 로드
+        ref.invalidate(favoritePhrasesNotifierProvider);
+        ref.invalidate(copyHistoryNotifierProvider);
+      }
+      _hasInitialized = true;
     }
   }
 
@@ -152,6 +156,8 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
     ref.read(converterNotifierProvider.notifier).clear();
   }
 
+  void _dismiss() => SystemNavigator.pop();
+
   @override
   Widget build(BuildContext context) {
     final isCompact = ref.watch(miniConverterCompactProvider);
@@ -159,7 +165,11 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
     return Scaffold(
       backgroundColor: Colors.black54,
       body: GestureDetector(
-        onTap: () => SystemNavigator.pop(),
+        behavior: HitTestBehavior.opaque,
+        onTap: _dismiss,
+        onVerticalDragEnd: (details) {
+          if (details.velocity.pixelsPerSecond.dy > 300) _dismiss();
+        },
         child: Align(
           alignment: Alignment.bottomCenter,
           child: GestureDetector(
@@ -196,7 +206,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
         Expanded(
           child: CompactPhraseList(
             tabController: _compactTabController,
-            onCopied: () => SystemNavigator.pop(),
+            onCopied: _dismiss,
           ),
         ),
         _buildOpenConverterButton(),
@@ -205,17 +215,26 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
   }
 
   Widget _buildDragHandle() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+    return GestureDetector(
+      onVerticalDragEnd: (details) {
+        if (details.velocity.pixelsPerSecond.dy > 300) _dismiss();
+      },
       child: Container(
-        width: 40,
-        height: 4,
-        decoration: BoxDecoration(
-          color: Theme.of(context)
-              .colorScheme
-              .onSurfaceVariant
-              .withValues(alpha: 0.4),
-          borderRadius: BorderRadius.circular(2),
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        color: Colors.transparent,
+        child: Center(
+          child: Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurfaceVariant
+                  .withValues(alpha: 0.4),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
         ),
       ),
     );
@@ -294,7 +313,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
           const SizedBox(width: 8),
           IconButton(
             icon: const Icon(Icons.close_rounded),
-            onPressed: () => SystemNavigator.pop(),
+            onPressed: _dismiss,
           ),
         ],
       ),
