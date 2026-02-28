@@ -10,7 +10,9 @@ import android.graphics.Color
 import android.graphics.PixelFormat
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.MotionEvent
@@ -302,12 +304,21 @@ class FloatingBubbleService : Service() {
 
     private fun snapToEdge() {
         val params = bubbleParams ?: return
-        val bubbleCenterX = params.x + dpToPx(BUBBLE_SIZE_DP) / 2
+        val bubbleSize = dpToPx(BUBBLE_SIZE_DP)
+        val margin = dpToPx(8)
+
+        // Y좌표 클램핑 — 화면 회전 후 버블이 화면 밖으로 나가지 않도록
+        val maxY = screenHeight - bubbleSize - margin
+        if (params.y > maxY) params.y = maxY
+        if (params.y < margin) params.y = margin
+
+        // X좌표 가장 가까운 가장자리로 스냅
+        val bubbleCenterX = params.x + bubbleSize / 2
         val targetX =
             if (bubbleCenterX < screenWidth / 2) {
-                dpToPx(8)
+                margin
             } else {
-                screenWidth - dpToPx(BUBBLE_SIZE_DP) - dpToPx(8)
+                screenWidth - bubbleSize - margin
             }
 
         val animator = ValueAnimator.ofInt(params.x, targetX)
@@ -372,10 +383,13 @@ class FloatingBubbleService : Service() {
     private fun registerConfigReceiver() {
         configReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                val oldWidth = screenWidth
-                updateScreenSize()
-                if (oldWidth != screenWidth) {
-                    snapToEdge()
+                // post로 지연 — 일부 OEM에서 metrics 갱신이 브로드캐스트보다 늦을 수 있음
+                Handler(Looper.getMainLooper()).post {
+                    val oldWidth = screenWidth
+                    updateScreenSize()
+                    if (oldWidth != screenWidth) {
+                        snapToEdge()
+                    }
                 }
             }
         }

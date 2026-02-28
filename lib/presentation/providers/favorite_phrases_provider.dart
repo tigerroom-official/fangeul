@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,12 +39,18 @@ class FavoritePhrasesNotifier extends _$FavoritePhrasesNotifier {
   bool isFavorite(String phraseKo) => state.contains(phraseKo);
 
   Future<void> _loadFromPrefs() async {
-    final prefs = await SharedPreferences.getInstance();
-    final json = prefs.getString(_key);
-    if (json != null) {
-      final saved = (jsonDecode(json) as List).cast<String>().toSet();
-      // merge: 저장된 데이터 + 로드 중 발생한 mutation 보존
-      state = {...saved, ...state};
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final json = prefs.getString(_key);
+      if (json != null) {
+        final saved = (jsonDecode(json) as List).cast<String>().toSet();
+        // merge: 저장된 데이터 + 로드 중 발생한 mutation 보존.
+        // 로드 전에는 UI가 빈 Set을 보여주므로, 사용자가 "저장된 항목을
+        // 의도적으로 제거"하는 것은 불가능 → saved union state로 안전.
+        state = {...saved, ...state};
+      }
+    } catch (e) {
+      debugPrint('FavoritePhrasesNotifier: load failed — $e');
     }
   }
 

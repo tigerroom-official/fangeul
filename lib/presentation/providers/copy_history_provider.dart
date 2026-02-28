@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -49,20 +50,25 @@ class CopyHistoryNotifier extends _$CopyHistoryNotifier {
   }
 
   Future<void> _loadFromPrefs() async {
-    final prefs = await SharedPreferences.getInstance();
-    final json = prefs.getString(_key);
-    if (json != null) {
-      final saved = (jsonDecode(json) as List).cast<String>();
-      // merge: 현재 state(로드 중 추가된 항목)를 앞에, 저장 데이터를 뒤에
-      // 중복 제거 + _maxEntries 제한
-      final merged = [...state];
-      for (final item in saved) {
-        if (!merged.contains(item)) {
-          merged.add(item);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final json = prefs.getString(_key);
+      if (json != null) {
+        final saved = (jsonDecode(json) as List).cast<String>();
+        // merge: 현재 state(로드 중 추가된 항목)를 앞에, 저장 데이터를 뒤에
+        // 중복 제거 + _maxEntries 제한
+        final merged = [...state];
+        for (final item in saved) {
+          if (!merged.contains(item)) {
+            merged.add(item);
+          }
         }
+        state = merged.length > _maxEntries
+            ? merged.sublist(0, _maxEntries)
+            : merged;
       }
-      state =
-          merged.length > _maxEntries ? merged.sublist(0, _maxEntries) : merged;
+    } catch (e) {
+      debugPrint('CopyHistoryNotifier: load failed — $e');
     }
   }
 
