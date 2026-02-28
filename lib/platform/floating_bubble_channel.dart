@@ -10,6 +10,16 @@ class FloatingBubbleChannel {
   static const _channel = MethodChannel(
     'com.tigerroom.fangeul/floating_bubble',
   );
+  static const _eventChannel = EventChannel(
+    'com.tigerroom.fangeul/floating_bubble_events',
+  );
+
+  /// 버블 상태 변경 스트림.
+  ///
+  /// Kotlin [FloatingBubbleService]에서 상태 변경 시 이벤트를 수신한다.
+  Stream<BubbleState> get stateStream => _eventChannel
+      .receiveBroadcastStream()
+      .map((event) => BubbleState.fromString(event as String? ?? 'off'));
 
   /// 버블을 화면에 표시한다.
   ///
@@ -46,11 +56,16 @@ class FloatingBubbleChannel {
   }
 
   /// 시스템 오버레이 권한 설정 화면을 연다.
-  Future<void> requestOverlayPermission() async {
+  ///
+  /// 사용자가 설정 화면에서 돌아오면 권한 부여 여부를 반환한다.
+  Future<bool> requestOverlayPermission() async {
     try {
-      await _channel.invokeMethod<void>('requestOverlayPermission');
+      final result = await _channel.invokeMethod<bool>(
+        'requestOverlayPermission',
+      );
+      return result ?? false;
     } on PlatformException {
-      // 무시 — 설정 화면 열기 실패 시 사용자에게 수동 안내
+      return false;
     }
   }
 

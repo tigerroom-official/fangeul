@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:fangeul/platform/bubble_state.dart';
 import 'package:fangeul/platform/floating_bubble_channel.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/bubble_providers.dart';
@@ -15,12 +18,20 @@ class MockFloatingBubbleChannel extends Mock implements FloatingBubbleChannel {}
 void main() {
   late MockFloatingBubbleChannel mockChannel;
   late SharedPreferences prefs;
+  late StreamController<BubbleState> eventController;
 
   setUp(() async {
     mockChannel = MockFloatingBubbleChannel();
+    eventController = StreamController<BubbleState>.broadcast();
+    when(() => mockChannel.getBubbleState())
+        .thenAnswer((_) async => BubbleState.off);
+    when(() => mockChannel.stateStream)
+        .thenAnswer((_) => eventController.stream);
     SharedPreferences.setMockInitialValues({});
     prefs = await SharedPreferences.getInstance();
   });
+
+  tearDown(() => eventController.close());
 
   Widget buildTestWidget() {
     return ProviderScope(

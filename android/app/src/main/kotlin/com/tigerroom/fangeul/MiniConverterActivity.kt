@@ -4,6 +4,7 @@ import android.content.Context
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
+import io.flutter.embedding.engine.dart.DartExecutor
 
 /// 미니 변환기 Flutter Activity.
 ///
@@ -18,6 +19,7 @@ class MiniConverterActivity : FlutterActivity() {
 
     override fun provideFlutterEngine(context: Context): FlutterEngine? {
         return FlutterEngineCache.getInstance().get(ENGINE_ID)
+            ?: createAndCacheEngine(context)
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -26,4 +28,14 @@ class MiniConverterActivity : FlutterActivity() {
     }
 
     override fun shouldDestroyEngineWithHost(): Boolean = false
+
+    /// 프로세스 재시작 등으로 캐시가 비었을 때 엔진을 새로 생성한다.
+    private fun createAndCacheEngine(context: Context): FlutterEngine {
+        val engine = FlutterEngine(context).apply {
+            navigationChannel.setInitialRoute("/mini-converter")
+            dartExecutor.executeDartEntrypoint(DartExecutor.DartEntrypoint.createDefault())
+        }
+        FlutterEngineCache.getInstance().put(ENGINE_ID, engine)
+        return engine
+    }
 }

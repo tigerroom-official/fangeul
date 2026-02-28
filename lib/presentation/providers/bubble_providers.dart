@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:fangeul/platform/bubble_state.dart';
@@ -15,12 +17,32 @@ FloatingBubbleChannel floatingBubbleChannel(FloatingBubbleChannelRef ref) {
 ///
 /// [FloatingBubbleChannel]을 통해 네이티브 버블 서비스를 제어하고
 /// 현재 상태를 [BubbleState]로 관리한다.
+/// EventChannel 스트림을 구독하여 Kotlin 상태 변경을 실시간 반영한다.
 @riverpod
 class BubbleNotifier extends _$BubbleNotifier {
+  StreamSubscription<BubbleState>? _eventSubscription;
+
   @override
-  BubbleState build() => BubbleState.off;
+  BubbleState build() {
+    _syncFromNative();
+    _listenToEvents();
+    ref.onDispose(() => _eventSubscription?.cancel());
+    return BubbleState.off;
+  }
 
   FloatingBubbleChannel get _channel => ref.read(floatingBubbleChannelProvider);
+
+  /// Provider 초기화 시 네이티브 서비스 상태를 비동기로 동기화한다.
+  Future<void> _syncFromNative() async {
+    state = await _channel.getBubbleState();
+  }
+
+  /// EventChannel 스트림을 구독하여 Kotlin→Dart 상태 변경을 수신한다.
+  void _listenToEvents() {
+    _eventSubscription = _channel.stateStream.listen(
+      (newState) => state = newState,
+    );
+  }
 
   /// 버블을 표시한다.
   ///
@@ -44,7 +66,9 @@ class BubbleNotifier extends _$BubbleNotifier {
   }
 
   /// 시스템 오버레이 권한 설정을 요청한다.
-  Future<void> requestPermission() {
+  ///
+  /// 사용자가 설정에서 돌아오면 권한 부여 여부를 반환한다.
+  Future<bool> requestPermission() {
     return _channel.requestOverlayPermission();
   }
 

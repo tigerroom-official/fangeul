@@ -67,6 +67,7 @@ class FloatingBubbleService : Service() {
             }
             ACTION_HIDE -> {
                 removeBubble()
+                BubbleEventBroadcaster.send("off")
                 return START_STICKY
             }
         }
@@ -82,12 +83,14 @@ class FloatingBubbleService : Service() {
             createCloseZoneView()
         }
 
+        BubbleEventBroadcaster.send("showing")
         return START_STICKY
     }
 
     override fun onDestroy() {
         removeBubble()
         removeCloseZone()
+        BubbleEventBroadcaster.send("off")
         super.onDestroy()
     }
 

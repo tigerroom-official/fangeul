@@ -133,7 +133,11 @@ class _BubbleToggleTile extends ConsumerWidget {
     );
 
     if (shouldRequest == true) {
-      await notifier.requestPermission();
+      final granted = await notifier.requestPermission();
+      if (granted) {
+        await notifier.show();
+        return;
+      }
     } else if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text(UiStrings.bubblePermissionDenied)),

@@ -9,6 +9,7 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.embedding.engine.dart.DartExecutor
+import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 
 /// 메인 Activity — FlutterEngine 프리워밍 + Platform Channel 핸들러.
@@ -16,7 +17,11 @@ class MainActivity : FlutterActivity() {
 
     companion object {
         private const val BUBBLE_CHANNEL = "com.tigerroom.fangeul/floating_bubble"
+        private const val BUBBLE_EVENT_CHANNEL = "com.tigerroom.fangeul/floating_bubble_events"
+        private const val OVERLAY_PERMISSION_REQUEST = 1001
     }
+
+    private var pendingPermissionResult: MethodChannel.Result? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +30,9 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger, BUBBLE_EVENT_CHANNEL)
+            .setStreamHandler(BubbleEventBroadcaster)
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, BUBBLE_CHANNEL)
             .setMethodCallHandler { call, result ->
@@ -54,12 +62,13 @@ class MainActivity : FlutterActivity() {
                     }
 
                     "requestOverlayPermission" -> {
+                        pendingPermissionResult = result
                         val intent = Intent(
                             Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                             Uri.parse("package:$packageName"),
                         )
-                        startActivity(intent)
-                        result.success(null)
+                        @Suppress("DEPRECATION")
+                        startActivityForResult(intent, OVERLAY_PERMISSION_REQUEST)
                     }
 
                     "getBubbleState" -> {
@@ -69,6 +78,16 @@ class MainActivity : FlutterActivity() {
                     else -> result.notImplemented()
                 }
             }
+    }
+
+    @Suppress("DEPRECATION")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == OVERLAY_PERMISSION_REQUEST) {
+            val granted = Settings.canDrawOverlays(this)
+            pendingPermissionResult?.success(granted)
+            pendingPermissionResult = null
+        }
     }
 
     /// MiniConverterActivity용 FlutterEngine 프리워밍.

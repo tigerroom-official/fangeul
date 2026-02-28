@@ -28,12 +28,13 @@ final floatingBubbleChannelProvider =
 // ignore: unused_element
 typedef FloatingBubbleChannelRef
     = AutoDisposeProviderRef<FloatingBubbleChannel>;
-String _$bubbleNotifierHash() => r'5f5be15e8e0127081ec2cafea0684ab51a8484aa';
+String _$bubbleNotifierHash() => r'798f0002c16e4ce631c321b9b0fbadd62594a1d0';
 
 /// 버블 상태 Notifier.
 ///
 /// [FloatingBubbleChannel]을 통해 네이티브 버블 서비스를 제어하고
 /// 현재 상태를 [BubbleState]로 관리한다.
+/// EventChannel 스트림을 구독하여 Kotlin 상태 변경을 실시간 반영한다.
 ///
 /// Copied from [BubbleNotifier].
 @ProviderFor(BubbleNotifier)

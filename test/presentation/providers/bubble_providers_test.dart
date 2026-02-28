@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mocktail/mocktail.dart';
@@ -12,9 +14,15 @@ void main() {
   group('BubbleNotifier', () {
     late MockFloatingBubbleChannel mockChannel;
     late ProviderContainer container;
+    late StreamController<BubbleState> eventController;
 
     setUp(() {
       mockChannel = MockFloatingBubbleChannel();
+      eventController = StreamController<BubbleState>.broadcast();
+      when(() => mockChannel.getBubbleState())
+          .thenAnswer((_) async => BubbleState.off);
+      when(() => mockChannel.stateStream)
+          .thenAnswer((_) => eventController.stream);
       container = ProviderContainer(
         overrides: [
           floatingBubbleChannelProvider.overrideWithValue(mockChannel),
@@ -22,7 +30,10 @@ void main() {
       );
     });
 
-    tearDown(() => container.dispose());
+    tearDown(() {
+      container.dispose();
+      eventController.close();
+    });
 
     test('should start with BubbleState.off', () {
       final state = container.read(bubbleNotifierProvider);
@@ -66,12 +77,15 @@ void main() {
       expect(result, isTrue);
     });
 
-    test('should request permission', () async {
+    test('should request permission and return result', () async {
       when(() => mockChannel.requestOverlayPermission())
-          .thenAnswer((_) async {});
+          .thenAnswer((_) async => true);
 
-      await container.read(bubbleNotifierProvider.notifier).requestPermission();
+      final result = await container
+          .read(bubbleNotifierProvider.notifier)
+          .requestPermission();
 
+      expect(result, isTrue);
       verify(() => mockChannel.requestOverlayPermission()).called(1);
     });
 
@@ -80,6 +94,18 @@ void main() {
           .thenAnswer((_) async => BubbleState.showing);
 
       await container.read(bubbleNotifierProvider.notifier).sync();
+
+      expect(container.read(bubbleNotifierProvider), BubbleState.showing);
+    });
+
+    test('should update state when EventChannel sends event', () async {
+      // Provider를 listen으로 유지 (auto-dispose 방지)
+      container.listen(bubbleNotifierProvider, (_, __) {});
+      await Future<void>.delayed(Duration.zero);
+
+      // EventChannel에서 상태 변경 전송
+      eventController.add(BubbleState.showing);
+      await Future<void>.delayed(Duration.zero);
 
       expect(container.read(bubbleNotifierProvider), BubbleState.showing);
     });
