@@ -12,6 +12,7 @@ abstract final class UiStrings {
   static const copied = '복사되었습니다';
   static const errorPrefix = '오류:';
   static const copyTooltip = '복사';
+  static const favoriteTooltip = '즐겨찾기';
 
   // 홈 화면
   static const dailyCardLoadError = '오늘의 카드를 불러올 수 없습니다';

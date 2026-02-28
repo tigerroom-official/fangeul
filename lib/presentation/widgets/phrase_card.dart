@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:fangeul/core/entities/phrase.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
 import 'package:fangeul/presentation/theme/fangeul_colors.dart';
 
 /// 문구 카드 -- 한글 원문 + 발음 + 번역.
 ///
-/// 복사 버튼으로 한글 원문을 클립보드에 복사할 수 있다.
-class PhraseCard extends StatelessWidget {
+/// 복사 버튼과 즐겨찾기 토글 버튼을 제공한다.
+class PhraseCard extends ConsumerWidget {
   /// Creates the [PhraseCard] widget.
   const PhraseCard({
     super.key,
@@ -23,9 +26,11 @@ class PhraseCard extends StatelessWidget {
   final String translationLang;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final translation = phrase.translations[translationLang] ?? '';
+    final favorites = ref.watch(favoritePhrasesNotifierProvider);
+    final isFavorite = favorites.contains(phrase.ko);
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -69,6 +74,19 @@ class PhraseCard extends StatelessWidget {
           // 액션 버튼
           Row(
             children: [
+              IconButton(
+                icon: Icon(
+                  isFavorite ? Icons.star_rounded : Icons.star_outline_rounded,
+                  size: 20,
+                  color: isFavorite ? FangeulColors.primary : null,
+                ),
+                onPressed: () {
+                  ref
+                      .read(favoritePhrasesNotifierProvider.notifier)
+                      .toggle(phrase.ko);
+                },
+                tooltip: UiStrings.favoriteTooltip,
+              ),
               IconButton(
                 icon: const Icon(Icons.copy_outlined, size: 20),
                 onPressed: () {

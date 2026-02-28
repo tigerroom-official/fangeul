@@ -6,12 +6,15 @@ part of 'app_router.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appRouterHash() => r'e6da86e410286c3daeb8e3fb160603348cf8b87d';
+String _$appRouterHash() => r'992bcf71b38eed881de3576afd548ac6924a9e8f';
 
 /// 앱 라우터 Provider.
 ///
 /// [StatefulShellRoute.indexedStack]로 3탭(홈/변환기/문구) 네비게이션 구성.
 /// 설정 화면은 독립 라우트.
+///
+/// 미니 엔진에서는 [PlatformDispatcher.defaultRouteName]을 읽어
+/// `/mini-converter`로 시작한다.
 ///
 /// Copied from [appRouter].
 @ProviderFor(appRouter)

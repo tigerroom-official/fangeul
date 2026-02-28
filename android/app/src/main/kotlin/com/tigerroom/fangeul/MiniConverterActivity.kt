@@ -21,7 +21,8 @@ class MiniConverterActivity : FlutterActivity() {
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-        // 엔진은 이미 프리워밍됨. 추가 설정 불필요.
+        super.configureFlutterEngine(flutterEngine)
+        // 엔진은 이미 프리워밍됨. super 호출로 플러그인 등록만 수행.
     }
 
     override fun shouldDestroyEngineWithHost(): Boolean = false

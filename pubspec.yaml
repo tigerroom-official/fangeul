@@ -57,6 +57,12 @@ dev_dependencies:
   # 테스트
   mocktail: ^1.0.4
 
+  # Driver 테스트
+  flutter_driver:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+
 flutter:
   uses-material-design: true
 
