@@ -59,8 +59,11 @@ abstract final class FangeulColors {
 
   // ── 액센트 (팬덤 독립) ──
 
-  /// 틸 — Fangeul 고유 프라이머리. 어떤 아이돌 그룹과도 무관.
+  /// 틸 — 다크 모드 프라이머리. 밝은 배경에서는 [primaryLight] 사용.
   static const primary = Color(0xFF4ECDC4);
+
+  /// 틸 — 라이트 모드 프라이머리. 흰 배경 WCAG AA 충족 (대비 5.5:1).
+  static const primaryLight = Color(0xFF0F766E);
 
   /// 틸 다크 컨테이너 (다크 모드)
   static const primaryContainerDark = Color(0xFF1A3A38);
@@ -68,8 +71,11 @@ abstract final class FangeulColors {
   /// 틸 라이트 컨테이너 (라이트 모드)
   static const primaryContainerLight = Color(0xFFD4F5F2);
 
-  /// 웜 옐로 — CTA, 강조
+  /// 웜 옐로 — 다크 모드 CTA/강조. 밝은 배경에서는 [secondaryLight] 사용.
   static const secondary = Color(0xFFFFE66D);
+
+  /// 앰버 — 라이트 모드 CTA/강조. 흰 배경 WCAG AA 충족 (대비 5.0:1).
+  static const secondaryLight = Color(0xFFB45309);
 
   /// 코랄 — 경고, 하트
   static const tertiary = Color(0xFFFF6B6B);

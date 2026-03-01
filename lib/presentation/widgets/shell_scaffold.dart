@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:fangeul/presentation/constants/ui_strings.dart';
+
 /// 3탭 BottomNavigationBar 쉘.
 ///
 /// [StatefulShellRoute.indexedStack]의 builder에서 사용.
@@ -26,17 +28,17 @@ class ShellScaffold extends StatelessWidget {
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home),
-            label: '홈',
+            label: UiStrings.navHome,
           ),
           NavigationDestination(
             icon: Icon(Icons.translate_outlined),
             selectedIcon: Icon(Icons.translate),
-            label: '변환기',
+            label: UiStrings.navConverter,
           ),
           NavigationDestination(
             icon: Icon(Icons.chat_bubble_outline),
             selectedIcon: Icon(Icons.chat_bubble),
-            label: '문구',
+            label: UiStrings.navPhrases,
           ),
         ],
       ),

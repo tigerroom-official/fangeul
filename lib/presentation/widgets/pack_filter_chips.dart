@@ -51,21 +51,54 @@ class PackFilterChips extends StatelessWidget {
   }
 
   Widget _buildFavoritesChip(BuildContext context) {
+    final theme = Theme.of(context);
+
     return FilterChip(
-      label: const Text(UiStrings.miniChipFavorites),
+      label: Text(
+        UiStrings.miniChipFavorites,
+        style: TextStyle(
+          color: isFavoritesSelected
+              ? theme.colorScheme.onPrimary
+              : theme.colorScheme.onSurface,
+          fontWeight: isFavoritesSelected ? FontWeight.w600 : FontWeight.w400,
+        ),
+      ),
       selected: isFavoritesSelected,
+      selectedColor: theme.colorScheme.primary,
+      backgroundColor: theme.colorScheme.surfaceContainer,
+      checkmarkColor: theme.colorScheme.onPrimary,
+      showCheckmark: false,
+      side: isFavoritesSelected
+          ? BorderSide.none
+          : BorderSide(color: theme.colorScheme.outlineVariant),
       visualDensity: VisualDensity.compact,
       onSelected: (_) => onFavoritesSelected?.call(),
     );
   }
 
   Widget _buildPackChip(BuildContext context, PhrasePack pack) {
+    final theme = Theme.of(context);
     final isSelected = !isFavoritesSelected && selectedPackId == pack.id;
     final label = pack.isFree ? pack.nameKo : '${pack.nameKo}🔒';
 
     return FilterChip(
-      label: Text(label),
+      label: Text(
+        label,
+        style: TextStyle(
+          color: isSelected
+              ? theme.colorScheme.onPrimary
+              : theme.colorScheme.onSurface,
+          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+        ),
+      ),
       selected: isSelected,
+      selectedColor: theme.colorScheme.primary,
+      backgroundColor: theme.colorScheme.surfaceContainer,
+      checkmarkColor: theme.colorScheme.onPrimary,
+      showCheckmark: false,
+      side: isSelected
+          ? BorderSide.none
+          : BorderSide(color: theme.colorScheme.outlineVariant),
       visualDensity: VisualDensity.compact,
       onSelected: (_) => onPackSelected?.call(pack.id),
     );

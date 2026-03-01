@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
 import 'package:fangeul/presentation/router/app_router.dart';
+import 'package:fangeul/presentation/theme/fangeul_colors.dart';
 import 'package:fangeul/presentation/theme/fangeul_theme.dart';
 
 /// Android 12+의 stretch 오버스크롤을 글로우 효과로 대체한다.
@@ -35,14 +39,30 @@ class FangeulApp extends ConsumerWidget {
     final router = ref.watch(appRouterProvider);
     final themeMode = ref.watch(themeModeNotifierProvider);
 
-    return MaterialApp.router(
-      title: 'Fangeul',
-      debugShowCheckedModeBanner: false,
-      theme: FangeulTheme.light(),
-      darkTheme: FangeulTheme.dark(),
-      themeMode: themeMode,
-      routerConfig: router,
-      scrollBehavior: const _NoStretchScrollBehavior(),
+    final isDark = themeMode == ThemeMode.dark ||
+        (themeMode == ThemeMode.system &&
+            MediaQuery.platformBrightnessOf(context) == Brightness.dark);
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        systemNavigationBarColor: isDark
+            ? FangeulColors.darkBackground
+            : FangeulColors.lightBackground,
+        systemNavigationBarDividerColor: Colors.transparent,
+        systemNavigationBarIconBrightness:
+            isDark ? Brightness.light : Brightness.dark,
+      ),
+      child: MaterialApp.router(
+        title: UiStrings.appName,
+        debugShowCheckedModeBanner: false,
+        theme: FangeulTheme.light(),
+        darkTheme: FangeulTheme.dark(),
+        themeMode: themeMode,
+        routerConfig: router,
+        scrollBehavior: const _NoStretchScrollBehavior(),
+      ),
     );
   }
 }

@@ -33,8 +33,11 @@ class FloatingBubbleService : Service() {
         const val ACTION_SHOW = "com.tigerroom.fangeul.SHOW_BUBBLE"
         const val ACTION_HIDE = "com.tigerroom.fangeul.HIDE_BUBBLE"
 
-        /// 임시 hide 시 Dart 이벤트 브로드캐스트를 억제하는 extra 키.
+        /** 임시 hide 시 Dart 이벤트 브로드캐스트를 억제하는 extra 키. */
         const val EXTRA_SILENT = "silent"
+
+        /** 서비스만 시작하고 버블 뷰는 생성하지 않는 extra 키. */
+        const val EXTRA_START_HIDDEN = "start_hidden"
 
         private const val BUBBLE_SIZE_DP = 56
         private const val CLOSE_ZONE_SIZE_DP = 56
@@ -56,6 +59,9 @@ class FloatingBubbleService : Service() {
     private var closeZoneView: View? = null
     private var bubbleParams: WindowManager.LayoutParams? = null
 
+    // 펄스 애니메이션
+    private var pulseAnimator: ValueAnimator? = null
+
     // 드래그 상태
     private var initialX = 0
     private var initialY = 0
@@ -66,6 +72,10 @@ class FloatingBubbleService : Service() {
 
     // 화면 회전 감지
     private var configReceiver: BroadcastReceiver? = null
+
+    // 마지막 버블 위치 (임시 hide 후 복원용)
+    private var lastBubbleX = -1
+    private var lastBubbleY = -1
 
     // 화면 크기
     private var screenWidth = 0
@@ -105,12 +115,14 @@ class FloatingBubbleService : Service() {
             BubbleNotificationHelper.buildNotification(this)
         )
 
-        if (bubbleView == null) {
+        val startHidden = intent?.getBooleanExtra(EXTRA_START_HIDDEN, false) == true
+
+        if (!startHidden && bubbleView == null) {
             createBubbleView()
             createCloseZoneView()
         }
 
-        isBubbleShowing = true
+        isBubbleShowing = !startHidden
         isServiceActive = true
         BubbleEventBroadcaster.send("showing")
         return START_STICKY
@@ -123,6 +135,9 @@ class FloatingBubbleService : Service() {
         isServiceActive = false
         removeBubble()
         removeCloseZone()
+        // 서비스 완전 종료 시 저장 위치 초기화.
+        lastBubbleX = -1
+        lastBubbleY = -1
         BubbleEventBroadcaster.send("off")
         super.onDestroy()
     }
@@ -170,8 +185,14 @@ class FloatingBubbleService : Service() {
             PixelFormat.TRANSLUCENT,
         ).apply {
             gravity = Gravity.TOP or Gravity.START
-            x = screenWidth - sizePx - dpToPx(8)
-            y = screenHeight / 3
+            // 이전 위치가 있으면 복원, 없으면 기본 위치(오른쪽 1/3).
+            if (lastBubbleX >= 0) {
+                x = lastBubbleX
+                y = lastBubbleY
+            } else {
+                x = screenWidth - sizePx - dpToPx(8)
+                y = screenHeight / 3
+            }
         }
 
         container.setOnTouchListener(BubbleTouchListener())
@@ -179,6 +200,29 @@ class FloatingBubbleService : Service() {
         windowManager.addView(container, params)
         bubbleView = container
         bubbleParams = params
+
+        startPulseAnimation(container)
+    }
+
+    /** 미세 맥박 애니메이션 (scale 1.0↔1.05, 2초 주기). */
+    private fun startPulseAnimation(view: View) {
+        pulseAnimator?.cancel()
+        pulseAnimator = ValueAnimator.ofFloat(1f, 1.05f).apply {
+            duration = 1000
+            repeatCount = ValueAnimator.INFINITE
+            repeatMode = ValueAnimator.REVERSE
+            addUpdateListener { anim ->
+                val scale = anim.animatedValue as Float
+                view.scaleX = scale
+                view.scaleY = scale
+            }
+            start()
+        }
+    }
+
+    private fun stopPulseAnimation() {
+        pulseAnimator?.cancel()
+        pulseAnimator = null
     }
 
     // ── 닫기 존 ──
@@ -266,6 +310,7 @@ class FloatingBubbleService : Service() {
                         (abs(dx) > TAP_THRESHOLD_PX || abs(dy) > TAP_THRESHOLD_PX)
                     ) {
                         isDragging = true
+                        stopPulseAnimation()
                         showCloseZone()
                     }
 
@@ -294,8 +339,17 @@ class FloatingBubbleService : Service() {
                     return true
                 }
 
-                MotionEvent.ACTION_UP -> {
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     hideCloseZone()
+
+                    if (event.action == MotionEvent.ACTION_CANCEL) {
+                        // 터치 취소 시 — 닫기 존 무시, 펄스 재시작만.
+                        if (isDragging) {
+                            snapToEdge()
+                            bubbleView?.let { startPulseAnimation(it) }
+                        }
+                        return true
+                    }
 
                     if (isInCloseZone) {
                         stopSelf()
@@ -306,6 +360,7 @@ class FloatingBubbleService : Service() {
                         onBubbleTapped()
                     } else {
                         snapToEdge()
+                        bubbleView?.let { startPulseAnimation(it) }
                     }
                     return true
                 }
@@ -360,6 +415,12 @@ class FloatingBubbleService : Service() {
     // ── 정리 ──
 
     private fun removeBubble() {
+        stopPulseAnimation()
+        // 현재 위치 저장 — 임시 hide 후 복원용.
+        bubbleParams?.let {
+            lastBubbleX = it.x
+            lastBubbleY = it.y
+        }
         bubbleView?.let {
             try {
                 windowManager.removeView(it)

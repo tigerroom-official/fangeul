@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'package:fangeul/core/entities/daily_card.dart';
+import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/theme/fangeul_colors.dart';
 
 /// 공유 카드 CustomPainter — 1080x1920 PNG 이미지 생성.
@@ -57,12 +58,14 @@ class ShareCardPainter extends CustomPainter {
     );
 
     // 로마자 발음
+    final romanColor =
+        isDark ? FangeulColors.primary : FangeulColors.primaryLight;
     _drawText(
       canvas,
       card.phrase.roman,
       offset: Offset(size.width / 2, size.height * 0.50),
       fontSize: 32,
-      color: FangeulColors.primary,
+      color: romanColor,
       fontWeight: FontWeight.w400,
       maxWidth: size.width - 120,
       textAlign: TextAlign.center,
@@ -86,7 +89,7 @@ class ShareCardPainter extends CustomPainter {
     // 브랜딩 (하단)
     _drawText(
       canvas,
-      'Fangeul',
+      UiStrings.appName,
       offset: Offset(size.width / 2, size.height * 0.90),
       fontSize: 24,
       color: subColor.withValues(alpha: 0.5),
@@ -172,7 +175,7 @@ Future<void> shareCard({
 
     await Share.shareXFiles(
       [XFile(file.path)],
-      text: '${card.phrase.ko} — Fangeul',
+      text: '${card.phrase.ko} — ${UiStrings.appName}',
     );
   } catch (e) {
     debugPrint('Share card failed: $e');

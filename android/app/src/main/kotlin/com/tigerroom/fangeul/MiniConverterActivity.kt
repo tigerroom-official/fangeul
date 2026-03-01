@@ -1,6 +1,7 @@
 package com.tigerroom.fangeul
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -25,6 +26,8 @@ class MiniConverterActivity : FlutterActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // 팝업 표시 중 버블 숨김 — 시각 중복 방지.
+        hideBubble()
         // 상태바·내비게이션바를 완전 투명으로 설정.
         // XML theme 속성만으로는 일부 OEM/API에서 회색이 남을 수 있어
         // 프로그래밍 방식으로 강제한다.
@@ -42,6 +45,12 @@ class MiniConverterActivity : FlutterActivity() {
         }
     }
 
+    override fun onDestroy() {
+        // 팝업 닫힘 → 버블 다시 표시.
+        showBubble()
+        super.onDestroy()
+    }
+
     override fun getBackgroundMode(): BackgroundMode = BackgroundMode.transparent
 
     override fun provideFlutterEngine(context: Context): FlutterEngine? {
@@ -56,7 +65,7 @@ class MiniConverterActivity : FlutterActivity() {
 
     override fun shouldDestroyEngineWithHost(): Boolean = false
 
-    /// 프로세스 재시작 등으로 캐시가 비었을 때 엔진을 새로 생성한다.
+    /** 프로세스 재시작 등으로 캐시가 비었을 때 엔진을 새로 생성한다. */
     private fun createAndCacheEngine(context: Context): FlutterEngine {
         val engine = FlutterEngine(context).apply {
             navigationChannel.setInitialRoute("/mini-converter")
@@ -64,5 +73,24 @@ class MiniConverterActivity : FlutterActivity() {
         }
         FlutterEngineCache.getInstance().put(ENGINE_ID, engine)
         return engine
+    }
+
+    /** 버블을 임시 숨김 (서비스 활성 상태 유지). */
+    private fun hideBubble() {
+        if (!FloatingBubbleService.isServiceActive) return
+        val intent = Intent(this, FloatingBubbleService::class.java).apply {
+            action = FloatingBubbleService.ACTION_HIDE
+            putExtra(FloatingBubbleService.EXTRA_SILENT, true)
+        }
+        startService(intent)
+    }
+
+    /** 버블을 다시 표시. */
+    private fun showBubble() {
+        if (!FloatingBubbleService.isServiceActive) return
+        val intent = Intent(this, FloatingBubbleService::class.java).apply {
+            action = FloatingBubbleService.ACTION_SHOW
+        }
+        startService(intent)
     }
 }

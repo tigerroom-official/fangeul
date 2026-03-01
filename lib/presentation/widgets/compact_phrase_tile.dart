@@ -8,7 +8,6 @@ import 'package:fangeul/core/entities/phrase.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/copy_history_provider.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
-import 'package:fangeul/presentation/theme/fangeul_colors.dart';
 
 /// 간편모드 문구 타일 — ko + roman + ★토글 + 복사.
 ///
@@ -31,7 +30,8 @@ class CompactPhraseTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final favorites = ref.watch(favoritePhrasesNotifierProvider).valueOrNull ?? {};
+    final favorites =
+        ref.watch(favoritePhrasesNotifierProvider).valueOrNull ?? {};
     final isFavorite = favorites.contains(phrase.ko);
 
     return ListTile(
@@ -47,7 +47,7 @@ class CompactPhraseTile extends ConsumerWidget {
           ? Text(
               phrase.roman,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: FangeulColors.primary,
+                color: theme.colorScheme.primary,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -60,7 +60,7 @@ class CompactPhraseTile extends ConsumerWidget {
             icon: Icon(
               isFavorite ? Icons.star_rounded : Icons.star_border_rounded,
               size: 20,
-              color: isFavorite ? FangeulColors.primary : null,
+              color: isFavorite ? theme.colorScheme.primary : null,
             ),
             tooltip: UiStrings.favoriteTooltip,
             constraints: const BoxConstraints(maxWidth: 32, maxHeight: 32),

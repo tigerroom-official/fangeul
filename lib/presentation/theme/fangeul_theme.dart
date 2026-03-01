@@ -53,8 +53,10 @@ abstract final class FangeulTheme {
       ),
       chipTheme: ChipThemeData(
         backgroundColor: FangeulColors.darkSurfaceContainer,
-        selectedColor: FangeulColors.primary.withValues(alpha: 0.2),
+        selectedColor: FangeulColors.primary,
         labelStyle: FangeulTextStyles.textTheme.labelLarge,
+        showCheckmark: false,
+        side: BorderSide(color: FangeulColors.darkOutlineVariant),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -77,10 +79,12 @@ abstract final class FangeulTheme {
       useMaterial3: true,
       brightness: Brightness.light,
       colorScheme: const ColorScheme.light(
-        primary: FangeulColors.primary,
+        primary: FangeulColors.primaryLight,
         onPrimary: Colors.white,
         primaryContainer: FangeulColors.primaryContainerLight,
-        secondary: FangeulColors.secondary,
+        onPrimaryContainer: FangeulColors.primaryLight,
+        secondary: FangeulColors.secondaryLight,
+        onSecondary: Colors.white,
         tertiary: FangeulColors.tertiary,
         surface: FangeulColors.lightSurface,
         onSurface: FangeulColors.lightOnSurface,
@@ -94,7 +98,7 @@ abstract final class FangeulTheme {
       textTheme: FangeulTextStyles.textTheme,
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: FangeulColors.lightSurface,
-        indicatorColor: FangeulColors.primary.withValues(alpha: 0.15),
+        indicatorColor: FangeulColors.primaryLight.withValues(alpha: 0.35),
         labelTextStyle: WidgetStatePropertyAll(
           FangeulTextStyles.textTheme.labelMedium,
         ),
@@ -110,8 +114,10 @@ abstract final class FangeulTheme {
       ),
       chipTheme: ChipThemeData(
         backgroundColor: FangeulColors.lightSurfaceContainer,
-        selectedColor: FangeulColors.primary.withValues(alpha: 0.15),
+        selectedColor: FangeulColors.primaryLight,
         labelStyle: FangeulTextStyles.textTheme.labelLarge,
+        showCheckmark: false,
+        side: BorderSide(color: FangeulColors.lightOutlineVariant),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -122,7 +128,7 @@ abstract final class FangeulTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: FangeulColors.primary),
+          borderSide: const BorderSide(color: FangeulColors.primaryLight),
         ),
       ),
     );

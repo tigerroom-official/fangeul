@@ -3,8 +3,6 @@ package com.tigerroom.fangeul
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.provider.Settings
 import androidx.lifecycle.Lifecycle
 import io.flutter.embedding.android.FlutterActivity
@@ -76,23 +74,18 @@ class MainActivity : FlutterActivity() {
                             result.success(false)
                             return@setMethodCallHandler
                         }
+                        // 메인 앱 포그라운드 시 서비스만 시작, 버블 뷰 생성 건너뜀.
+                        // onStop()에서 백그라운드 전환 시 버블 표시.
+                        val isForeground =
+                            lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)
                         val showIntent = Intent(this, FloatingBubbleService::class.java).apply {
                             action = FloatingBubbleService.ACTION_SHOW
+                            if (isForeground) {
+                                putExtra(FloatingBubbleService.EXTRA_START_HIDDEN, true)
+                            }
                         }
                         startForegroundService(showIntent)
-
-                        // 메인 앱이 포그라운드이면 버블을 즉시 숨긴다.
-                        // silent = true → Dart에 "off" 이벤트 안 보냄 (설정 토글 유지).
-                        if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
-                            bubbleHiddenByUs = true
-                            Handler(Looper.getMainLooper()).postDelayed({
-                                val hideIntent = Intent(this, FloatingBubbleService::class.java).apply {
-                                    action = FloatingBubbleService.ACTION_HIDE
-                                    putExtra(FloatingBubbleService.EXTRA_SILENT, true)
-                                }
-                                startService(hideIntent)
-                            }, 300)
-                        }
+                        if (isForeground) bubbleHiddenByUs = true
                         result.success(true)
                     }
 

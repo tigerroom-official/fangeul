@@ -8,6 +8,7 @@ import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/converter_providers.dart';
 import 'package:fangeul/presentation/providers/copy_history_provider.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
+import 'package:fangeul/presentation/providers/theme_providers.dart';
 import 'package:fangeul/presentation/widgets/compact_phrase_list.dart';
 import 'package:fangeul/presentation/widgets/converter_input.dart';
 import 'package:fangeul/presentation/widgets/korean_keyboard.dart';
@@ -88,10 +89,19 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
     if (state == AppLifecycleState.resumed) {
       // 미니 엔진은 프리워밍 시 provider가 빌드됨.
       // 메인 앱에서 이후 변경된 SharedPreferences 데이터를 반영하려면
-      // 매 resumed마다 invalidate하여 prefs.reload()를 다시 실행해야 한다.
-      ref.invalidate(favoritePhrasesNotifierProvider);
-      ref.invalidate(copyHistoryNotifierProvider);
+      // 매 resumed마다 reload() → invalidate로 최신 데이터를 다시 읽어야 한다.
+      _syncFromMainEngine();
     }
+  }
+
+  /// 메인 엔진에서 변경된 SharedPreferences 데이터를 미니 엔진으로 동기화한다.
+  Future<void> _syncFromMainEngine() async {
+    final prefs = ref.read(sharedPreferencesProvider);
+    await prefs.reload();
+    if (!mounted) return;
+    ref.invalidate(favoritePhrasesNotifierProvider);
+    ref.invalidate(copyHistoryNotifierProvider);
+    ref.invalidate(themeModeNotifierProvider);
   }
 
   void _onConverterTabChanged() {
@@ -184,8 +194,8 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
               height: isCompact
-                  ? MediaQuery.of(context).size.height * 0.35
-                  : MediaQuery.of(context).size.height * 0.75,
+                  ? MediaQuery.of(context).size.height * 0.30
+                  : MediaQuery.of(context).size.height * 0.70,
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: const BorderRadius.vertical(

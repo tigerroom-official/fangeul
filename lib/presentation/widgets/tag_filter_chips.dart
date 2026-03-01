@@ -37,6 +37,9 @@ class TagFilterChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+
     return SizedBox(
       height: 48,
       child: ListView(
@@ -45,24 +48,61 @@ class TagFilterChips extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(right: 8),
-            child: FilterChip(
-              label: const Text(UiStrings.tagAll),
+            child: _buildChip(
+              context,
+              label: UiStrings.tagAll,
               selected: selectedTag == null,
               onSelected: (_) => onTagSelected(null),
+              primary: primary,
+              theme: theme,
             ),
           ),
           ...tags.map(
             (tag) => Padding(
               padding: const EdgeInsets.only(right: 8),
-              child: FilterChip(
-                label: Text(_tagLabels[tag] ?? tag),
+              child: _buildChip(
+                context,
+                label: _tagLabels[tag] ?? tag,
                 selected: selectedTag == tag,
                 onSelected: (_) => onTagSelected(tag),
+                primary: primary,
+                theme: theme,
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildChip(
+    BuildContext context, {
+    required String label,
+    required bool selected,
+    required ValueChanged<bool> onSelected,
+    required Color primary,
+    required ThemeData theme,
+  }) {
+    return FilterChip(
+      label: Text(
+        label,
+        style: TextStyle(
+          color: selected
+              ? theme.colorScheme.onPrimary
+              : theme.colorScheme.onSurface,
+          fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+        ),
+      ),
+      selected: selected,
+      onSelected: onSelected,
+      selectedColor: primary,
+      backgroundColor: theme.colorScheme.surfaceContainer,
+      checkmarkColor: theme.colorScheme.onPrimary,
+      showCheckmark: false,
+      side: selected
+          ? BorderSide.none
+          : BorderSide(color: theme.colorScheme.outlineVariant),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:fangeul/core/engines/keyboard_converter.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
@@ -24,6 +25,8 @@ class ConverterScreen extends ConsumerStatefulWidget {
 
 class _ConverterScreenState extends ConsumerState<ConverterScreen>
     with SingleTickerProviderStateMixin {
+  static const _tabPrefsKey = 'converter_tab_index';
+
   late final TabController _tabController;
   final _textController = TextEditingController();
 
@@ -51,11 +54,42 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
   /// 영->한 모드 여부.
   bool get _isEngToKor => _currentMode == ConvertMode.engToKor;
 
+  /// 사용자가 탭을 직접 전환했는지 여부. async 복원이 사용자 선택을 덮어쓰는 것을 방지.
+  bool _userChangedTab = false;
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: _modes.length, vsync: this);
     _tabController.addListener(_onTabChanged);
+    _restoreSavedTab();
+  }
+
+  /// SharedPreferences에서 저장된 탭 인덱스를 복원한다.
+  Future<void> _restoreSavedTab() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final saved = prefs.getInt(_tabPrefsKey);
+      if (saved != null &&
+          saved >= 0 &&
+          saved < _modes.length &&
+          mounted &&
+          !_userChangedTab) {
+        _tabController.animateTo(saved);
+      }
+    } catch (e) {
+      debugPrint('Failed to restore tab preference: $e');
+    }
+  }
+
+  /// 현재 탭 인덱스를 SharedPreferences에 저장한다.
+  Future<void> _saveTab(int index) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(_tabPrefsKey, index);
+    } catch (e) {
+      debugPrint('Failed to save tab preference: $e');
+    }
   }
 
   @override
@@ -68,10 +102,12 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
 
   // ── 탭 전환 ──
 
-  /// 탭 전환 시 모든 버퍼와 변환 상태를 초기화한다.
+  /// 탭 전환 시 모든 버퍼와 변환 상태를 초기화하고, 선택을 저장한다.
   void _onTabChanged() {
     if (_tabController.indexIsChanging) return;
+    _userChangedTab = true;
     _clear();
+    _saveTab(_tabController.index);
   }
 
   // ── 텍스트 업데이트 ──

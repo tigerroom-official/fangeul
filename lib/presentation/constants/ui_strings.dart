@@ -13,6 +13,16 @@ abstract final class UiStrings {
   static const errorPrefix = '오류:';
   static const copyTooltip = '복사';
   static const favoriteTooltip = '즐겨찾기';
+  static const complete = '완료';
+  static const share = '공유';
+
+  /// 스트릭 일수 표시. 예: '7일 연속'.
+  static String streakDays(int streak) => '$streak일 연속';
+
+  // 네비게이션 바
+  static const navHome = '홈';
+  static const navConverter = '변환기';
+  static const navPhrases = '문구';
 
   // 홈 화면
   static const dailyCardLoadError = '오늘의 카드를 불러올 수 없습니다';

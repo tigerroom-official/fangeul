@@ -115,8 +115,10 @@ class KeyboardKey extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? const Color(0xFF2A2A3E) : const Color(0xFFE8E8F0);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final accentColor = theme.colorScheme.primary;
+    final bgColor = isDark ? const Color(0xFF2A2A3E) : const Color(0xFFF3F4F6);
     final subColor = isDark
         ? FangeulColors.darkOnSurfaceVariant
         : FangeulColors.lightOnSurfaceVariant;
@@ -139,13 +141,13 @@ class KeyboardKey extends StatelessWidget {
                 onLongPressEnd != null ? (_) => onLongPressEnd!() : null,
             child: InkWell(
               borderRadius: BorderRadius.circular(8),
-              splashColor: FangeulColors.primary.withValues(alpha: 0.2),
+              splashColor: accentColor.withValues(alpha: 0.2),
               onTap: () {
                 _triggerHaptic();
                 onTap();
               },
               child: Center(
-                child: _buildContent(subColor),
+                child: _buildContent(subColor, accentColor),
               ),
             ),
           ),
@@ -167,12 +169,12 @@ class KeyboardKey extends StatelessWidget {
     }
   }
 
-  Widget _buildContent(Color subColor) {
+  Widget _buildContent(Color subColor, Color accentColor) {
     switch (keyType) {
       case KeyType.character:
-        return _buildCharacterContent(subColor);
+        return _buildCharacterContent(subColor, accentColor);
       case KeyType.caps:
-        return _buildCapsContent(subColor);
+        return _buildCapsContent(subColor, accentColor);
       case KeyType.backspace:
         return Icon(
           Icons.backspace_outlined,
@@ -191,7 +193,7 @@ class KeyboardKey extends StatelessWidget {
     }
   }
 
-  Widget _buildCharacterContent(Color subColor) {
+  Widget _buildCharacterContent(Color subColor, Color accentColor) {
     final data = keyData!;
     final engLabel = isShifted ? data.eng.toUpperCase() : data.eng;
     final korLabel =
@@ -209,11 +211,11 @@ class KeyboardKey extends StatelessWidget {
       mainLabel = engLabel;
       mainColor = subColor;
       subLabel = korLabel;
-      subLabelColor = FangeulColors.primary.withValues(alpha: korOpacity);
+      subLabelColor = accentColor.withValues(alpha: korOpacity);
     } else {
       // 한->영/발음 모드: 한글이 주 라벨, 영문이 보조 라벨
       mainLabel = korLabel;
-      mainColor = FangeulColors.primary;
+      mainColor = accentColor;
       subLabel = engLabel;
       subLabelColor = subColor.withValues(alpha: 0.4);
     }
@@ -243,9 +245,9 @@ class KeyboardKey extends StatelessWidget {
     );
   }
 
-  Widget _buildCapsContent(Color subColor) {
+  Widget _buildCapsContent(Color subColor, Color accentColor) {
     final isActive = isShifted || isCapsLocked;
-    final iconColor = isActive ? FangeulColors.primary : subColor;
+    final iconColor = isActive ? accentColor : subColor;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -261,7 +263,7 @@ class KeyboardKey extends StatelessWidget {
             height: 2,
             margin: const EdgeInsets.only(top: 2),
             decoration: BoxDecoration(
-              color: FangeulColors.primary,
+              color: accentColor,
               borderRadius: BorderRadius.circular(1),
             ),
           ),

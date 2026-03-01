@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fangeul/core/entities/phrase.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
-import 'package:fangeul/presentation/theme/fangeul_colors.dart';
 
 /// 문구 카드 -- 한글 원문 + 발음 + 번역.
 ///
@@ -29,7 +28,8 @@ class PhraseCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final translation = phrase.translations[translationLang] ?? '';
-    final favorites = ref.watch(favoritePhrasesNotifierProvider).valueOrNull ?? {};
+    final favorites =
+        ref.watch(favoritePhrasesNotifierProvider).valueOrNull ?? {};
     final isFavorite = favorites.contains(phrase.ko);
 
     return Container(
@@ -58,7 +58,7 @@ class PhraseCard extends ConsumerWidget {
           Text(
             phrase.roman,
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: FangeulColors.primary,
+              color: theme.colorScheme.primary,
             ),
           ),
           const SizedBox(height: 4),
@@ -78,7 +78,7 @@ class PhraseCard extends ConsumerWidget {
                 icon: Icon(
                   isFavorite ? Icons.star_rounded : Icons.star_outline_rounded,
                   size: 20,
-                  color: isFavorite ? FangeulColors.primary : null,
+                  color: isFavorite ? theme.colorScheme.primary : null,
                 ),
                 onPressed: () {
                   ref

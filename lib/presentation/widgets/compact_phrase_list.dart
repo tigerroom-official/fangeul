@@ -10,7 +10,7 @@ import 'package:fangeul/presentation/providers/compact_phrase_filter_provider.da
 import 'package:fangeul/presentation/providers/copy_history_provider.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
 import 'package:fangeul/presentation/providers/phrase_providers.dart';
-import 'package:fangeul/presentation/theme/fangeul_colors.dart';
+
 import 'package:fangeul/presentation/widgets/compact_phrase_tile.dart';
 import 'package:fangeul/presentation/widgets/pack_filter_chips.dart';
 import 'package:fangeul/presentation/widgets/recent_copy_tile.dart';
@@ -273,7 +273,8 @@ class _PhraseCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final favorites = ref.watch(favoritePhrasesNotifierProvider).valueOrNull ?? {};
+    final favorites =
+        ref.watch(favoritePhrasesNotifierProvider).valueOrNull ?? {};
     final isFavorite = favorites.contains(phrase.ko);
 
     return Padding(
@@ -292,7 +293,7 @@ class _PhraseCard extends ConsumerWidget {
             Text(
               phrase.roman,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: FangeulColors.primary,
+                color: theme.colorScheme.primary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -305,7 +306,7 @@ class _PhraseCard extends ConsumerWidget {
               IconButton(
                 icon: Icon(
                   isFavorite ? Icons.star_rounded : Icons.star_border_rounded,
-                  color: isFavorite ? FangeulColors.primary : null,
+                  color: isFavorite ? theme.colorScheme.primary : null,
                 ),
                 tooltip: UiStrings.favoriteTooltip,
                 onPressed: () {

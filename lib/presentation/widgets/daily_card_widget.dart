@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:fangeul/core/entities/daily_card.dart';
-import 'package:fangeul/presentation/theme/fangeul_colors.dart';
+import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/theme/fangeul_text_styles.dart';
 
 /// 데일리 카드 -- 큰 한글 중앙 배치 + 발음 + 번역.
@@ -67,7 +67,7 @@ class DailyCardWidget extends StatelessWidget {
           Text(
             card.phrase.roman,
             style: FangeulTextStyles.koreanSubtitle.copyWith(
-              color: FangeulColors.primary,
+              color: theme.colorScheme.primary,
             ),
             textAlign: TextAlign.center,
           ),
@@ -90,25 +90,25 @@ class DailyCardWidget extends StatelessWidget {
                 FilledButton.icon(
                   onPressed: onComplete,
                   icon: const Icon(Icons.check_circle_outline),
-                  label: const Text('완료'),
+                  label: const Text(UiStrings.complete),
                 ),
                 const SizedBox(width: 12),
               ],
               OutlinedButton.icon(
                 onPressed: onShare,
                 icon: const Icon(Icons.share_outlined),
-                label: const Text('공유'),
+                label: const Text(UiStrings.share),
               ),
               const SizedBox(width: 12),
               IconButton(
                 onPressed: () {
                   Clipboard.setData(ClipboardData(text: card.phrase.ko));
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('복사되었습니다')),
+                    const SnackBar(content: Text(UiStrings.copied)),
                   );
                 },
                 icon: const Icon(Icons.copy_outlined),
-                tooltip: '복사',
+                tooltip: UiStrings.copyTooltip,
               ),
             ],
           ),

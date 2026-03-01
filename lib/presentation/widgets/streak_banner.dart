@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:fangeul/presentation/theme/fangeul_colors.dart';
+import 'package:fangeul/presentation/constants/ui_strings.dart';
 
 /// 스트릭 배너 -- 현재 연속 학습일수 표시.
 ///
@@ -37,13 +37,13 @@ class StreakBanner extends StatelessWidget {
                 ? Icons.local_fire_department
                 : Icons.local_fire_department_outlined,
             color: isCompletedToday
-                ? FangeulColors.secondary
+                ? theme.colorScheme.secondary
                 : theme.colorScheme.onSurfaceVariant,
             size: 28,
           ),
           const SizedBox(width: 12),
           Text(
-            '$streak일 연속',
+            UiStrings.streakDays(streak),
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,
             ),
@@ -53,13 +53,13 @@ class StreakBanner extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               decoration: BoxDecoration(
-                color: FangeulColors.primary.withValues(alpha: 0.15),
+                color: theme.colorScheme.primary.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                '완료',
+                UiStrings.complete,
                 style: theme.textTheme.labelMedium?.copyWith(
-                  color: FangeulColors.primary,
+                  color: theme.colorScheme.primary,
                 ),
               ),
             ),
