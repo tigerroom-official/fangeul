@@ -98,12 +98,19 @@ class __$$FavoritesImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FavoritesImpl implements _Favorites {
+class _$FavoritesImpl with DiagnosticableTreeMixin implements _Favorites {
   const _$FavoritesImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'CompactPhraseFilter.favorites()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'CompactPhraseFilter.favorites'));
   }
 
   @override
@@ -216,15 +223,23 @@ class __$$PackImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$PackImpl implements _Pack {
+class _$PackImpl with DiagnosticableTreeMixin implements _Pack {
   const _$PackImpl(this.packId);
 
   @override
   final String packId;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'CompactPhraseFilter.pack(packId: $packId)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'CompactPhraseFilter.pack'))
+      ..add(DiagnosticsProperty('packId', packId));
   }
 
   @override

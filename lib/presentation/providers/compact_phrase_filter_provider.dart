@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:fangeul/core/entities/phrase.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
@@ -19,19 +21,51 @@ sealed class CompactPhraseFilter with _$CompactPhraseFilter {
 }
 
 /// 간편모드 문구 필터 Notifier.
+///
+/// SharedPreferences에 마지막 선택 필터를 저장하여 재시작 시 복원한다.
+/// 듀얼 FlutterEngine 환경에서 cross-engine sync를 위해 `prefs.reload()` 수행.
 @riverpod
 class CompactPhraseFilterNotifier extends _$CompactPhraseFilterNotifier {
+  static const _key = 'compact_phrase_filter';
+
   @override
-  CompactPhraseFilter build() => const CompactPhraseFilter.favorites();
+  Future<CompactPhraseFilter> build() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.reload();
+    final saved = prefs.getString(_key);
+    if (saved == null) return const CompactPhraseFilter.favorites();
+    if (saved == 'favorites') return const CompactPhraseFilter.favorites();
+    if (saved.startsWith('pack:')) {
+      return CompactPhraseFilter.pack(saved.substring(5));
+    }
+    return const CompactPhraseFilter.favorites();
+  }
 
   /// 즐겨찾기 필터로 전환.
-  void selectFavorites() {
-    state = const CompactPhraseFilter.favorites();
+  Future<void> selectFavorites() async {
+    const filter = CompactPhraseFilter.favorites();
+    state = const AsyncData(filter);
+    await _saveToPrefs(filter);
   }
 
   /// 팩 필터로 전환.
-  void selectPack(String packId) {
-    state = CompactPhraseFilter.pack(packId);
+  Future<void> selectPack(String packId) async {
+    final filter = CompactPhraseFilter.pack(packId);
+    state = AsyncData(filter);
+    await _saveToPrefs(filter);
+  }
+
+  Future<void> _saveToPrefs(CompactPhraseFilter filter) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final value = switch (filter) {
+        _Favorites() => 'favorites',
+        _Pack(:final packId) => 'pack:$packId',
+      };
+      await prefs.setString(_key, value);
+    } catch (e) {
+      debugPrint('CompactPhraseFilterNotifier: save failed — $e');
+    }
   }
 }
 
@@ -42,7 +76,7 @@ class CompactPhraseFilterNotifier extends _$CompactPhraseFilterNotifier {
 @riverpod
 Future<List<Phrase>> filteredCompactPhrases(
     FilteredCompactPhrasesRef ref) async {
-  final filter = ref.watch(compactPhraseFilterNotifierProvider);
+  final filter = await ref.watch(compactPhraseFilterNotifierProvider.future);
 
   return switch (filter) {
     _Favorites() => _buildFavoritesPhrases(ref),
@@ -56,8 +90,7 @@ Future<List<Phrase>> filteredCompactPhrases(
 /// SharedPreferences 로드 완료를 자연스럽게 대기한다.
 Future<List<Phrase>> _buildFavoritesPhrases(
     FilteredCompactPhrasesRef ref) async {
-  final favoriteKos =
-      await ref.watch(favoritePhrasesNotifierProvider.future);
+  final favoriteKos = await ref.watch(favoritePhrasesNotifierProvider.future);
   if (favoriteKos.isEmpty) return [];
 
   final packs = await ref.watch(allPhrasesProvider.future);
@@ -87,7 +120,7 @@ Future<List<Phrase>> _buildPackPhrases(
 /// 현재 선택된 팩이 잠금 상태인지.
 @riverpod
 Future<bool> isSelectedPackLocked(IsSelectedPackLockedRef ref) async {
-  final filter = ref.watch(compactPhraseFilterNotifierProvider);
+  final filter = await ref.watch(compactPhraseFilterNotifierProvider.future);
 
   return switch (filter) {
     _Favorites() => false,

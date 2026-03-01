@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +11,7 @@ import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
 import 'package:fangeul/presentation/providers/phrase_providers.dart';
 
 import 'package:fangeul/presentation/widgets/compact_phrase_tile.dart';
+import 'package:fangeul/presentation/widgets/copy_feedback_overlay.dart';
 import 'package:fangeul/presentation/widgets/pack_filter_chips.dart';
 import 'package:fangeul/presentation/widgets/recent_copy_tile.dart';
 
@@ -122,11 +122,13 @@ class _PhrasesTabState extends ConsumerState<_PhrasesTab>
   Widget build(BuildContext context) {
     super.build(context); // AutomaticKeepAliveClientMixin 필수
 
-    final filter = ref.watch(compactPhraseFilterNotifierProvider);
+    final filterAsync = ref.watch(compactPhraseFilterNotifierProvider);
     final packsAsync = ref.watch(allPhrasesProvider);
     final phrasesAsync = ref.watch(filteredCompactPhrasesProvider);
     final lockedAsync = ref.watch(isSelectedPackLockedProvider);
 
+    final filter =
+        filterAsync.valueOrNull ?? const CompactPhraseFilter.favorites();
     final isFavoritesSelected = filter == const CompactPhraseFilter.favorites();
     final selectedPackId = filter.whenOrNull(pack: (id) => id);
 
@@ -331,7 +333,9 @@ class _PhraseCard extends ConsumerWidget {
   void _copy(BuildContext context, WidgetRef ref) {
     Clipboard.setData(ClipboardData(text: phrase.ko));
     ref.read(copyHistoryNotifierProvider.notifier).addEntry(phrase.ko);
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+    CopyFeedback.trigger(context);
+    // 피드백이 잠시 보인 후 닫기
+    Future.delayed(const Duration(milliseconds: 400), () {
       onCopied?.call();
     });
   }

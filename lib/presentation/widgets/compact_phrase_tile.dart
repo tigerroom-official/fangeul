@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,6 +7,7 @@ import 'package:fangeul/core/entities/phrase.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/copy_history_provider.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
+import 'package:fangeul/presentation/widgets/copy_feedback_overlay.dart';
 
 /// 간편모드 문구 타일 — ko + roman + ★토글 + 복사.
 ///
@@ -87,7 +87,9 @@ class CompactPhraseTile extends ConsumerWidget {
   void _copy(BuildContext context, WidgetRef ref) {
     Clipboard.setData(ClipboardData(text: phrase.ko));
     ref.read(copyHistoryNotifierProvider.notifier).addEntry(phrase.ko);
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+    CopyFeedback.trigger(context);
+    // 피드백이 잠시 보인 후 닫기
+    Future.delayed(const Duration(milliseconds: 400), () {
       onCopied?.call();
     });
   }

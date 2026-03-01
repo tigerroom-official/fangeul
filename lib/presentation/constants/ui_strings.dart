@@ -75,6 +75,11 @@ abstract final class UiStrings {
   static const bubblePermissionAllow = '허용';
   static const bubblePermissionDeny = '취소';
   static const bubblePermissionDenied = '앱 내에서도 모든 기능을 사용할 수 있습니다';
+  static const bubbleBatteryTitle = '배터리 최적화 해제';
+  static const bubbleBatteryMessage = '버블이 안정적으로 동작하려면 배터리 최적화를 해제해주세요.\n'
+      '일부 기기에서는 배터리 최적화가 버블을 자동 종료할 수 있습니다.';
+  static const bubbleBatteryAllow = '설정 열기';
+  static const bubbleBatteryDeny = '나중에';
 
   // 미니 변환기
   static const miniConverterTitle = 'Fangeul';

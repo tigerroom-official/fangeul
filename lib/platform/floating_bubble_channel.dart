@@ -78,4 +78,34 @@ class FloatingBubbleChannel {
       return BubbleState.off;
     }
   }
+
+  /// 배터리 최적화가 해제되어 있는지 확인한다.
+  ///
+  /// `true` — 배터리 최적화 제외 상태 (버블 서비스 안정).
+  /// `false` — 최적화 적용 중 (OEM 프로세스 킬 위험).
+  Future<bool> isBatteryOptimizationDisabled() async {
+    try {
+      final result = await _channel.invokeMethod<bool>(
+        'isBatteryOptimizationDisabled',
+      );
+      return result ?? false;
+    } on PlatformException {
+      return false;
+    }
+  }
+
+  /// 배터리 최적화 해제를 시스템에 요청한다.
+  ///
+  /// `ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` Intent를 실행하여
+  /// 사용자에게 배터리 최적화 해제 동의 다이얼로그를 표시한다.
+  Future<bool> requestIgnoreBatteryOptimization() async {
+    try {
+      final result = await _channel.invokeMethod<bool>(
+        'requestIgnoreBatteryOptimization',
+      );
+      return result ?? false;
+    } on PlatformException {
+      return false;
+    }
+  }
 }

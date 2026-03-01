@@ -28,8 +28,7 @@ void main() {
       container.listen(favoritePhrasesNotifierProvider, (_, __) {});
       await container.read(favoritePhrasesNotifierProvider.future);
 
-      final notifier =
-          container.read(favoritePhrasesNotifierProvider.notifier);
+      final notifier = container.read(favoritePhrasesNotifierProvider.notifier);
       await notifier.toggle('사랑해요');
 
       final favorites =
@@ -41,8 +40,7 @@ void main() {
       container.listen(favoritePhrasesNotifierProvider, (_, __) {});
       await container.read(favoritePhrasesNotifierProvider.future);
 
-      final notifier =
-          container.read(favoritePhrasesNotifierProvider.notifier);
+      final notifier = container.read(favoritePhrasesNotifierProvider.notifier);
       await notifier.toggle('사랑해요');
       await notifier.toggle('사랑해요');
 
@@ -55,8 +53,7 @@ void main() {
       container.listen(favoritePhrasesNotifierProvider, (_, __) {});
       await container.read(favoritePhrasesNotifierProvider.future);
 
-      final notifier =
-          container.read(favoritePhrasesNotifierProvider.notifier);
+      final notifier = container.read(favoritePhrasesNotifierProvider.notifier);
       await notifier.toggle('사랑해요');
 
       expect(notifier.isFavorite('사랑해요'), isTrue);
@@ -67,8 +64,7 @@ void main() {
       container.listen(favoritePhrasesNotifierProvider, (_, __) {});
       await container.read(favoritePhrasesNotifierProvider.future);
 
-      final notifier =
-          container.read(favoritePhrasesNotifierProvider.notifier);
+      final notifier = container.read(favoritePhrasesNotifierProvider.notifier);
       await notifier.toggle('사랑해요');
       await notifier.toggle('화이팅');
       await notifier.toggle('보고싶어');
@@ -88,8 +84,7 @@ void main() {
         addTearDown(c.dispose);
 
         c.listen(favoritePhrasesNotifierProvider, (_, __) {});
-        final favorites =
-            await c.read(favoritePhrasesNotifierProvider.future);
+        final favorites = await c.read(favoritePhrasesNotifierProvider.future);
         expect(favorites, containsAll(['사랑해요', '화이팅']));
         expect(favorites, hasLength(2));
       });
@@ -105,12 +100,10 @@ void main() {
         await c.read(favoritePhrasesNotifierProvider.future);
 
         // 로드 후 toggle — await로 build() 완료 후 반영 보장
-        final notifier =
-            c.read(favoritePhrasesNotifierProvider.notifier);
+        final notifier = c.read(favoritePhrasesNotifierProvider.notifier);
         await notifier.toggle('화이팅');
 
-        final favorites =
-            c.read(favoritePhrasesNotifierProvider).valueOrNull;
+        final favorites = c.read(favoritePhrasesNotifierProvider).valueOrNull;
         // 저장된 '사랑해요' + 새로 추가된 '화이팅' 모두 존재해야 함
         expect(favorites, containsAll(['사랑해요', '화이팅']));
       });

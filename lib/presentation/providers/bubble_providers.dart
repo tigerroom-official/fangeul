@@ -76,4 +76,14 @@ class BubbleNotifier extends _$BubbleNotifier {
   Future<void> sync() async {
     state = await _channel.getBubbleState();
   }
+
+  /// 배터리 최적화가 해제되어 있는지 확인한다.
+  Future<bool> isBatteryOptimizationDisabled() {
+    return _channel.isBatteryOptimizationDisabled();
+  }
+
+  /// 배터리 최적화 해제를 시스템에 요청한다.
+  Future<bool> requestIgnoreBatteryOptimization() {
+    return _channel.requestIgnoreBatteryOptimization();
+  }
 }

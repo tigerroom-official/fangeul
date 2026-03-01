@@ -7,7 +7,7 @@ part of 'compact_phrase_filter_provider.dart';
 // **************************************************************************
 
 String _$filteredCompactPhrasesHash() =>
-    r'f660fefa3273e20e74ffbb0b3f2c915eb2cf7f7e';
+    r'c001f6a5c8b33b5bf2d11f0e5d5162b6334d4159';
 
 /// 현재 필터에 맞는 문구 목록.
 ///
@@ -31,7 +31,7 @@ final filteredCompactPhrasesProvider =
 // ignore: unused_element
 typedef FilteredCompactPhrasesRef = AutoDisposeFutureProviderRef<List<Phrase>>;
 String _$isSelectedPackLockedHash() =>
-    r'92298c1c28d3c087271cfc0fd940cf71a39f1bb9';
+    r'a66f1375fceec7a9f40ba046cb61452c9152f772';
 
 /// 현재 선택된 팩이 잠금 상태인지.
 ///
@@ -51,13 +51,16 @@ final isSelectedPackLockedProvider = AutoDisposeFutureProvider<bool>.internal(
 // ignore: unused_element
 typedef IsSelectedPackLockedRef = AutoDisposeFutureProviderRef<bool>;
 String _$compactPhraseFilterNotifierHash() =>
-    r'463fec86781a1734b631e05f80a9ca66df66727b';
+    r'cbcf27e016a569314aa09ebf1ee0a27b40521d27';
 
 /// 간편모드 문구 필터 Notifier.
 ///
+/// SharedPreferences에 마지막 선택 필터를 저장하여 재시작 시 복원한다.
+/// 듀얼 FlutterEngine 환경에서 cross-engine sync를 위해 `prefs.reload()` 수행.
+///
 /// Copied from [CompactPhraseFilterNotifier].
 @ProviderFor(CompactPhraseFilterNotifier)
-final compactPhraseFilterNotifierProvider = AutoDisposeNotifierProvider<
+final compactPhraseFilterNotifierProvider = AutoDisposeAsyncNotifierProvider<
     CompactPhraseFilterNotifier, CompactPhraseFilter>.internal(
   CompactPhraseFilterNotifier.new,
   name: r'compactPhraseFilterNotifierProvider',
@@ -69,6 +72,6 @@ final compactPhraseFilterNotifierProvider = AutoDisposeNotifierProvider<
 );
 
 typedef _$CompactPhraseFilterNotifier
-    = AutoDisposeNotifier<CompactPhraseFilter>;
+    = AutoDisposeAsyncNotifier<CompactPhraseFilter>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

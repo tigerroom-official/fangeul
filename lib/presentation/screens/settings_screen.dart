@@ -110,6 +110,7 @@ class _BubbleToggleTile extends ConsumerWidget {
 
     if (hasPermission) {
       await notifier.show();
+      if (context.mounted) await _checkBatteryOptimization(context, notifier);
       return;
     }
 
@@ -136,12 +137,45 @@ class _BubbleToggleTile extends ConsumerWidget {
       final granted = await notifier.requestPermission();
       if (granted) {
         await notifier.show();
+        if (context.mounted) await _checkBatteryOptimization(context, notifier);
         return;
       }
     } else if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text(UiStrings.bubblePermissionDenied)),
       );
+    }
+  }
+
+  /// 배터리 최적화가 적용 중이면 해제 안내 다이얼로그를 표시한다.
+  Future<void> _checkBatteryOptimization(
+    BuildContext context,
+    BubbleNotifier notifier,
+  ) async {
+    final isDisabled = await notifier.isBatteryOptimizationDisabled();
+    if (isDisabled) return;
+
+    if (!context.mounted) return;
+    final shouldOpen = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text(UiStrings.bubbleBatteryTitle),
+        content: const Text(UiStrings.bubbleBatteryMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text(UiStrings.bubbleBatteryDeny),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text(UiStrings.bubbleBatteryAllow),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldOpen == true) {
+      await notifier.requestIgnoreBatteryOptimization();
     }
   }
 }

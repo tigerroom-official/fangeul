@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:fangeul/core/engines/keyboard_converter.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/presentation/providers/compact_phrase_filter_provider.dart';
 import 'package:fangeul/presentation/providers/converter_providers.dart';
 import 'package:fangeul/presentation/providers/copy_history_provider.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
@@ -22,7 +23,7 @@ final miniConverterCompactProvider =
 /// 미니 변환기 팝업 화면.
 ///
 /// FloatingBubbleService에서 버블 탭 시 열리는 Flutter Activity 화면.
-/// 2단 모드: 간편모드(기본, ~35%) <-> 확장모드(변환기, ~75%).
+/// 2단 모드: 간편모드(기본, ~43%) <-> 확장모드(변환기, ~70%).
 /// 드래그 핸들: 아래로 밀어 닫기, 위로 밀어 변환기 확장.
 class MiniConverterScreen extends ConsumerStatefulWidget {
   /// Creates the [MiniConverterScreen] widget.
@@ -101,6 +102,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
     if (!mounted) return;
     ref.invalidate(favoritePhrasesNotifierProvider);
     ref.invalidate(copyHistoryNotifierProvider);
+    ref.invalidate(compactPhraseFilterNotifierProvider);
     ref.invalidate(themeModeNotifierProvider);
   }
 
@@ -194,7 +196,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
               height: isCompact
-                  ? MediaQuery.of(context).size.height * 0.30
+                  ? MediaQuery.of(context).size.height * 0.43
                   : MediaQuery.of(context).size.height * 0.70,
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,

@@ -7,7 +7,7 @@ part of 'copy_history_provider.dart';
 // **************************************************************************
 
 String _$copyHistoryNotifierHash() =>
-    r'26a7cad8c408e3a9c7e5deeb318a77b70a01fd17';
+    r'3400be45b76003d4973e1cb6f9b7112e8d9fb01b';
 
 /// 복사 이력 Provider.
 ///

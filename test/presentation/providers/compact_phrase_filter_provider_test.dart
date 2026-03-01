@@ -48,7 +48,12 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  ProviderContainer createContainer() {
+  ProviderContainer createContainer({
+    Map<String, Object>? prefsValues,
+  }) {
+    if (prefsValues != null) {
+      SharedPreferences.setMockInitialValues(prefsValues);
+    }
     return ProviderContainer(
       overrides: [
         allPhrasesProvider.overrideWith((ref) async => _testPacks),
@@ -57,36 +62,123 @@ void main() {
   }
 
   group('CompactPhraseFilterNotifier', () {
-    test('should start with favorites filter', () {
+    test('should default to favorites when no saved data', () async {
       final container = createContainer();
       addTearDown(container.dispose);
 
-      final filter = container.read(compactPhraseFilterNotifierProvider);
+      container.listen(compactPhraseFilterNotifierProvider, (_, __) {});
+      final filter =
+          await container.read(compactPhraseFilterNotifierProvider.future);
       expect(filter, const CompactPhraseFilter.favorites());
     });
 
-    test('should switch to pack filter', () {
-      final container = createContainer();
+    test('should load saved pack filter on build', () async {
+      final container = createContainer(
+        prefsValues: {'compact_phrase_filter': 'pack:basic_love'},
+      );
       addTearDown(container.dispose);
 
-      container
-          .read(compactPhraseFilterNotifierProvider.notifier)
-          .selectPack('basic_love');
-
-      final filter = container.read(compactPhraseFilterNotifierProvider);
+      container.listen(compactPhraseFilterNotifierProvider, (_, __) {});
+      final filter =
+          await container.read(compactPhraseFilterNotifierProvider.future);
       expect(filter, const CompactPhraseFilter.pack('basic_love'));
     });
 
-    test('should switch back to favorites', () {
+    test('should load saved favorites filter on build', () async {
+      final container = createContainer(
+        prefsValues: {'compact_phrase_filter': 'favorites'},
+      );
+      addTearDown(container.dispose);
+
+      container.listen(compactPhraseFilterNotifierProvider, (_, __) {});
+      final filter =
+          await container.read(compactPhraseFilterNotifierProvider.future);
+      expect(filter, const CompactPhraseFilter.favorites());
+    });
+
+    test('should handle invalid saved data gracefully', () async {
+      final container = createContainer(
+        prefsValues: {'compact_phrase_filter': 'garbage_data'},
+      );
+      addTearDown(container.dispose);
+
+      container.listen(compactPhraseFilterNotifierProvider, (_, __) {});
+      final filter =
+          await container.read(compactPhraseFilterNotifierProvider.future);
+      expect(filter, const CompactPhraseFilter.favorites());
+    });
+
+    test('should save pack selection to SharedPreferences', () async {
       final container = createContainer();
       addTearDown(container.dispose);
 
+      container.listen(compactPhraseFilterNotifierProvider, (_, __) {});
+      await container.read(compactPhraseFilterNotifierProvider.future);
+
+      await container
+          .read(compactPhraseFilterNotifierProvider.notifier)
+          .selectPack('basic_love');
+
+      final filter =
+          await container.read(compactPhraseFilterNotifierProvider.future);
+      expect(filter, const CompactPhraseFilter.pack('basic_love'));
+
+      // SharedPreferences에 저장 확인
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getString('compact_phrase_filter'), 'pack:basic_love');
+    });
+
+    test('should save favorites selection to SharedPreferences', () async {
+      final container = createContainer(
+        prefsValues: {'compact_phrase_filter': 'pack:daily'},
+      );
+      addTearDown(container.dispose);
+
+      container.listen(compactPhraseFilterNotifierProvider, (_, __) {});
+      await container.read(compactPhraseFilterNotifierProvider.future);
+
+      await container
+          .read(compactPhraseFilterNotifierProvider.notifier)
+          .selectFavorites();
+
+      final filter =
+          await container.read(compactPhraseFilterNotifierProvider.future);
+      expect(filter, const CompactPhraseFilter.favorites());
+
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getString('compact_phrase_filter'), 'favorites');
+    });
+
+    test('should switch to pack filter', () async {
+      final container = createContainer();
+      addTearDown(container.dispose);
+
+      container.listen(compactPhraseFilterNotifierProvider, (_, __) {});
+      await container.read(compactPhraseFilterNotifierProvider.future);
+
+      await container
+          .read(compactPhraseFilterNotifierProvider.notifier)
+          .selectPack('basic_love');
+
+      final filter =
+          await container.read(compactPhraseFilterNotifierProvider.future);
+      expect(filter, const CompactPhraseFilter.pack('basic_love'));
+    });
+
+    test('should switch back to favorites', () async {
+      final container = createContainer();
+      addTearDown(container.dispose);
+
+      container.listen(compactPhraseFilterNotifierProvider, (_, __) {});
+      await container.read(compactPhraseFilterNotifierProvider.future);
+
       final notifier =
           container.read(compactPhraseFilterNotifierProvider.notifier);
-      notifier.selectPack('daily');
-      notifier.selectFavorites();
+      await notifier.selectPack('daily');
+      await notifier.selectFavorites();
 
-      final filter = container.read(compactPhraseFilterNotifierProvider);
+      final filter =
+          await container.read(compactPhraseFilterNotifierProvider.future);
       expect(filter, const CompactPhraseFilter.favorites());
     });
   });
@@ -144,7 +236,10 @@ void main() {
       final container = createContainer();
       addTearDown(container.dispose);
 
-      container
+      container.listen(compactPhraseFilterNotifierProvider, (_, __) {});
+      await container.read(compactPhraseFilterNotifierProvider.future);
+
+      await container
           .read(compactPhraseFilterNotifierProvider.notifier)
           .selectPack('basic_love');
 
@@ -158,7 +253,10 @@ void main() {
       final container = createContainer();
       addTearDown(container.dispose);
 
-      container
+      container.listen(compactPhraseFilterNotifierProvider, (_, __) {});
+      await container.read(compactPhraseFilterNotifierProvider.future);
+
+      await container
           .read(compactPhraseFilterNotifierProvider.notifier)
           .selectPack('birthday');
 
@@ -171,7 +269,10 @@ void main() {
       final container = createContainer();
       addTearDown(container.dispose);
 
-      container
+      container.listen(compactPhraseFilterNotifierProvider, (_, __) {});
+      await container.read(compactPhraseFilterNotifierProvider.future);
+
+      await container
           .read(compactPhraseFilterNotifierProvider.notifier)
           .selectPack('nonexistent');
 
@@ -194,7 +295,10 @@ void main() {
       final container = createContainer();
       addTearDown(container.dispose);
 
-      container
+      container.listen(compactPhraseFilterNotifierProvider, (_, __) {});
+      await container.read(compactPhraseFilterNotifierProvider.future);
+
+      await container
           .read(compactPhraseFilterNotifierProvider.notifier)
           .selectPack('basic_love');
 
@@ -206,7 +310,10 @@ void main() {
       final container = createContainer();
       addTearDown(container.dispose);
 
-      container
+      container.listen(compactPhraseFilterNotifierProvider, (_, __) {});
+      await container.read(compactPhraseFilterNotifierProvider.future);
+
+      await container
           .read(compactPhraseFilterNotifierProvider.notifier)
           .selectPack('birthday');
 

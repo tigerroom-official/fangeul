@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/theme/fangeul_text_styles.dart';
+import 'package:fangeul/presentation/widgets/copy_feedback_overlay.dart';
 
 /// 변환기 입출력 위젯 -- 읽기 전용 TextField + 결과 표시.
 ///
@@ -86,6 +87,7 @@ class ConverterInput extends StatelessWidget {
                     IconButton(
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: output));
+                        CopyFeedback.trigger(context);
                         onCopied?.call(output);
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text(UiStrings.copied)),
