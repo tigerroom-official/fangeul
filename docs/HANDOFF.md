@@ -1,127 +1,153 @@
 # Fangeul — Session Handoff
 
 BASE_COMMIT: c3f7167e2c035827195fdd5a92a74b358bffa862
-HANDOFF_COMMIT: 5934a20
+HANDOFF_COMMIT: b4e6547
 BRANCH: main
 
 ---
 
+## 프로젝트 상태 (누적)
+
+### 완료된 마일스톤
+- Phase 1~4: Core 엔진 + 데이터 레이어 + UI 완료
+- Phase 5: 플로팅 버블 전체 구현 + C1~C3/H1~H4 리뷰 수정 완료
+- Phase 5.1: MEDIUM 이슈 M1/M3/M4/M5 수정 완료
+- Phase 5.2: 간편모드 팩 문구 탐색 + 크로스엔진 동기화 + 버블/키보드 UX 수정
+
+### 활성 작업
+없음. 이번 세션 작업 완료.
+
+### 보류/백로그
+- LOW 이슈: L1(비율 조정), L2(탭 persistence), L3(자동닫기 설정), L4(펄스 애니메이션), L5(복사 기록 암호화)
+- Phase 4 UI 마무리: 데일리 카드 공유, 스트릭 배너, celebration_overlay
+- Phase 6: 수익화 (감성 컬러 팩 IAP)
+
 ## 작업 요약
 
-Phase 5 플로팅 버블 구현 완료 후, Claude+Codex 통합 코드 리뷰를 수행하고
-CRITICAL 3건 + HIGH 4건 이슈를 수정했다. 215개 테스트 전체 통과.
+간편모드에 팩별 문구 탐색 기능을 추가하고, 크로스 FlutterEngine 간 SharedPreferences 동기화,
+버블 토글 상태, 키보드 언어 전환 등 다수의 UX 버그를 수정했다.
+3+ 회 실패한 즐겨찾기 동기화 문제를 AsyncNotifier 아키텍처 전환으로 근본 해결. 247개 테스트 통과.
 
 ## 완료된 작업
 
-- [x] Phase 5 플로팅 버블 전체 구현 (16 tasks) — `86b39a0`~`15a0260`
-- [x] 코드 리뷰: Claude 자체 리뷰 + Codex GPT-5.3 독립 리뷰 + 에뮬레이터 앱 테스트
-- [x] **C1** GoRouter + setInitialRoute 충돌 수정 — `d263360`
-  - `app_router.dart`: `PlatformDispatcher.defaultRouteName` 읽어 미니 엔진 → `/mini-converter` 라우팅
-- [x] **C2** MiniConverterActivity `super.configureFlutterEngine()` 추가 — `d263360`
-- [x] **C3** PhraseCard 즐겨찾기 토글 버튼 추가 — `d263360`
-  - `phrase_card.dart`: StatelessWidget → ConsumerWidget, 별 아이콘 + FavoritePhrasesNotifier 연동
-- [x] **H1** EventChannel 구현 — `5934a20`
-  - `BubbleEventBroadcaster.kt` (싱글턴), `FloatingBubbleService` → send(), `floating_bubble_channel.dart` stateStream
-- [x] **H2** MiniConverterActivity 엔진 캐시 null 폴백 — `5934a20`
-- [x] **H3** `requestOverlayPermission` → `startActivityForResult` + 권한 복귀 시 자동 버블 표시 — `5934a20`
-- [x] **H4** BubbleNotifier.build()에서 `_syncFromNative()` + `_listenToEvents()` — `5934a20`
-- [x] 리뷰 반영: setState 제거 + 권한 거부 피드백 — `3849f56`
+- [x] 간편모드 팩 문구 탐색 — 필터 칩 바 + 좌우 스와이프 카드(PageView) + 즐겨찾기 세로 리스트
+  - 신규: `compact_phrase_filter_provider.dart`, `compact_phrase_tile.dart`, `pack_filter_chips.dart`
+  - 수정: `compact_phrase_list.dart` 전면 리팩토링
+- [x] FavoritePhrasesNotifier → AsyncNotifier 전환 (근본 아키텍처 수정) — `b4e6547`
+  - sync Notifier의 "{}→async load" 갭이 파생 provider에서 빈 데이터 노출하는 근본 문제 해결
+  - `toggle()` → `Future<void>` + `await future`로 race condition 방지
+- [x] 크로스 엔진 SharedPreferences 동기화 — `prefs.reload()` + `didChangeAppLifecycleState` invalidate
+- [x] CopyHistoryNotifier `late final _loaded` → `late _loaded` (invalidate 시 재할당 크래시 수정)
+- [x] 버블 임시 hide 시 토글 상태 유지 — `EXTRA_SILENT` 플래그 + `isServiceActive` 분리
+- [x] 메인 앱 포그라운드에서 버블 자동 숨김 — `onResume`/`onStop` + `showBubble` handler
+- [x] 탭 전환 시 키보드 언어 즉시 반영 — `ListenableBuilder(listenable: _tabController)`
+- [x] 상태바 투명 처리 — `MiniConverterActivity.onCreate()` + XML theme 속성
+- [x] MEDIUM 이슈 M1/M3/M4/M5 수정 (이전 세션에서 커밋)
 
 ## 진행 중인 작업
 
-없음. CRITICAL/HIGH 이슈 모두 수정 완료.
-
-## 다음 단계
-
-### 1순위: MEDIUM 이슈 수정 (Phase 5.1)
-- **M1** Provider `build()`에서 async `_loadFromPrefs()` 호출 레이스 컨디션 — `favorite_phrases_provider.dart`, `copy_history_provider.dart`
-- **M3** `ACTION_HIDE`에서 close-zone 오버레이 리크 — `FloatingBubbleService.kt` `removeBubble()` 시 `removeCloseZone()`도 호출
-- **M4** 화면 회전 시 bubble 위치 초기화 — `FloatingBubbleService.kt` `onConfigurationChanged`
-- **M5** `getRunningServices()` deprecated API → `ActivityManager.getRunningServiceControlPanel()` 또는 바인드 패턴
-
-### 2순위: LOW/UX 이슈
-- **L1** 간편/확장 모드 비율 30%/75% → 25%/70% (설계서 기준)
-- **L2** 탭 선택 persistence
-- **L3** 자동 닫기 타이밍 하드코딩 → 설정 가능하게
-- **L4** 버블 펄스 애니메이션
-- **L5** 복사 기록 평문 저장 → 프라이버시 고려
-
-### 3순위: Phase 4 UI 진행
-- 홈 화면 데일리 카드 공유 기능
-- 스트릭 배너 비주얼 개선
-- celebration_overlay.dart (이미 파일 존재, 내용 구현 필요)
+없음.
 
 ## 핵심 교훈
 
-- ★ GoRouter는 `initialLocation` 파라미터만 사용하고 `window.defaultRouteName`을 무시한다. 별도 FlutterEngine에서 `setInitialRoute()`를 쓰려면 `PlatformDispatcher.instance.defaultRouteName`을 직접 읽어 GoRouter에 전달해야 한다.
-- ★ FlutterActivity의 `configureFlutterEngine()`을 override할 때 반드시 `super` 호출. 안 하면 플러그인 미등록 → `MissingPluginException`.
-- ★ Kotlin Service → Dart 이벤트 전송: `EventChannel.StreamHandler`를 싱글턴 object로 구현하고, Service에서 `mainHandler.post { eventSink?.success() }`로 메인 스레드 보장.
-- ★ Riverpod auto-dispose provider 테스트 시 `container.read()`가 아닌 `container.listen()`으로 provider를 유지해야 비동기 상태 변경이 반영된다.
-- `requestOverlayPermission`에서 `startActivityForResult` 사용 시 `@Suppress("DEPRECATION")` 필요 (Activity Result API 대안 있지만 FlutterActivity에서는 이 방식이 간단).
+- ★ **듀얼 FlutterEngine = 별도 Dart 격리 = SharedPreferences 캐시 분리**. 크로스엔진 데이터 공유 시 반드시 `prefs.reload()` 호출 필요. (2026-03-01)
+- ★ **sync Notifier + async load 패턴은 파생 provider에서 근본적으로 깨짐**. `build()` 동기 반환 `{}` → 비동기 load 완료 전에 파생 provider가 빈 데이터로 평가 → AsyncNotifier로 전환해야 함. 3+ 회 실패 후 아키텍처 문제로 판단. (2026-03-01)
+- ★ **`late final` 필드를 Riverpod Notifier.build()에서 초기화하면 안 됨**. `ref.invalidate()` 시 `build()` 재호출 → `late final` 재할당 에러. `late` (non-final) 또는 nullable 사용. (2026-03-01)
+- ★ **프리워밍된 FlutterEngine의 provider는 엔진 생성 시 빌드됨** — MiniConverterActivity 열기 시점이 아님. `didChangeAppLifecycleState(resumed)`에서 반드시 invalidate하여 최신 데이터 로드. `_hasInitialized` 가드로 첫 resume를 건너뛰면 안 됨. (2026-03-01)
+- ★ **버블 임시 hide vs 영구 stop 구분 필요** — `ACTION_HIDE`에 `EXTRA_SILENT` boolean extra로 이벤트 브로드캐스트 억제. `isServiceActive`(서비스 활성) vs `isBubbleShowing`(뷰 표시) 플래그 분리. (2026-03-01)
+- ★ **TabController 변경이 provider 상태 변경 없으면 리빌드 안 됨** — freezed state가 이미 동일 값이면 Riverpod가 리빌드를 건너뜀. `ListenableBuilder(listenable: _tabController)`로 키보드 등 탭 의존 위젯을 감싸야 함. (2026-03-01)
+- `AutomaticKeepAliveClientMixin` — TabBarView에서 탭 전환 시 provider auto-dispose 방지
+- `ref.listenManual` — build() 내 side-effect 대신 initState()에서 사용 (필터 변경 시 PageView 리셋)
+
+## 다음 단계
+
+### 1순위: LOW 이슈 수정
+- **L1** 간편/확장 모드 비율 35%/75% → 설계서 기준 조정
+- **L2** 탭 선택 persistence (SharedPreferences)
+- **L3** 자동 닫기 타이밍 하드코딩 → 설정 가능
+- **L4** 버블 펄스 애니메이션
+- **L5** 복사 기록 평문 저장 → 프라이버시 고려
+
+### 2순위: Phase 4 UI 마무리
+- 홈 화면 데일리 카드 공유 기능
+- 스트릭 배너 비주얼 개선
+- celebration_overlay.dart 구현
+
+### 3순위: Phase 6 수익화
+- 감성 컬러 팩 IAP 구현
+- 보상형 광고 "팬 패스" 시스템
+- 전환 퍼널 로직
 
 ## 커밋 히스토리
 
 ```
+b4e6547 feat: 간편모드 팩 문구 탐색 + 버블/키보드 UX 버그 수정
+d0945b3 fix: 버블 팝업 UX 수정 — 닫기/스와이프/즐겨찾기 복사
+b457ae6 fix: 버블 팝업 투명 배경 + 즐겨찾기 동기화
+8d47b3c fix: 버블 팝업 재열기 시 빈 화면 — SystemNavigator.pop()으로 교체
+888c046 fix: 다크모드에서 버블 탭 시 검은 화면 — TranslucentTheme 누락 수정
+308fb2a fix: removeBubble bubbleParams null + config receiver height 감지 추가
+6b59a3c fix: 심층 리뷰 반영 — _loadFromPrefs try-catch, snapToEdge Y클램핑, Handler.post
+c95cda7 fix: 코드 리뷰 반영 — isRunning→isBubbleShowing, RECEIVER_NOT_EXPORTED, dart:async 제거
+a7f130a style: dart format 적용
+2a15b74 fix(M3/M4/M5): close-zone 리크 수정, 화면 회전 대응, deprecated API 교체
+8f710d7 fix(M1): CopyHistoryNotifier — merge 전략으로 race condition 해결
+c2ecd5c fix(M1): FavoritePhrasesNotifier — merge 전략으로 race condition 해결
+8be4f5d chore: session handoff - Phase 5 리뷰 수정 완료
 5934a20 fix: HIGH 리뷰 이슈 4건 수정 (H1~H4)
 d263360 fix: 크리티컬 리뷰 이슈 3건 수정 (C1~C3)
 3849f56 fix: 리뷰 반영 — setState() 제거 + 권한 거부 피드백 추가
 15a0260 chore: Phase 5 최종 검증 — 포맷 수정 + unnecessary_import 제거
 6cc3842 feat(bubble): MiniConverterScreen — 간편모드 + 확장모드 2단 팝업 (TDD)
-2011bc8 feat(bubble): /mini-converter 라우트 추가
-da5600e feat(bubble): Settings — 버블 토글 + 권한 다이얼로그
-7f29583 feat(bubble): UI strings + 간편모드 위젯 (타일, 리스트)
-a8e7c32 feat(bubble): BubbleNotifier — 상태 관리 Provider (TDD)
-4488628 feat(bubble): ConverterInput — onCopied 콜백 추가
-5728480 feat(bubble): FavoritePhrasesNotifier — 즐겨찾기 토글/persist (TDD)
-ceb91cb feat(bubble): CopyHistoryNotifier — 복사 이력 20개 제한 (TDD)
-d008c80 feat(bubble): FloatingBubbleChannel — MethodChannel 래퍼 (TDD)
-b6aa1c2 feat(bubble): MainActivity — FlutterEngine 프리워밍 + MethodChannel
-0bdcd51 feat(bubble): BubbleState enum — off/showing/popup (TDD)
-3e1a6f6 feat(bubble): MiniConverterActivity — 캐시 엔진 Flutter Activity
-42a76c8 feat(bubble): FloatingBubbleService — 오버레이, 드래그, 스냅, 닫기 존
-7d6ae72 feat(bubble): BubbleNotificationHelper — 알림 채널/빌더
-86b39a0 feat(bubble): AndroidManifest + TranslucentTheme 설정
 ```
 
 ## 수정한 파일 (이번 세션)
 
 ```
-android/.../BubbleEventBroadcaster.kt     (NEW) — EventChannel 싱글턴
-android/.../FloatingBubbleService.kt      — 이벤트 전송 추가
-android/.../MainActivity.kt              — EventChannel 등록, startActivityForResult
-android/.../MiniConverterActivity.kt      — super 호출 + null 폴백
-lib/platform/floating_bubble_channel.dart — stateStream, requestOverlayPermission 반환
-lib/presentation/constants/ui_strings.dart — favoriteTooltip
-lib/presentation/providers/bubble_providers.dart — syncFromNative, listenToEvents
-lib/presentation/router/app_router.dart   — PlatformDispatcher.defaultRouteName
-lib/presentation/screens/settings_screen.dart — 권한 허용 시 자동 버블 표시
-lib/presentation/widgets/phrase_card.dart — ConsumerWidget + 즐겨찾기 토글
-test/.../bubble_providers_test.dart       — EventChannel 스트림 테스트
-test/.../settings_bubble_toggle_test.dart — stateStream mock 추가
-test_driver/driver_main.dart              — lib/에서 이동
+android/.../FloatingBubbleService.kt    — EXTRA_SILENT + isServiceActive 플래그
+android/.../MainActivity.kt             — onResume/onStop 버블 숨김, showBubble silent hide
+android/.../MiniConverterActivity.kt    — onCreate 상태바 투명 처리
+android/.../values/styles.xml (x2)      — TranslucentTheme 상태바/네비바 투명
+lib/.../compact_phrase_filter_provider.dart  (NEW) — freezed 필터 + 파생 provider
+lib/.../compact_phrase_tile.dart         (NEW) — ko + roman + ★토글 + 복사 타일
+lib/.../pack_filter_chips.dart          (NEW) — 수평 팩 필터 칩 바
+lib/.../copy_history_provider.dart       — late final → late (invalidate 호환)
+lib/.../favorite_phrases_provider.dart   — AsyncNotifier 전환 + await future
+lib/.../converter_screen.dart            — ListenableBuilder 키보드 감싸기
+lib/.../mini_converter_screen.dart       — 전면 리팩토링 (팩 탐색, lifecycle invalidate)
+lib/.../compact_phrase_list.dart         — 팩 스와이퍼 + 즐겨찾기 리스트 + AutomaticKeepAlive
+lib/.../phrase_card.dart                 — AsyncValue 대응 (.valueOrNull)
+test/.../favorite_phrases_provider_test.dart — AsyncNotifier API 대응
+test/.../compact_phrase_filter_provider_test.dart (NEW)
+test/.../compact_phrase_tile_test.dart    (NEW)
+test/.../pack_filter_chips_test.dart     (NEW)
+test/.../mini_converter_screen_test.dart — 팩 스와이퍼 테스트 추가
 ```
 
 ## 핵심 결정사항
 
 | 결정 | 이유 |
 |------|------|
-| GoRouter에서 `PlatformDispatcher.defaultRouteName` 사용 | `setInitialRoute()`와 GoRouter 호환을 위해. 유효한 경로만 허용하는 allowlist 방식 |
-| EventChannel을 싱글턴 object로 구현 | Service는 Activity와 생명주기가 다르므로, static EventSink로 브릿지 |
-| `startActivityForResult` 사용 (deprecated지만) | FlutterActivity에서 Activity Result API 적용이 복잡. MVP에서는 충분 |
-| PhraseCard를 ConsumerWidget으로 전환 | 즐겨찾기 상태를 실시간 반영하려면 ref.watch 필요 |
+| FavoritePhrasesNotifier: sync → AsyncNotifier | sync Notifier + async load 패턴이 파생 provider에서 근본적으로 깨짐. 3회 실패 후 아키텍처 문제로 판단 |
+| 버블 hide에 EXTRA_SILENT 플래그 | 임시 hide(메인 앱 포그라운드)와 영구 stop을 구분하여 Dart 이벤트 브로드캐스트 제어 |
+| isServiceActive vs isBubbleShowing 분리 | 뷰 숨김 상태에서도 서비스 활성 상태를 추적하여 getBubbleState/토글 UI 정확성 보장 |
+| ListenableBuilder로 키보드 감싸기 | freezed state가 동일하면 Riverpod이 리빌드 건너뜀 → TabController Listenable 직접 구독 |
+| didChangeAppLifecycleState에서 무조건 invalidate | 프리워밍 엔진의 provider가 이미 빌드 완료됨 → 첫 resume에서도 invalidate 필요 |
 
 ## 참고 컨텍스트
 
-- 리뷰 기준 문서: `docs/plans/2026-02-28-phase5-floating-bubble-design.md`
-- 수익화 패널 토론: `docs/discussions/2026-02-28-bubble-monetization.md`
-- 에뮬레이터 테스트: Home/Converter/Phrases 정상, Settings는 Driver 접근 실패 (IconButton tooltip 없음)
-- 전체 테스트: 215개 통과 (기존 214 + EventChannel 1)
+- 설계서: `docs/plans/2026-02-28-phase5-floating-bubble-design.md`
+- 수익화 패널: `docs/discussions/2026-02-28-bubble-monetization.md`
+- 전체 테스트: 247개 통과 (이전 세션 215 → 이번 세션 +32)
+- 에뮬레이터 검증: 즐겨찾기 크로스엔진 동기화, 버블 토글 상태, 키보드 언어 전환 확인 완료
 
 ## 세션 히스토리
 
 | 세션 | 요약 |
 |------|------|
 | P1~P3 | Core 엔진 + 데이터 레이어 완료 |
-| P5-구현 | Phase 5 플로팅 버블 16 tasks 구현 (86b39a0~15a0260) |
-| P5-리뷰 (이전) | Claude+Codex 통합 리뷰, setState 수정 |
-| **P5-수정 (이번)** | C1~C3 크리티컬 + H1~H4 하이 이슈 수정 → 215 tests |
+| P4 | UI 화면 구현 (홈, 변환기, 문구, 설정) |
+| P5-구현 | Phase 5 플로팅 버블 16 tasks 구현 |
+| P5-리뷰 | C1~C3/H1~H4 리뷰 수정 → 215 tests |
+| P5.1-MEDIUM | M1/M3/M4/M5 수정 |
+| **P5.2-UX (이번)** | 팩 문구 탐색 + AsyncNotifier 전환 + 버블/키보드 UX 수정 → 247 tests |

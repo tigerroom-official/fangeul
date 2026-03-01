@@ -53,6 +53,6 @@ dart format --set-exit-if-changed .  # 포맷 검증
 | `docs/HANDOFF.md` | 세션 핸드오프 (최신 작업 상태) |
 
 ## 현재 작업 상태
-> 마지막 핸드오프: 2026-02-28 21:30
+> 마지막 핸드오프: 2026-03-01 22:50
 > 상세: `docs/HANDOFF.md` 참조
-> 요약: Phase 5 플로팅 버블 완료 + C1~C3/H1~H4 리뷰 수정. 215개 테스트 pass. 다음: MEDIUM/LOW 잔여 이슈 → Phase 6 수익화.
+> 요약: Phase 5.2 완료 — 간편모드 팩 탐색 + AsyncNotifier 전환 + 버블/키보드 UX 수정. 247개 테스트 pass. 다음: LOW 이슈 → Phase 6 수익화.
