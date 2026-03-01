@@ -16,7 +16,8 @@ class CopyHistoryNotifier extends _$CopyHistoryNotifier {
   static const _maxEntries = 20;
 
   /// 초기 로드 완료 future. save가 로드 완료 후에만 실행되도록 게이트 역할.
-  late final Future<void> _loaded;
+  /// `ref.invalidate()` 시 `build()`가 재호출되므로 `final` 불가.
+  late Future<void> _loaded;
 
   @override
   List<String> build() {
@@ -52,6 +53,9 @@ class CopyHistoryNotifier extends _$CopyHistoryNotifier {
   Future<void> _loadFromPrefs() async {
     try {
       final prefs = await SharedPreferences.getInstance();
+      // 별도 FlutterEngine(메인앱 엔진)에서 기록한 값을 읽기 위해
+      // 플랫폼에서 최신 데이터를 다시 로드한다.
+      await prefs.reload();
       final json = prefs.getString(_key);
       if (json != null) {
         final saved = (jsonDecode(json) as List).cast<String>();

@@ -3,23 +3,42 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:fangeul/core/entities/phrase.dart';
+import 'package:fangeul/core/entities/phrase_pack.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/presentation/providers/phrase_providers.dart';
 import 'package:fangeul/presentation/screens/mini_converter_screen.dart';
+
+/// 테스트용 PhrasePack 목록.
+final _testPacks = [
+  PhrasePack(
+    id: 'basic_love',
+    name: 'Love & Support',
+    nameKo: '사랑 & 응원',
+    phrases: [
+      const Phrase(ko: '사랑해요', roman: 'saranghaeyo', context: 'Love'),
+      const Phrase(ko: '화이팅', roman: 'hwaiting', context: 'Cheer'),
+    ],
+  ),
+];
 
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  Widget buildTestWidget() {
+  Widget buildTestWidget({List<Override> overrides = const []}) {
     return ProviderScope(
+      overrides: [
+        allPhrasesProvider.overrideWith((ref) async => _testPacks),
+        ...overrides,
+      ],
       child: MaterialApp(
         home: const MiniConverterScreen(),
       ),
     );
   }
 
-  /// 확장모드 테스트에서는 키보드까지 렌더링하므로 큰 화면이 필요하다.
   Future<void> setPhoneSize(WidgetTester tester) async {
     const phoneSize = Size(412, 915);
     await tester.binding.setSurfaceSize(phoneSize);
@@ -35,29 +54,50 @@ void main() {
 
   group('MiniConverterScreen', () {
     testWidgets('should show compact mode by default', (tester) async {
-      await tester.pumpWidget(buildTestWidget());
-      await tester.pumpAndSettle();
-
-      expect(find.text(UiStrings.miniTabFavorites), findsOneWidget);
-      expect(find.text(UiStrings.miniTabRecent), findsOneWidget);
-      expect(find.text(UiStrings.miniOpenConverter), findsOneWidget);
-    });
-
-    testWidgets('should show empty favorites message', (tester) async {
-      await tester.pumpWidget(buildTestWidget());
-      await tester.pumpAndSettle();
-
-      expect(find.text(UiStrings.miniFavoritesEmpty), findsOneWidget);
-    });
-
-    testWidgets('should switch to expanded mode on button tap', (tester) async {
       await setPhoneSize(tester);
       addTearDown(() => resetSize(tester));
 
       await tester.pumpWidget(buildTestWidget());
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text(UiStrings.miniOpenConverter));
+      expect(find.text(UiStrings.miniTabPhrases), findsOneWidget);
+      expect(find.text(UiStrings.miniTabRecent), findsOneWidget);
+    });
+
+    testWidgets('should show favorites chip and empty message', (tester) async {
+      await setPhoneSize(tester);
+      addTearDown(() => resetSize(tester));
+
+      await tester.pumpWidget(buildTestWidget());
+      await tester.pumpAndSettle();
+
+      expect(find.text(UiStrings.miniChipFavorites), findsOneWidget);
+      expect(find.text(UiStrings.miniFavoritesEmpty), findsOneWidget);
+    });
+
+    testWidgets('should show pack filter chips', (tester) async {
+      await setPhoneSize(tester);
+      addTearDown(() => resetSize(tester));
+
+      await tester.pumpWidget(buildTestWidget());
+      await tester.pumpAndSettle();
+
+      expect(find.text('사랑 & 응원'), findsOneWidget);
+    });
+
+    testWidgets('should expand to converter on drag handle swipe up',
+        (tester) async {
+      await setPhoneSize(tester);
+      addTearDown(() => resetSize(tester));
+
+      await tester.pumpWidget(buildTestWidget());
+      await tester.pumpAndSettle();
+
+      // 드래그 핸들 영역에서 위로 스와이프 (빠른 fling)
+      final handle = find.byKey(const ValueKey('drag_handle'));
+      expect(handle, findsOneWidget);
+
+      await tester.fling(handle, const Offset(0, -200), 500);
       await tester.pumpAndSettle();
 
       expect(find.text(UiStrings.miniBackToCompact), findsOneWidget);
@@ -72,13 +112,45 @@ void main() {
       await tester.pumpWidget(buildTestWidget());
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text(UiStrings.miniOpenConverter));
+      // 위로 스와이프하여 확장
+      final handle = find.byKey(const ValueKey('drag_handle'));
+      await tester.fling(handle, const Offset(0, -200), 500);
       await tester.pumpAndSettle();
 
+      // 간편모드 버튼으로 복귀
       await tester.tap(find.text(UiStrings.miniBackToCompact));
       await tester.pumpAndSettle();
 
-      expect(find.text(UiStrings.miniOpenConverter), findsOneWidget);
+      expect(find.text(UiStrings.miniTabPhrases), findsOneWidget);
+    });
+
+    testWidgets('should show horizontal swiper for pack phrases',
+        (tester) async {
+      await setPhoneSize(tester);
+      addTearDown(() => resetSize(tester));
+
+      await tester.pumpWidget(buildTestWidget());
+      await tester.pumpAndSettle();
+
+      // 팩 칩 선택
+      await tester.tap(find.text('사랑 & 응원'));
+      await tester.pumpAndSettle();
+
+      // 첫 문구 카드 표시 + 페이지 인디케이터
+      expect(find.text('사랑해요'), findsOneWidget);
+      expect(find.text('saranghaeyo'), findsOneWidget);
+      expect(find.text('1 / 2'), findsOneWidget);
+    });
+
+    testWidgets('should not show open converter button', (tester) async {
+      await setPhoneSize(tester);
+      addTearDown(() => resetSize(tester));
+
+      await tester.pumpWidget(buildTestWidget());
+      await tester.pumpAndSettle();
+
+      // "변환기 열기" 버튼이 없어야 함
+      expect(find.text(UiStrings.miniOpenConverter), findsNothing);
     });
   });
 }

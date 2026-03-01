@@ -68,8 +68,12 @@ abstract final class UiStrings {
 
   // 미니 변환기
   static const miniConverterTitle = 'Fangeul';
+  static const miniTabPhrases = '문구';
   static const miniTabFavorites = '즐겨찾기';
   static const miniTabRecent = '최근';
+  static const miniChipFavorites = '★즐찾';
+  static const miniPackLocked = '이 팩은 잠겨있습니다\n곧 해금할 수 있어요!';
+  static const miniPackEmpty = '문구가 없습니다';
   static const miniOpenConverter = '변환기 열기';
   static const miniBackToCompact = '간편모드';
   static const miniFavoritesEmpty = '문구 화면에서 ⭐ 탭하여\n즐겨찾기를 추가하세요';

@@ -17,43 +17,64 @@ void main() {
 
     tearDown(() => container.dispose());
 
-    test('should start with empty set', () {
-      final favorites = container.read(favoritePhrasesNotifierProvider);
+    test('should start with empty set after load', () async {
+      container.listen(favoritePhrasesNotifierProvider, (_, __) {});
+      final favorites =
+          await container.read(favoritePhrasesNotifierProvider.future);
       expect(favorites, isEmpty);
     });
 
-    test('should add phrase to favorites', () {
-      final notifier = container.read(favoritePhrasesNotifierProvider.notifier);
-      notifier.toggle('사랑해요');
+    test('should add phrase to favorites', () async {
+      container.listen(favoritePhrasesNotifierProvider, (_, __) {});
+      await container.read(favoritePhrasesNotifierProvider.future);
 
-      final favorites = container.read(favoritePhrasesNotifierProvider);
+      final notifier =
+          container.read(favoritePhrasesNotifierProvider.notifier);
+      await notifier.toggle('사랑해요');
+
+      final favorites =
+          container.read(favoritePhrasesNotifierProvider).valueOrNull;
       expect(favorites, contains('사랑해요'));
     });
 
-    test('should remove phrase when toggled again', () {
-      final notifier = container.read(favoritePhrasesNotifierProvider.notifier);
-      notifier.toggle('사랑해요');
-      notifier.toggle('사랑해요');
+    test('should remove phrase when toggled again', () async {
+      container.listen(favoritePhrasesNotifierProvider, (_, __) {});
+      await container.read(favoritePhrasesNotifierProvider.future);
 
-      final favorites = container.read(favoritePhrasesNotifierProvider);
+      final notifier =
+          container.read(favoritePhrasesNotifierProvider.notifier);
+      await notifier.toggle('사랑해요');
+      await notifier.toggle('사랑해요');
+
+      final favorites =
+          container.read(favoritePhrasesNotifierProvider).valueOrNull;
       expect(favorites, isEmpty);
     });
 
-    test('should report isFavorite correctly', () {
-      final notifier = container.read(favoritePhrasesNotifierProvider.notifier);
-      notifier.toggle('사랑해요');
+    test('should report isFavorite correctly', () async {
+      container.listen(favoritePhrasesNotifierProvider, (_, __) {});
+      await container.read(favoritePhrasesNotifierProvider.future);
+
+      final notifier =
+          container.read(favoritePhrasesNotifierProvider.notifier);
+      await notifier.toggle('사랑해요');
 
       expect(notifier.isFavorite('사랑해요'), isTrue);
       expect(notifier.isFavorite('화이팅'), isFalse);
     });
 
-    test('should manage multiple favorites', () {
-      final notifier = container.read(favoritePhrasesNotifierProvider.notifier);
-      notifier.toggle('사랑해요');
-      notifier.toggle('화이팅');
-      notifier.toggle('보고싶어');
+    test('should manage multiple favorites', () async {
+      container.listen(favoritePhrasesNotifierProvider, (_, __) {});
+      await container.read(favoritePhrasesNotifierProvider.future);
 
-      final favorites = container.read(favoritePhrasesNotifierProvider);
+      final notifier =
+          container.read(favoritePhrasesNotifierProvider.notifier);
+      await notifier.toggle('사랑해요');
+      await notifier.toggle('화이팅');
+      await notifier.toggle('보고싶어');
+
+      final favorites =
+          container.read(favoritePhrasesNotifierProvider).valueOrNull;
       expect(favorites, hasLength(3));
       expect(favorites, containsAll(['사랑해요', '화이팅', '보고싶어']));
     });
@@ -66,17 +87,14 @@ void main() {
         final c = ProviderContainer();
         addTearDown(c.dispose);
 
-        // listen()으로 auto-dispose 방지
         c.listen(favoritePhrasesNotifierProvider, (_, __) {});
-        // microtask 대기 — async _loadFromPrefs 완료
-        await Future<void>.delayed(Duration.zero);
-
-        final favorites = c.read(favoritePhrasesNotifierProvider);
+        final favorites =
+            await c.read(favoritePhrasesNotifierProvider.future);
         expect(favorites, containsAll(['사랑해요', '화이팅']));
         expect(favorites, hasLength(2));
       });
 
-      test('should merge loaded data with in-flight toggles', () async {
+      test('should preserve in-flight toggles after load', () async {
         SharedPreferences.setMockInitialValues({
           'favorite_phrases': jsonEncode(['사랑해요']),
         });
@@ -84,15 +102,15 @@ void main() {
         addTearDown(c.dispose);
 
         c.listen(favoritePhrasesNotifierProvider, (_, __) {});
+        await c.read(favoritePhrasesNotifierProvider.future);
 
-        // 로드 완료 전에 toggle 호출
-        final notifier = c.read(favoritePhrasesNotifierProvider.notifier);
-        notifier.toggle('화이팅');
+        // 로드 후 toggle — await로 build() 완료 후 반영 보장
+        final notifier =
+            c.read(favoritePhrasesNotifierProvider.notifier);
+        await notifier.toggle('화이팅');
 
-        // 로드 완료 대기
-        await Future<void>.delayed(Duration.zero);
-
-        final favorites = c.read(favoritePhrasesNotifierProvider);
+        final favorites =
+            c.read(favoritePhrasesNotifierProvider).valueOrNull;
         // 저장된 '사랑해요' + 새로 추가된 '화이팅' 모두 존재해야 함
         expect(favorites, containsAll(['사랑해요', '화이팅']));
       });

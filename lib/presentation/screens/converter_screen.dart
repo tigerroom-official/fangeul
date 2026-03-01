@@ -185,11 +185,14 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
               ),
             ),
           ),
-          KoreanKeyboard(
-            isEngToKor: _isEngToKor,
-            onCharacterTap: _onCharacterTap,
-            onBackspace: _onBackspace,
-            onSpace: _onSpace,
+          ListenableBuilder(
+            listenable: _tabController,
+            builder: (context, _) => KoreanKeyboard(
+              isEngToKor: _isEngToKor,
+              onCharacterTap: _onCharacterTap,
+              onBackspace: _onBackspace,
+              onSpace: _onSpace,
+            ),
           ),
         ],
       ),

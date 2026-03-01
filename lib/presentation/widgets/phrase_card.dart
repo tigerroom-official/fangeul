@@ -29,7 +29,7 @@ class PhraseCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final translation = phrase.translations[translationLang] ?? '';
-    final favorites = ref.watch(favoritePhrasesNotifierProvider);
+    final favorites = ref.watch(favoritePhrasesNotifierProvider).valueOrNull ?? {};
     final isFavorite = favorites.contains(phrase.ko);
 
     return Container(

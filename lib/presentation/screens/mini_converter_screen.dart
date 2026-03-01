@@ -21,7 +21,8 @@ final miniConverterCompactProvider =
 /// 미니 변환기 팝업 화면.
 ///
 /// FloatingBubbleService에서 버블 탭 시 열리는 Flutter Activity 화면.
-/// 2단 모드: 간편모드(기본, ~25%) <-> 확장모드(변환기, ~70%).
+/// 2단 모드: 간편모드(기본, ~35%) <-> 확장모드(변환기, ~75%).
+/// 드래그 핸들: 아래로 밀어 닫기, 위로 밀어 변환기 확장.
 class MiniConverterScreen extends ConsumerStatefulWidget {
   /// Creates the [MiniConverterScreen] widget.
   const MiniConverterScreen({super.key});
@@ -38,7 +39,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
   final _textController = TextEditingController();
   String _engBuffer = '';
   List<String> _jamoList = [];
-  bool _hasInitialized = false;
+  double _dragDelta = 0;
 
   static const _modes = ConvertMode.values;
   static const _modeLabels = [
@@ -62,6 +63,14 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
     _compactTabController = TabController(length: 2, vsync: this);
     _converterTabController = TabController(length: 3, vsync: this);
     _converterTabController.addListener(_onConverterTabChanged);
+    // 상태바(시계/배터리) 영역 완전 투명 처리
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarDividerColor: Colors.transparent,
+    ));
+    // edge-to-edge 렌더링 — 시스템 바 뒤까지 컨텐츠 확장
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
 
   @override
@@ -77,12 +86,11 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      if (_hasInitialized) {
-        // 재열기 시 메인 앱에서 변경된 데이터를 다시 로드
-        ref.invalidate(favoritePhrasesNotifierProvider);
-        ref.invalidate(copyHistoryNotifierProvider);
-      }
-      _hasInitialized = true;
+      // 미니 엔진은 프리워밍 시 provider가 빌드됨.
+      // 메인 앱에서 이후 변경된 SharedPreferences 데이터를 반영하려면
+      // 매 resumed마다 invalidate하여 prefs.reload()를 다시 실행해야 한다.
+      ref.invalidate(favoritePhrasesNotifierProvider);
+      ref.invalidate(copyHistoryNotifierProvider);
     }
   }
 
@@ -163,13 +171,11 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
     final isCompact = ref.watch(miniConverterCompactProvider);
 
     return Scaffold(
-      backgroundColor: Colors.black54,
+      backgroundColor: Colors.transparent,
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: _dismiss,
-        onVerticalDragEnd: (details) {
-          if (details.velocity.pixelsPerSecond.dy > 300) _dismiss();
-        },
+        // 외부 영역 vertical drag 제거 — 내부 드래그 핸들과 제스처 충돌 방지
         child: Align(
           alignment: Alignment.bottomCenter,
           child: GestureDetector(
@@ -178,7 +184,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
               height: isCompact
-                  ? MediaQuery.of(context).size.height * 0.30
+                  ? MediaQuery.of(context).size.height * 0.35
                   : MediaQuery.of(context).size.height * 0.75,
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
@@ -209,46 +215,49 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
             onCopied: _dismiss,
           ),
         ),
-        _buildOpenConverterButton(),
       ],
     );
   }
 
+  /// 드래그 핸들 — 양방향 제스처.
+  ///
+  /// 아래로 밀기: 팝업 닫기 (dismiss).
+  /// 위로 밀기: 확장모드 (변환기) 전환.
   Widget _buildDragHandle() {
     return GestureDetector(
+      onVerticalDragStart: (_) => _dragDelta = 0,
+      onVerticalDragUpdate: (details) => _dragDelta += details.delta.dy,
       onVerticalDragEnd: (details) {
-        if (details.velocity.pixelsPerSecond.dy > 300) _dismiss();
+        final vy = details.velocity.pixelsPerSecond.dy;
+        // velocity 또는 누적 거리(50px) 중 하나만 충족하면 동작
+        if (vy > 300 || _dragDelta > 50) {
+          _dismiss();
+        } else if (vy < -300 || _dragDelta < -50) {
+          _expandToConverter();
+        }
+        _dragDelta = 0;
       },
       child: Container(
+        key: const ValueKey('drag_handle'),
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.only(top: 12, bottom: 8),
         color: Colors.transparent,
-        child: Center(
-          child: Container(
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: Theme.of(context)
-                  .colorScheme
-                  .onSurfaceVariant
-                  .withValues(alpha: 0.4),
-              borderRadius: BorderRadius.circular(2),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // 핸들 바
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurfaceVariant
+                    .withValues(alpha: 0.4),
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildOpenConverterButton() {
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: SizedBox(
-        width: double.infinity,
-        child: OutlinedButton.icon(
-          onPressed: _expandToConverter,
-          icon: const Icon(Icons.search_rounded, size: 18),
-          label: const Text(UiStrings.miniOpenConverter),
+          ],
         ),
       ),
     );
@@ -285,11 +294,14 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
             ),
           ),
         ),
-        KoreanKeyboard(
-          isEngToKor: _isEngToKor,
-          onCharacterTap: _onCharacterTap,
-          onBackspace: _onBackspace,
-          onSpace: _onSpace,
+        ListenableBuilder(
+          listenable: _converterTabController,
+          builder: (context, _) => KoreanKeyboard(
+            isEngToKor: _isEngToKor,
+            onCharacterTap: _onCharacterTap,
+            onBackspace: _onBackspace,
+            onSpace: _onSpace,
+          ),
         ),
       ],
     );

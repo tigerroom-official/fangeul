@@ -33,13 +33,21 @@ class FloatingBubbleService : Service() {
         const val ACTION_SHOW = "com.tigerroom.fangeul.SHOW_BUBBLE"
         const val ACTION_HIDE = "com.tigerroom.fangeul.HIDE_BUBBLE"
 
+        /// 임시 hide 시 Dart 이벤트 브로드캐스트를 억제하는 extra 키.
+        const val EXTRA_SILENT = "silent"
+
         private const val BUBBLE_SIZE_DP = 56
         private const val CLOSE_ZONE_SIZE_DP = 56
         private const val CLOSE_ZONE_MARGIN_BOTTOM_DP = 80
         private const val TAP_THRESHOLD_PX = 10
 
-        /// 버블 표시 상태. MainActivity에서 참조.
+        /// 버블 뷰 표시 상태. MainActivity에서 참조.
         var isBubbleShowing: Boolean = false
+            private set
+
+        /// 서비스 활성 상태 (뷰 숨김과 무관).
+        /// 임시 hide 중에도 true — getBubbleState가 "showing" 반환.
+        var isServiceActive: Boolean = false
             private set
     }
 
@@ -82,7 +90,11 @@ class FloatingBubbleService : Service() {
                 removeBubble()
                 removeCloseZone()
                 isBubbleShowing = false
-                BubbleEventBroadcaster.send("off")
+                // silent = true: 메인 앱 포그라운드 임시 hide → Dart에 "off" 안 보냄.
+                if (intent?.getBooleanExtra(EXTRA_SILENT, false) != true) {
+                    isServiceActive = false
+                    BubbleEventBroadcaster.send("off")
+                }
                 return START_STICKY
             }
         }
@@ -99,6 +111,7 @@ class FloatingBubbleService : Service() {
         }
 
         isBubbleShowing = true
+        isServiceActive = true
         BubbleEventBroadcaster.send("showing")
         return START_STICKY
     }
@@ -107,6 +120,7 @@ class FloatingBubbleService : Service() {
         configReceiver?.let { unregisterReceiver(it) }
         configReceiver = null
         isBubbleShowing = false
+        isServiceActive = false
         removeBubble()
         removeCloseZone()
         BubbleEventBroadcaster.send("off")
