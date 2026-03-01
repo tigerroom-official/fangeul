@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'package:fangeul/platform/bubble_state.dart';
@@ -89,7 +90,9 @@ class FloatingBubbleChannel {
         'isBatteryOptimizationDisabled',
       );
       return result ?? false;
-    } on PlatformException {
+    } on PlatformException catch (e) {
+      debugPrint('FloatingBubbleChannel: isBatteryOptimizationDisabled '
+          'failed — ${e.code}: ${e.message}');
       return false;
     }
   }
@@ -104,7 +107,9 @@ class FloatingBubbleChannel {
         'requestIgnoreBatteryOptimization',
       );
       return result ?? false;
-    } on PlatformException {
+    } on PlatformException catch (e) {
+      debugPrint('FloatingBubbleChannel: requestIgnoreBatteryOptimization '
+          'failed — ${e.code}: ${e.message}');
       return false;
     }
   }

@@ -11,8 +11,12 @@ import 'package:flutter/services.dart';
 /// 2. 접근성 애니메이션 비활성이 아닌 경우 confetti burst 표시
 ///
 /// 저사양 SEA 디바이스를 고려하여 Canvas 기반 `confetti` 패키지 사용.
+/// 빠른 연속 탭 시 중복 오버레이 방지 (쓰로틀링).
 class CopyFeedback {
   CopyFeedback._();
+
+  /// 중복 방지 — 진행 중인 confetti가 있으면 새로 생성하지 않는다.
+  static bool _active = false;
 
   /// 복사 피드백을 실행한다.
   static void trigger(BuildContext context) {
@@ -25,7 +29,12 @@ class CopyFeedback {
   }
 
   static void _showConfettiBurst(BuildContext context) {
-    final overlay = Overlay.of(context);
+    if (_active) return;
+
+    final overlay = Overlay.maybeOf(context);
+    if (overlay == null) return;
+
+    _active = true;
     final controller = ConfettiController(
       duration: const Duration(milliseconds: 300),
     );
@@ -52,10 +61,14 @@ class CopyFeedback {
     overlay.insert(entry);
     controller.play();
 
-    // 파티클 낙하 완료 후 자동 정리
+    // 파티클 낙하 완료 후 자동 정리 — mounted 가드로 해제된 오버레이 크래시 방지.
     Timer(const Duration(milliseconds: 1500), () {
-      entry.remove();
+      if (entry.mounted) {
+        entry.remove();
+        entry.dispose();
+      }
       controller.dispose();
+      _active = false;
     });
   }
 

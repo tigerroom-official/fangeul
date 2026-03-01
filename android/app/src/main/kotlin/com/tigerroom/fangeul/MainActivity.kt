@@ -122,17 +122,26 @@ class MainActivity : FlutterActivity() {
                     }
 
                     "isBatteryOptimizationDisabled" -> {
-                        val pm = getSystemService(POWER_SERVICE) as PowerManager
-                        result.success(pm.isIgnoringBatteryOptimizations(packageName))
+                        try {
+                            val pm = getSystemService(POWER_SERVICE) as PowerManager
+                            result.success(pm.isIgnoringBatteryOptimizations(packageName))
+                        } catch (e: Exception) {
+                            result.success(false)
+                        }
                     }
 
                     "requestIgnoreBatteryOptimization" -> {
-                        val intent = Intent(
-                            Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
-                            Uri.parse("package:$packageName"),
-                        )
-                        startActivity(intent)
-                        result.success(true)
+                        try {
+                            val intent = Intent(
+                                Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                                Uri.parse("package:$packageName"),
+                            )
+                            startActivity(intent)
+                            result.success(true)
+                        } catch (e: Exception) {
+                            // OEM ROM에서 ActivityNotFoundException/SecurityException 가능
+                            result.success(false)
+                        }
                     }
 
                     else -> result.notImplemented()
