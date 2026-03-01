@@ -53,6 +53,6 @@ dart format --set-exit-if-changed .  # 포맷 검증
 | `docs/HANDOFF.md` | 세션 핸드오프 (최신 작업 상태) |
 
 ## 현재 작업 상태
-> 마지막 핸드오프: 2026-03-01 22:50
+> 마지막 핸드오프: 2026-03-02 23:30
 > 상세: `docs/HANDOFF.md` 참조
-> 요약: Phase 5.2 완료 — 간편모드 팩 탐색 + AsyncNotifier 전환 + 버블/키보드 UX 수정. 247개 테스트 pass. 다음: LOW 이슈 → Phase 6 수익화.
+> 요약: Sprint 1 MVP UX 완료 — 간편모드 높이 43% + 팩 자동 복원 + 복사 confetti/진동 + OEM 배터리 대응. 252개 테스트 pass. 다음: Sprint 1 연기 이슈 → LOW 이슈 → Phase 6 수익화.
