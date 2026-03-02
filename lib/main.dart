@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fangeul/app.dart';
 import 'package:fangeul/presentation/providers/analytics_providers.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
+import 'package:fangeul/presentation/router/app_router.dart';
 import 'package:fangeul/services/analytics_events.dart';
 
 void main() async {
@@ -12,9 +13,17 @@ void main() async {
 
   final prefs = await SharedPreferences.getInstance();
 
+  // 첫 실행 체크: 온보딩 미완료 시 아이돌 선택으로 시작
+  final isOnboardingDone = prefs.getBool('onboarding_done') ?? false;
+  if (!isOnboardingDone) {
+    await prefs.setBool('onboarding_done', true);
+  }
+
   final container = ProviderContainer(
     overrides: [
       sharedPreferencesProvider.overrideWithValue(prefs),
+      if (!isOnboardingDone)
+        initialRouteOverrideProvider.overrideWithValue('/onboarding/idol-select'),
     ],
   );
 

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:fangeul/platform/bubble_state.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/bubble_providers.dart';
+import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
 
 /// 설정 화면 — 테마 모드 전환, 앱 정보.
@@ -57,6 +59,9 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
           const Divider(),
+          // 마이 아이돌
+          const _MyIdolTile(),
+          const Divider(),
           // 플로팅 버블
           const _BubbleToggleTile(),
           const Divider(),
@@ -76,6 +81,32 @@ class SettingsScreen extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// 마이 아이돌 설정 타일.
+class _MyIdolTile extends ConsumerWidget {
+  const _MyIdolTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final idolNameAsync = ref.watch(myIdolDisplayNameProvider);
+
+    return ListTile(
+      leading: const Icon(Icons.favorite_outline),
+      title: const Text(UiStrings.idolSettingLabel),
+      subtitle: idolNameAsync.when(
+        data: (name) => Text(
+          name != null
+              ? UiStrings.idolSettingCurrent(name)
+              : UiStrings.idolSettingEmpty,
+        ),
+        loading: () => const Text('...'),
+        error: (_, __) => const Text(UiStrings.idolSettingEmpty),
+      ),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () => context.push('/settings/idol-select'),
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:fangeul/presentation/screens/converter_screen.dart';
 import 'package:fangeul/presentation/screens/home_screen.dart';
+import 'package:fangeul/presentation/screens/idol_select_screen.dart';
 import 'package:fangeul/presentation/screens/mini_converter_screen.dart';
 import 'package:fangeul/presentation/screens/phrases_screen.dart';
 import 'package:fangeul/presentation/screens/settings_screen.dart';
@@ -13,7 +14,11 @@ import 'package:fangeul/presentation/widgets/shell_scaffold.dart';
 part 'app_router.g.dart';
 
 /// Kotlin [setInitialRoute]에서 설정된 경로 중 유효한 것만 사용.
-const _validInitialRoutes = {'/home', '/mini-converter'};
+const _validInitialRoutes = {'/home', '/mini-converter', '/onboarding/idol-select'};
+
+/// 첫 실행 시 온보딩 경로를 주입하기 위한 override.
+@Riverpod(keepAlive: true)
+String? initialRouteOverride(InitialRouteOverrideRef ref) => null;
 
 /// 앱 라우터 Provider.
 ///
@@ -24,9 +29,10 @@ const _validInitialRoutes = {'/home', '/mini-converter'};
 /// `/mini-converter`로 시작한다.
 @Riverpod(keepAlive: true)
 GoRouter appRouter(AppRouterRef ref) {
+  final overrideRoute = ref.read(initialRouteOverrideProvider);
   final platformRoute = PlatformDispatcher.instance.defaultRouteName;
-  final initialLocation =
-      _validInitialRoutes.contains(platformRoute) ? platformRoute : '/home';
+  final initialLocation = overrideRoute ??
+      (_validInitialRoutes.contains(platformRoute) ? platformRoute : '/home');
 
   return GoRouter(
     initialLocation: initialLocation,
@@ -69,6 +75,14 @@ GoRouter appRouter(AppRouterRef ref) {
       GoRoute(
         path: '/mini-converter',
         builder: (context, state) => const MiniConverterScreen(),
+      ),
+      GoRoute(
+        path: '/onboarding/idol-select',
+        builder: (context, state) => const IdolSelectScreen(isOnboarding: true),
+      ),
+      GoRoute(
+        path: '/settings/idol-select',
+        builder: (context, state) => const IdolSelectScreen(),
       ),
     ],
   );

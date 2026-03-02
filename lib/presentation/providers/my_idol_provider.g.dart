@@ -25,11 +25,12 @@ final availableGroupsProvider = FutureProvider<List<IdolGroup>>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AvailableGroupsRef = FutureProviderRef<List<IdolGroup>>;
-String _$myIdolDisplayNameHash() => r'0499db223a0adf6b6a991e7dd8ee4970fd2875ce';
+String _$myIdolDisplayNameHash() => r'fe05eb9cfaca39da1e0d7d19c748cc683b6b8052';
 
 /// 현재 선택된 그룹의 표시 이름 (name_en).
 ///
 /// 템플릿 치환에 사용. 미설정 시 null.
+/// 커스텀 입력은 `"custom:그룹명"` 형태로 저장된다.
 ///
 /// Copied from [myIdolDisplayName].
 @ProviderFor(myIdolDisplayName)

@@ -61,10 +61,16 @@ Future<List<IdolGroup>> availableGroups(AvailableGroupsRef ref) async {
 /// 현재 선택된 그룹의 표시 이름 (name_en).
 ///
 /// 템플릿 치환에 사용. 미설정 시 null.
+/// 커스텀 입력은 `"custom:그룹명"` 형태로 저장된다.
 @riverpod
 Future<String?> myIdolDisplayName(MyIdolDisplayNameRef ref) async {
   final groupId = await ref.watch(myIdolNotifierProvider.future);
   if (groupId == null) return null;
+
+  // 커스텀 입력: "custom:그룹명" 형태
+  if (groupId.startsWith('custom:')) {
+    return groupId.substring(7);
+  }
 
   final groups = await ref.watch(availableGroupsProvider.future);
   final group = groups.where((g) => g.id == groupId).firstOrNull;

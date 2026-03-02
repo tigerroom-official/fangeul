@@ -93,4 +93,18 @@ abstract final class UiStrings {
   static const miniBackToCompact = '간편모드';
   static const miniFavoritesEmpty = '문구 화면에서 ⭐ 탭하여\n즐겨찾기를 추가하세요';
   static const miniRecentEmpty = '아직 복사한 텍스트가 없습니다';
+
+  // 마이 아이돌
+  static const idolSelectTitle = '좋아하는 그룹을 선택하세요';
+  static const idolSelectSubtitle = '설정에서 언제든 바꿀 수 있어요';
+  static const idolSelectSkip = '나중에 설정하기';
+  static const idolSelectOther = '기타 (직접 입력)';
+  static const idolSelectOtherHint = '그룹 이름을 입력하세요';
+  static const idolSelectConfirm = '확인';
+  static const idolSettingLabel = '마이 아이돌';
+  static const idolSettingEmpty = '아직 선택하지 않았어요';
+
+  /// 현재 선택된 아이돌 표시. 예: '현재: BTS'.
+  static String idolSettingCurrent(String name) => '현재: $name';
+  static const idolSettingChange = '변경';
 }

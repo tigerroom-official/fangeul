@@ -6,7 +6,27 @@ part of 'app_router.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appRouterHash() => r'992bcf71b38eed881de3576afd548ac6924a9e8f';
+String _$initialRouteOverrideHash() =>
+    r'f8051f75f5766568b19a579696802bd6fdc2ab9b';
+
+/// 첫 실행 시 온보딩 경로를 주입하기 위한 override.
+///
+/// Copied from [initialRouteOverride].
+@ProviderFor(initialRouteOverride)
+final initialRouteOverrideProvider = Provider<String?>.internal(
+  initialRouteOverride,
+  name: r'initialRouteOverrideProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$initialRouteOverrideHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef InitialRouteOverrideRef = ProviderRef<String?>;
+String _$appRouterHash() => r'68dd2b1d5ec954ec28cf89978eba28a8dd3f739c';
 
 /// 앱 라우터 Provider.
 ///
