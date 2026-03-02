@@ -7,6 +7,8 @@ import 'package:fangeul/core/entities/phrase.dart';
 import 'package:fangeul/presentation/providers/analytics_providers.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
 import 'package:fangeul/presentation/providers/phrase_providers.dart';
+import 'package:fangeul/presentation/providers/my_idol_provider.dart';
+import 'package:fangeul/presentation/providers/template_phrase_provider.dart';
 import 'package:fangeul/services/analytics_events.dart';
 
 part 'compact_phrase_filter_provider.freezed.dart';
@@ -20,6 +22,7 @@ part 'compact_phrase_filter_provider.g.dart';
 sealed class CompactPhraseFilter with _$CompactPhraseFilter {
   const factory CompactPhraseFilter.favorites() = _Favorites;
   const factory CompactPhraseFilter.pack(String packId) = _Pack;
+  const factory CompactPhraseFilter.myIdol() = _MyIdol;
 }
 
 /// 간편모드 문구 필터 Notifier.
@@ -37,6 +40,7 @@ class CompactPhraseFilterNotifier extends _$CompactPhraseFilterNotifier {
     final saved = prefs.getString(_key);
     if (saved == null) return const CompactPhraseFilter.favorites();
     if (saved == 'favorites') return const CompactPhraseFilter.favorites();
+    if (saved == 'my_idol') return const CompactPhraseFilter.myIdol();
     if (saved.startsWith('pack:')) {
       return CompactPhraseFilter.pack(saved.substring(5));
     }
@@ -68,12 +72,24 @@ class CompactPhraseFilterNotifier extends _$CompactPhraseFilterNotifier {
     );
   }
 
+  /// 마이 아이돌 필터로 전환.
+  Future<void> selectMyIdol() async {
+    const filter = CompactPhraseFilter.myIdol();
+    state = const AsyncData(filter);
+    await _saveToPrefs(filter);
+    ref.read(analyticsServiceProvider).logEvent(
+      AnalyticsEvents.filterChange,
+      {AnalyticsParams.filterType: 'my_idol'},
+    );
+  }
+
   Future<void> _saveToPrefs(CompactPhraseFilter filter) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final value = switch (filter) {
         _Favorites() => 'favorites',
         _Pack(:final packId) => 'pack:$packId',
+        _MyIdol() => 'my_idol',
       };
       await prefs.setString(_key, value);
     } catch (e) {
@@ -94,6 +110,7 @@ Future<List<Phrase>> filteredCompactPhrases(
   return switch (filter) {
     _Favorites() => _buildFavoritesPhrases(ref),
     _Pack(:final packId) => _buildPackPhrases(ref, packId),
+    _MyIdol() => _buildMyIdolPhrases(ref),
   };
 }
 
@@ -130,6 +147,25 @@ Future<List<Phrase>> _buildPackPhrases(
   return pack.phrases;
 }
 
+/// 마이 아이돌 템플릿 문구 목록.
+///
+/// isTemplate == true인 문구를 수집하고 마이 아이돌 이름으로 치환한다.
+Future<List<Phrase>> _buildMyIdolPhrases(
+    FilteredCompactPhrasesRef ref) async {
+  final idolName = await ref.watch(myIdolDisplayNameProvider.future);
+  if (idolName == null) return [];
+
+  final packs = await ref.watch(allPhrasesProvider.future);
+  final templates = packs
+      .expand((p) => p.phrases)
+      .where((p) => p.isTemplate)
+      .toList();
+
+  return templates
+      .map((p) => resolveTemplatePhrase(p, idolName))
+      .toList();
+}
+
 /// 현재 선택된 팩이 잠금 상태인지.
 @riverpod
 Future<bool> isSelectedPackLocked(IsSelectedPackLockedRef ref) async {
@@ -138,6 +174,7 @@ Future<bool> isSelectedPackLocked(IsSelectedPackLockedRef ref) async {
   return switch (filter) {
     _Favorites() => false,
     _Pack(:final packId) => _isPackLocked(ref, packId),
+    _MyIdol() => false,
   };
 }
 

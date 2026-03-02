@@ -20,18 +20,21 @@ mixin _$CompactPhraseFilter {
   TResult when<TResult extends Object?>({
     required TResult Function() favorites,
     required TResult Function(String packId) pack,
+    required TResult Function() myIdol,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? favorites,
     TResult? Function(String packId)? pack,
+    TResult? Function()? myIdol,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? favorites,
     TResult Function(String packId)? pack,
+    TResult Function()? myIdol,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -39,18 +42,21 @@ mixin _$CompactPhraseFilter {
   TResult map<TResult extends Object?>({
     required TResult Function(_Favorites value) favorites,
     required TResult Function(_Pack value) pack,
+    required TResult Function(_MyIdol value) myIdol,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Favorites value)? favorites,
     TResult? Function(_Pack value)? pack,
+    TResult? Function(_MyIdol value)? myIdol,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Favorites value)? favorites,
     TResult Function(_Pack value)? pack,
+    TResult Function(_MyIdol value)? myIdol,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -127,6 +133,7 @@ class _$FavoritesImpl with DiagnosticableTreeMixin implements _Favorites {
   TResult when<TResult extends Object?>({
     required TResult Function() favorites,
     required TResult Function(String packId) pack,
+    required TResult Function() myIdol,
   }) {
     return favorites();
   }
@@ -136,6 +143,7 @@ class _$FavoritesImpl with DiagnosticableTreeMixin implements _Favorites {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? favorites,
     TResult? Function(String packId)? pack,
+    TResult? Function()? myIdol,
   }) {
     return favorites?.call();
   }
@@ -145,6 +153,7 @@ class _$FavoritesImpl with DiagnosticableTreeMixin implements _Favorites {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? favorites,
     TResult Function(String packId)? pack,
+    TResult Function()? myIdol,
     required TResult orElse(),
   }) {
     if (favorites != null) {
@@ -158,6 +167,7 @@ class _$FavoritesImpl with DiagnosticableTreeMixin implements _Favorites {
   TResult map<TResult extends Object?>({
     required TResult Function(_Favorites value) favorites,
     required TResult Function(_Pack value) pack,
+    required TResult Function(_MyIdol value) myIdol,
   }) {
     return favorites(this);
   }
@@ -167,6 +177,7 @@ class _$FavoritesImpl with DiagnosticableTreeMixin implements _Favorites {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Favorites value)? favorites,
     TResult? Function(_Pack value)? pack,
+    TResult? Function(_MyIdol value)? myIdol,
   }) {
     return favorites?.call(this);
   }
@@ -176,6 +187,7 @@ class _$FavoritesImpl with DiagnosticableTreeMixin implements _Favorites {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Favorites value)? favorites,
     TResult Function(_Pack value)? pack,
+    TResult Function(_MyIdol value)? myIdol,
     required TResult orElse(),
   }) {
     if (favorites != null) {
@@ -266,6 +278,7 @@ class _$PackImpl with DiagnosticableTreeMixin implements _Pack {
   TResult when<TResult extends Object?>({
     required TResult Function() favorites,
     required TResult Function(String packId) pack,
+    required TResult Function() myIdol,
   }) {
     return pack(packId);
   }
@@ -275,6 +288,7 @@ class _$PackImpl with DiagnosticableTreeMixin implements _Pack {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? favorites,
     TResult? Function(String packId)? pack,
+    TResult? Function()? myIdol,
   }) {
     return pack?.call(packId);
   }
@@ -284,6 +298,7 @@ class _$PackImpl with DiagnosticableTreeMixin implements _Pack {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? favorites,
     TResult Function(String packId)? pack,
+    TResult Function()? myIdol,
     required TResult orElse(),
   }) {
     if (pack != null) {
@@ -297,6 +312,7 @@ class _$PackImpl with DiagnosticableTreeMixin implements _Pack {
   TResult map<TResult extends Object?>({
     required TResult Function(_Favorites value) favorites,
     required TResult Function(_Pack value) pack,
+    required TResult Function(_MyIdol value) myIdol,
   }) {
     return pack(this);
   }
@@ -306,6 +322,7 @@ class _$PackImpl with DiagnosticableTreeMixin implements _Pack {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Favorites value)? favorites,
     TResult? Function(_Pack value)? pack,
+    TResult? Function(_MyIdol value)? myIdol,
   }) {
     return pack?.call(this);
   }
@@ -315,6 +332,7 @@ class _$PackImpl with DiagnosticableTreeMixin implements _Pack {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Favorites value)? favorites,
     TResult Function(_Pack value)? pack,
+    TResult Function(_MyIdol value)? myIdol,
     required TResult orElse(),
   }) {
     if (pack != null) {
@@ -334,4 +352,121 @@ abstract class _Pack implements CompactPhraseFilter {
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PackImplCopyWith<_$PackImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$MyIdolImplCopyWith<$Res> {
+  factory _$$MyIdolImplCopyWith(
+          _$MyIdolImpl value, $Res Function(_$MyIdolImpl) then) =
+      __$$MyIdolImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$MyIdolImplCopyWithImpl<$Res>
+    extends _$CompactPhraseFilterCopyWithImpl<$Res, _$MyIdolImpl>
+    implements _$$MyIdolImplCopyWith<$Res> {
+  __$$MyIdolImplCopyWithImpl(
+      _$MyIdolImpl _value, $Res Function(_$MyIdolImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of CompactPhraseFilter
+  /// with the given fields replaced by the non-null parameter values.
+}
+
+/// @nodoc
+
+class _$MyIdolImpl with DiagnosticableTreeMixin implements _MyIdol {
+  const _$MyIdolImpl();
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'CompactPhraseFilter.myIdol()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(DiagnosticsProperty('type', 'CompactPhraseFilter.myIdol'));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$MyIdolImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() favorites,
+    required TResult Function(String packId) pack,
+    required TResult Function() myIdol,
+  }) {
+    return myIdol();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? favorites,
+    TResult? Function(String packId)? pack,
+    TResult? Function()? myIdol,
+  }) {
+    return myIdol?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? favorites,
+    TResult Function(String packId)? pack,
+    TResult Function()? myIdol,
+    required TResult orElse(),
+  }) {
+    if (myIdol != null) {
+      return myIdol();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Favorites value) favorites,
+    required TResult Function(_Pack value) pack,
+    required TResult Function(_MyIdol value) myIdol,
+  }) {
+    return myIdol(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Favorites value)? favorites,
+    TResult? Function(_Pack value)? pack,
+    TResult? Function(_MyIdol value)? myIdol,
+  }) {
+    return myIdol?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Favorites value)? favorites,
+    TResult Function(_Pack value)? pack,
+    TResult Function(_MyIdol value)? myIdol,
+    required TResult orElse(),
+  }) {
+    if (myIdol != null) {
+      return myIdol(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _MyIdol implements CompactPhraseFilter {
+  const factory _MyIdol() = _$MyIdolImpl;
 }
