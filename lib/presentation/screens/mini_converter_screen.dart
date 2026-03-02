@@ -9,6 +9,7 @@ import 'package:fangeul/presentation/providers/compact_phrase_filter_provider.da
 import 'package:fangeul/presentation/providers/converter_providers.dart';
 import 'package:fangeul/presentation/providers/copy_history_provider.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
+import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
 import 'package:fangeul/presentation/widgets/compact_phrase_list.dart';
 import 'package:fangeul/presentation/widgets/converter_input.dart';
@@ -104,6 +105,8 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
     ref.invalidate(copyHistoryNotifierProvider);
     ref.invalidate(compactPhraseFilterNotifierProvider);
     ref.invalidate(themeModeNotifierProvider);
+    ref.invalidate(myIdolNotifierProvider);
+    ref.invalidate(myIdolDisplayNameProvider);
   }
 
   void _onConverterTabChanged() {
