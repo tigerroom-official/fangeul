@@ -160,7 +160,8 @@ Future<List<Phrase>> _buildPackPhrases(
   final pack = packs.where((p) => p.id == packId).firstOrNull;
   if (pack == null) return [];
   if (!pack.isFree) return [];
-  return pack.phrases;
+  // 템플릿 문구 제외 — 마이 아이돌 전용 치환 경로에서만 사용
+  return pack.phrases.where((p) => !p.isTemplate).toList();
 }
 
 /// 마이 아이돌 템플릿 문구 목록.

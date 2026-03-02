@@ -103,10 +103,13 @@ class PhrasesScreen extends ConsumerWidget {
   }
 
   /// 무료 팩의 문구를 평탄화하여 단일 리스트로 변환.
+  ///
+  /// 템플릿 문구(`isTemplate`)는 제외 — 마이 아이돌 전용 치환 경로에서만 사용.
   List<Phrase> _flattenPacks(List<PhrasePack> packs) {
     return packs
         .where((pack) => pack.isFree)
         .expand((pack) => pack.phrases)
+        .where((phrase) => !phrase.isTemplate)
         .toList();
   }
 }

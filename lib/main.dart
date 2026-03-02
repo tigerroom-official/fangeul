@@ -15,15 +15,13 @@ void main() async {
 
   // 첫 실행 체크: 온보딩 미완료 시 아이돌 선택으로 시작
   final isOnboardingDone = prefs.getBool('onboarding_done') ?? false;
-  if (!isOnboardingDone) {
-    await prefs.setBool('onboarding_done', true);
-  }
 
   final container = ProviderContainer(
     overrides: [
       sharedPreferencesProvider.overrideWithValue(prefs),
       if (!isOnboardingDone)
-        initialRouteOverrideProvider.overrideWithValue('/onboarding/idol-select'),
+        initialRouteOverrideProvider
+            .overrideWithValue('/onboarding/idol-select'),
     ],
   );
 

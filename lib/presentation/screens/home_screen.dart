@@ -45,7 +45,7 @@ class HomeScreen extends ConsumerWidget {
             final idolName = ref.watch(myIdolDisplayNameProvider);
             return idolName.when(
               data: (name) => name != null
-                  ? Text('안녕하세요, $name 팬님!')
+                  ? Text(UiStrings.homeGreeting(name))
                   : const Text(UiStrings.appName),
               loading: () => const Text(UiStrings.appName),
               error: (_, __) => const Text(UiStrings.appName),

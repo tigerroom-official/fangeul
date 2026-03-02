@@ -93,6 +93,8 @@ abstract final class UiStrings {
   static const miniOpenConverter = '변환기 열기';
   static const miniBackToCompact = '간편모드';
   static const miniFavoritesEmpty = '문구 화면에서 ⭐ 탭하여\n즐겨찾기를 추가하세요';
+  static const miniMyIdolEmpty = '설정에서 아이돌을 선택하면\n맞춤 문구가 표시됩니다';
+  static const miniTodayEmpty = '오늘은 관련 이벤트가 없습니다';
   static const miniRecentEmpty = '아직 복사한 텍스트가 없습니다';
 
   // 마이 아이돌
@@ -107,5 +109,8 @@ abstract final class UiStrings {
 
   /// 현재 선택된 아이돌 표시. 예: '현재: BTS'.
   static String idolSettingCurrent(String name) => '현재: $name';
+
+  /// 홈 화면 인사말. 예: '안녕하세요, BTS 팬님!'.
+  static String homeGreeting(String name) => '안녕하세요, $name 팬님!';
   static const idolSettingChange = '변경';
 }

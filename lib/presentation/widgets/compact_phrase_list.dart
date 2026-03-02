@@ -149,7 +149,10 @@ class _PhrasesTabState extends ConsumerState<_PhrasesTab>
         // 팩 필터 칩 바
         packsAsync.when(
           data: (packs) => PackFilterChips(
-            packs: packs,
+            // 템플릿 전용 팩 제외 — 마이 아이돌 칩에서만 사용
+            packs: packs
+                .where((p) => p.phrases.any((phrase) => !phrase.isTemplate))
+                .toList(),
             isFavoritesSelected: isFavoritesSelected,
             selectedPackId: selectedPackId,
             onFavoritesSelected: () {
@@ -187,6 +190,13 @@ class _PhrasesTabState extends ConsumerState<_PhrasesTab>
             phrasesAsync,
             lockedAsync,
             useList: isFavoritesSelected || isMyIdolSelected || isTodaySelected,
+            emptyMessage: isMyIdolSelected
+                ? UiStrings.miniMyIdolEmpty
+                : isTodaySelected
+                    ? UiStrings.miniTodayEmpty
+                    : isFavoritesSelected
+                        ? UiStrings.miniFavoritesEmpty
+                        : UiStrings.miniPackEmpty,
           ),
         ),
       ],
@@ -198,6 +208,7 @@ class _PhrasesTabState extends ConsumerState<_PhrasesTab>
     AsyncValue<List<Phrase>> phrasesAsync,
     AsyncValue<bool> lockedAsync, {
     required bool useList,
+    required String emptyMessage,
   }) {
     // 잠금 팩
     final isLocked = lockedAsync.valueOrNull ?? false;
@@ -217,7 +228,7 @@ class _PhrasesTabState extends ConsumerState<_PhrasesTab>
         if (phrases.isEmpty) {
           return Center(
             child: Text(
-              useList ? UiStrings.miniFavoritesEmpty : UiStrings.miniPackEmpty,
+              emptyMessage,
               textAlign: TextAlign.center,
             ),
           );
