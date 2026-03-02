@@ -1,0 +1,29 @@
+{
+  "groups": [
+    {
+      "id": "bts",
+      "name_en": "BTS",
+      "name_ko": "방탄소년단"
+    },
+    {
+      "id": "blackpink",
+      "name_en": "BLACKPINK",
+      "name_ko": "블랙핑크"
+    },
+    {
+      "id": "stray_kids",
+      "name_en": "Stray Kids",
+      "name_ko": "스트레이 키즈"
+    },
+    {
+      "id": "seventeen",
+      "name_en": "SEVENTEEN",
+      "name_ko": "세븐틴"
+    },
+    {
+      "id": "twice",
+      "name_en": "TWICE",
+      "name_ko": "트와이스"
+    }
+  ]
+}
