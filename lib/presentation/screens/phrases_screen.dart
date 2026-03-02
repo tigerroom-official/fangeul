@@ -175,9 +175,10 @@ class PhrasesScreen extends ConsumerWidget {
         .toList();
   }
 
-  /// 모든 팩에서 템플릿 문구를 수집하여 치환 후 반환.
+  /// 무료 팩에서 템플릿 문구를 수집하여 치환 후 반환.
   List<Phrase> _resolveTemplates(List<PhrasePack> packs, String idolName) {
     return packs
+        .where((p) => p.isFree)
         .expand((p) => p.phrases)
         .where((p) => p.isTemplate)
         .map((p) => resolveTemplatePhrase(p, idolName))
