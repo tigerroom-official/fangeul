@@ -84,9 +84,12 @@ final todayEventsProvider = AutoDisposeFutureProvider<List<KpopEvent>>.internal(
 // ignore: unused_element
 typedef TodayEventsRef = AutoDisposeFutureProviderRef<List<KpopEvent>>;
 String _$todaySuggestedPhrasesHash() =>
-    r'e6338c01ccd8fe34b7eaa3a978e6e634dec07682';
+    r'c519fd04744e22f9dba6f631962f1df827a12ace';
 
-/// 오늘 이벤트 기반 추천 문구
+/// 오늘 이벤트 기반 추천 문구.
+///
+/// 마이 아이돌 설정 시 해당 그룹 이벤트만 필터링하고
+/// 템플릿 문구의 `{{group_name}}`을 치환한다.
 ///
 /// Copied from [todaySuggestedPhrases].
 @ProviderFor(todaySuggestedPhrases)
