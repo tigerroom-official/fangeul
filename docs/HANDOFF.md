@@ -1,8 +1,8 @@
 # Fangeul — Session Handoff
 
-BASE_COMMIT: 361cd0b (main)
-HANDOFF_COMMIT: 미커밋 (워크트리 작업 중)
-BRANCH: feature/sprint2-data-analytics (worktree: .worktrees/sprint2-data-analytics)
+BASE_COMMIT: b26c14e (main)
+HANDOFF_COMMIT: (이 커밋에서 갱신)
+BRANCH: main
 
 ---
 
@@ -12,148 +12,157 @@ BRANCH: feature/sprint2-data-analytics (worktree: .worktrees/sprint2-data-analyt
 - Phase 1~4: Core 엔진 + 데이터 레이어 + UI 완료
 - Phase 5: 플로팅 버블 전체 구현 + 리뷰 수정 + MEDIUM/UX 수정
 - Sprint 1 MVP UX: 간편모드 높이 43% + 팩 자동 복원 + 복사 confetti/진동 + OEM 배터리 대응
-- Sprint 2 Task 5~7: 상황태그 + K-pop 캘린더 + 분석 계측 (2026-03-02)
+- Sprint 2: 상황태그 + K-pop 캘린더(69이벤트) + 분석 계측(NoOp) (2026-03-02)
+- **MVP 통합: 마이아이돌 + 템플릿 문구 + 온보딩 + 크로스엔진 연동 (2026-03-03)**
 
 ### 활성 작업
-Sprint 2 워크트리에서 Task 5+6+7 구현 완료. **커밋/머지 대기.**
+없음. MVP 통합 머지 완료.
 
 ### 보류/백로그
-- 3차 패널 토론 결과: v1.2(마이아이돌 + 템플릿 문구)를 MVP에 통합 → 별도 구현 계획 필요
 - LOW 이슈 잔여: L3(자동닫기 설정), L4(펄스 애니메이션), L5(복사 기록 암호화)
-- Phase 6: 수익화 (감성 컬러 팩 IAP)
+- Phase 6: 수익화 (감성 컬러 팩 IAP + 보상형 팬 패스 + 배너 조건부)
+- 리뷰 연기 이슈: I1(IdolSelectScreen setState→Riverpod), I6(즐겨찾기 템플릿 메타데이터), I7~I9(minor)
+- 관리 대시보드 + R2 동기화 (출시 후 1~2주)
+
+---
 
 ## 작업 요약
 
-Sprint 2 "데이터 + 분석" 3개 태스크 구현:
-1. **상황 태그(Task 5)**: Phrase entity에 situation 필드 추가, 4개 JSON 태깅, GetPhrasesBySituationUseCase + provider
-2. **K-pop 캘린더(Task 6)**: 69개 이벤트 JSON, KpopEvent entity, CalendarRepository + DataSource, GetTodayEventsUseCase, todaySuggestedPhrasesProvider
-3. **분석 계측(Task 7)**: AnalyticsService 추상 인터페이스 + NoOp 구현, 이벤트 상수, 6곳 계측 삽입
-
-패널 토론 3회 진행 — "금주의 문구 & 캘린더 수집 시스템" 설계서 리뷰. 최종 합의: v1.2를 MVP에 포함(마이아이돌 + 템플릿 + 5그룹 파일럿), 대시보드/R2는 출시 후 1~2주.
+MVP 통합 — 마이 아이돌 선택(5그룹 파일럿) + 템플릿 문구(`{{group_name}}` 치환) + 온보딩 플로우 + 오늘 필터 + 크로스엔진 동기화. 18개 피처 커밋, 3라운드 교차 리뷰(Claude self + Codex GPT-5.3). 314 tests pass.
 
 ## 완료된 작업
 
-- [x] Task 5: Phrase.situation 필드 + 4개 JSON 태깅 + GetPhrasesBySituationUseCase + provider + 테스트 6개
-- [x] Task 6: kpop_events.json(69이벤트) + KpopEvent freezed entity + CalendarRepository + DataSource + GetTodayEventsUseCase + calendar_providers + 테스트 14개
-- [x] Task 7: AnalyticsService interface + NoOpAnalyticsService + AnalyticsEvents 상수 + analyticsServiceProvider + 6곳 계측(app_open, bubble_session_start/end, phrase_copy, phrase_favorite, filter_change) + 테스트 7개
+- [x] groups.json lite (5그룹: BTS, BLACKPINK, Stray Kids, aespa, SEVENTEEN)
+- [x] Phrase.isTemplate 필드 + my_idol_pack.json (10개 템플릿 문구)
+- [x] IdolGroup freezed entity + MyIdolNotifier provider (SharedPreferences 저장)
+- [x] 템플릿 문구 해결 로직 (`resolveTemplatePhrase()`)
+- [x] CompactPhraseFilter.myIdol / .today sealed class 케이스 추가
+- [x] filteredCompactPhrasesProvider에 myIdol/today 분기 + 템플릿 치환
+- [x] IdolSelectScreen (온보딩 + 설정 재사용)
+- [x] 온보딩 플로우: main.dart initialRoute → IdolSelectScreen → /home
+- [x] HomeScreen 마이 아이돌 인사말
+- [x] todaySuggestedPhrases 아이돌 그룹 필터링
+- [x] PackFilterChips에 마이아이돌/오늘 칩 추가
+- [x] compact_phrase_list에 전체 칩 와이어링 + 수직 리스트/스와이퍼 분기
+- [x] 크로스엔진 동기화 (myIdol provider + lifecycle invalidate)
+- [x] 설정 화면 마이 아이돌 타일
+- [x] 라우터 갱신 (onboarding/idol-select + settings/idol-select)
+- [x] 리뷰 수정 Round 1: knownPackIds 누락 + 칩 와이어링 + 오늘 칩 UI
+- [x] 리뷰 수정 Round 2: 템플릿 노출 방지(3단계 필터링) + 빈상태 메시지 + 온보딩 시점
+- [x] 테스트 23개 추가: myIdol/today 칩 위젯 12개 + 필터 provider 11개
 
 ## 진행 중인 작업
 
-없음. 워크트리에서 커밋/머지 대기.
+없음.
 
-## 워크트리 상태
+## 핵심 교훈
 
-```
-경로: .worktrees/sprint2-data-analytics
-브랜치: feature/sprint2-data-analytics
-테스트: 280개 pass (기존 252 + 신규 28)
-분석: No issues found
-포맷: 0 changed
-```
+- ★ 템플릿 문구(`isTemplate: true`)는 3단계에서 필터링 필수: (1) phrases_screen `_flattenPacks`, (2) compact_phrase_list 칩 목록, (3) provider `_buildPackPhrases`. 하나라도 빠지면 `{{group_name}}` 원본이 사용자에게 노출됨 (2026-03-03)
+- ★ `onboarding_done` 플래그는 온보딩 완료/스킵 시점에만 설정. main.dart에서 조기 설정하면 앱 킬 시 온보딩 재진입 불가 (2026-03-03)
+- ★ 즐겨찾기에 저장된 템플릿 문구는 치환된 ko 텍스트만 보존됨 — roman/context 등 메타데이터는 원본 팩에서 ko 키로 lookup 실패 (원본은 `{{group_name}} ...`). MVP 한계로 수용, 향후 즐겨찾기 구조 개선 필요 (2026-03-03)
+- ★ PackFilterChips에 새 칩 추가 시 `extraChips` 카운트와 `itemBuilder` 인덱스 오프셋 모두 갱신 필수 — 불일치 시 팩 칩이 누락되거나 잘못된 팩에 매핑 (2026-03-03)
 
-## 신규 파일
+## 리뷰 연기 이슈 (post-MVP)
 
-```
-lib/services/analytics_service.dart          — AnalyticsService 추상 인터페이스
-lib/services/noop_analytics_service.dart     — NoOp 구현 (디버그 출력)
-lib/services/analytics_events.dart           — 이벤트/파라미터 상수
-lib/presentation/providers/analytics_providers.dart — analyticsServiceProvider
-lib/presentation/providers/calendar_providers.dart  — todayEvents + todaySuggestedPhrases
-lib/core/entities/kpop_event.dart            — KpopEvent freezed entity
-lib/core/repositories/calendar_repository.dart — CalendarRepository interface
-lib/core/usecases/get_today_events_usecase.dart — GetTodayEventsUseCase
-lib/core/usecases/get_phrases_by_situation_usecase.dart — GetPhrasesBySituationUseCase
-lib/data/datasources/calendar_local_datasource.dart — 캘린더 JSON 로드 + 캐시
-lib/data/repositories/calendar_repository_impl.dart — CalendarRepository 구현
-assets/calendar/kpop_events.json             — 상위 10그룹 69개 이벤트
-test/services/analytics_service_test.dart    — NoOp + Recording + 상수 테스트
-test/core/entities/kpop_event_test.dart      — KpopEvent fromJson 테스트
-test/core/usecases/get_today_events_usecase_test.dart — 날짜 매칭 테스트
-test/core/usecases/get_phrases_by_situation_usecase_test.dart — situation 필터 테스트
-test/data/datasources/calendar_local_datasource_test.dart — DataSource 테스트
-```
+| ID | 내용 | 심각도 | 이유 |
+|----|------|--------|------|
+| I1 | IdolSelectScreen에서 setState 사용 | LOW | 순수 ephemeral UI 상태(선택 하이라이트, 커스텀 입력 토글). 비즈니스 로직 아님 |
+| I6 | 즐겨찾기 템플릿 메타데이터 손실 | LOW | ko 텍스트는 정상 표시. roman/context 누락은 UX 영향 미미 |
+| I7 | myIdolDisplayNameProvider auto-dispose | LOW | 크로스엔진에서 lifecycle invalidate로 커버 |
+| I8 | HomeScreen Consumer-in-ConsumerWidget 중복 | LOW | 코스메틱 리팩토링 |
+| I9 | _buildMyIdolPhrases isFree 미확인 | LOW | my_idol_pack은 항상 free |
 
-## 수정된 파일
+## 다음 단계
 
-```
-lib/core/entities/phrase.dart                — situation 필드 추가
-lib/main.dart                                — app_open 이벤트 + UncontrolledProviderScope
-lib/presentation/providers/bubble_providers.dart — session start/end 이벤트
-lib/presentation/providers/favorite_phrases_provider.dart — phrase_favorite 이벤트
-lib/presentation/providers/compact_phrase_filter_provider.dart — filter_change 이벤트
-lib/presentation/providers/phrase_providers.dart — situation usecase provider
-lib/presentation/widgets/compact_phrase_tile.dart — phrase_copy 이벤트 (bubble)
-lib/presentation/widgets/phrase_card.dart     — phrase_copy 이벤트 (main)
-assets/phrases/basic_love.json               — situation 태깅
-assets/phrases/birthday_pack.json            — situation 태깅
-assets/phrases/comeback_pack.json            — situation 태깅
-assets/phrases/daily_pack.json               — situation 태깅
-pubspec.yaml                                 — assets/calendar/ 추가
-```
+### 1순위: Phase 6 수익화
+- 감성 컬러 팩 IAP (퍼플 드림, 골든 아워 등)
+- 보상형 광고 "팬 패스" (4h 해금, 3회/일)
+- 전환 퍼널 구현 (7일 무료 → Day4 보상형 → IAP 트리거)
+- 상세: `docs/discussions/2026-02-28-bubble-monetization.md`
 
-## 분석 계측 삽입 지점
+### 2순위: Phase 7 릴리즈 준비
+- Play Store 리스팅 + 스크린샷
+- Firebase Analytics 연동 (NoOp → real)
+- 크래시 리포팅 (Crashlytics)
 
-| 이벤트 | 위치 | 파라미터 |
-|--------|------|----------|
-| `app_open` | `main.dart` | — |
-| `bubble_session_start` | `BubbleNotifier.show()` | — |
-| `bubble_session_end` | `BubbleNotifier.hide()` | `duration_sec` |
-| `phrase_copy` | `CompactPhraseTile._copy()`, `PhraseCard` copy button | `source`, `situation` |
-| `phrase_favorite` | `FavoritePhrasesNotifier.toggle()` | `action` (add/remove) |
-| `filter_change` | `CompactPhraseFilterNotifier.selectFavorites/selectPack()` | `filter_type`, `pack_id` |
-
-## 패널 토론 결과 (3차 최종)
-
-토론 기록: `docs/discussions/2026-03-02-weekly-phrases-system-review.md`
-
-### 확정된 MVP 범위 (v1.1+v1.2 통합)
-
-| 구성요소 | MVP | 출시 후 |
-|----------|-----|---------|
-| 정적 캘린더 + 상황태그 | **완료** | — |
-| 분석 계측 | **완료** | — |
-| 마이 아이돌 선택 UI (5그룹) | 미착수 | — |
-| 템플릿 문구 렌더링 | 미착수 | — |
-| 5그룹 데이터 (앱 번들) | 미착수 | — |
-| 관리 대시보드 | — | MVP+1~2주 |
-| R2 동기화 | — | MVP+1~2주 |
-
-### 추정 잔여 일정
-- 마이아이돌 + 템플릿 + groups.json + 통합 테스트: **5~7일**
-- 7일 cap (초과 시 v1.1만 출시)
+### 3순위: 출시 후 운영
+- 관리 대시보드 + R2 동기화 (MVP+1~2주)
+- 30그룹 확장 (DAU 5K gate)
+- LOW 이슈 잔여 처리
 
 ## 핵심 결정사항
 
 | 결정 | 이유 |
 |------|------|
-| Firebase 미포함, NoOp 폴백 | google-services.json 없이 빌드 성공 보장. Firebase 추가 시 provider override로 교체 |
-| AnalyticsService → services/ 레이어 | core/ 순수 Dart 규칙 유지. services/는 플랫폼 서비스 레이어 |
-| main.dart UncontrolledProviderScope | app_open 이벤트를 runApp 전에 기록하기 위해 ProviderContainer 직접 생성 |
 | 템플릿 방식 이름 삽입 | 법적 안전 + 비용 절감. 유저가 이름 선택, 앱은 템플릿만 제공 |
-| v1.2 MVP 통합 | 첫인상 임팩트 극대화. 정적 캘린더만으로는 차별화 체감 약함 |
-| DAU 5K gate → 30그룹 확장에만 적용 | 5그룹 파일럿은 PMF 검증 도구, gate 무관 |
+| v1.2 MVP 통합 | 첫인상 임팩트 극대화. 마이아이돌 없이는 "또 다른 한국어 앱" |
+| 5그룹 파일럿 (BTS/BP/SKZ/aespa/SVT) | PMF 검증 도구, DAU gate 무관. 데이터량 최소화 |
+| onboarding_done 지연 설정 | 앱 킬 대응 — 완료/스킵 확인 후에만 플래그 set |
+| 템플릿 3단계 필터링 | `{{group_name}}` 원문 노출은 치명적 UX 결함 |
+| setState 허용 (IdolSelectScreen) | ephemeral UI state만 — 프로젝트 규칙 엄격 적용 시 과도한 오버엔지니어링 |
 
-## 다음 단계
+## 커밋 히스토리
 
-### 1순위: 워크트리 커밋/머지
-- `.worktrees/sprint2-data-analytics` 변경사항 커밋
-- main에 머지 또는 PR 생성
+```
+b26c14e merge: MVP 통합 — 마이아이돌 + 템플릿 문구 + 온보딩 (feature/mvp-integration)
+fa85a88 fix: 교차리뷰 Round 2 수정 — 템플릿 노출 방지 + 빈상태 메시지 + 온보딩 시점
+0373d98 test: myIdol/today 칩 위젯 + 필터 provider 테스트 추가
+f0f1bff fix: 리뷰 수정 — knownPackIds 누락 + 칩 와이어링 + 오늘 칩 UI
+dd0373e docs: add MVP integration design, plan, and panel discussion
+5ace8e9 chore: fix dart format + suppress freezed @JsonKey analyzer warning
+fc09f11 feat: add today filter for bubble context-aware phrases
+280c50a feat: add myIdol provider to cross-engine sync
+fd0d42c feat: add my idol filter chip to PackFilterChips
+7744e14 feat: filter todaySuggestedPhrases by my idol group
+48414cb feat: add my idol greeting on home app bar
+c1620b8 feat: add idol selection UI (onboarding + settings)
+e2f8782 feat: add myIdol filter case + template resolution in compact phrases
+4d1e437 feat: add template phrase resolution logic
+acbbb84 feat: add IdolGroup entity + MyIdolNotifier provider
+948e3f7 docs: allow idol name template insertion in rules
+ed48aae feat: add my_idol template phrase pack (10 phrases)
+65a029a feat: add isTemplate field to Phrase entity
+400f9e0 feat: add groups.json lite (5 pilot groups)
+```
 
-### 2순위: MVP 통합 구현 계획 수립
-- 마이 아이돌 선택 UI + groups.json lite (5그룹)
-- 템플릿 문구 시스템 (`{{group_name}}` 치환)
-- 통합 테스트 + 안정화
-- 세밀한 구현 계획 작성 필요
+## 수정한 파일 (MVP 통합)
 
-### 3순위: Phase 6 수익화
-- 감성 컬러 팩 IAP
-- 보상형 광고 "팬 패스"
+```
+신규:
+  assets/groups/groups.json                          — 5그룹 파일럿 데이터
+  assets/phrases/my_idol_pack.json                   — 10개 템플릿 문구
+  lib/core/entities/idol_group.dart                  — IdolGroup freezed entity
+  lib/presentation/providers/my_idol_provider.dart   — MyIdolNotifier + display name
+  lib/presentation/providers/template_phrase_provider.dart — resolveTemplatePhrase
+  lib/presentation/screens/idol_select_screen.dart   — 아이돌 선택 UI
+  docs/plans/2026-03-03-mvp-integration-design.md    — 설계서
+  docs/plans/2026-03-03-mvp-integration-plan.md      — 구현 계획서
+  test/presentation/providers/my_idol_provider_test.dart
+  test/presentation/providers/template_phrase_provider_test.dart
+
+수정:
+  lib/core/entities/phrase.dart                      — isTemplate 필드 추가
+  lib/data/datasources/phrase_local_datasource.dart  — knownPackIds에 my_idol_pack 추가
+  lib/main.dart                                      — 온보딩 라우트 + onboarding_done 조기설정 제거
+  lib/presentation/constants/ui_strings.dart          — 20개 문자열 상수 추가
+  lib/presentation/providers/calendar_providers.dart  — myIdol 그룹 필터링
+  lib/presentation/providers/compact_phrase_filter_provider.dart — myIdol/today 케이스 + 템플릿 필터
+  lib/presentation/router/app_router.dart            — 온보딩/설정 라우트
+  lib/presentation/screens/home_screen.dart          — 마이아이돌 인사말
+  lib/presentation/screens/phrases_screen.dart       — 템플릿 문구 필터링
+  lib/presentation/screens/settings_screen.dart      — 마이아이돌 타일
+  lib/presentation/widgets/compact_phrase_list.dart  — 칩 와이어링 + 수직 리스트
+  lib/presentation/widgets/pack_filter_chips.dart    — myIdol/today 칩 추가
+  test/presentation/widgets/pack_filter_chips_test.dart — 12개 테스트 추가
+  test/presentation/providers/compact_phrase_filter_provider_test.dart — 11개 테스트 추가
+```
 
 ## 참고 컨텍스트
 
-- 패널 토론: `docs/discussions/2026-03-02-weekly-phrases-system-review.md` (1차~3차)
-- 설계서: `docs/fangeul-weekly-phrases-system.md` (3차 합의로 일부 대체됨)
-- 인프라: VPS(자동매매봇 운영) + 로컬 GPU서버 + DB/웹겸용서버 → 대시보드 배포 가능
+- 패널 토론: `docs/discussions/2026-03-02-mvp-launch-review.md`
+- 설계서: `docs/plans/2026-03-03-mvp-integration-design.md`
+- 구현 계획: `docs/plans/2026-03-03-mvp-integration-plan.md`
+- 수익화 토론: `docs/discussions/2026-02-28-bubble-monetization.md`
 
 ## 세션 히스토리
 
@@ -166,4 +175,5 @@ pubspec.yaml                                 — assets/calendar/ 추가
 | P5.1-MEDIUM | M1/M3/M4/M5 수정 |
 | P5.2-UX | 팩 문구 탐색 + AsyncNotifier 전환 + 버블/키보드 UX 수정 → 247 tests |
 | Sprint 1 | MVP UX 기반 다듬기 — 높이/팩복원/confetti/배터리 + 3건 리뷰 수정 → 252 tests |
-| **Sprint 2 (이번)** | 상황태그 + K-pop 캘린더 + 분석 계측 + 패널 토론 3회 → 280 tests |
+| Sprint 2 | 상황태그 + K-pop 캘린더 + 분석 계측 + 패널 토론 3회 → 280 tests |
+| **MVP 통합 (이번)** | 마이아이돌 + 템플릿 문구 + 온보딩 + 교차리뷰 3라운드 → 314 tests |

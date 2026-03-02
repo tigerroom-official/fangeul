@@ -55,4 +55,4 @@ dart format --set-exit-if-changed .  # 포맷 검증
 ## 현재 작업 상태
 > 마지막 핸드오프: 2026-03-03
 > 상세: `docs/HANDOFF.md` 참조
-> 요약: Sprint 2 완료 — 상황태그 + K-pop 캘린더 + 분석 계측. 280개 테스트 pass. 워크트리(.worktrees/sprint2-data-analytics) 커밋/머지 대기. 다음: MVP 통합 구현 계획(마이아이돌 + 템플릿 문구) → Phase 6 수익화.
+> 요약: MVP 통합 완료 — 마이아이돌(5그룹) + 템플릿 문구 + 온보딩 + 교차리뷰 3라운드. 314 tests pass. 다음: Phase 6 수익화.
