@@ -39,8 +39,7 @@ Future<List<KpopEvent>> todayEvents(TodayEventsRef ref) {
 /// 마이 아이돌 설정 시 해당 그룹 이벤트만 필터링하고
 /// 템플릿 문구의 `{{group_name}}`을 치환한다.
 @riverpod
-Future<List<Phrase>> todaySuggestedPhrases(
-    TodaySuggestedPhrasesRef ref) async {
+Future<List<Phrase>> todaySuggestedPhrases(TodaySuggestedPhrasesRef ref) async {
   final events = await ref.watch(todayEventsProvider.future);
   if (events.isEmpty) return [];
 

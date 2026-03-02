@@ -52,8 +52,7 @@ void main() {
     });
 
     test('should load persisted selection on rebuild', () async {
-      SharedPreferences.setMockInitialValues(
-          {'my_idol_group_id': 'seventeen'});
+      SharedPreferences.setMockInitialValues({'my_idol_group_id': 'seventeen'});
 
       final container2 = ProviderContainer();
       addTearDown(() => container2.dispose());

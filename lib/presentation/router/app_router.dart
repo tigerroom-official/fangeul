@@ -14,7 +14,11 @@ import 'package:fangeul/presentation/widgets/shell_scaffold.dart';
 part 'app_router.g.dart';
 
 /// Kotlin [setInitialRoute]에서 설정된 경로 중 유효한 것만 사용.
-const _validInitialRoutes = {'/home', '/mini-converter', '/onboarding/idol-select'};
+const _validInitialRoutes = {
+  '/home',
+  '/mini-converter',
+  '/onboarding/idol-select'
+};
 
 /// 첫 실행 시 온보딩 경로를 주입하기 위한 override.
 @Riverpod(keepAlive: true)
