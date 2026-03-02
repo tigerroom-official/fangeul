@@ -16,6 +16,9 @@ class PackFilterChips extends StatelessWidget {
     this.selectedPackId,
     this.onFavoritesSelected,
     this.onPackSelected,
+    this.isMyIdolSelected = false,
+    this.onMyIdolSelected,
+    this.showMyIdolChip = false,
   });
 
   /// 표시할 팩 목록.
@@ -33,18 +36,31 @@ class PackFilterChips extends StatelessWidget {
   /// 팩 칩 탭 콜백.
   final ValueChanged<String>? onPackSelected;
 
+  /// 마이 아이돌 칩 선택 상태.
+  final bool isMyIdolSelected;
+
+  /// 마이 아이돌 칩 탭 콜백.
+  final VoidCallback? onMyIdolSelected;
+
+  /// 마이 아이돌 칩 표시 여부 (아이돌 설정 유저만).
+  final bool showMyIdolChip;
+
   @override
   Widget build(BuildContext context) {
+    final chipCount = packs.length + 1 + (showMyIdolChip ? 1 : 0);
+
     return SizedBox(
       height: 36,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 8),
-        itemCount: packs.length + 1, // +1 for favorites chip
+        itemCount: chipCount,
         separatorBuilder: (_, __) => const SizedBox(width: 6),
         itemBuilder: (context, index) {
           if (index == 0) return _buildFavoritesChip(context);
-          return _buildPackChip(context, packs[index - 1]);
+          if (showMyIdolChip && index == 1) return _buildMyIdolChip(context);
+          final packIndex = index - 1 - (showMyIdolChip ? 1 : 0);
+          return _buildPackChip(context, packs[packIndex]);
         },
       ),
     );
@@ -63,7 +79,7 @@ class PackFilterChips extends StatelessWidget {
           fontWeight: isFavoritesSelected ? FontWeight.w600 : FontWeight.w400,
         ),
       ),
-      selected: isFavoritesSelected,
+      selected: isFavoritesSelected && !isMyIdolSelected,
       selectedColor: theme.colorScheme.primary,
       backgroundColor: theme.colorScheme.surfaceContainer,
       checkmarkColor: theme.colorScheme.onPrimary,
@@ -76,9 +92,36 @@ class PackFilterChips extends StatelessWidget {
     );
   }
 
+  Widget _buildMyIdolChip(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return FilterChip(
+      label: Text(
+        UiStrings.idolSettingLabel,
+        style: TextStyle(
+          color: isMyIdolSelected
+              ? theme.colorScheme.onPrimary
+              : theme.colorScheme.onSurface,
+          fontWeight: isMyIdolSelected ? FontWeight.w600 : FontWeight.w400,
+        ),
+      ),
+      selected: isMyIdolSelected,
+      selectedColor: theme.colorScheme.primary,
+      backgroundColor: theme.colorScheme.surfaceContainer,
+      checkmarkColor: theme.colorScheme.onPrimary,
+      showCheckmark: false,
+      side: isMyIdolSelected
+          ? BorderSide.none
+          : BorderSide(color: theme.colorScheme.outlineVariant),
+      visualDensity: VisualDensity.compact,
+      onSelected: (_) => onMyIdolSelected?.call(),
+    );
+  }
+
   Widget _buildPackChip(BuildContext context, PhrasePack pack) {
     final theme = Theme.of(context);
-    final isSelected = !isFavoritesSelected && selectedPackId == pack.id;
+    final isSelected =
+        !isFavoritesSelected && !isMyIdolSelected && selectedPackId == pack.id;
     final label = pack.isFree ? pack.nameKo : '${pack.nameKo}🔒';
 
     return FilterChip(
