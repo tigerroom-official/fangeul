@@ -27,6 +27,9 @@ class Phrase with _$Phrase {
 
     /// 상황 태그 (birthday / comeback / concert / daily / support)
     String? situation,
+
+    /// 템플릿 문구 여부. true이면 {{group_name}} 등 치환 슬롯 포함.
+    @JsonKey(name: 'is_template') @Default(false) bool isTemplate,
   }) = _Phrase;
 
   factory Phrase.fromJson(Map<String, dynamic> json) => _$PhraseFromJson(json);

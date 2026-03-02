@@ -18,6 +18,7 @@ _$PhraseImpl _$$PhraseImplFromJson(Map<String, dynamic> json) => _$PhraseImpl(
           ) ??
           const {},
       situation: json['situation'] as String?,
+      isTemplate: json['is_template'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$PhraseImplToJson(_$PhraseImpl instance) =>
@@ -28,4 +29,5 @@ Map<String, dynamic> _$$PhraseImplToJson(_$PhraseImpl instance) =>
       'tags': instance.tags,
       'translations': instance.translations,
       'situation': instance.situation,
+      'is_template': instance.isTemplate,
     };

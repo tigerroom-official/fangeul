@@ -69,6 +69,33 @@ void main() {
       expect(restored, original);
     });
 
+    test('should parse isTemplate field from JSON', () {
+      final json = {
+        'ko': '{{group_name}} 컴백 축하해요!',
+        'roman': '{{group_name}} keombaek chukahaeyo!',
+        'context': 'Template: comeback congratulations',
+        'tags': ['comeback'],
+        'translations': {'en': 'Congratulations on {{group_name}} comeback!'},
+        'situation': 'comeback',
+        'is_template': true,
+      };
+      final phrase = Phrase.fromJson(json);
+      expect(phrase.isTemplate, true);
+      expect(phrase.ko, contains('{{group_name}}'));
+    });
+
+    test('should default isTemplate to false', () {
+      final json = {
+        'ko': '사랑해요',
+        'roman': 'saranghaeyo',
+        'context': 'Love',
+        'tags': <String>[],
+        'translations': <String, String>{},
+      };
+      final phrase = Phrase.fromJson(json);
+      expect(phrase.isTemplate, false);
+    });
+
     test('should serialize to snake_case JSON', () {
       const phrase = Phrase(
         ko: '사랑해요',

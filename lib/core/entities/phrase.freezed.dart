@@ -38,6 +38,10 @@ mixin _$Phrase {
   /// 상황 태그 (birthday / comeback / concert / daily / support)
   String? get situation => throw _privateConstructorUsedError;
 
+  /// 템플릿 문구 여부. true이면 {{group_name}} 등 치환 슬롯 포함.
+  @JsonKey(name: 'is_template')
+  bool get isTemplate => throw _privateConstructorUsedError;
+
   /// Serializes this Phrase to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
@@ -58,7 +62,8 @@ abstract class $PhraseCopyWith<$Res> {
       String context,
       List<String> tags,
       Map<String, String> translations,
-      String? situation});
+      String? situation,
+      @JsonKey(name: 'is_template') bool isTemplate});
 }
 
 /// @nodoc
@@ -82,6 +87,7 @@ class _$PhraseCopyWithImpl<$Res, $Val extends Phrase>
     Object? tags = null,
     Object? translations = null,
     Object? situation = freezed,
+    Object? isTemplate = null,
   }) {
     return _then(_value.copyWith(
       ko: null == ko
@@ -108,6 +114,10 @@ class _$PhraseCopyWithImpl<$Res, $Val extends Phrase>
           ? _value.situation
           : situation // ignore: cast_nullable_to_non_nullable
               as String?,
+      isTemplate: null == isTemplate
+          ? _value.isTemplate
+          : isTemplate // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -125,7 +135,8 @@ abstract class _$$PhraseImplCopyWith<$Res> implements $PhraseCopyWith<$Res> {
       String context,
       List<String> tags,
       Map<String, String> translations,
-      String? situation});
+      String? situation,
+      @JsonKey(name: 'is_template') bool isTemplate});
 }
 
 /// @nodoc
@@ -147,6 +158,7 @@ class __$$PhraseImplCopyWithImpl<$Res>
     Object? tags = null,
     Object? translations = null,
     Object? situation = freezed,
+    Object? isTemplate = null,
   }) {
     return _then(_$PhraseImpl(
       ko: null == ko
@@ -173,6 +185,10 @@ class __$$PhraseImplCopyWithImpl<$Res>
           ? _value.situation
           : situation // ignore: cast_nullable_to_non_nullable
               as String?,
+      isTemplate: null == isTemplate
+          ? _value.isTemplate
+          : isTemplate // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -186,7 +202,8 @@ class _$PhraseImpl implements _Phrase {
       required this.context,
       final List<String> tags = const [],
       final Map<String, String> translations = const {},
-      this.situation})
+      this.situation,
+      @JsonKey(name: 'is_template') this.isTemplate = false})
       : _tags = tags,
         _translations = translations;
 
@@ -233,9 +250,14 @@ class _$PhraseImpl implements _Phrase {
   @override
   final String? situation;
 
+  /// 템플릿 문구 여부. true이면 {{group_name}} 등 치환 슬롯 포함.
+  @override
+  @JsonKey(name: 'is_template')
+  final bool isTemplate;
+
   @override
   String toString() {
-    return 'Phrase(ko: $ko, roman: $roman, context: $context, tags: $tags, translations: $translations, situation: $situation)';
+    return 'Phrase(ko: $ko, roman: $roman, context: $context, tags: $tags, translations: $translations, situation: $situation, isTemplate: $isTemplate)';
   }
 
   @override
@@ -250,7 +272,9 @@ class _$PhraseImpl implements _Phrase {
             const DeepCollectionEquality()
                 .equals(other._translations, _translations) &&
             (identical(other.situation, situation) ||
-                other.situation == situation));
+                other.situation == situation) &&
+            (identical(other.isTemplate, isTemplate) ||
+                other.isTemplate == isTemplate));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -262,7 +286,8 @@ class _$PhraseImpl implements _Phrase {
       context,
       const DeepCollectionEquality().hash(_tags),
       const DeepCollectionEquality().hash(_translations),
-      situation);
+      situation,
+      isTemplate);
 
   /// Create a copy of Phrase
   /// with the given fields replaced by the non-null parameter values.
@@ -287,7 +312,8 @@ abstract class _Phrase implements Phrase {
       required final String context,
       final List<String> tags,
       final Map<String, String> translations,
-      final String? situation}) = _$PhraseImpl;
+      final String? situation,
+      @JsonKey(name: 'is_template') final bool isTemplate}) = _$PhraseImpl;
 
   factory _Phrase.fromJson(Map<String, dynamic> json) = _$PhraseImpl.fromJson;
 
@@ -314,6 +340,11 @@ abstract class _Phrase implements Phrase {
   /// 상황 태그 (birthday / comeback / concert / daily / support)
   @override
   String? get situation;
+
+  /// 템플릿 문구 여부. true이면 {{group_name}} 등 치환 슬롯 포함.
+  @override
+  @JsonKey(name: 'is_template')
+  bool get isTemplate;
 
   /// Create a copy of Phrase
   /// with the given fields replaced by the non-null parameter values.
