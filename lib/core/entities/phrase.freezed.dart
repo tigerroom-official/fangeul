@@ -35,6 +35,9 @@ mixin _$Phrase {
   /// 다국어 번역 — 키: 언어 코드, 값: 번역문
   Map<String, String> get translations => throw _privateConstructorUsedError;
 
+  /// 상황 태그 (birthday / comeback / concert / daily / support)
+  String? get situation => throw _privateConstructorUsedError;
+
   /// Serializes this Phrase to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
@@ -54,7 +57,8 @@ abstract class $PhraseCopyWith<$Res> {
       String roman,
       String context,
       List<String> tags,
-      Map<String, String> translations});
+      Map<String, String> translations,
+      String? situation});
 }
 
 /// @nodoc
@@ -77,6 +81,7 @@ class _$PhraseCopyWithImpl<$Res, $Val extends Phrase>
     Object? context = null,
     Object? tags = null,
     Object? translations = null,
+    Object? situation = freezed,
   }) {
     return _then(_value.copyWith(
       ko: null == ko
@@ -99,6 +104,10 @@ class _$PhraseCopyWithImpl<$Res, $Val extends Phrase>
           ? _value.translations
           : translations // ignore: cast_nullable_to_non_nullable
               as Map<String, String>,
+      situation: freezed == situation
+          ? _value.situation
+          : situation // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -115,7 +124,8 @@ abstract class _$$PhraseImplCopyWith<$Res> implements $PhraseCopyWith<$Res> {
       String roman,
       String context,
       List<String> tags,
-      Map<String, String> translations});
+      Map<String, String> translations,
+      String? situation});
 }
 
 /// @nodoc
@@ -136,6 +146,7 @@ class __$$PhraseImplCopyWithImpl<$Res>
     Object? context = null,
     Object? tags = null,
     Object? translations = null,
+    Object? situation = freezed,
   }) {
     return _then(_$PhraseImpl(
       ko: null == ko
@@ -158,6 +169,10 @@ class __$$PhraseImplCopyWithImpl<$Res>
           ? _value._translations
           : translations // ignore: cast_nullable_to_non_nullable
               as Map<String, String>,
+      situation: freezed == situation
+          ? _value.situation
+          : situation // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -170,7 +185,8 @@ class _$PhraseImpl implements _Phrase {
       required this.roman,
       required this.context,
       final List<String> tags = const [],
-      final Map<String, String> translations = const {}})
+      final Map<String, String> translations = const {},
+      this.situation})
       : _tags = tags,
         _translations = translations;
 
@@ -213,9 +229,13 @@ class _$PhraseImpl implements _Phrase {
     return EqualUnmodifiableMapView(_translations);
   }
 
+  /// 상황 태그 (birthday / comeback / concert / daily / support)
+  @override
+  final String? situation;
+
   @override
   String toString() {
-    return 'Phrase(ko: $ko, roman: $roman, context: $context, tags: $tags, translations: $translations)';
+    return 'Phrase(ko: $ko, roman: $roman, context: $context, tags: $tags, translations: $translations, situation: $situation)';
   }
 
   @override
@@ -228,7 +248,9 @@ class _$PhraseImpl implements _Phrase {
             (identical(other.context, context) || other.context == context) &&
             const DeepCollectionEquality().equals(other._tags, _tags) &&
             const DeepCollectionEquality()
-                .equals(other._translations, _translations));
+                .equals(other._translations, _translations) &&
+            (identical(other.situation, situation) ||
+                other.situation == situation));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -239,7 +261,8 @@ class _$PhraseImpl implements _Phrase {
       roman,
       context,
       const DeepCollectionEquality().hash(_tags),
-      const DeepCollectionEquality().hash(_translations));
+      const DeepCollectionEquality().hash(_translations),
+      situation);
 
   /// Create a copy of Phrase
   /// with the given fields replaced by the non-null parameter values.
@@ -263,7 +286,8 @@ abstract class _Phrase implements Phrase {
       required final String roman,
       required final String context,
       final List<String> tags,
-      final Map<String, String> translations}) = _$PhraseImpl;
+      final Map<String, String> translations,
+      final String? situation}) = _$PhraseImpl;
 
   factory _Phrase.fromJson(Map<String, dynamic> json) = _$PhraseImpl.fromJson;
 
@@ -286,6 +310,10 @@ abstract class _Phrase implements Phrase {
   /// 다국어 번역 — 키: 언어 코드, 값: 번역문
   @override
   Map<String, String> get translations;
+
+  /// 상황 태그 (birthday / comeback / concert / daily / support)
+  @override
+  String? get situation;
 
   /// Create a copy of Phrase
   /// with the given fields replaced by the non-null parameter values.

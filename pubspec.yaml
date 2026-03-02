@@ -71,6 +71,7 @@ flutter:
     - assets/phrases/
     - assets/audio/
     - assets/lottie/
+    - assets/calendar/
 
   fonts:
     - family: NotoSansKR

@@ -28,7 +28,7 @@ final floatingBubbleChannelProvider =
 // ignore: unused_element
 typedef FloatingBubbleChannelRef
     = AutoDisposeProviderRef<FloatingBubbleChannel>;
-String _$bubbleNotifierHash() => r'798f0002c16e4ce631c321b9b0fbadd62594a1d0';
+String _$bubbleNotifierHash() => r'8cac4081c5e1f2e9cf0f63300a7fa4bbe9a819c3';
 
 /// 버블 상태 Notifier.
 ///

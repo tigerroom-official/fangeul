@@ -7,7 +7,7 @@ part of 'favorite_phrases_provider.dart';
 // **************************************************************************
 
 String _$favoritePhrasesNotifierHash() =>
-    r'ec9c8c89868cbd6adb2bf84bed6fe6a06b1a534e';
+    r'15a66f79068fa2c76e155d4b2555fa97dd1ef134';
 
 /// 즐겨찾기 문구 Provider.
 ///

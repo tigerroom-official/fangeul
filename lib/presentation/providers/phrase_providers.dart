@@ -5,6 +5,7 @@ import 'package:fangeul/core/entities/phrase_pack.dart';
 import 'package:fangeul/core/repositories/phrase_repository.dart';
 import 'package:fangeul/core/usecases/get_phrases_usecase.dart';
 import 'package:fangeul/core/usecases/get_phrases_by_tag_usecase.dart';
+import 'package:fangeul/core/usecases/get_phrases_by_situation_usecase.dart';
 import 'package:fangeul/core/usecases/get_daily_card_usecase.dart';
 import 'package:fangeul/core/entities/daily_card.dart';
 import 'package:fangeul/data/datasources/phrase_local_datasource.dart';
@@ -33,6 +34,12 @@ GetPhrasesByTagUseCase getPhrasesByTagUseCase(GetPhrasesByTagUseCaseRef ref) {
 }
 
 @riverpod
+GetPhrasesBySituationUseCase getPhrasesBySituationUseCase(
+    GetPhrasesBySituationUseCaseRef ref) {
+  return GetPhrasesBySituationUseCase(ref.read(phraseRepositoryProvider));
+}
+
+@riverpod
 GetDailyCardUseCase getDailyCardUseCase(GetDailyCardUseCaseRef ref) {
   return GetDailyCardUseCase(ref.read(phraseRepositoryProvider));
 }
@@ -47,6 +54,13 @@ Future<List<PhrasePack>> allPhrases(AllPhrasesRef ref) {
 @riverpod
 Future<List<Phrase>> phrasesByTag(PhrasesByTagRef ref, String tag) {
   return ref.read(getPhrasesByTagUseCaseProvider).execute(tag);
+}
+
+/// 상황별 문구 필터
+@riverpod
+Future<List<Phrase>> phrasesBySituation(
+    PhrasesBySituationRef ref, String situation) {
+  return ref.read(getPhrasesBySituationUseCaseProvider).execute(situation);
 }
 
 /// 오늘의 카드

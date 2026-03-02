@@ -81,6 +81,26 @@ final getPhrasesByTagUseCaseProvider =
 // ignore: unused_element
 typedef GetPhrasesByTagUseCaseRef
     = AutoDisposeProviderRef<GetPhrasesByTagUseCase>;
+String _$getPhrasesBySituationUseCaseHash() =>
+    r'ee68e3d33a113aa40aa7e282a2dd969d71f03e34';
+
+/// See also [getPhrasesBySituationUseCase].
+@ProviderFor(getPhrasesBySituationUseCase)
+final getPhrasesBySituationUseCaseProvider =
+    AutoDisposeProvider<GetPhrasesBySituationUseCase>.internal(
+  getPhrasesBySituationUseCase,
+  name: r'getPhrasesBySituationUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getPhrasesBySituationUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef GetPhrasesBySituationUseCaseRef
+    = AutoDisposeProviderRef<GetPhrasesBySituationUseCase>;
 String _$getDailyCardUseCaseHash() =>
     r'15032703adef096b0169750b968ed7789c6f0b95';
 
@@ -280,6 +300,151 @@ class _PhrasesByTagProviderElement
 
   @override
   String get tag => (origin as PhrasesByTagProvider).tag;
+}
+
+String _$phrasesBySituationHash() =>
+    r'481bf77a811f93ae18bd269c75e48d17d3f3076f';
+
+/// 상황별 문구 필터
+///
+/// Copied from [phrasesBySituation].
+@ProviderFor(phrasesBySituation)
+const phrasesBySituationProvider = PhrasesBySituationFamily();
+
+/// 상황별 문구 필터
+///
+/// Copied from [phrasesBySituation].
+class PhrasesBySituationFamily extends Family<AsyncValue<List<Phrase>>> {
+  /// 상황별 문구 필터
+  ///
+  /// Copied from [phrasesBySituation].
+  const PhrasesBySituationFamily();
+
+  /// 상황별 문구 필터
+  ///
+  /// Copied from [phrasesBySituation].
+  PhrasesBySituationProvider call(
+    String situation,
+  ) {
+    return PhrasesBySituationProvider(
+      situation,
+    );
+  }
+
+  @override
+  PhrasesBySituationProvider getProviderOverride(
+    covariant PhrasesBySituationProvider provider,
+  ) {
+    return call(
+      provider.situation,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'phrasesBySituationProvider';
+}
+
+/// 상황별 문구 필터
+///
+/// Copied from [phrasesBySituation].
+class PhrasesBySituationProvider
+    extends AutoDisposeFutureProvider<List<Phrase>> {
+  /// 상황별 문구 필터
+  ///
+  /// Copied from [phrasesBySituation].
+  PhrasesBySituationProvider(
+    String situation,
+  ) : this._internal(
+          (ref) => phrasesBySituation(
+            ref as PhrasesBySituationRef,
+            situation,
+          ),
+          from: phrasesBySituationProvider,
+          name: r'phrasesBySituationProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$phrasesBySituationHash,
+          dependencies: PhrasesBySituationFamily._dependencies,
+          allTransitiveDependencies:
+              PhrasesBySituationFamily._allTransitiveDependencies,
+          situation: situation,
+        );
+
+  PhrasesBySituationProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.situation,
+  }) : super.internal();
+
+  final String situation;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<Phrase>> Function(PhrasesBySituationRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: PhrasesBySituationProvider._internal(
+        (ref) => create(ref as PhrasesBySituationRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        situation: situation,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<Phrase>> createElement() {
+    return _PhrasesBySituationProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is PhrasesBySituationProvider && other.situation == situation;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, situation.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin PhrasesBySituationRef on AutoDisposeFutureProviderRef<List<Phrase>> {
+  /// The parameter `situation` of this provider.
+  String get situation;
+}
+
+class _PhrasesBySituationProviderElement
+    extends AutoDisposeFutureProviderElement<List<Phrase>>
+    with PhrasesBySituationRef {
+  _PhrasesBySituationProviderElement(super.provider);
+
+  @override
+  String get situation => (origin as PhrasesBySituationProvider).situation;
 }
 
 String _$dailyCardHash() => r'2717a654a80fce36116cc175dab30242e7c95869';

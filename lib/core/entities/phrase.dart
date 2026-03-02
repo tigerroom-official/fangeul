@@ -24,6 +24,9 @@ class Phrase with _$Phrase {
 
     /// 다국어 번역 — 키: 언어 코드, 값: 번역문
     @Default({}) Map<String, String> translations,
+
+    /// 상황 태그 (birthday / comeback / concert / daily / support)
+    String? situation,
   }) = _Phrase;
 
   factory Phrase.fromJson(Map<String, dynamic> json) => _$PhraseFromJson(json);

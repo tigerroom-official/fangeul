@@ -26,6 +26,20 @@ void main() {
       expect(phrase.translations['id'], 'Aku cinta kamu');
     });
 
+    test('should parse situation field from JSON', () {
+      final json = {
+        'ko': '생일 축하해요!',
+        'roman': 'saengil chukahaeyo!',
+        'context': 'Happy birthday',
+        'tags': ['birthday'],
+        'situation': 'birthday',
+      };
+
+      final phrase = Phrase.fromJson(json);
+
+      expect(phrase.situation, 'birthday');
+    });
+
     test('should use default values for optional fields', () {
       final json = {
         'ko': '사랑해요',
@@ -37,6 +51,7 @@ void main() {
 
       expect(phrase.tags, isEmpty);
       expect(phrase.translations, isEmpty);
+      expect(phrase.situation, isNull);
     });
 
     test('should round-trip through JSON', () {

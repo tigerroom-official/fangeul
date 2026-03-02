@@ -17,6 +17,7 @@ _$PhraseImpl _$$PhraseImplFromJson(Map<String, dynamic> json) => _$PhraseImpl(
             (k, e) => MapEntry(k, e as String),
           ) ??
           const {},
+      situation: json['situation'] as String?,
     );
 
 Map<String, dynamic> _$$PhraseImplToJson(_$PhraseImpl instance) =>
@@ -26,4 +27,5 @@ Map<String, dynamic> _$$PhraseImplToJson(_$PhraseImpl instance) =>
       'context': instance.context,
       'tags': instance.tags,
       'translations': instance.translations,
+      'situation': instance.situation,
     };

@@ -4,8 +4,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:fangeul/core/entities/phrase.dart';
+import 'package:fangeul/presentation/providers/analytics_providers.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
 import 'package:fangeul/presentation/providers/phrase_providers.dart';
+import 'package:fangeul/services/analytics_events.dart';
 
 part 'compact_phrase_filter_provider.freezed.dart';
 part 'compact_phrase_filter_provider.g.dart';
@@ -46,6 +48,10 @@ class CompactPhraseFilterNotifier extends _$CompactPhraseFilterNotifier {
     const filter = CompactPhraseFilter.favorites();
     state = const AsyncData(filter);
     await _saveToPrefs(filter);
+    ref.read(analyticsServiceProvider).logEvent(
+      AnalyticsEvents.filterChange,
+      {AnalyticsParams.filterType: 'favorites'},
+    );
   }
 
   /// 팩 필터로 전환.
@@ -53,6 +59,13 @@ class CompactPhraseFilterNotifier extends _$CompactPhraseFilterNotifier {
     final filter = CompactPhraseFilter.pack(packId);
     state = AsyncData(filter);
     await _saveToPrefs(filter);
+    ref.read(analyticsServiceProvider).logEvent(
+      AnalyticsEvents.filterChange,
+      {
+        AnalyticsParams.filterType: 'pack',
+        AnalyticsParams.packId: packId,
+      },
+    );
   }
 
   Future<void> _saveToPrefs(CompactPhraseFilter filter) async {

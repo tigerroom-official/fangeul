@@ -9,7 +9,9 @@
       "ko": "컴백 축하해요!",
       "roman": "keombaek chukahaeyo!",
       "context": "Congratulations on the comeback!",
-      "tags": ["comeback"],
+      "tags": [
+        "comeback"
+      ],
       "translations": {
         "en": "Congratulations on the comeback!",
         "id": "Selamat atas comebacknya!",
@@ -17,13 +19,17 @@
         "pt": "Parabéns pelo comeback!",
         "es": "¡Felicidades por el comeback!",
         "vi": "Chúc mừng comeback!"
-      }
+      },
+      "situation": "comeback"
     },
     {
       "ko": "신곡 너무 좋아요!",
       "roman": "singok neomu joayo!",
       "context": "The new song is so good!",
-      "tags": ["comeback", "praise"],
+      "tags": [
+        "comeback",
+        "praise"
+      ],
       "translations": {
         "en": "The new song is so good!",
         "id": "Lagu barunya sangat bagus!",
@@ -31,13 +37,17 @@
         "pt": "A música nova é muito boa!",
         "es": "¡La nueva canción es muy buena!",
         "vi": "Bài hát mới hay quá!"
-      }
+      },
+      "situation": "comeback"
     },
     {
       "ko": "음원 1위 하자!",
       "roman": "eumwon ilwi haja!",
       "context": "Let's get #1 on the charts!",
-      "tags": ["comeback", "cheer"],
+      "tags": [
+        "comeback",
+        "cheer"
+      ],
       "translations": {
         "en": "Let's get #1 on the charts!",
         "id": "Ayo raih peringkat 1 di chart!",
@@ -45,13 +55,17 @@
         "pt": "Vamos chegar ao 1º lugar!",
         "es": "¡Vamos al #1 en las listas!",
         "vi": "Cùng đạt hạng 1 nhé!"
-      }
+      },
+      "situation": "comeback"
     },
     {
       "ko": "뮤직비디오 대박이에요",
       "roman": "myujikbidieo daebagieyo",
       "context": "The music video is amazing",
-      "tags": ["comeback", "praise"],
+      "tags": [
+        "comeback",
+        "praise"
+      ],
       "translations": {
         "en": "The music video is amazing",
         "id": "Video musiknya luar biasa",
@@ -59,13 +73,17 @@
         "pt": "O MV é incrível",
         "es": "El MV es increíble",
         "vi": "MV quá đỉnh luôn"
-      }
+      },
+      "situation": "comeback"
     },
     {
       "ko": "기다렸어요!",
       "roman": "gidaryeosseoyo!",
       "context": "I've been waiting! Common comeback excitement",
-      "tags": ["comeback", "emotional"],
+      "tags": [
+        "comeback",
+        "emotional"
+      ],
       "translations": {
         "en": "I've been waiting!",
         "id": "Aku sudah menunggu!",
@@ -73,13 +91,17 @@
         "pt": "Eu estava esperando!",
         "es": "¡Estuve esperando!",
         "vi": "Đã đợi rồi!"
-      }
+      },
+      "situation": "comeback"
     },
     {
       "ko": "컨셉 완벽해요",
       "roman": "keonsep wanbyeokaeyo",
       "context": "The concept is perfect",
-      "tags": ["comeback", "praise"],
+      "tags": [
+        "comeback",
+        "praise"
+      ],
       "translations": {
         "en": "The concept is perfect",
         "id": "Konsepnya sempurna",
@@ -87,13 +109,17 @@
         "pt": "O conceito é perfeito",
         "es": "El concepto es perfecto",
         "vi": "Concept hoàn hảo luôn"
-      }
+      },
+      "situation": "comeback"
     },
     {
       "ko": "총공 준비됐어요!",
       "roman": "chonggong junbidwaesseoyo!",
       "context": "Ready for mass streaming! Fan mobilization term",
-      "tags": ["comeback", "fandom"],
+      "tags": [
+        "comeback",
+        "fandom"
+      ],
       "translations": {
         "en": "Ready for mass streaming!",
         "id": "Siap untuk streaming massal!",
@@ -101,13 +127,17 @@
         "pt": "Pronta para o streaming em massa!",
         "es": "¡Lista para el streaming masivo!",
         "vi": "Sẵn sàng stream rồi!"
-      }
+      },
+      "situation": "comeback"
     },
     {
       "ko": "안무가 미쳤어요",
       "roman": "anmuga michyeosseoyo",
       "context": "The choreography is insane, high praise slang",
-      "tags": ["comeback", "praise"],
+      "tags": [
+        "comeback",
+        "praise"
+      ],
       "translations": {
         "en": "The choreography is insane",
         "id": "Koreografinya gila",
@@ -115,13 +145,17 @@
         "pt": "A coreografia é insana",
         "es": "La coreografía es una locura",
         "vi": "Vũ đạo điên luôn"
-      }
+      },
+      "situation": "comeback"
     },
     {
       "ko": "이번 앨범 최고예요",
       "roman": "ibeon aelbem choegoyeyo",
       "context": "This album is the best",
-      "tags": ["comeback", "praise"],
+      "tags": [
+        "comeback",
+        "praise"
+      ],
       "translations": {
         "en": "This album is the best",
         "id": "Album ini yang terbaik",
@@ -129,13 +163,17 @@
         "pt": "Este álbum é o melhor",
         "es": "Este álbum es el mejor",
         "vi": "Album này là đỉnh nhất"
-      }
+      },
+      "situation": "comeback"
     },
     {
       "ko": "음원 스밍 가요!",
       "roman": "eumwon seuming gayo!",
       "context": "Let's go stream the music! Fan action call",
-      "tags": ["comeback", "fandom"],
+      "tags": [
+        "comeback",
+        "fandom"
+      ],
       "translations": {
         "en": "Let's go stream!",
         "id": "Ayo streaming!",
@@ -143,13 +181,17 @@
         "pt": "Vamos dar stream!",
         "es": "¡Vamos a hacer streaming!",
         "vi": "Đi stream nhạc thôi!"
-      }
+      },
+      "situation": "comeback"
     },
     {
       "ko": "티저부터 미쳤어요",
       "roman": "tizeobuteo michyeosseoyo",
       "context": "Even the teaser is insane, pre-comeback hype",
-      "tags": ["comeback", "praise"],
+      "tags": [
+        "comeback",
+        "praise"
+      ],
       "translations": {
         "en": "Even the teaser is insane",
         "id": "Dari teaser aja sudah gila",
@@ -157,13 +199,17 @@
         "pt": "Até o teaser é insano",
         "es": "Hasta el teaser es una locura",
         "vi": "Từ teaser đã điên rồi"
-      }
+      },
+      "situation": "comeback"
     },
     {
       "ko": "사전예약 완료!",
       "roman": "sajonyeyak wallyo!",
       "context": "Pre-order complete! Fan achievement",
-      "tags": ["comeback", "fandom"],
+      "tags": [
+        "comeback",
+        "fandom"
+      ],
       "translations": {
         "en": "Pre-order complete!",
         "id": "Pre-order selesai!",
@@ -171,13 +217,17 @@
         "pt": "Pré-venda concluída!",
         "es": "¡Pre-orden completada!",
         "vi": "Đặt trước xong rồi!"
-      }
+      },
+      "situation": "comeback"
     },
     {
       "ko": "무대가 기대돼요",
       "roman": "mudaega gidaedwaeyo",
       "context": "Looking forward to the stage/performance",
-      "tags": ["comeback", "cheer"],
+      "tags": [
+        "comeback",
+        "cheer"
+      ],
       "translations": {
         "en": "Looking forward to the performance",
         "id": "Tidak sabar menantikan penampilannya",
@@ -185,13 +235,17 @@
         "pt": "Ansiosa pela performance",
         "es": "Esperando la actuación",
         "vi": "Mong chờ sân khấu quá"
-      }
+      },
+      "situation": "comeback"
     },
     {
       "ko": "올해의 앨범이에요",
       "roman": "olhaeui aelbemieyo",
       "context": "This is the album of the year",
-      "tags": ["comeback", "praise"],
+      "tags": [
+        "comeback",
+        "praise"
+      ],
       "translations": {
         "en": "This is the album of the year",
         "id": "Ini album tahun ini",
@@ -199,13 +253,17 @@
         "pt": "Este é o álbum do ano",
         "es": "Este es el álbum del año",
         "vi": "Đây là album của năm"
-      }
+      },
+      "situation": "comeback"
     },
     {
       "ko": "대상 받자!",
       "roman": "daesang batja!",
       "context": "Let's win the grand prize! Award season goal",
-      "tags": ["comeback", "cheer"],
+      "tags": [
+        "comeback",
+        "cheer"
+      ],
       "translations": {
         "en": "Let's win the grand prize!",
         "id": "Ayo raih penghargaan utama!",
@@ -213,7 +271,8 @@
         "pt": "Vamos ganhar o prêmio principal!",
         "es": "¡Vamos a ganar el gran premio!",
         "vi": "Cùng nhận giải lớn nhé!"
-      }
+      },
+      "situation": "comeback"
     }
   ]
 }

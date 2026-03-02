@@ -4,6 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:fangeul/presentation/providers/analytics_providers.dart';
+import 'package:fangeul/services/analytics_events.dart';
+
 part 'favorite_phrases_provider.g.dart';
 
 /// 즐겨찾기 문구 Provider.
@@ -33,13 +36,18 @@ class FavoritePhrasesNotifier extends _$FavoritePhrasesNotifier {
   /// `build()` 완료를 대기한 뒤 변경하므로 로딩 중 호출해도 안전하다.
   Future<void> toggle(String phraseKo) async {
     final current = {...await future};
-    if (current.contains(phraseKo)) {
+    final wasPresent = current.contains(phraseKo);
+    if (wasPresent) {
       current.remove(phraseKo);
     } else {
       current.add(phraseKo);
     }
     state = AsyncData(current);
     _saveToPrefs(current);
+    ref.read(analyticsServiceProvider).logEvent(
+      AnalyticsEvents.phraseFavorite,
+      {AnalyticsParams.action: wasPresent ? 'remove' : 'add'},
+    );
   }
 
   /// 즐겨찾기 여부 확인.

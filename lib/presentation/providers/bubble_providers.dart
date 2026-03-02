@@ -4,6 +4,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:fangeul/platform/bubble_state.dart';
 import 'package:fangeul/platform/floating_bubble_channel.dart';
+import 'package:fangeul/presentation/providers/analytics_providers.dart';
+import 'package:fangeul/services/analytics_events.dart';
 
 part 'bubble_providers.g.dart';
 
@@ -21,6 +23,7 @@ FloatingBubbleChannel floatingBubbleChannel(FloatingBubbleChannelRef ref) {
 @riverpod
 class BubbleNotifier extends _$BubbleNotifier {
   StreamSubscription<BubbleState>? _eventSubscription;
+  DateTime? _sessionStartTime;
 
   @override
   BubbleState build() {
@@ -51,6 +54,10 @@ class BubbleNotifier extends _$BubbleNotifier {
     final success = await _channel.showBubble();
     if (success) {
       state = BubbleState.showing;
+      _sessionStartTime = DateTime.now();
+      ref
+          .read(analyticsServiceProvider)
+          .logEvent(AnalyticsEvents.bubbleSessionStart);
     }
   }
 
@@ -58,6 +65,7 @@ class BubbleNotifier extends _$BubbleNotifier {
   Future<void> hide() async {
     await _channel.hideBubble();
     state = BubbleState.off;
+    _logSessionEnd();
   }
 
   /// 오버레이 권한 부여 여부를 확인한다.
@@ -85,5 +93,16 @@ class BubbleNotifier extends _$BubbleNotifier {
   /// 배터리 최적화 해제를 시스템에 요청한다.
   Future<bool> requestIgnoreBatteryOptimization() {
     return _channel.requestIgnoreBatteryOptimization();
+  }
+
+  void _logSessionEnd() {
+    final start = _sessionStartTime;
+    if (start == null) return;
+    final duration = DateTime.now().difference(start).inSeconds;
+    _sessionStartTime = null;
+    ref.read(analyticsServiceProvider).logEvent(
+      AnalyticsEvents.bubbleSessionEnd,
+      {AnalyticsParams.durationSec: duration},
+    );
   }
 }
