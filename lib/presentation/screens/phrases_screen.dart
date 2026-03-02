@@ -86,13 +86,15 @@ class PhrasesScreen extends ConsumerWidget {
 
     return phrasesAsync.when(
       data: (phrases) {
-        if (phrases.isEmpty) {
+        // 템플릿 문구 제외 — {{group_name}} 원문 노출 방지
+        final filtered = phrases.where((p) => !p.isTemplate).toList();
+        if (filtered.isEmpty) {
           return const Center(child: Text(UiStrings.phrasesEmpty));
         }
         return ListView.builder(
-          itemCount: phrases.length,
+          itemCount: filtered.length,
           itemBuilder: (context, index) => PhraseCard(
-            phrase: phrases[index],
+            phrase: filtered[index],
             translationLang: UiStrings.defaultTranslationLang,
           ),
         );
