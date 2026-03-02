@@ -7,6 +7,7 @@ import 'package:fangeul/core/entities/phrase.dart';
 import 'package:fangeul/presentation/providers/analytics_providers.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
 import 'package:fangeul/presentation/providers/phrase_providers.dart';
+import 'package:fangeul/presentation/providers/calendar_providers.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/template_phrase_provider.dart';
 import 'package:fangeul/services/analytics_events.dart';
@@ -23,6 +24,7 @@ sealed class CompactPhraseFilter with _$CompactPhraseFilter {
   const factory CompactPhraseFilter.favorites() = _Favorites;
   const factory CompactPhraseFilter.pack(String packId) = _Pack;
   const factory CompactPhraseFilter.myIdol() = _MyIdol;
+  const factory CompactPhraseFilter.today() = _Today;
 }
 
 /// 간편모드 문구 필터 Notifier.
@@ -41,6 +43,7 @@ class CompactPhraseFilterNotifier extends _$CompactPhraseFilterNotifier {
     if (saved == null) return const CompactPhraseFilter.favorites();
     if (saved == 'favorites') return const CompactPhraseFilter.favorites();
     if (saved == 'my_idol') return const CompactPhraseFilter.myIdol();
+    if (saved == 'today') return const CompactPhraseFilter.today();
     if (saved.startsWith('pack:')) {
       return CompactPhraseFilter.pack(saved.substring(5));
     }
@@ -83,6 +86,17 @@ class CompactPhraseFilterNotifier extends _$CompactPhraseFilterNotifier {
     );
   }
 
+  /// "오늘" 필터로 전환.
+  Future<void> selectToday() async {
+    const filter = CompactPhraseFilter.today();
+    state = const AsyncData(filter);
+    await _saveToPrefs(filter);
+    ref.read(analyticsServiceProvider).logEvent(
+      AnalyticsEvents.filterChange,
+      {AnalyticsParams.filterType: 'today'},
+    );
+  }
+
   Future<void> _saveToPrefs(CompactPhraseFilter filter) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -90,6 +104,7 @@ class CompactPhraseFilterNotifier extends _$CompactPhraseFilterNotifier {
         _Favorites() => 'favorites',
         _Pack(:final packId) => 'pack:$packId',
         _MyIdol() => 'my_idol',
+        _Today() => 'today',
       };
       await prefs.setString(_key, value);
     } catch (e) {
@@ -111,6 +126,7 @@ Future<List<Phrase>> filteredCompactPhrases(
     _Favorites() => _buildFavoritesPhrases(ref),
     _Pack(:final packId) => _buildPackPhrases(ref, packId),
     _MyIdol() => _buildMyIdolPhrases(ref),
+    _Today() => _buildTodayPhrases(ref),
   };
 }
 
@@ -166,6 +182,12 @@ Future<List<Phrase>> _buildMyIdolPhrases(
       .toList();
 }
 
+/// 오늘 이벤트 기반 추천 문구 (버블 "오늘" 칩).
+Future<List<Phrase>> _buildTodayPhrases(
+    FilteredCompactPhrasesRef ref) async {
+  return ref.watch(todaySuggestedPhrasesProvider.future);
+}
+
 /// 현재 선택된 팩이 잠금 상태인지.
 @riverpod
 Future<bool> isSelectedPackLocked(IsSelectedPackLockedRef ref) async {
@@ -175,6 +197,7 @@ Future<bool> isSelectedPackLocked(IsSelectedPackLockedRef ref) async {
     _Favorites() => false,
     _Pack(:final packId) => _isPackLocked(ref, packId),
     _MyIdol() => false,
+    _Today() => false,
   };
 }
 

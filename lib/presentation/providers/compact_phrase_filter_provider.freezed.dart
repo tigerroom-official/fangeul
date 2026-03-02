@@ -21,6 +21,7 @@ mixin _$CompactPhraseFilter {
     required TResult Function() favorites,
     required TResult Function(String packId) pack,
     required TResult Function() myIdol,
+    required TResult Function() today,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -28,6 +29,7 @@ mixin _$CompactPhraseFilter {
     TResult? Function()? favorites,
     TResult? Function(String packId)? pack,
     TResult? Function()? myIdol,
+    TResult? Function()? today,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -35,6 +37,7 @@ mixin _$CompactPhraseFilter {
     TResult Function()? favorites,
     TResult Function(String packId)? pack,
     TResult Function()? myIdol,
+    TResult Function()? today,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -43,6 +46,7 @@ mixin _$CompactPhraseFilter {
     required TResult Function(_Favorites value) favorites,
     required TResult Function(_Pack value) pack,
     required TResult Function(_MyIdol value) myIdol,
+    required TResult Function(_Today value) today,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -50,6 +54,7 @@ mixin _$CompactPhraseFilter {
     TResult? Function(_Favorites value)? favorites,
     TResult? Function(_Pack value)? pack,
     TResult? Function(_MyIdol value)? myIdol,
+    TResult? Function(_Today value)? today,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -57,6 +62,7 @@ mixin _$CompactPhraseFilter {
     TResult Function(_Favorites value)? favorites,
     TResult Function(_Pack value)? pack,
     TResult Function(_MyIdol value)? myIdol,
+    TResult Function(_Today value)? today,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -134,6 +140,7 @@ class _$FavoritesImpl with DiagnosticableTreeMixin implements _Favorites {
     required TResult Function() favorites,
     required TResult Function(String packId) pack,
     required TResult Function() myIdol,
+    required TResult Function() today,
   }) {
     return favorites();
   }
@@ -144,6 +151,7 @@ class _$FavoritesImpl with DiagnosticableTreeMixin implements _Favorites {
     TResult? Function()? favorites,
     TResult? Function(String packId)? pack,
     TResult? Function()? myIdol,
+    TResult? Function()? today,
   }) {
     return favorites?.call();
   }
@@ -154,6 +162,7 @@ class _$FavoritesImpl with DiagnosticableTreeMixin implements _Favorites {
     TResult Function()? favorites,
     TResult Function(String packId)? pack,
     TResult Function()? myIdol,
+    TResult Function()? today,
     required TResult orElse(),
   }) {
     if (favorites != null) {
@@ -168,6 +177,7 @@ class _$FavoritesImpl with DiagnosticableTreeMixin implements _Favorites {
     required TResult Function(_Favorites value) favorites,
     required TResult Function(_Pack value) pack,
     required TResult Function(_MyIdol value) myIdol,
+    required TResult Function(_Today value) today,
   }) {
     return favorites(this);
   }
@@ -178,6 +188,7 @@ class _$FavoritesImpl with DiagnosticableTreeMixin implements _Favorites {
     TResult? Function(_Favorites value)? favorites,
     TResult? Function(_Pack value)? pack,
     TResult? Function(_MyIdol value)? myIdol,
+    TResult? Function(_Today value)? today,
   }) {
     return favorites?.call(this);
   }
@@ -188,6 +199,7 @@ class _$FavoritesImpl with DiagnosticableTreeMixin implements _Favorites {
     TResult Function(_Favorites value)? favorites,
     TResult Function(_Pack value)? pack,
     TResult Function(_MyIdol value)? myIdol,
+    TResult Function(_Today value)? today,
     required TResult orElse(),
   }) {
     if (favorites != null) {
@@ -279,6 +291,7 @@ class _$PackImpl with DiagnosticableTreeMixin implements _Pack {
     required TResult Function() favorites,
     required TResult Function(String packId) pack,
     required TResult Function() myIdol,
+    required TResult Function() today,
   }) {
     return pack(packId);
   }
@@ -289,6 +302,7 @@ class _$PackImpl with DiagnosticableTreeMixin implements _Pack {
     TResult? Function()? favorites,
     TResult? Function(String packId)? pack,
     TResult? Function()? myIdol,
+    TResult? Function()? today,
   }) {
     return pack?.call(packId);
   }
@@ -299,6 +313,7 @@ class _$PackImpl with DiagnosticableTreeMixin implements _Pack {
     TResult Function()? favorites,
     TResult Function(String packId)? pack,
     TResult Function()? myIdol,
+    TResult Function()? today,
     required TResult orElse(),
   }) {
     if (pack != null) {
@@ -313,6 +328,7 @@ class _$PackImpl with DiagnosticableTreeMixin implements _Pack {
     required TResult Function(_Favorites value) favorites,
     required TResult Function(_Pack value) pack,
     required TResult Function(_MyIdol value) myIdol,
+    required TResult Function(_Today value) today,
   }) {
     return pack(this);
   }
@@ -323,6 +339,7 @@ class _$PackImpl with DiagnosticableTreeMixin implements _Pack {
     TResult? Function(_Favorites value)? favorites,
     TResult? Function(_Pack value)? pack,
     TResult? Function(_MyIdol value)? myIdol,
+    TResult? Function(_Today value)? today,
   }) {
     return pack?.call(this);
   }
@@ -333,6 +350,7 @@ class _$PackImpl with DiagnosticableTreeMixin implements _Pack {
     TResult Function(_Favorites value)? favorites,
     TResult Function(_Pack value)? pack,
     TResult Function(_MyIdol value)? myIdol,
+    TResult Function(_Today value)? today,
     required TResult orElse(),
   }) {
     if (pack != null) {
@@ -404,6 +422,7 @@ class _$MyIdolImpl with DiagnosticableTreeMixin implements _MyIdol {
     required TResult Function() favorites,
     required TResult Function(String packId) pack,
     required TResult Function() myIdol,
+    required TResult Function() today,
   }) {
     return myIdol();
   }
@@ -414,6 +433,7 @@ class _$MyIdolImpl with DiagnosticableTreeMixin implements _MyIdol {
     TResult? Function()? favorites,
     TResult? Function(String packId)? pack,
     TResult? Function()? myIdol,
+    TResult? Function()? today,
   }) {
     return myIdol?.call();
   }
@@ -424,6 +444,7 @@ class _$MyIdolImpl with DiagnosticableTreeMixin implements _MyIdol {
     TResult Function()? favorites,
     TResult Function(String packId)? pack,
     TResult Function()? myIdol,
+    TResult Function()? today,
     required TResult orElse(),
   }) {
     if (myIdol != null) {
@@ -438,6 +459,7 @@ class _$MyIdolImpl with DiagnosticableTreeMixin implements _MyIdol {
     required TResult Function(_Favorites value) favorites,
     required TResult Function(_Pack value) pack,
     required TResult Function(_MyIdol value) myIdol,
+    required TResult Function(_Today value) today,
   }) {
     return myIdol(this);
   }
@@ -448,6 +470,7 @@ class _$MyIdolImpl with DiagnosticableTreeMixin implements _MyIdol {
     TResult? Function(_Favorites value)? favorites,
     TResult? Function(_Pack value)? pack,
     TResult? Function(_MyIdol value)? myIdol,
+    TResult? Function(_Today value)? today,
   }) {
     return myIdol?.call(this);
   }
@@ -458,6 +481,7 @@ class _$MyIdolImpl with DiagnosticableTreeMixin implements _MyIdol {
     TResult Function(_Favorites value)? favorites,
     TResult Function(_Pack value)? pack,
     TResult Function(_MyIdol value)? myIdol,
+    TResult Function(_Today value)? today,
     required TResult orElse(),
   }) {
     if (myIdol != null) {
@@ -469,4 +493,127 @@ class _$MyIdolImpl with DiagnosticableTreeMixin implements _MyIdol {
 
 abstract class _MyIdol implements CompactPhraseFilter {
   const factory _MyIdol() = _$MyIdolImpl;
+}
+
+/// @nodoc
+abstract class _$$TodayImplCopyWith<$Res> {
+  factory _$$TodayImplCopyWith(
+          _$TodayImpl value, $Res Function(_$TodayImpl) then) =
+      __$$TodayImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$TodayImplCopyWithImpl<$Res>
+    extends _$CompactPhraseFilterCopyWithImpl<$Res, _$TodayImpl>
+    implements _$$TodayImplCopyWith<$Res> {
+  __$$TodayImplCopyWithImpl(
+      _$TodayImpl _value, $Res Function(_$TodayImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of CompactPhraseFilter
+  /// with the given fields replaced by the non-null parameter values.
+}
+
+/// @nodoc
+
+class _$TodayImpl with DiagnosticableTreeMixin implements _Today {
+  const _$TodayImpl();
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'CompactPhraseFilter.today()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(DiagnosticsProperty('type', 'CompactPhraseFilter.today'));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$TodayImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() favorites,
+    required TResult Function(String packId) pack,
+    required TResult Function() myIdol,
+    required TResult Function() today,
+  }) {
+    return today();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? favorites,
+    TResult? Function(String packId)? pack,
+    TResult? Function()? myIdol,
+    TResult? Function()? today,
+  }) {
+    return today?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? favorites,
+    TResult Function(String packId)? pack,
+    TResult Function()? myIdol,
+    TResult Function()? today,
+    required TResult orElse(),
+  }) {
+    if (today != null) {
+      return today();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Favorites value) favorites,
+    required TResult Function(_Pack value) pack,
+    required TResult Function(_MyIdol value) myIdol,
+    required TResult Function(_Today value) today,
+  }) {
+    return today(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Favorites value)? favorites,
+    TResult? Function(_Pack value)? pack,
+    TResult? Function(_MyIdol value)? myIdol,
+    TResult? Function(_Today value)? today,
+  }) {
+    return today?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Favorites value)? favorites,
+    TResult Function(_Pack value)? pack,
+    TResult Function(_MyIdol value)? myIdol,
+    TResult Function(_Today value)? today,
+    required TResult orElse(),
+  }) {
+    if (today != null) {
+      return today(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _Today implements CompactPhraseFilter {
+  const factory _Today() = _$TodayImpl;
 }
