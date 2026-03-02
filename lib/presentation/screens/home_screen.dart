@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/phrase_providers.dart';
 import 'package:fangeul/presentation/providers/progress_providers.dart';
 import 'package:fangeul/presentation/widgets/celebration_overlay.dart';
@@ -39,7 +40,18 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(UiStrings.appName),
+        title: Consumer(
+          builder: (context, ref, _) {
+            final idolName = ref.watch(myIdolDisplayNameProvider);
+            return idolName.when(
+              data: (name) => name != null
+                  ? Text('안녕하세요, $name 팬님!')
+                  : const Text(UiStrings.appName),
+              loading: () => const Text(UiStrings.appName),
+              error: (_, __) => const Text(UiStrings.appName),
+            );
+          },
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
