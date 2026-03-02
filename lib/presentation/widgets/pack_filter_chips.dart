@@ -19,6 +19,9 @@ class PackFilterChips extends StatelessWidget {
     this.isMyIdolSelected = false,
     this.onMyIdolSelected,
     this.showMyIdolChip = false,
+    this.isTodaySelected = false,
+    this.onTodaySelected,
+    this.showTodayChip = false,
   });
 
   /// 표시할 팩 목록.
@@ -45,9 +48,19 @@ class PackFilterChips extends StatelessWidget {
   /// 마이 아이돌 칩 표시 여부 (아이돌 설정 유저만).
   final bool showMyIdolChip;
 
+  /// "오늘" 칩 선택 상태.
+  final bool isTodaySelected;
+
+  /// "오늘" 칩 탭 콜백.
+  final VoidCallback? onTodaySelected;
+
+  /// "오늘" 칩 표시 여부.
+  final bool showTodayChip;
+
   @override
   Widget build(BuildContext context) {
-    final chipCount = packs.length + 1 + (showMyIdolChip ? 1 : 0);
+    final extraChips = (showMyIdolChip ? 1 : 0) + (showTodayChip ? 1 : 0);
+    final chipCount = packs.length + 1 + extraChips;
 
     return SizedBox(
       height: 36,
@@ -58,9 +71,16 @@ class PackFilterChips extends StatelessWidget {
         separatorBuilder: (_, __) => const SizedBox(width: 6),
         itemBuilder: (context, index) {
           if (index == 0) return _buildFavoritesChip(context);
-          if (showMyIdolChip && index == 1) return _buildMyIdolChip(context);
-          final packIndex = index - 1 - (showMyIdolChip ? 1 : 0);
-          return _buildPackChip(context, packs[packIndex]);
+          var offset = 1;
+          if (showMyIdolChip) {
+            if (index == offset) return _buildMyIdolChip(context);
+            offset++;
+          }
+          if (showTodayChip) {
+            if (index == offset) return _buildTodayChip(context);
+            offset++;
+          }
+          return _buildPackChip(context, packs[index - offset]);
         },
       ),
     );
@@ -79,7 +99,7 @@ class PackFilterChips extends StatelessWidget {
           fontWeight: isFavoritesSelected ? FontWeight.w600 : FontWeight.w400,
         ),
       ),
-      selected: isFavoritesSelected && !isMyIdolSelected,
+      selected: isFavoritesSelected && !isMyIdolSelected && !isTodaySelected,
       selectedColor: theme.colorScheme.primary,
       backgroundColor: theme.colorScheme.surfaceContainer,
       checkmarkColor: theme.colorScheme.onPrimary,
@@ -118,10 +138,38 @@ class PackFilterChips extends StatelessWidget {
     );
   }
 
+  Widget _buildTodayChip(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return FilterChip(
+      label: Text(
+        UiStrings.miniChipToday,
+        style: TextStyle(
+          color: isTodaySelected
+              ? theme.colorScheme.onPrimary
+              : theme.colorScheme.onSurface,
+          fontWeight: isTodaySelected ? FontWeight.w600 : FontWeight.w400,
+        ),
+      ),
+      selected: isTodaySelected,
+      selectedColor: theme.colorScheme.primary,
+      backgroundColor: theme.colorScheme.surfaceContainer,
+      checkmarkColor: theme.colorScheme.onPrimary,
+      showCheckmark: false,
+      side: isTodaySelected
+          ? BorderSide.none
+          : BorderSide(color: theme.colorScheme.outlineVariant),
+      visualDensity: VisualDensity.compact,
+      onSelected: (_) => onTodaySelected?.call(),
+    );
+  }
+
   Widget _buildPackChip(BuildContext context, PhrasePack pack) {
     final theme = Theme.of(context);
-    final isSelected =
-        !isFavoritesSelected && !isMyIdolSelected && selectedPackId == pack.id;
+    final isSelected = !isFavoritesSelected &&
+        !isMyIdolSelected &&
+        !isTodaySelected &&
+        selectedPackId == pack.id;
     final label = pack.isFree ? pack.nameKo : '${pack.nameKo}🔒';
 
     return FilterChip(

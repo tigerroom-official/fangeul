@@ -23,6 +23,7 @@ class PhraseLocalDataSource {
     'birthday_pack',
     'comeback_pack',
     'daily_pack',
+    'my_idol_pack',
   ];
 
   PhraseLocalDataSource({AssetBundle? assetBundle})

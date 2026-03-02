@@ -6,8 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fangeul/core/entities/phrase.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/compact_phrase_filter_provider.dart';
+import 'package:fangeul/presentation/providers/calendar_providers.dart';
 import 'package:fangeul/presentation/providers/copy_history_provider.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
+import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/phrase_providers.dart';
 
 import 'package:fangeul/presentation/widgets/compact_phrase_tile.dart';
@@ -130,7 +132,17 @@ class _PhrasesTabState extends ConsumerState<_PhrasesTab>
     final filter =
         filterAsync.valueOrNull ?? const CompactPhraseFilter.favorites();
     final isFavoritesSelected = filter == const CompactPhraseFilter.favorites();
+    final isMyIdolSelected = filter == const CompactPhraseFilter.myIdol();
+    final isTodaySelected = filter == const CompactPhraseFilter.today();
     final selectedPackId = filter.whenOrNull(pack: (id) => id);
+
+    // 마이 아이돌 설정 여부 — 칩 표시 조건
+    final idolNameAsync = ref.watch(myIdolDisplayNameProvider);
+    final hasIdol = idolNameAsync.valueOrNull != null;
+
+    // "오늘" 칩 표시 조건 — 오늘 이벤트가 있는지
+    final todayAsync = ref.watch(todaySuggestedPhrasesProvider);
+    final hasToday = (todayAsync.valueOrNull ?? []).isNotEmpty;
 
     return Column(
       children: [
@@ -150,6 +162,20 @@ class _PhrasesTabState extends ConsumerState<_PhrasesTab>
                   .read(compactPhraseFilterNotifierProvider.notifier)
                   .selectPack(packId);
             },
+            showMyIdolChip: hasIdol,
+            isMyIdolSelected: isMyIdolSelected,
+            onMyIdolSelected: () {
+              ref
+                  .read(compactPhraseFilterNotifierProvider.notifier)
+                  .selectMyIdol();
+            },
+            showTodayChip: hasToday,
+            isTodaySelected: isTodaySelected,
+            onTodaySelected: () {
+              ref
+                  .read(compactPhraseFilterNotifierProvider.notifier)
+                  .selectToday();
+            },
           ),
           loading: () => const SizedBox(height: 36),
           error: (_, __) => const SizedBox(height: 36),
@@ -160,7 +186,7 @@ class _PhrasesTabState extends ConsumerState<_PhrasesTab>
             context,
             phrasesAsync,
             lockedAsync,
-            isFavoritesSelected,
+            useList: isFavoritesSelected || isMyIdolSelected || isTodaySelected,
           ),
         ),
       ],
@@ -170,9 +196,9 @@ class _PhrasesTabState extends ConsumerState<_PhrasesTab>
   Widget _buildPhraseContent(
     BuildContext context,
     AsyncValue<List<Phrase>> phrasesAsync,
-    AsyncValue<bool> lockedAsync,
-    bool isFavoritesSelected,
-  ) {
+    AsyncValue<bool> lockedAsync, {
+    required bool useList,
+  }) {
     // 잠금 팩
     final isLocked = lockedAsync.valueOrNull ?? false;
     if (isLocked) {
@@ -191,17 +217,15 @@ class _PhrasesTabState extends ConsumerState<_PhrasesTab>
         if (phrases.isEmpty) {
           return Center(
             child: Text(
-              isFavoritesSelected
-                  ? UiStrings.miniFavoritesEmpty
-                  : UiStrings.miniPackEmpty,
+              useList ? UiStrings.miniFavoritesEmpty : UiStrings.miniPackEmpty,
               textAlign: TextAlign.center,
             ),
           );
         }
 
-        // 즐겨찾기: 세로 리스트, 팩 문구: 좌우 스와이프 카드
-        if (isFavoritesSelected) {
-          return _buildFavoritesList(phrases);
+        // 즐겨찾기/마이아이돌/오늘: 세로 리스트, 팩 문구: 좌우 스와이프 카드
+        if (useList) {
+          return _buildVerticalList(phrases);
         }
         return _buildPackSwiper(context, phrases);
       },
@@ -210,8 +234,8 @@ class _PhrasesTabState extends ConsumerState<_PhrasesTab>
     );
   }
 
-  /// 즐겨찾기 — 세로 리스트.
-  Widget _buildFavoritesList(List<Phrase> phrases) {
+  /// 즐겨찾기 / 마이아이돌 / 오늘 — 세로 리스트.
+  Widget _buildVerticalList(List<Phrase> phrases) {
     return ListView.builder(
       itemCount: phrases.length,
       itemBuilder: (context, index) {
