@@ -39,6 +39,10 @@ abstract final class UiStrings {
   // 문구 화면
   static const phrasesTitle = '문구';
   static const phrasesEmpty = '문구가 없습니다';
+  static const phrasesMyIdolEmpty = '설정에서 아이돌을 선택하면\n맞춤 문구가 표시됩니다';
+
+  /// 마이아이돌 칩 레이블. 예: '♡ BTS'.
+  static String phrasesMyIdolChip(String name) => '♡ $name';
 
   // 설정 화면
   static const settingsTitle = '설정';
