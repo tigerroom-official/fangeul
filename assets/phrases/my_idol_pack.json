@@ -1,0 +1,168 @@
+{
+  "id": "my_idol",
+  "name": "My Idol",
+  "name_ko": "내 아이돌",
+  "is_free": true,
+  "phrases": [
+    {
+      "ko": "{{group_name}} 사랑해요!",
+      "roman": "{{group_name}} saranghaeyo!",
+      "context": "Template: express love to your idol group",
+      "tags": ["love"],
+      "translations": {
+        "en": "I love {{group_name}}!",
+        "id": "Aku cinta {{group_name}}!",
+        "th": "รัก {{group_name}}!",
+        "pt": "Eu amo {{group_name}}!",
+        "es": "¡Amo a {{group_name}}!",
+        "vi": "Yêu {{group_name}}!"
+      },
+      "situation": "daily",
+      "is_template": true
+    },
+    {
+      "ko": "{{group_name}} 화이팅!",
+      "roman": "{{group_name}} hwaiting!",
+      "context": "Template: cheer for your idol group",
+      "tags": ["cheer"],
+      "translations": {
+        "en": "Go {{group_name}}!",
+        "id": "Semangat {{group_name}}!",
+        "th": "สู้ๆ {{group_name}}!",
+        "pt": "Força {{group_name}}!",
+        "es": "¡Ánimo {{group_name}}!",
+        "vi": "Cố lên {{group_name}}!"
+      },
+      "situation": "support",
+      "is_template": true
+    },
+    {
+      "ko": "{{group_name}} 컴백 축하해요!",
+      "roman": "{{group_name}} keombaek chukahaeyo!",
+      "context": "Template: congratulate comeback",
+      "tags": ["comeback"],
+      "translations": {
+        "en": "Congratulations on the comeback, {{group_name}}!",
+        "id": "Selamat comeback {{group_name}}!",
+        "th": "ยินดีกับคัมแบ็ค {{group_name}}!",
+        "pt": "Parabéns pelo comeback, {{group_name}}!",
+        "es": "¡Felicidades por el comeback, {{group_name}}!",
+        "vi": "Chúc mừng comeback {{group_name}}!"
+      },
+      "situation": "comeback",
+      "is_template": true
+    },
+    {
+      "ko": "{{group_name}} 생일 축하해요!",
+      "roman": "{{group_name}} saengil chukahaeyo!",
+      "context": "Template: birthday wishes",
+      "tags": ["birthday"],
+      "translations": {
+        "en": "Happy birthday, {{group_name}}!",
+        "id": "Selamat ulang tahun {{group_name}}!",
+        "th": "สุขสันต์วันเกิด {{group_name}}!",
+        "pt": "Feliz aniversário, {{group_name}}!",
+        "es": "¡Feliz cumpleaños, {{group_name}}!",
+        "vi": "Chúc mừng sinh nhật {{group_name}}!"
+      },
+      "situation": "birthday",
+      "is_template": true
+    },
+    {
+      "ko": "{{group_name}} 1위 축하해요!",
+      "roman": "{{group_name}} irwi chukahaeyo!",
+      "context": "Template: celebrate music show win",
+      "tags": ["comeback", "cheer"],
+      "translations": {
+        "en": "Congrats on #1, {{group_name}}!",
+        "id": "Selamat juara 1, {{group_name}}!",
+        "th": "ยินดีที่ได้อันดับ 1 {{group_name}}!",
+        "pt": "Parabéns pelo 1º lugar, {{group_name}}!",
+        "es": "¡Felicidades por el #1, {{group_name}}!",
+        "vi": "Chúc mừng hạng 1 {{group_name}}!"
+      },
+      "situation": "comeback",
+      "is_template": true
+    },
+    {
+      "ko": "{{group_name}} 최고!",
+      "roman": "{{group_name}} choego!",
+      "context": "Template: express that your idol is the best",
+      "tags": ["cheer", "love"],
+      "translations": {
+        "en": "{{group_name}} is the best!",
+        "id": "{{group_name}} yang terbaik!",
+        "th": "{{group_name}} เก่งที่สุด!",
+        "pt": "{{group_name}} é o melhor!",
+        "es": "¡{{group_name}} es lo mejor!",
+        "vi": "{{group_name}} là nhất!"
+      },
+      "situation": "daily",
+      "is_template": true
+    },
+    {
+      "ko": "{{group_name}} 덕분에 행복해요",
+      "roman": "{{group_name}} deokbune haengbokhaeyo",
+      "context": "Template: express gratitude and happiness",
+      "tags": ["love", "daily"],
+      "translations": {
+        "en": "I'm happy because of {{group_name}}",
+        "id": "Aku bahagia karena {{group_name}}",
+        "th": "มีความสุขเพราะ {{group_name}}",
+        "pt": "Sou feliz por causa de {{group_name}}",
+        "es": "Soy feliz gracias a {{group_name}}",
+        "vi": "Hạnh phúc nhờ có {{group_name}}"
+      },
+      "situation": "daily",
+      "is_template": true
+    },
+    {
+      "ko": "{{group_name}} 오래오래 함께해요",
+      "roman": "{{group_name}} oraeorae hamkkehaeyo",
+      "context": "Template: wish to stay together forever",
+      "tags": ["love"],
+      "translations": {
+        "en": "Let's be together forever, {{group_name}}",
+        "id": "Mari bersama selamanya, {{group_name}}",
+        "th": "อยู่ด้วยกันตลอดไปนะ {{group_name}}",
+        "pt": "Vamos ficar juntos para sempre, {{group_name}}",
+        "es": "Estemos juntos para siempre, {{group_name}}",
+        "vi": "Hãy bên nhau mãi nhé {{group_name}}"
+      },
+      "situation": "daily",
+      "is_template": true
+    },
+    {
+      "ko": "{{group_name}} 콘서트 가고 싶어요!",
+      "roman": "{{group_name}} konseoteu gago sipeoyo!",
+      "context": "Template: express desire to attend concert",
+      "tags": ["fandom"],
+      "translations": {
+        "en": "I want to go to {{group_name}} concert!",
+        "id": "Aku mau nonton konser {{group_name}}!",
+        "th": "อยากไปคอนเสิร์ต {{group_name}}!",
+        "pt": "Quero ir ao show do {{group_name}}!",
+        "es": "¡Quiero ir al concierto de {{group_name}}!",
+        "vi": "Muốn đi concert {{group_name}} quá!"
+      },
+      "situation": "daily",
+      "is_template": true
+    },
+    {
+      "ko": "{{group_name}} 노래 또 듣고 있어요",
+      "roman": "{{group_name}} norae tto deutgo isseoyo",
+      "context": "Template: express listening to their music again",
+      "tags": ["daily"],
+      "translations": {
+        "en": "I'm listening to {{group_name}} again",
+        "id": "Aku dengerin lagu {{group_name}} lagi",
+        "th": "ฟังเพลง {{group_name}} อีกแล้ว",
+        "pt": "Estou ouvindo {{group_name}} de novo",
+        "es": "Estoy escuchando a {{group_name}} otra vez",
+        "vi": "Lại nghe nhạc {{group_name}} rồi"
+      },
+      "situation": "daily",
+      "is_template": true
+    }
+  ]
+}
