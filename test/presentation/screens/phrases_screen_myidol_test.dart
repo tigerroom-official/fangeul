@@ -82,6 +82,117 @@ void main() {
     });
   });
 
+  group('PhrasesScreen filter sentinel logic — with member', () {
+    // Updated filter logic: member takes priority over idol on default (null tag).
+    bool isMemberSelected(String? selectedTag, bool hasMember) {
+      return selectedTag == '__my_member__' ||
+          (selectedTag == null && hasMember);
+    }
+
+    bool isMyIdolSelected(String? selectedTag, bool hasIdol, bool hasMember) {
+      return selectedTag == '__my_idol__' ||
+          (selectedTag == null && hasIdol && !hasMember);
+    }
+
+    bool isAllSelected(String? selectedTag, bool hasIdol) {
+      return selectedTag == '__all__' || (selectedTag == null && !hasIdol);
+    }
+
+    test('should default to member when member is set and tag is null', () {
+      expect(isMemberSelected(null, true), isTrue);
+      expect(isMyIdolSelected(null, true, true), isFalse);
+      expect(isAllSelected(null, true), isFalse);
+    });
+
+    test('should default to idol when idol set but no member', () {
+      expect(isMemberSelected(null, false), isFalse);
+      expect(isMyIdolSelected(null, true, false), isTrue);
+      expect(isAllSelected(null, true), isFalse);
+    });
+
+    test('should select member when sentinel is __my_member__', () {
+      expect(isMemberSelected('__my_member__', true), isTrue);
+      expect(isMemberSelected('__my_member__', false), isTrue);
+      expect(isMyIdolSelected('__my_member__', true, true), isFalse);
+    });
+
+    test('should select idol when sentinel is __my_idol__ even with member',
+        () {
+      expect(isMyIdolSelected('__my_idol__', true, true), isTrue);
+      expect(isMemberSelected('__my_idol__', true), isFalse);
+    });
+
+    test('should not select member when tag is a regular tag', () {
+      expect(isMemberSelected('love', true), isFalse);
+      expect(isMyIdolSelected('love', true, true), isFalse);
+      expect(isAllSelected('love', true), isFalse);
+    });
+  });
+
+  group('PhrasesScreen member template filtering', () {
+    test('should filter member-only templates from group view', () {
+      final phrases = [
+        const Phrase(
+          ko: '{{group_name}} 사랑해요!',
+          roman: '{{group_name}} saranghaeyo!',
+          context: 'template',
+          tags: ['love'],
+          translations: {'en': 'I love {{group_name}}!'},
+          situation: 'daily',
+          isTemplate: true,
+        ),
+        const Phrase(
+          ko: '{{member_name}}아 생일 축하해!',
+          roman: '{{member_name}}a saengil chukhahae!',
+          context: 'template',
+          tags: ['birthday'],
+          translations: {'en': 'Happy birthday {{member_name}}!'},
+          situation: 'birthday',
+          isTemplate: true,
+        ),
+      ];
+
+      // When member is set, group view should exclude member templates
+      final groupOnly = phrases
+          .where((p) => p.isTemplate)
+          .where((p) => !needsMemberName(p))
+          .toList();
+      expect(groupOnly.length, 1);
+      expect(groupOnly.first.ko, contains('{{group_name}}'));
+    });
+
+    test('should include only member templates in member view', () {
+      final phrases = [
+        const Phrase(
+          ko: '{{group_name}} 사랑해요!',
+          roman: '{{group_name}} saranghaeyo!',
+          context: 'template',
+          tags: ['love'],
+          translations: {'en': 'I love {{group_name}}!'},
+          situation: 'daily',
+          isTemplate: true,
+        ),
+        const Phrase(
+          ko: '{{member_name}}아 생일 축하해!',
+          roman: '{{member_name}}a saengil chukhahae!',
+          context: 'template',
+          tags: ['birthday'],
+          translations: {'en': 'Happy birthday {{member_name}}!'},
+          situation: 'birthday',
+          isTemplate: true,
+        ),
+      ];
+
+      // Member view: only templates that need member_name
+      final memberOnly = phrases
+          .where((p) => p.isTemplate && needsMemberName(p))
+          .map((p) => resolveTemplatePhrase(p, 'BTS', memberName: '정국'))
+          .toList();
+      expect(memberOnly.length, 1);
+      expect(memberOnly.first.ko, '정국아 생일 축하해!');
+    });
+  });
+
   group('PhrasesScreen template resolution', () {
     test('should resolve template phrases with idol name', () {
       const phrase = Phrase(

@@ -10,10 +10,14 @@ void main() {
   Widget buildTestWidget({
     String? selectedTag,
     ValueChanged<String?>? onTagSelected,
+    bool showMemberChip = false,
+    bool isMemberSelected = false,
+    VoidCallback? onMemberSelected,
+    String memberLabel = '♡ TestMember',
     bool showMyIdolChip = false,
     bool isMyIdolSelected = false,
     VoidCallback? onMyIdolSelected,
-    String myIdolLabel = '\u2661 TestIdol',
+    String myIdolLabel = '♡ TestIdol',
   }) {
     return MaterialApp(
       home: Scaffold(
@@ -21,6 +25,10 @@ void main() {
           tags: tags,
           selectedTag: selectedTag,
           onTagSelected: onTagSelected ?? (_) {},
+          showMemberChip: showMemberChip,
+          isMemberSelected: isMemberSelected,
+          onMemberSelected: onMemberSelected,
+          memberLabel: memberLabel,
           showMyIdolChip: showMyIdolChip,
           isMyIdolSelected: isMyIdolSelected,
           onMyIdolSelected: onMyIdolSelected,
@@ -111,6 +119,97 @@ void main() {
       for (final chip in chips.skip(2)) {
         expect(chip.selected, isFalse);
       }
+    });
+  });
+
+  group('TagFilterChips — member chip', () {
+    testWidgets('should show member chip when showMemberChip is true',
+        (tester) async {
+      await tester.pumpWidget(buildTestWidget(
+        showMemberChip: true,
+        showMyIdolChip: true,
+      ));
+      await tester.pumpAndSettle();
+      expect(find.text('♡ TestMember'), findsOneWidget);
+    });
+
+    testWidgets('should not show member chip when showMemberChip is false',
+        (tester) async {
+      await tester.pumpWidget(buildTestWidget(showMyIdolChip: true));
+      await tester.pumpAndSettle();
+      expect(find.text('♡ TestMember'), findsNothing);
+    });
+
+    testWidgets('should place member chip before idol chip', (tester) async {
+      await tester.pumpWidget(buildTestWidget(
+        showMemberChip: true,
+        showMyIdolChip: true,
+      ));
+      await tester.pumpAndSettle();
+
+      // Member chip should be at index 0, idol at index 1
+      final memberCenter = tester.getCenter(find.text('♡ TestMember'));
+      final idolCenter = tester.getCenter(find.text('♡ TestIdol'));
+      expect(memberCenter.dx, lessThan(idolCenter.dx));
+    });
+
+    testWidgets('should call onMemberSelected when member chip tapped',
+        (tester) async {
+      var called = false;
+      await tester.pumpWidget(buildTestWidget(
+        showMemberChip: true,
+        showMyIdolChip: true,
+        onMemberSelected: () => called = true,
+      ));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('♡ TestMember'));
+      await tester.pumpAndSettle();
+      expect(called, isTrue);
+    });
+
+    testWidgets('should not highlight 전체 when member is selected',
+        (tester) async {
+      await tester.pumpWidget(buildTestWidget(
+        showMemberChip: true,
+        isMemberSelected: true,
+        showMyIdolChip: true,
+      ));
+      await tester.pumpAndSettle();
+      final chips =
+          tester.widgetList<FilterChip>(find.byType(FilterChip)).toList();
+      // 0=member, 1=idol, 2=전체
+      expect(chips[2].selected, isFalse);
+    });
+
+    testWidgets('should not highlight tag chips when member is selected',
+        (tester) async {
+      await tester.pumpWidget(buildTestWidget(
+        showMemberChip: true,
+        isMemberSelected: true,
+        showMyIdolChip: true,
+        selectedTag: 'love',
+      ));
+      await tester.pumpAndSettle();
+      final chips =
+          tester.widgetList<FilterChip>(find.byType(FilterChip)).toList();
+      // 0=member, 1=idol, 2=전체, 3+=tags — all tags unselected
+      for (final chip in chips.skip(3)) {
+        expect(chip.selected, isFalse);
+      }
+    });
+
+    testWidgets('should highlight member chip when isMemberSelected is true',
+        (tester) async {
+      await tester.pumpWidget(buildTestWidget(
+        showMemberChip: true,
+        isMemberSelected: true,
+        showMyIdolChip: true,
+      ));
+      await tester.pumpAndSettle();
+      final chips =
+          tester.widgetList<FilterChip>(find.byType(FilterChip)).toList();
+      expect(chips[0].selected, isTrue); // member chip
+      expect(chips[1].selected, isFalse); // idol chip
     });
   });
 

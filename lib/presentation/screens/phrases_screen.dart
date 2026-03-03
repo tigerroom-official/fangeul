@@ -13,12 +13,16 @@ import 'package:fangeul/presentation/widgets/tag_filter_chips.dart';
 /// 마이아이돌 필터 sentinel.
 const _filterMyIdol = '__my_idol__';
 
+/// 멤버 필터 sentinel.
+const _filterMyMember = '__my_member__';
+
 /// 전체 필터 sentinel (아이돌 설정 유저가 명시적으로 '전체' 선택 시).
 const _filterAll = '__all__';
 
 /// 선택된 필터 상태 Provider.
 ///
-/// - null: 초기 상태 (아이돌 설정 유저는 아이돌, 미설정이면 전체)
+/// - null: 초기 상태 (멤버 설정 시 멤버, 아이돌만이면 아이돌, 미설정이면 전체)
+/// - [_filterMyMember]: 멤버 전용 문구
 /// - [_filterMyIdol]: 마이아이돌 문구
 /// - [_filterAll]: 전체 문구 (아이돌 유저의 명시 선택)
 /// - 그 외 문자열: 태그명
@@ -49,9 +53,15 @@ class PhrasesScreen extends ConsumerWidget {
     final idolName = idolNameAsync.valueOrNull;
     final hasIdol = idolName != null;
 
-    // 필터 상태 해석
-    final isMyIdolSelected =
-        selectedTag == _filterMyIdol || (selectedTag == null && hasIdol);
+    final memberNameAsync = ref.watch(myIdolMemberNameProvider);
+    final memberName = memberNameAsync.valueOrNull;
+    final hasMember = memberName != null;
+
+    // 필터 상태 해석 — 멤버 > 아이돌 > 전체 우선순위
+    final isMemberSelected =
+        selectedTag == _filterMyMember || (selectedTag == null && hasMember);
+    final isMyIdolSelected = selectedTag == _filterMyIdol ||
+        (selectedTag == null && hasIdol && !hasMember);
     final isAllSelected =
         selectedTag == _filterAll || (selectedTag == null && !hasIdol);
 
@@ -61,7 +71,9 @@ class PhrasesScreen extends ConsumerWidget {
         children: [
           TagFilterChips(
             tags: _availableTags,
-            selectedTag: isMyIdolSelected || isAllSelected ? null : selectedTag,
+            selectedTag: isMemberSelected || isMyIdolSelected || isAllSelected
+                ? null
+                : selectedTag,
             onTagSelected: (tag) {
               if (tag == null) {
                 // "전체" 탭: 아이돌 유저는 sentinel 사용
@@ -71,27 +83,78 @@ class PhrasesScreen extends ConsumerWidget {
                 ref.read(selectedTagProvider.notifier).state = tag;
               }
             },
+            // member
+            showMemberChip: hasMember,
+            isMemberSelected: isMemberSelected,
+            onMemberSelected: () =>
+                ref.read(selectedTagProvider.notifier).state = _filterMyMember,
+            memberLabel:
+                hasMember ? UiStrings.phrasesMemberChip(memberName) : null,
+            // idol (label changes when member is set)
             showMyIdolChip: hasIdol,
             isMyIdolSelected: isMyIdolSelected,
             onMyIdolSelected: () =>
                 ref.read(selectedTagProvider.notifier).state = _filterMyIdol,
-            myIdolLabel: hasIdol ? UiStrings.phrasesMyIdolChip(idolName) : null,
+            myIdolLabel: hasIdol
+                ? (hasMember
+                    ? UiStrings.phrasesGroupChip(idolName)
+                    : UiStrings.phrasesMyIdolChip(idolName))
+                : null,
           ),
           const SizedBox(height: 8),
           Expanded(
-            child: isMyIdolSelected
-                ? _buildMyIdolPhrases(ref, idolName)
-                : isAllSelected
-                    ? _buildAllPhrases(ref)
-                    : _buildFilteredPhrases(ref, selectedTag!),
+            child: isMemberSelected
+                ? _buildMyMemberPhrases(ref, idolName, memberName)
+                : isMyIdolSelected
+                    ? _buildMyIdolPhrases(ref, idolName, memberName: memberName)
+                    : isAllSelected
+                        ? _buildAllPhrases(ref)
+                        : _buildFilteredPhrases(ref, selectedTag!),
           ),
         ],
       ),
     );
   }
 
+  /// 멤버 전용 문구 표시 (`{{member_name}}` 포함 템플릿만).
+  Widget _buildMyMemberPhrases(
+      WidgetRef ref, String? idolName, String? memberName) {
+    if (idolName == null || memberName == null) {
+      return const Center(child: Text(UiStrings.phrasesMemberEmpty));
+    }
+
+    final packsAsync = ref.watch(allPhrasesProvider);
+
+    return packsAsync.when(
+      data: (packs) {
+        final phrases = packs
+            .where((p) => p.isFree)
+            .expand((p) => p.phrases)
+            .where((p) => p.isTemplate && needsMemberName(p))
+            .map((p) =>
+                resolveTemplatePhrase(p, idolName, memberName: memberName))
+            .toList();
+        if (phrases.isEmpty) {
+          return const Center(child: Text(UiStrings.phrasesMemberEmpty));
+        }
+        return ListView.builder(
+          itemCount: phrases.length,
+          itemBuilder: (context, index) => PhraseCard(
+            phrase: phrases[index],
+            translationLang: UiStrings.defaultTranslationLang,
+          ),
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text('${UiStrings.errorPrefix} $e')),
+    );
+  }
+
   /// 마이아이돌 개인화 문구 표시.
-  Widget _buildMyIdolPhrases(WidgetRef ref, String? idolName) {
+  ///
+  /// [memberName]이 설정되어 있으면 멤버 전용 템플릿은 제외한다.
+  Widget _buildMyIdolPhrases(WidgetRef ref, String? idolName,
+      {String? memberName}) {
     if (idolName == null) {
       return const Center(child: Text(UiStrings.phrasesMyIdolEmpty));
     }
@@ -100,7 +163,13 @@ class PhrasesScreen extends ConsumerWidget {
 
     return packsAsync.when(
       data: (packs) {
-        final phrases = _resolveTemplates(packs, idolName);
+        final phrases = packs
+            .where((p) => p.isFree)
+            .expand((p) => p.phrases)
+            .where((p) => p.isTemplate)
+            .where((p) => !needsMemberName(p) || memberName == null)
+            .map((p) => resolveTemplatePhrase(p, idolName))
+            .toList();
         if (phrases.isEmpty) {
           return const Center(child: Text(UiStrings.phrasesMyIdolEmpty));
         }
@@ -172,16 +241,6 @@ class PhrasesScreen extends ConsumerWidget {
         .where((pack) => pack.isFree)
         .expand((pack) => pack.phrases)
         .where((phrase) => !phrase.isTemplate)
-        .toList();
-  }
-
-  /// 무료 팩에서 템플릿 문구를 수집하여 치환 후 반환.
-  List<Phrase> _resolveTemplates(List<PhrasePack> packs, String idolName) {
-    return packs
-        .where((p) => p.isFree)
-        .expand((p) => p.phrases)
-        .where((p) => p.isTemplate)
-        .map((p) => resolveTemplatePhrase(p, idolName))
         .toList();
   }
 }

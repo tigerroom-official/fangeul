@@ -5,7 +5,8 @@ import 'package:fangeul/presentation/constants/ui_strings.dart';
 /// 태그 필터 칩 -- 문구 카테고리 필터링.
 ///
 /// 수평 스크롤 칩 목록으로, '전체' + 개별 태그를 선택할 수 있다.
-/// [showMyIdolChip]이 true이면 마이아이돌 칩이 '전체' 앞에 표시된다.
+/// [showMemberChip]이 true이면 멤버 칩이 가장 앞에 표시된다.
+/// [showMyIdolChip]이 true이면 마이아이돌 칩이 멤버 칩 뒤, '전체' 앞에 표시된다.
 class TagFilterChips extends StatelessWidget {
   /// Creates the [TagFilterChips] widget.
   const TagFilterChips({
@@ -13,6 +14,10 @@ class TagFilterChips extends StatelessWidget {
     required this.tags,
     required this.selectedTag,
     required this.onTagSelected,
+    this.showMemberChip = false,
+    this.isMemberSelected = false,
+    this.onMemberSelected,
+    this.memberLabel,
     this.showMyIdolChip = false,
     this.isMyIdolSelected = false,
     this.onMyIdolSelected,
@@ -27,6 +32,18 @@ class TagFilterChips extends StatelessWidget {
 
   /// 태그 선택 콜백. null을 전달하면 '전체' 선택.
   final ValueChanged<String?> onTagSelected;
+
+  /// 멤버 칩 표시 여부.
+  final bool showMemberChip;
+
+  /// 멤버 칩 선택 상태.
+  final bool isMemberSelected;
+
+  /// 멤버 칩 탭 콜백.
+  final VoidCallback? onMemberSelected;
+
+  /// 멤버 칩 레이블. 예: '♡ 정국'.
+  final String? memberLabel;
 
   /// 마이아이돌 칩 표시 여부.
   final bool showMyIdolChip;
@@ -63,7 +80,20 @@ class TagFilterChips extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
-          // 마이아이돌 칩 (전체 앞에 배치)
+          // 멤버 칩 (가장 앞에 배치)
+          if (showMemberChip)
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: _buildChip(
+                context,
+                label: memberLabel ?? UiStrings.idolMemberLabel,
+                selected: isMemberSelected,
+                onSelected: (_) => onMemberSelected?.call(),
+                primary: primary,
+                theme: theme,
+              ),
+            ),
+          // 마이아이돌 칩 (멤버 칩 뒤, 전체 앞에 배치)
           if (showMyIdolChip)
             Padding(
               padding: const EdgeInsets.only(right: 8),
@@ -82,7 +112,8 @@ class TagFilterChips extends StatelessWidget {
             child: _buildChip(
               context,
               label: UiStrings.tagAll,
-              selected: !isMyIdolSelected && selectedTag == null,
+              selected:
+                  !isMyIdolSelected && !isMemberSelected && selectedTag == null,
               onSelected: (_) => onTagSelected(null),
               primary: primary,
               theme: theme,
@@ -95,7 +126,9 @@ class TagFilterChips extends StatelessWidget {
               child: _buildChip(
                 context,
                 label: _tagLabels[tag] ?? tag,
-                selected: !isMyIdolSelected && selectedTag == tag,
+                selected: !isMyIdolSelected &&
+                    !isMemberSelected &&
+                    selectedTag == tag,
                 onSelected: (_) => onTagSelected(tag),
                 primary: primary,
                 theme: theme,
