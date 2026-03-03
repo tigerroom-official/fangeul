@@ -132,6 +132,7 @@ void main() {
       test('should persist member name to SharedPreferences', () async {
         final notifier = container.read(myIdolNotifierProvider.notifier);
         await container.read(myIdolNotifierProvider.future);
+        await notifier.select('bts');
         await notifier.selectMember('원필');
         final prefs = await SharedPreferences.getInstance();
         expect(prefs.getString('my_idol_member_name'), '원필');
@@ -140,6 +141,7 @@ void main() {
       test('should clear member name', () async {
         final notifier = container.read(myIdolNotifierProvider.notifier);
         await container.read(myIdolNotifierProvider.future);
+        await notifier.select('bts');
         await notifier.selectMember('정국');
         await notifier.clearMember();
         final result =
@@ -178,6 +180,17 @@ void main() {
         final result =
             await container2.read(myIdolMemberNameProvider.future);
         expect(result, '정국');
+      });
+
+      test('should not save member name without group set', () async {
+        final notifier = container.read(myIdolNotifierProvider.notifier);
+        await container.read(myIdolNotifierProvider.future);
+
+        // 그룹 미설정 상태에서 멤버 저장 시도
+        await notifier.selectMember('정국');
+
+        final prefs = await SharedPreferences.getInstance();
+        expect(prefs.getString('my_idol_member_name'), isNull);
       });
     });
   });

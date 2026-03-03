@@ -61,7 +61,13 @@ class MyIdolNotifier extends _$MyIdolNotifier {
   }
 
   /// 멤버명을 저장한다.
+  ///
+  /// 그룹이 설정되지 않은 상태에서는 저장하지 않는다.
   Future<void> selectMember(String memberName) async {
+    if (state.valueOrNull == null) {
+      debugPrint('MyIdolNotifier: selectMember — no group set, skipping');
+      return;
+    }
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_memberKey, memberName);
