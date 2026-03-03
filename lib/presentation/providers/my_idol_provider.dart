@@ -16,6 +16,7 @@ part 'my_idol_provider.g.dart';
 @Riverpod(keepAlive: true)
 class MyIdolNotifier extends _$MyIdolNotifier {
   static const _key = 'my_idol_group_id';
+  static const _memberKey = 'my_idol_member_name';
 
   @override
   Future<String?> build() async {
@@ -43,6 +44,8 @@ class MyIdolNotifier extends _$MyIdolNotifier {
   }
 
   /// 마이 아이돌 선택을 초기화한다.
+  ///
+  /// 그룹 ID와 멤버명 모두 삭제한다.
   Future<void> clear() async {
     try {
       await future;
@@ -51,8 +54,29 @@ class MyIdolNotifier extends _$MyIdolNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(_key);
+      await prefs.remove(_memberKey);
     } catch (e) {
       debugPrint('MyIdolNotifier: clear failed — $e');
+    }
+  }
+
+  /// 멤버명을 저장한다.
+  Future<void> selectMember(String memberName) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_memberKey, memberName);
+    } catch (e) {
+      debugPrint('MyIdolNotifier: save member failed — $e');
+    }
+  }
+
+  /// 멤버명을 삭제한다.
+  Future<void> clearMember() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_memberKey);
+    } catch (e) {
+      debugPrint('MyIdolNotifier: clear member failed — $e');
     }
   }
 }
@@ -85,4 +109,17 @@ Future<String?> myIdolDisplayName(MyIdolDisplayNameRef ref) async {
   final groups = await ref.watch(availableGroupsProvider.future);
   final group = groups.where((g) => g.id == groupId).firstOrNull;
   return group?.nameEn;
+}
+
+/// 현재 설정된 멤버명.
+///
+/// 멤버 전용 템플릿 치환에 사용. 그룹 미설정이면 null 반환.
+@riverpod
+Future<String?> myIdolMemberName(MyIdolMemberNameRef ref) async {
+  final groupId = await ref.watch(myIdolNotifierProvider.future);
+  if (groupId == null) return null;
+
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.reload();
+  return prefs.getString('my_idol_member_name');
 }

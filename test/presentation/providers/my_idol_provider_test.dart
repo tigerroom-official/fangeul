@@ -111,5 +111,74 @@ void main() {
           await container.read(myIdolDisplayNameProvider.future);
       expect(displayName, 'DaySix');
     });
+
+    group('Member name', () {
+      test('should return null member name when not set', () async {
+        final result =
+            await container.read(myIdolMemberNameProvider.future);
+        expect(result, isNull);
+      });
+
+      test('should save and return member name after selectMember', () async {
+        final notifier = container.read(myIdolNotifierProvider.notifier);
+        await container.read(myIdolNotifierProvider.future);
+        await notifier.select('bts');
+        await notifier.selectMember('정국');
+        final result =
+            await container.read(myIdolMemberNameProvider.future);
+        expect(result, '정국');
+      });
+
+      test('should persist member name to SharedPreferences', () async {
+        final notifier = container.read(myIdolNotifierProvider.notifier);
+        await container.read(myIdolNotifierProvider.future);
+        await notifier.selectMember('원필');
+        final prefs = await SharedPreferences.getInstance();
+        expect(prefs.getString('my_idol_member_name'), '원필');
+      });
+
+      test('should clear member name', () async {
+        final notifier = container.read(myIdolNotifierProvider.notifier);
+        await container.read(myIdolNotifierProvider.future);
+        await notifier.selectMember('정국');
+        await notifier.clearMember();
+        final result =
+            await container.read(myIdolMemberNameProvider.future);
+        expect(result, isNull);
+      });
+
+      test('should clear member name when group is cleared', () async {
+        final notifier = container.read(myIdolNotifierProvider.notifier);
+        await container.read(myIdolNotifierProvider.future);
+        await notifier.select('bts');
+        await notifier.selectMember('정국');
+        await notifier.clear();
+        final prefs = await SharedPreferences.getInstance();
+        expect(prefs.getString('my_idol_member_name'), isNull);
+      });
+
+      test('should return null member when group is not set', () async {
+        SharedPreferences.setMockInitialValues({
+          'my_idol_member_name': '정국',
+        });
+        final container2 = ProviderContainer();
+        addTearDown(() => container2.dispose());
+        final result =
+            await container2.read(myIdolMemberNameProvider.future);
+        expect(result, isNull);
+      });
+
+      test('should load persisted member name on rebuild', () async {
+        SharedPreferences.setMockInitialValues({
+          'my_idol_group_id': 'bts',
+          'my_idol_member_name': '정국',
+        });
+        final container2 = ProviderContainer();
+        addTearDown(() => container2.dispose());
+        final result =
+            await container2.read(myIdolMemberNameProvider.future);
+        expect(result, '정국');
+      });
+    });
   });
 }

@@ -47,7 +47,28 @@ final myIdolDisplayNameProvider = AutoDisposeFutureProvider<String?>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef MyIdolDisplayNameRef = AutoDisposeFutureProviderRef<String?>;
-String _$myIdolNotifierHash() => r'e5ebac5a1fb0889107c3e18f49ba70132177557d';
+String _$myIdolMemberNameHash() => r'50fadf8167cb69d268930c87b2cc1e46403e6254';
+
+/// 현재 설정된 멤버명.
+///
+/// 멤버 전용 템플릿 치환에 사용. 그룹 미설정이면 null 반환.
+///
+/// Copied from [myIdolMemberName].
+@ProviderFor(myIdolMemberName)
+final myIdolMemberNameProvider = AutoDisposeFutureProvider<String?>.internal(
+  myIdolMemberName,
+  name: r'myIdolMemberNameProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$myIdolMemberNameHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef MyIdolMemberNameRef = AutoDisposeFutureProviderRef<String?>;
+String _$myIdolNotifierHash() => r'8dd95211c2ae03a3f5a460ad163198d4baa86136';
 
 /// 마이 아이돌 선택 Notifier.
 ///
