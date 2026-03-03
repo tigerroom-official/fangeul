@@ -53,6 +53,6 @@ dart format --set-exit-if-changed .  # 포맷 검증
 | `docs/HANDOFF.md` | 세션 핸드오프 (최신 작업 상태) |
 
 ## 현재 작업 상태
-> 마지막 핸드오프: 2026-03-03
+> 마지막 핸드오프: 2026-03-04
 > 상세: `docs/HANDOFF.md` 참조
-> 요약: PhrasesScreen 마이아이돌 칩 + race condition 수정. 337 tests pass. 다음: Phase 6 수익화 또는 Phase B 멤버 개인화.
+> 요약: Phase B 멤버 개인화 완료 + Codex 리뷰 수정. 383 tests pass. 다음: 수익화 심층 토론 → Phase 6.
