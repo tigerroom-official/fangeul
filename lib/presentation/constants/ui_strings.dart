@@ -118,4 +118,16 @@ abstract final class UiStrings {
   /// 홈 화면 인사말. 예: '안녕하세요, BTS 팬님!'.
   static String homeGreeting(String name) => '안녕하세요, $name 팬님!';
   static const idolSettingChange = '변경';
+
+  // 마이 아이돌 — 멤버
+  static const idolMemberHint = '멤버 이름 (선택사항)';
+  static const idolMemberLabel = '최애 멤버';
+
+  /// 멤버 칩 레이블. 예: '♡ 정국'.
+  static String phrasesMemberChip(String name) => '♡ $name';
+
+  /// 멤버 설정 시 그룹 칩 레이블 (♡ 없음).
+  static String phrasesGroupChip(String name) => name;
+
+  static const phrasesMemberEmpty = '멤버 전용 문구가 없습니다';
 }
