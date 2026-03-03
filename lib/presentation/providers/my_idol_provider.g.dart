@@ -47,11 +47,16 @@ final myIdolDisplayNameProvider = AutoDisposeFutureProvider<String?>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef MyIdolDisplayNameRef = AutoDisposeFutureProviderRef<String?>;
-String _$myIdolMemberNameHash() => r'50fadf8167cb69d268930c87b2cc1e46403e6254';
+String _$myIdolMemberNameHash() => r'8bc1ba36549f19296c4a8d811b72f96dbafce5e3';
 
 /// 현재 설정된 멤버명.
 ///
 /// 멤버 전용 템플릿 치환에 사용. 그룹 미설정이면 null 반환.
+///
+/// **반응성 제약:** 이 provider는 [myIdolNotifierProvider](그룹 ID)만 watch한다.
+/// [MyIdolNotifier.selectMember]만 단독 호출하면 이 provider가 갱신되지 않는다.
+/// 현재 IdolSelectScreen은 `select()` + `selectMember()`를 항상 함께 호출하므로
+/// 문제없지만, 향후 "멤버만 변경" 시나리오 추가 시 invalidation 처리 필요.
 ///
 /// Copied from [myIdolMemberName].
 @ProviderFor(myIdolMemberName)
@@ -68,7 +73,7 @@ final myIdolMemberNameProvider = AutoDisposeFutureProvider<String?>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef MyIdolMemberNameRef = AutoDisposeFutureProviderRef<String?>;
-String _$myIdolNotifierHash() => r'fa3ce758ce43ab6fbc1af5074ae905a1e02d85ef';
+String _$myIdolNotifierHash() => r'77d67f583bb2eae5c8427e1977aef391043f92ea';
 
 /// 마이 아이돌 선택 Notifier.
 ///
