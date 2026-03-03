@@ -163,6 +163,102 @@
       },
       "situation": "daily",
       "is_template": true
+    },
+    {
+      "ko": "{{member_name}} 사랑해!",
+      "roman": "{{member_name}} saranghae!",
+      "context": "Template: express love to specific member",
+      "tags": ["love"],
+      "translations": {
+        "en": "I love you, {{member_name}}!",
+        "id": "Aku cinta {{member_name}}!",
+        "th": "รัก {{member_name}}!",
+        "pt": "Te amo, {{member_name}}!",
+        "es": "¡Te amo, {{member_name}}!",
+        "vi": "Yêu {{member_name}}!"
+      },
+      "situation": "daily",
+      "is_template": true
+    },
+    {
+      "ko": "{{member_name}} 생일 축하해!",
+      "roman": "{{member_name}} saengil chukahae!",
+      "context": "Template: birthday wishes to specific member",
+      "tags": ["birthday"],
+      "translations": {
+        "en": "Happy birthday, {{member_name}}!",
+        "id": "Selamat ulang tahun, {{member_name}}!",
+        "th": "สุขสันต์วันเกิด {{member_name}}!",
+        "pt": "Feliz aniversário, {{member_name}}!",
+        "es": "¡Feliz cumpleaños, {{member_name}}!",
+        "vi": "Chúc mừng sinh nhật {{member_name}}!"
+      },
+      "situation": "birthday",
+      "is_template": true
+    },
+    {
+      "ko": "{{member_name}} 오늘도 고마워",
+      "roman": "{{member_name}} oneuldo gomawo",
+      "context": "Template: thank specific member",
+      "tags": ["daily"],
+      "translations": {
+        "en": "Thank you as always, {{member_name}}",
+        "id": "Terima kasih selalu, {{member_name}}",
+        "th": "ขอบคุณเสมอนะ {{member_name}}",
+        "pt": "Obrigado como sempre, {{member_name}}",
+        "es": "Gracias como siempre, {{member_name}}",
+        "vi": "Cảm ơn như mọi ngày, {{member_name}}"
+      },
+      "situation": "daily",
+      "is_template": true
+    },
+    {
+      "ko": "{{member_name}} 화이팅!",
+      "roman": "{{member_name}} hwaiting!",
+      "context": "Template: cheer for specific member",
+      "tags": ["cheer"],
+      "translations": {
+        "en": "Go {{member_name}}!",
+        "id": "Semangat {{member_name}}!",
+        "th": "สู้ๆ {{member_name}}!",
+        "pt": "Força {{member_name}}!",
+        "es": "¡Ánimo {{member_name}}!",
+        "vi": "Cố lên {{member_name}}!"
+      },
+      "situation": "support",
+      "is_template": true
+    },
+    {
+      "ko": "{{group_name}}의 {{member_name}} 최고!",
+      "roman": "{{group_name}}ui {{member_name}} choego!",
+      "context": "Template: member of group is the best",
+      "tags": ["cheer", "love"],
+      "translations": {
+        "en": "{{member_name}} of {{group_name}} is the best!",
+        "id": "{{member_name}} dari {{group_name}} yang terbaik!",
+        "th": "{{member_name}} แห่ง {{group_name}} เก่งที่สุด!",
+        "pt": "{{member_name}} do {{group_name}} é o melhor!",
+        "es": "¡{{member_name}} de {{group_name}} es lo mejor!",
+        "vi": "{{member_name}} của {{group_name}} là nhất!"
+      },
+      "situation": "daily",
+      "is_template": true
+    },
+    {
+      "ko": "{{member_name}} 보고 싶어!",
+      "roman": "{{member_name}} bogo sipeo!",
+      "context": "Template: miss specific member",
+      "tags": ["love", "emotional"],
+      "translations": {
+        "en": "I miss you, {{member_name}}!",
+        "id": "Kangen {{member_name}}!",
+        "th": "คิดถึง {{member_name}}!",
+        "pt": "Sinto sua falta, {{member_name}}!",
+        "es": "¡Te extraño, {{member_name}}!",
+        "vi": "Nhớ {{member_name}} quá!"
+      },
+      "situation": "daily",
+      "is_template": true
     }
   ]
 }
