@@ -166,6 +166,17 @@ void main() {
 
       expect(needsMemberName(phrase), isFalse);
     });
+
+    test('should return false for non-template containing slot literal', () {
+      final phrase = Phrase(
+        ko: '템플릿 예시: {{member_name}}',
+        roman: '',
+        context: 'Explainer',
+        isTemplate: false,
+      );
+
+      expect(needsMemberName(phrase), isFalse);
+    });
   });
 
   group('filterAndResolveTemplates member support', () {

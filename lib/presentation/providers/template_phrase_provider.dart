@@ -34,10 +34,10 @@ Phrase resolveTemplatePhrase(
 
 /// 문구가 `{{member_name}}` 슬롯을 포함하는지 확인한다.
 ///
-/// [ko] 필드에 `{{member_name}}`이 존재하면 true를 반환한다.
-/// 비템플릿 문구나 그룹 전용 템플릿은 false를 반환한다.
+/// [Phrase.isTemplate]이 true이고 [ko] 필드에 `{{member_name}}`이
+/// 존재하면 true를 반환한다. 비템플릿 문구는 항상 false.
 bool needsMemberName(Phrase phrase) =>
-    phrase.ko.contains('{{member_name}}');
+    phrase.isTemplate && phrase.ko.contains('{{member_name}}');
 
 /// 문구 리스트에서 템플릿 문구를 필터링/치환한다.
 ///
