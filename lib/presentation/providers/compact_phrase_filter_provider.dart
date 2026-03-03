@@ -167,15 +167,23 @@ Future<List<Phrase>> _buildPackPhrases(
 /// 마이 아이돌 템플릿 문구 목록.
 ///
 /// isTemplate == true인 문구를 수집하고 마이 아이돌 이름으로 치환한다.
+/// 멤버명이 설정되어 있으면 `{{member_name}}` 슬롯도 함께 치환하고,
+/// 미설정이면 멤버 전용 템플릿은 제외한다.
 Future<List<Phrase>> _buildMyIdolPhrases(FilteredCompactPhrasesRef ref) async {
   final idolName = await ref.watch(myIdolDisplayNameProvider.future);
   if (idolName == null) return [];
 
+  final memberName = await ref.watch(myIdolMemberNameProvider.future);
   final packs = await ref.watch(allPhrasesProvider.future);
-  final templates =
-      packs.expand((p) => p.phrases).where((p) => p.isTemplate).toList();
+  final templates = packs
+      .expand((p) => p.phrases)
+      .where((p) => p.isTemplate)
+      .where((p) => !needsMemberName(p) || memberName != null)
+      .toList();
 
-  return templates.map((p) => resolveTemplatePhrase(p, idolName)).toList();
+  return templates
+      .map((p) => resolveTemplatePhrase(p, idolName, memberName: memberName))
+      .toList();
 }
 
 /// 오늘 이벤트 기반 추천 문구 (버블 "오늘" 칩).

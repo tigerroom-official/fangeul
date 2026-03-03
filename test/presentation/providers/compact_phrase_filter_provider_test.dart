@@ -60,6 +60,18 @@ final _testPacks = [
         context: 'Template',
         isTemplate: true,
       ),
+      const Phrase(
+        ko: '{{member_name}} 생일 축하해요',
+        roman: '{{member_name}} saengil chukahaeyo',
+        context: 'Member template',
+        isTemplate: true,
+      ),
+      const Phrase(
+        ko: '{{group_name}} {{member_name}} 최고!',
+        roman: '{{group_name}} {{member_name}} choego!',
+        context: 'Group+Member template',
+        isTemplate: true,
+      ),
     ],
   ),
 ];
@@ -499,6 +511,62 @@ void main() {
       final phrases =
           await container.read(filteredCompactPhrasesProvider.future);
       expect(phrases, isEmpty);
+    });
+
+    test('should include member templates when memberName is set', () async {
+      final container = ProviderContainer(
+        overrides: [
+          allPhrasesProvider.overrideWith((ref) async => _testPacks),
+          myIdolDisplayNameProvider.overrideWith((ref) async => 'BTS'),
+          myIdolMemberNameProvider.overrideWith((ref) async => '정국'),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      container.listen(compactPhraseFilterNotifierProvider, (_, __) {});
+      await container.read(compactPhraseFilterNotifierProvider.future);
+
+      await container
+          .read(compactPhraseFilterNotifierProvider.notifier)
+          .selectMyIdol();
+
+      final phrases =
+          await container.read(filteredCompactPhrasesProvider.future);
+      // 4 templates: 2 group-only + 2 member (all resolved)
+      expect(phrases, hasLength(4));
+      expect(phrases[0].ko, 'BTS 사랑해요');
+      expect(phrases[1].ko, 'BTS 화이팅!');
+      expect(phrases[2].ko, '정국 생일 축하해요');
+      expect(phrases[3].ko, 'BTS 정국 최고!');
+    });
+
+    test('should exclude member templates when memberName is null', () async {
+      final container = ProviderContainer(
+        overrides: [
+          allPhrasesProvider.overrideWith((ref) async => _testPacks),
+          myIdolDisplayNameProvider.overrideWith((ref) async => 'BTS'),
+          myIdolMemberNameProvider.overrideWith((ref) async => null),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      container.listen(compactPhraseFilterNotifierProvider, (_, __) {});
+      await container.read(compactPhraseFilterNotifierProvider.future);
+
+      await container
+          .read(compactPhraseFilterNotifierProvider.notifier)
+          .selectMyIdol();
+
+      final phrases =
+          await container.read(filteredCompactPhrasesProvider.future);
+      // Only 2 group-only templates, member templates excluded
+      expect(phrases, hasLength(2));
+      expect(phrases[0].ko, 'BTS 사랑해요');
+      expect(phrases[1].ko, 'BTS 화이팅!');
+      // No phrase should contain unreplaced {{member_name}}
+      for (final p in phrases) {
+        expect(p.ko, isNot(contains('{{member_name}}')));
+      }
     });
   });
 
