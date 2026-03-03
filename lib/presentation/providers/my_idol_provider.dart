@@ -25,7 +25,14 @@ class MyIdolNotifier extends _$MyIdolNotifier {
   }
 
   /// 마이 아이돌 그룹을 선택한다.
+  ///
+  /// [build]가 아직 실행 중이면 완료될 때까지 기다린 후 state를 설정한다.
+  /// Riverpod의 AsyncNotifier는 수동 state 설정 후에도 build() 완료 시
+  /// 반환값으로 state를 덮어쓰므로, build 완료를 보장해야 한다.
   Future<void> select(String groupId) async {
+    try {
+      await future;
+    } catch (_) {}
     state = AsyncData(groupId);
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -37,6 +44,9 @@ class MyIdolNotifier extends _$MyIdolNotifier {
 
   /// 마이 아이돌 선택을 초기화한다.
   Future<void> clear() async {
+    try {
+      await future;
+    } catch (_) {}
     state = const AsyncData(null);
     try {
       final prefs = await SharedPreferences.getInstance();
