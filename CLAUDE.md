@@ -55,4 +55,4 @@ dart format --set-exit-if-changed .  # 포맷 검증
 ## 현재 작업 상태
 > 마지막 핸드오프: 2026-03-03
 > 상세: `docs/HANDOFF.md` 참조
-> 요약: MVP 통합 완료 — 마이아이돌(5그룹) + 템플릿 문구 + 온보딩 + 교차리뷰 3라운드. 314 tests pass. 다음: Phase 6 수익화.
+> 요약: PhrasesScreen 마이아이돌 칩 + race condition 수정. 337 tests pass. 다음: Phase 6 수익화 또는 Phase B 멤버 개인화.
