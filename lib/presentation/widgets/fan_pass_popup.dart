@@ -8,7 +8,7 @@ import 'package:fangeul/presentation/providers/monetization_provider.dart';
 ///
 /// [showDialog]로 모달 다이얼로그를 표시하며, 해금 남은 시간과
 /// 간단한 scale/fade 애니메이션을 포함한다.
-Future<void> showFanPassPopup(BuildContext context, WidgetRef ref) {
+Future<void> showFanPassPopup(BuildContext context) {
   return showDialog<void>(
     context: context,
     barrierDismissible: false,

@@ -5,7 +5,8 @@ part 'session_state_provider.g.dart';
 /// 세션 동안 배너 광고 숨김 여부.
 ///
 /// 보상형 광고 1회 시청 시 true로 전환. 앱 프로세스 종료 시 리셋.
-@riverpod
+/// keepAlive: 위젯 unmount 후에도 세션 동안 상태 유지.
+@Riverpod(keepAlive: true)
 class SessionBannerHidden extends _$SessionBannerHidden {
   @override
   bool build() => false;
@@ -16,8 +17,8 @@ class SessionBannerHidden extends _$SessionBannerHidden {
 
 /// 전환 트리거 팝업 이번 세션에서 표시 여부.
 ///
-/// 세션 당 1회만 표시.
-@riverpod
+/// 세션 당 1회만 표시. keepAlive: 위젯 unmount 후에도 유지.
+@Riverpod(keepAlive: true)
 class SessionConversionShown extends _$SessionConversionShown {
   @override
   bool build() => false;

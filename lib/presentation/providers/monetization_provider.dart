@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:fangeul/core/entities/monetization_state.dart';
 import 'package:fangeul/core/repositories/monetization_repository.dart';
+import 'package:fangeul/core/usecases/check_honeymoon_usecase.dart';
 import 'package:fangeul/data/datasources/monetization_local_datasource.dart';
 import 'package:fangeul/data/repositories/monetization_repository_impl.dart';
 
@@ -15,6 +18,17 @@ part 'monetization_provider.g.dart';
 @Riverpod(keepAlive: true)
 FlutterSecureStorage monetizationStorage(MonetizationStorageRef ref) =>
     const FlutterSecureStorage();
+
+/// 수익화 Repository Provider.
+///
+/// presentation → core/ 인터페이스만 노출. data/ 구현은 여기서 조립.
+/// 테스트에서 mock MonetizationRepository로 override 가능.
+@Riverpod(keepAlive: true)
+MonetizationRepository monetizationRepository(
+    MonetizationRepositoryRef ref) {
+  final storage = ref.read(monetizationStorageProvider);
+  return MonetizationRepositoryImpl(MonetizationLocalDataSource(storage));
+}
 
 /// 수익화 상태를 관리하는 중앙 Notifier.
 ///
@@ -42,11 +56,10 @@ class MonetizationNotifier extends _$MonetizationNotifier {
 
   @override
   Future<MonetizationState> build() async {
-    final storage = ref.read(monetizationStorageProvider);
-    _repository = MonetizationRepositoryImpl(
-      MonetizationLocalDataSource(storage),
-    );
-    return _repository.load();
+    _repository = ref.read(monetizationRepositoryProvider);
+    // 허니문 체크 (설치일 기록 + Day 7 전환)
+    final usecase = CheckHoneymoonUseCase(_repository);
+    return usecase.execute();
   }
 
   /// 상태를 업데이트하고 lastTimestamp를 갱신한 뒤 저장소에 기록한다.
@@ -146,6 +159,7 @@ class MonetizationNotifier extends _$MonetizationNotifier {
   /// 해금 만료 타임스탬프를 계산한다.
   ///
   /// min(현재 + 4시간, 다음 자정) 밀리초 반환.
+  @visibleForTesting
   int computeUnlockExpiry({required DateTime now}) {
     final fourHoursLater = now.millisecondsSinceEpoch + unlockDurationMs;
     final nextMidnight = DateTime(now.year, now.month, now.day + 1);
@@ -154,6 +168,9 @@ class MonetizationNotifier extends _$MonetizationNotifier {
   }
 
   /// 구매 완료된 팩을 추가한다 (중복 무시).
+  ///
+  /// IAP 구매 상태는 손실 시 복구 불가하므로, save 실패 시 예외를 전파한다.
+  /// 호출부에서 catch하여 사용자에게 안내해야 한다.
   Future<void> addPurchasedPack(String packId) async {
     try {
       await future;
@@ -163,9 +180,15 @@ class MonetizationNotifier extends _$MonetizationNotifier {
 
     if (current.purchasedPackIds.contains(packId)) return;
 
-    await _updateState(current.copyWith(
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final updated = current.copyWith(
       purchasedPackIds: [...current.purchasedPackIds, packId],
-    ));
+      lastTimestamp:
+          now > current.lastTimestamp ? now : current.lastTimestamp,
+    );
+    state = AsyncData(updated);
+    // IAP 상태는 silent swallow 없이 예외 전파
+    await _repository.save(updated);
   }
 
   /// 허니문 기간을 종료한다.
@@ -270,13 +293,14 @@ class MonetizationNotifier extends _$MonetizationNotifier {
 
   /// TTS 재생 횟수를 기록한다.
   ///
+  /// 일일 제한(5회) 도달 시 false 반환.
   /// 날짜가 바뀌었으면 카운트를 자동 리셋한다.
-  Future<void> recordTtsPlay() async {
+  Future<bool> recordTtsPlay() async {
     try {
       await future;
     } catch (_) {}
     var current = state.valueOrNull;
-    if (current == null) return;
+    if (current == null) return false;
 
     final now = DateTime.now();
     final todayStr = _formatDate(now);
@@ -289,23 +313,37 @@ class MonetizationNotifier extends _$MonetizationNotifier {
       );
     }
 
+    // 일일 제한 확인
+    if (current.ttsPlayCount >= dailyTtsLimit) {
+      return false;
+    }
+
     await _updateState(current.copyWith(
       ttsPlayCount: current.ttsPlayCount + 1,
       ttsLastResetDate: todayStr,
     ));
+    return true;
   }
 
   /// 일일 광고 시청 제한에 도달했는지 확인한다.
+  ///
+  /// 날짜가 바뀌었으면 카운트를 리셋된 것으로 간주하여 false 반환.
   bool get isAdLimitReached {
     final current = state.valueOrNull;
     if (current == null) return false;
+    final todayStr = _formatDate(DateTime.now());
+    if (current.adLastResetDate != todayStr) return false;
     return current.adWatchCount >= dailyAdLimit;
   }
 
   /// 일일 TTS 재생 제한에 도달했는지 확인한다.
+  ///
+  /// 날짜가 바뀌었으면 카운트를 리셋된 것으로 간주하여 false 반환.
   bool get isTtsLimitReached {
     final current = state.valueOrNull;
     if (current == null) return false;
+    final todayStr = _formatDate(DateTime.now());
+    if (current.ttsLastResetDate != todayStr) return false;
     return current.ttsPlayCount >= dailyTtsLimit;
   }
 
@@ -325,13 +363,27 @@ bool isHoneymoon(IsHoneymoonRef ref) {
 }
 
 /// 보상형 해금 활성 여부 편의 Provider.
+///
+/// 해금 만료 시각에 자동 invalidation하여 배너 표시를 즉시 갱신한다.
 @riverpod
 bool isRewardedUnlockActive(IsRewardedUnlockActiveRef ref) {
   final asyncState = ref.watch(monetizationNotifierProvider);
   final monetizationState = asyncState.valueOrNull;
   if (monetizationState == null) return false;
-  return monetizationState.unlockExpiresAt >
-      DateTime.now().millisecondsSinceEpoch;
+
+  final now = DateTime.now().millisecondsSinceEpoch;
+  final expiresAt = monetizationState.unlockExpiresAt;
+  final remainingMs = expiresAt - now;
+
+  if (remainingMs <= 0) return false;
+
+  // 만료 시각에 자동 invalidation 예약
+  final timer = Timer(Duration(milliseconds: remainingMs), () {
+    ref.invalidateSelf();
+  });
+  ref.onDispose(timer.cancel);
+
+  return true;
 }
 
 /// 즐겨찾기 슬롯 제한 편의 Provider.

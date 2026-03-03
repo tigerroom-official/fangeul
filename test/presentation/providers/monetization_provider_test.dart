@@ -57,7 +57,8 @@ void main() {
 
   group('MonetizationNotifier', () {
     group('initial load', () {
-      test('should return default state when no stored data', () async {
+      test('should initialize honeymoon with install date when no stored data',
+          () async {
         setUpDefault();
 
         final state = await container.read(monetizationNotifierProvider.future);
@@ -66,10 +67,47 @@ void main() {
         expect(state.adWatchCount, 0);
         expect(state.ttsPlayCount, 0);
         expect(state.favoriteSlotLimit, 0);
-        expect(state.installDate, isNull);
+        // build()에서 CheckHoneymoonUseCase가 설치일을 자동 설정
+        expect(state.installDate, isNotNull);
+        expect(state.installDate, matches(RegExp(r'^\d{4}-\d{2}-\d{2}$')));
         expect(state.purchasedPackIds, isEmpty);
         expect(state.ddayUnlockedDates, isEmpty);
         expect(state.unlockExpiresAt, 0);
+      });
+
+      test('should end honeymoon when install date is 7+ days ago', () async {
+        setUpWithState(const MonetizationState(
+          installDate: '2026-02-01',
+          honeymoonActive: true,
+          favoriteSlotLimit: 0,
+        ));
+
+        final state = await container.read(monetizationNotifierProvider.future);
+
+        // Day 7 이상 → 허니문 종료
+        expect(state.honeymoonActive, false);
+        expect(state.favoriteSlotLimit, 3);
+      });
+
+      test('should keep honeymoon active within 7 days', () async {
+        // 오늘 날짜로 설치
+        final now = DateTime.now();
+        final y = now.year.toString().padLeft(4, '0');
+        final m = now.month.toString().padLeft(2, '0');
+        final d = now.day.toString().padLeft(2, '0');
+        final todayStr = '$y-$m-$d';
+
+        setUpWithState(MonetizationState(
+          installDate: todayStr,
+          honeymoonActive: true,
+          favoriteSlotLimit: 0,
+        ));
+
+        final state = await container.read(monetizationNotifierProvider.future);
+
+        // Day 0 → 허니문 유지
+        expect(state.honeymoonActive, true);
+        expect(state.favoriteSlotLimit, 0);
       });
     });
 
@@ -448,12 +486,47 @@ void main() {
       });
 
       test('isTtsLimitReached should return true at limit', () async {
-        setUpWithState(const MonetizationState(ttsPlayCount: 5));
+        final now = DateTime.now();
+        final y = now.year.toString().padLeft(4, '0');
+        final m = now.month.toString().padLeft(2, '0');
+        final d = now.day.toString().padLeft(2, '0');
+        final todayStr = '$y-$m-$d';
+
+        setUpWithState(MonetizationState(
+          ttsPlayCount: 5,
+          ttsLastResetDate: todayStr,
+        ));
 
         final notifier = container.read(monetizationNotifierProvider.notifier);
         await container.read(monetizationNotifierProvider.future);
 
         expect(notifier.isTtsLimitReached, true);
+      });
+
+      test('isAdLimitReached should return false on new day (cross-day reset)',
+          () async {
+        setUpWithState(const MonetizationState(
+          adWatchCount: 3,
+          adLastResetDate: '2026-01-01', // 과거 날짜
+        ));
+
+        final notifier = container.read(monetizationNotifierProvider.notifier);
+        await container.read(monetizationNotifierProvider.future);
+
+        expect(notifier.isAdLimitReached, false);
+      });
+
+      test('isTtsLimitReached should return false on new day (cross-day reset)',
+          () async {
+        setUpWithState(const MonetizationState(
+          ttsPlayCount: 5,
+          ttsLastResetDate: '2026-01-01', // 과거 날짜
+        ));
+
+        final notifier = container.read(monetizationNotifierProvider.notifier);
+        await container.read(monetizationNotifierProvider.future);
+
+        expect(notifier.isTtsLimitReached, false);
       });
 
       test('isUnlockActive should return true when not expired', () async {

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:fangeul/core/entities/monetization_state.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/ad_service_provider.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
@@ -36,11 +37,27 @@ class FanPassButtonState extends ConsumerState<FanPassButton> {
   bool isShowingAd = false;
 
   Timer? _cooldownTimer;
+  bool _cooldownInitialized = false;
 
   @override
   void dispose() {
     _cooldownTimer?.cancel();
     super.dispose();
+  }
+
+  /// 초기 쿨다운 상태를 확인한다. 첫 유효 상태 도착 시 1회만 실행.
+  void _initCooldownIfNeeded(MonetizationState? monState) {
+    if (_cooldownInitialized || monState == null) return;
+    _cooldownInitialized = true;
+
+    if (monState.lastAdWatchTimestamp > 0) {
+      final elapsed = DateTime.now().millisecondsSinceEpoch -
+          monState.lastAdWatchTimestamp;
+      final remaining = MonetizationNotifier.cooldownMs - elapsed;
+      if (remaining > 0) {
+        _startCooldownTimer(remaining);
+      }
+    }
   }
 
   /// 쿨다운 타이머를 시작한다.
@@ -75,7 +92,14 @@ class FanPassButtonState extends ConsumerState<FanPassButton> {
     return '$min:${sec.toString().padLeft(2, '0')}';
   }
 
+  /// 보상형 광고에서 보상을 받았는지 여부.
+  @visibleForTesting
+  bool rewardEarned = false;
+
   /// 보상형 광고 플로우를 실행한다.
+  ///
+  /// 플래그 기반 설계: onRewarded에서는 플래그만 설정하고,
+  /// onDismissed 후 async 처리를 수행하여 fire-and-forget을 방지한다.
   Future<void> _onTap() async {
     if (isShowingAd) return;
 
@@ -93,28 +117,35 @@ class FanPassButtonState extends ConsumerState<FanPassButton> {
       if (elapsed < MonetizationNotifier.cooldownMs) return;
     }
 
+    rewardEarned = false;
     setState(() => isShowingAd = true);
 
     await adService.showRewarded(
-      onRewarded: () async {
-        final success = await notifier.recordAdWatch();
-        if (success) {
-          await notifier.activateRewardedUnlock();
-          ref.read(sessionBannerHiddenProvider.notifier).hide();
-
-          if (mounted) {
-            // 쿨다운 타이머 시작
-            _startCooldownTimer(MonetizationNotifier.cooldownMs);
-
-            // 축하 팝업 표시
-            await showFanPassPopup(context, ref);
-          }
-        }
+      onRewarded: () {
+        rewardEarned = true;
       },
       onDismissed: () {
-        if (mounted) setState(() => isShowingAd = false);
+        if (mounted) {
+          setState(() => isShowingAd = false);
+          if (rewardEarned) _processReward();
+        }
       },
     );
+  }
+
+  /// 보상 지급을 처리한다. onDismissed 이후 호출되어 context가 유효하다.
+  Future<void> _processReward() async {
+    final notifier = ref.read(monetizationNotifierProvider.notifier);
+    final success = await notifier.recordAdWatch();
+    if (!success) return;
+
+    await notifier.activateRewardedUnlock();
+    ref.read(sessionBannerHiddenProvider.notifier).hide();
+
+    if (!mounted) return;
+
+    _startCooldownTimer(MonetizationNotifier.cooldownMs);
+    await showFanPassPopup(context);
   }
 
   @override
@@ -127,21 +158,8 @@ class FanPassButtonState extends ConsumerState<FanPassButton> {
     final isLimitReached = watchCount >= MonetizationNotifier.dailyAdLimit;
     final isAdReady = adService.isRewardedReady;
 
-    // 쿨다운 확인 (초기 렌더 시)
-    if (monState != null &&
-        cooldownSeconds == 0 &&
-        _cooldownTimer == null &&
-        monState.lastAdWatchTimestamp > 0) {
-      final elapsed =
-          DateTime.now().millisecondsSinceEpoch - monState.lastAdWatchTimestamp;
-      final remaining = MonetizationNotifier.cooldownMs - elapsed;
-      if (remaining > 0) {
-        // Schedule timer start after build
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) _startCooldownTimer(remaining);
-        });
-      }
-    }
+    // 초기 쿨다운 확인 (1회만)
+    _initCooldownIfNeeded(monState);
 
     final isCooldown = cooldownSeconds > 0;
     final isDisabled =

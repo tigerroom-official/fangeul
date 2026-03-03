@@ -73,6 +73,7 @@ class AdService {
         debugPrint('AdService: rewarded show failed: ${error.message}');
         ad.dispose();
         _rewardedAd = null;
+        onDismissed?.call();
         preloadRewarded();
       },
     );

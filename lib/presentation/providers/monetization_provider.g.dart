@@ -28,6 +28,30 @@ final monetizationStorageProvider = Provider<FlutterSecureStorage>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef MonetizationStorageRef = ProviderRef<FlutterSecureStorage>;
+String _$monetizationRepositoryHash() =>
+    r'a5d71795e1ba962e9c3256c08c7b5c8ea2ae17b9';
+
+/// 수익화 Repository Provider.
+///
+/// presentation → core/ 인터페이스만 노출. data/ 구현은 여기서 조립.
+/// 테스트에서 mock MonetizationRepository로 override 가능.
+///
+/// Copied from [monetizationRepository].
+@ProviderFor(monetizationRepository)
+final monetizationRepositoryProvider =
+    Provider<MonetizationRepository>.internal(
+  monetizationRepository,
+  name: r'monetizationRepositoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$monetizationRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef MonetizationRepositoryRef = ProviderRef<MonetizationRepository>;
 String _$isHoneymoonHash() => r'0104d1e777a16b30613f769da683b7029a1833f3';
 
 /// 허니문 기간 활성 여부 편의 Provider.
@@ -47,9 +71,11 @@ final isHoneymoonProvider = AutoDisposeProvider<bool>.internal(
 // ignore: unused_element
 typedef IsHoneymoonRef = AutoDisposeProviderRef<bool>;
 String _$isRewardedUnlockActiveHash() =>
-    r'b242a9b7ede181f5a8ea085d9af96f54eea1d8e6';
+    r'6b86218aa55ecb1872b5892c8221ac0cfbb36ed4';
 
 /// 보상형 해금 활성 여부 편의 Provider.
+///
+/// 해금 만료 시각에 자동 invalidation하여 배너 표시를 즉시 갱신한다.
 ///
 /// Copied from [isRewardedUnlockActive].
 @ProviderFor(isRewardedUnlockActive)
@@ -86,7 +112,7 @@ final favoriteSlotLimitProvider = AutoDisposeProvider<int>.internal(
 // ignore: unused_element
 typedef FavoriteSlotLimitRef = AutoDisposeProviderRef<int>;
 String _$monetizationNotifierHash() =>
-    r'c9ceaf55c9c8894a40dc04f37b986541705fbc97';
+    r'181008e2d68b0543afca136c1bf968747a940a7d';
 
 /// 수익화 상태를 관리하는 중앙 Notifier.
 ///
