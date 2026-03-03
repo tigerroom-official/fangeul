@@ -216,4 +216,32 @@ abstract final class UiStrings {
 
   /// 전환 트리거 팝업 닫기 버튼.
   static const conversionTriggerDismiss = '나중에';
+
+  // 즐겨찾기 제한
+  /// 즐겨찾기 슬롯 포화 다이얼로그 타이틀.
+  static const favLimitTitle = '즐겨찾기가 가득 찼어요';
+
+  /// 즐겨찾기 슬롯 포화 메시지.
+  static const favLimitMessage =
+      '팬 패스로 임시 해금하거나\n감성 컬러 팩으로 무제한 즐기세요';
+
+  /// 즐겨찾기 제한 — 팬 패스 버튼.
+  static const favLimitAdButton = '팬 패스로 해금';
+
+  /// 즐겨찾기 제한 — IAP 버튼.
+  static const favLimitIapButton = '감성 컬러 팩 보기';
+
+  // 구매 결과
+  /// 구매 성공.
+  static const shopPurchaseSuccess = '구매 완료! 콘텐츠가 해금되었어요';
+
+  /// 구매 실패.
+  static const shopPurchaseFailed = '구매에 실패했어요. 다시 시도해주세요';
+
+  /// 구매 처리 중.
+  static const shopPurchasePending = '결제 처리 중...';
+
+  // 허니문
+  /// 허니문 남은 일수 표시. 예: '무료 체험 3일 남음'.
+  static String honeymoonDaysLeft(int days) => '무료 체험 $days일 남음';
 }

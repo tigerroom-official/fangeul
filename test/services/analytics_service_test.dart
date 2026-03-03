@@ -91,6 +91,26 @@ void main() {
       expect(AnalyticsEvents.calendarEventView, 'calendar_event_view');
     });
 
+    test('should have monetization event names', () {
+      expect(AnalyticsEvents.adBannerImpression, 'ad_banner_impression');
+      expect(AnalyticsEvents.adRewardedStart, 'ad_rewarded_start');
+      expect(AnalyticsEvents.adRewardedComplete, 'ad_rewarded_complete');
+      expect(AnalyticsEvents.adRewardedFailed, 'ad_rewarded_failed');
+      expect(AnalyticsEvents.fanPassActivated, 'fan_pass_activated');
+      expect(AnalyticsEvents.fanPassExpired, 'fan_pass_expired');
+      expect(AnalyticsEvents.iapViewShop, 'iap_view_shop');
+      expect(AnalyticsEvents.iapStartPurchase, 'iap_start_purchase');
+      expect(AnalyticsEvents.iapPurchaseSuccess, 'iap_purchase_success');
+      expect(AnalyticsEvents.iapPurchaseFailed, 'iap_purchase_failed');
+      expect(AnalyticsEvents.iapRestorePurchase, 'iap_restore_purchase');
+      expect(AnalyticsEvents.favLimitReached, 'fav_limit_reached');
+      expect(AnalyticsEvents.ttsLimitReached, 'tts_limit_reached');
+      expect(AnalyticsEvents.conversionTriggerShown, 'conversion_trigger_shown');
+      expect(AnalyticsEvents.conversionTriggerClicked, 'conversion_trigger_clicked');
+      expect(AnalyticsEvents.ddayGiftActivated, 'dday_gift_activated');
+      expect(AnalyticsEvents.honeymoonEnded, 'honeymoon_ended');
+    });
+
     test('should have all required param keys', () {
       expect(AnalyticsParams.packId, 'pack_id');
       expect(AnalyticsParams.situation, 'situation');
@@ -100,6 +120,10 @@ void main() {
       expect(AnalyticsParams.durationSec, 'duration_sec');
       expect(AnalyticsParams.eventType, 'event_type');
       expect(AnalyticsParams.artist, 'artist');
+      expect(AnalyticsParams.skuId, 'sku_id');
+      expect(AnalyticsParams.revenue, 'revenue');
+      expect(AnalyticsParams.unlockDurationMin, 'unlock_duration_min');
+      expect(AnalyticsParams.daysSinceInstall, 'days_since_install');
     });
   });
 }
