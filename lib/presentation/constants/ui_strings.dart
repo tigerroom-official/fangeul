@@ -156,4 +156,50 @@ abstract final class UiStrings {
   /// 자정 만료 시 남은 시간 표시. 예: '42:15 남음 (자정에 만료)'.
   static String unlockMidnightExpiry(String time) =>
       '$time 남음 ($unlockMidnightLabel)';
+
+  // 샵
+  /// 샵 화면 타이틀.
+  static const shopTitle = '감성 컬러 팩';
+
+  /// 구매 복원 버튼 레이블.
+  static const shopRestore = '구매 복원';
+
+  /// 구매하기 버튼 레이블.
+  static const shopBuyButton = '구매하기';
+
+  /// 구매 완료 배지 텍스트.
+  static const shopPurchased = '구매 완료';
+
+  /// 문구 개수 표시. 예: '문구 50개'.
+  static String shopPhraseCount(int count) => '문구 $count개';
+
+  /// 발음 개수 표시. 예: '발음 30개'.
+  static String shopPronunciationCount(int count) => '발음 $count개';
+
+  /// 구매 복원 성공 메시지.
+  static const shopRestoreSuccess = '구매가 복원되었습니다';
+
+  /// 구매 복원 실패 메시지.
+  static const shopRestoreFailed = '복원할 구매가 없습니다';
+
+  // D-day 선물 팝업
+
+  /// D-day 선물 팝업 제목. 예: '슈가 생일 축하해요!'.
+  static String ddayGiftTitle(String eventName) => '$eventName 축하해요!';
+
+  /// D-day 선물 팝업 메시지.
+  static const ddayGiftMessage = '오늘 하루 모든 콘텐츠가 무료예요';
+
+  /// D-day 선물 팝업 수락 버튼.
+  static const ddayGiftButton = '선물 받기';
+
+  // TTS 제한
+  /// TTS 일일 제한 도달 시 다이얼로그 타이틀.
+  static const ttsLimitTitle = 'TTS 사용량 소진';
+
+  /// TTS 일일 제한 도달 시 메시지. 예: '오늘 5회 모두 사용했어요'.
+  static String ttsLimitMessage(int limit) => '오늘 $limit회 모두 사용했어요';
+
+  /// TTS 제한 다이얼로그 — 보상형 광고 해금 버튼.
+  static const ttsLimitAdButton = '팬 패스로 해금';
 }
