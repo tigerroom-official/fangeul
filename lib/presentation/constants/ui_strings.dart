@@ -39,6 +39,7 @@ abstract final class UiStrings {
   // 문구 화면
   static const phrasesTitle = '문구';
   static const phrasesEmpty = '문구가 없습니다';
+
   /// 마이아이돌 문구 빈 상태 메시지.
   static const phrasesMyIdolEmpty = '설정에서 아이돌을 선택하면\n맞춤 문구가 표시됩니다';
 
@@ -130,4 +131,29 @@ abstract final class UiStrings {
   static String phrasesGroupChip(String name) => name;
 
   static const phrasesMemberEmpty = '멤버 전용 문구가 없습니다';
+
+  // 팬 패스 (보상형 광고)
+  static const fanPassButton = '팬 패스';
+
+  /// 남은 시청 횟수. 예: '(1/3)'.
+  static String fanPassRemaining(int current, int max) => '($current/$max)';
+  static const fanPassCooldown = '잠시 후 다시 시도하세요';
+  static const fanPassAdLoading = '광고 준비 중...';
+  static const fanPassLimitReached = '오늘 시청 완료';
+  static const fanPassPopupTitle = '팬 패스 획득!';
+  static const fanPassPopupConfirm = '확인';
+
+  /// 해금 남은 시간. 예: '03:45 남음'.
+  static String fanPassUnlockRemaining(String time) => '$time 남음';
+
+  // 해금 타이머
+  /// 남은 시간 표시. 예: '3:42:15 남음'.
+  static String unlockRemaining(String time) => '$time 남음';
+
+  /// 자정 만료 레이블.
+  static const unlockMidnightLabel = '자정에 만료';
+
+  /// 자정 만료 시 남은 시간 표시. 예: '42:15 남음 (자정에 만료)'.
+  static String unlockMidnightExpiry(String time) =>
+      '$time 남음 ($unlockMidnightLabel)';
 }
