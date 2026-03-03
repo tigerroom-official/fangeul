@@ -37,6 +37,9 @@ dependencies:
   # 공유
   share_plus: ^10.1.4
 
+  # 광고
+  google_mobile_ads: ^7.0.0
+
   # 유틸리티
   path_provider: ^2.1.4
   http: ^1.2.2
