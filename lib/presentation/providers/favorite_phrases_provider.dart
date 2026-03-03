@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:fangeul/presentation/providers/analytics_providers.dart';
+import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/services/analytics_events.dart';
 
 part 'favorite_phrases_provider.g.dart';
@@ -34,10 +35,30 @@ class FavoritePhrasesNotifier extends _$FavoritePhrasesNotifier {
   /// 즐겨찾기 토글 -- 있으면 제거, 없으면 추가.
   ///
   /// `build()` 완료를 대기한 뒤 변경하므로 로딩 중 호출해도 안전하다.
-  Future<void> toggle(String phraseKo) async {
+  /// 슬롯 제한(허니문 종료 후 기본 3개)을 초과하면 추가를 거부하고 `false` 반환.
+  /// 제거는 항상 허용. Pro(IAP 구매) 사용자는 제한 없이 추가 가능.
+  Future<bool> toggle(String phraseKo) async {
     final current = {...await future};
-    final wasPresent = current.contains(phraseKo);
-    if (wasPresent) {
+    final isRemoving = current.contains(phraseKo);
+
+    // 추가 시에만 슬롯 제한 확인 (제거는 항상 허용)
+    if (!isRemoving) {
+      final limit = ref.read(favoriteSlotLimitProvider);
+      // limit=0 → 무제한 (허니문 또는 Pro)
+      if (limit > 0) {
+        final hasPurchase = ref
+                .read(monetizationNotifierProvider)
+                .value
+                ?.purchasedPackIds
+                .isNotEmpty ??
+            false;
+        if (!hasPurchase && current.length >= limit) {
+          return false; // 슬롯 제한 도달
+        }
+      }
+    }
+
+    if (isRemoving) {
       current.remove(phraseKo);
     } else {
       current.add(phraseKo);
@@ -46,8 +67,9 @@ class FavoritePhrasesNotifier extends _$FavoritePhrasesNotifier {
     _saveToPrefs(current);
     ref.read(analyticsServiceProvider).logEvent(
       AnalyticsEvents.phraseFavorite,
-      {AnalyticsParams.action: wasPresent ? 'remove' : 'add'},
+      {AnalyticsParams.action: isRemoving ? 'remove' : 'add'},
     );
+    return true;
   }
 
   /// 즐겨찾기 여부 확인.
