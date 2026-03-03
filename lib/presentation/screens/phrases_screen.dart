@@ -59,7 +59,8 @@ class PhrasesScreen extends ConsumerWidget {
 
     // 필터 상태 해석 — 멤버 > 아이돌 > 전체 우선순위
     final isMemberSelected =
-        selectedTag == _filterMyMember || (selectedTag == null && hasMember);
+        hasMember &&
+        (selectedTag == _filterMyMember || selectedTag == null);
     final isMyIdolSelected = selectedTag == _filterMyIdol ||
         (selectedTag == null && hasIdol && !hasMember);
     final isAllSelected =
@@ -150,9 +151,10 @@ class PhrasesScreen extends ConsumerWidget {
     );
   }
 
-  /// 마이아이돌 개인화 문구 표시.
+  /// 마이아이돌 그룹 전용 개인화 문구 표시.
   ///
-  /// [memberName]이 설정되어 있으면 멤버 전용 템플릿은 제외한다.
+  /// `{{member_name}}` 슬롯을 포함하는 템플릿은 항상 제외한다.
+  /// 멤버 설정 시 해당 템플릿은 [_buildMyMemberPhrases]에서 표시한다.
   Widget _buildMyIdolPhrases(WidgetRef ref, String? idolName,
       {String? memberName}) {
     if (idolName == null) {
@@ -167,7 +169,7 @@ class PhrasesScreen extends ConsumerWidget {
             .where((p) => p.isFree)
             .expand((p) => p.phrases)
             .where((p) => p.isTemplate)
-            .where((p) => !needsMemberName(p) || memberName == null)
+            .where((p) => !needsMemberName(p))
             .map((p) => resolveTemplatePhrase(p, idolName))
             .toList();
         if (phrases.isEmpty) {

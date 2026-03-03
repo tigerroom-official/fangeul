@@ -46,7 +46,7 @@ class _IdolSelectScreenState extends ConsumerState<IdolSelectScreen> {
   /// 기존에 저장된 멤버명을 불러와 TextField에 표시한다.
   Future<void> _loadExistingMember() async {
     final prefs = await SharedPreferences.getInstance();
-    final memberName = prefs.getString('my_idol_member_name');
+    final memberName = prefs.getString(myIdolMemberPrefsKey);
     if (memberName != null && mounted) {
       _memberController.text = memberName;
     }

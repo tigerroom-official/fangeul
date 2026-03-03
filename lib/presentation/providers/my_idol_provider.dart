@@ -9,6 +9,12 @@ import 'package:fangeul/core/entities/idol_group.dart';
 
 part 'my_idol_provider.g.dart';
 
+/// SharedPreferences 키: 멤버명.
+///
+/// [MyIdolNotifier], [myIdolMemberName] provider,
+/// [IdolSelectScreen._loadExistingMember] 등에서 공유한다.
+const myIdolMemberPrefsKey = 'my_idol_member_name';
+
 /// 마이 아이돌 선택 Notifier.
 ///
 /// SharedPreferences에 선택된 그룹 ID를 저장한다.
@@ -16,7 +22,6 @@ part 'my_idol_provider.g.dart';
 @Riverpod(keepAlive: true)
 class MyIdolNotifier extends _$MyIdolNotifier {
   static const _key = 'my_idol_group_id';
-  static const _memberKey = 'my_idol_member_name';
 
   @override
   Future<String?> build() async {
@@ -54,7 +59,7 @@ class MyIdolNotifier extends _$MyIdolNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(_key);
-      await prefs.remove(_memberKey);
+      await prefs.remove(myIdolMemberPrefsKey);
     } catch (e) {
       debugPrint('MyIdolNotifier: clear failed — $e');
     }
@@ -70,7 +75,7 @@ class MyIdolNotifier extends _$MyIdolNotifier {
     }
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_memberKey, memberName);
+      await prefs.setString(myIdolMemberPrefsKey, memberName);
     } catch (e) {
       debugPrint('MyIdolNotifier: save member failed — $e');
     }
@@ -80,7 +85,7 @@ class MyIdolNotifier extends _$MyIdolNotifier {
   Future<void> clearMember() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.remove(_memberKey);
+      await prefs.remove(myIdolMemberPrefsKey);
     } catch (e) {
       debugPrint('MyIdolNotifier: clear member failed — $e');
     }
@@ -120,6 +125,11 @@ Future<String?> myIdolDisplayName(MyIdolDisplayNameRef ref) async {
 /// 현재 설정된 멤버명.
 ///
 /// 멤버 전용 템플릿 치환에 사용. 그룹 미설정이면 null 반환.
+///
+/// **반응성 제약:** 이 provider는 [myIdolNotifierProvider](그룹 ID)만 watch한다.
+/// [MyIdolNotifier.selectMember]만 단독 호출하면 이 provider가 갱신되지 않는다.
+/// 현재 IdolSelectScreen은 `select()` + `selectMember()`를 항상 함께 호출하므로
+/// 문제없지만, 향후 "멤버만 변경" 시나리오 추가 시 invalidation 처리 필요.
 @riverpod
 Future<String?> myIdolMemberName(MyIdolMemberNameRef ref) async {
   final groupId = await ref.watch(myIdolNotifierProvider.future);
@@ -127,5 +137,5 @@ Future<String?> myIdolMemberName(MyIdolMemberNameRef ref) async {
 
   final prefs = await SharedPreferences.getInstance();
   await prefs.reload();
-  return prefs.getString('my_idol_member_name');
+  return prefs.getString(myIdolMemberPrefsKey);
 }

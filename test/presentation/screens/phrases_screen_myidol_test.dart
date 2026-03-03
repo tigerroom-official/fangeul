@@ -225,5 +225,50 @@ void main() {
       final result = resolveTemplatePhrase(phrase, 'DaySix');
       expect(result.ko, '사랑해요');
     });
+
+    test(
+        'should not include unresolved member placeholders '
+        'when memberName is null', () {
+      // Codex 리뷰 회귀 테스트: 멤버 미설정 시 {{member_name}} 원문 노출 방지
+      final phrases = [
+        const Phrase(
+          ko: '{{group_name}} 화이팅!',
+          roman: '{{group_name}} hwaiting!',
+          context: 'template',
+          tags: ['cheer'],
+          translations: {'en': 'Go {{group_name}}!'},
+          situation: 'daily',
+          isTemplate: true,
+        ),
+        const Phrase(
+          ko: '{{member_name}} 사랑해!',
+          roman: '{{member_name}} saranghae!',
+          context: 'template',
+          tags: ['love'],
+          translations: {'en': 'I love you, {{member_name}}!'},
+          situation: 'daily',
+          isTemplate: true,
+        ),
+      ];
+
+      // 그룹 뷰: memberName null → 멤버 템플릿 제외
+      final groupView = phrases
+          .where((p) => p.isTemplate)
+          .where((p) => !needsMemberName(p))
+          .map((p) => resolveTemplatePhrase(p, 'BTS'))
+          .toList();
+
+      // 어떤 문구도 {{member_name}} 원문을 포함하지 않아야 함
+      for (final p in groupView) {
+        expect(p.ko.contains('{{member_name}}'), isFalse,
+            reason: 'Unresolved {{member_name}} found in: ${p.ko}');
+        for (final t in p.translations.values) {
+          expect(t.contains('{{member_name}}'), isFalse,
+              reason: 'Unresolved {{member_name}} found in translation: $t');
+        }
+      }
+      expect(groupView.length, 1);
+      expect(groupView.first.ko, 'BTS 화이팅!');
+    });
   });
 }
