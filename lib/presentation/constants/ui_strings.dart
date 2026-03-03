@@ -202,4 +202,18 @@ abstract final class UiStrings {
 
   /// TTS 제한 다이얼로그 — 보상형 광고 해금 버튼.
   static const ttsLimitAdButton = '팬 패스로 해금';
+
+  // 전환 트리거 팝업
+  /// 전환 트리거 팝업 타이틀.
+  static const conversionTriggerTitle = '더 많은 콘텐츠를 즐기세요';
+
+  /// 전환 트리거 팝업 메시지.
+  static const conversionTriggerMessage =
+      '감성 컬러 팩으로\n무제한 해금하고 특별한 경험을 시작하세요';
+
+  /// 전환 트리거 팝업 CTA 버튼.
+  static const conversionTriggerButton = '감성 컬러 팩 보기';
+
+  /// 전환 트리거 팝업 닫기 버튼.
+  static const conversionTriggerDismiss = '나중에';
 }
