@@ -41,7 +41,7 @@ class MonetizationState with _$MonetizationState {
     /// 구매 완료된 팩 ID 목록.
     @Default([]) List<String> purchasedPackIds,
 
-    /// D-day 해금 날짜 목록 ('{date}_{eventId}' 형식).
+    /// D-day 해금 날짜 목록 ('{date}_{artist}_{type}' 형식).
     @Default([]) List<String> ddayUnlockedDates,
 
     /// 단조증가 타임스탬프 (밀리초). 시간 조작 방어용.

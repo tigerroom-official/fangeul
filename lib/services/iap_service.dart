@@ -35,9 +35,9 @@ class IapService {
     }
 
     _subscription = _iap.purchaseStream.listen(
-      (purchases) {
+      (purchases) async {
         for (final purchase in purchases) {
-          _handlePurchase(
+          await _handlePurchase(
             purchase,
             onPurchased: onPurchased,
             onError: onError,
