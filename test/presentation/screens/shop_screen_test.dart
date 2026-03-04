@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'package:fangeul/core/entities/color_pack.dart';
+import 'package:fangeul/data/models/color_pack.dart';
 import 'package:fangeul/core/entities/monetization_state.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/color_pack_provider.dart';

@@ -54,6 +54,12 @@ class MonetizationNotifier extends _$MonetizationNotifier {
   /// 일일 TTS 재생 제한.
   static const int dailyTtsLimit = 5;
 
+  /// D-day dedup 키를 생성한다.
+  ///
+  /// '{yyyy-MM-dd}_{artist}_{type}' 형식. provider와 unlock에서 동일한 키를 사용.
+  static String ddayKey(String date, String artist, String type) =>
+      '${date}_${artist}_$type';
+
   @override
   Future<MonetizationState> build() async {
     _repository = ref.read(monetizationRepositoryProvider);
@@ -112,6 +118,14 @@ class MonetizationNotifier extends _$MonetizationNotifier {
     if (current == null) return false;
 
     final now = DateTime.now();
+    final nowMs = now.millisecondsSinceEpoch;
+
+    // 시간 조작 감지 (단조증가 검증)
+    if (current.lastTimestamp > 0 && nowMs < current.lastTimestamp) {
+      debugPrint('[MonetizationNotifier] time manipulation detected in recordAdWatch');
+      return false;
+    }
+
     final todayStr = _formatDate(now);
 
     // 날짜 변경 시 카운트 리셋
@@ -245,9 +259,11 @@ class MonetizationNotifier extends _$MonetizationNotifier {
   /// D-day 해금을 활성화한다 (24시간).
   ///
   /// 중복 이벤트 또는 시간 조작 감지 시 false 반환.
+  /// [date]는 'yyyy-MM-dd', [artist]와 [eventType]은 키 생성용.
   Future<bool> activateDdayUnlock({
     required String date,
-    required String eventId,
+    required String artist,
+    required String eventType,
   }) async {
     try {
       await future;
@@ -255,7 +271,7 @@ class MonetizationNotifier extends _$MonetizationNotifier {
     final current = state.valueOrNull;
     if (current == null) return false;
 
-    final key = '${date}_$eventId';
+    final key = ddayKey(date, artist, eventType);
 
     // 중복 확인
     if (current.ddayUnlockedDates.contains(key)) {
@@ -269,8 +285,13 @@ class MonetizationNotifier extends _$MonetizationNotifier {
       return false;
     }
 
-    // 24시간 해금
-    final expiryMs = now + (24 * 60 * 60 * 1000);
+    // min(24시간, 다음 자정) 해금
+    final nowDt = DateTime.fromMillisecondsSinceEpoch(now);
+    final twentyFourHoursLater = now + (24 * 60 * 60 * 1000);
+    final nextMidnight = DateTime(nowDt.year, nowDt.month, nowDt.day + 1);
+    final midnightMs = nextMidnight.millisecondsSinceEpoch;
+    final expiryMs =
+        twentyFourHoursLater < midnightMs ? twentyFourHoursLater : midnightMs;
     await _updateState(current.copyWith(
       ddayUnlockedDates: [...current.ddayUnlockedDates, key],
       unlockExpiresAt: expiryMs,
@@ -303,6 +324,14 @@ class MonetizationNotifier extends _$MonetizationNotifier {
     if (current == null) return false;
 
     final now = DateTime.now();
+    final nowMs = now.millisecondsSinceEpoch;
+
+    // 시간 조작 감지 (단조증가 검증)
+    if (current.lastTimestamp > 0 && nowMs < current.lastTimestamp) {
+      debugPrint('[MonetizationNotifier] time manipulation detected in recordTtsPlay');
+      return false;
+    }
+
     final todayStr = _formatDate(now);
 
     // 날짜 변경 시 카운트 리셋

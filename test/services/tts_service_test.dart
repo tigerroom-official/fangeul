@@ -10,8 +10,8 @@ void main() {
       service = TtsService();
     });
 
-    tearDown(() {
-      service.dispose();
+    tearDown(() async {
+      await service.dispose();
     });
 
     test('should create without errors', () {
@@ -27,20 +27,20 @@ void main() {
       await service.stop();
     });
 
-    test('should safely dispose without prior play', () {
+    test('should safely dispose without prior play', () async {
       // dispose()는 play() 호출 없이도 예외 없이 동작해야 한다
-      service.dispose();
+      await service.dispose();
       expect(service.isPlaying, false);
     });
 
-    test('should safely dispose multiple times', () {
-      service.dispose();
-      service.dispose(); // 중복 dispose도 안전
+    test('should safely dispose multiple times', () async {
+      await service.dispose();
+      await service.dispose(); // 중복 dispose도 안전
       expect(service.isPlaying, false);
     });
 
-    test('should report isPlaying as false after dispose', () {
-      service.dispose();
+    test('should report isPlaying as false after dispose', () async {
+      await service.dispose();
       expect(service.isPlaying, false);
     });
 

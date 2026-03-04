@@ -22,10 +22,10 @@ class IapService {
 
   /// IAP 초기화.
   ///
-  /// [onPurchased] 구매 성공 시 팩 ID 콜백.
+  /// [onPurchased] 구매 성공 시 팩 ID 콜백 (await하여 상태 저장 보장).
   /// [onError] 구매 실패 시 에러 메시지 콜백.
   Future<void> initialize({
-    required void Function(String packId) onPurchased,
+    required Future<void> Function(String packId) onPurchased,
     required void Function(String error) onError,
   }) async {
     _isAvailable = await _iap.isAvailable();
@@ -100,17 +100,26 @@ class IapService {
   /// 개별 구매 처리.
   Future<void> _handlePurchase(
     PurchaseDetails purchase, {
-    required void Function(String packId) onPurchased,
+    required Future<void> Function(String packId) onPurchased,
     required void Function(String error) onError,
   }) async {
     switch (purchase.status) {
       case PurchaseStatus.purchased:
       case PurchaseStatus.restored:
-        // 구매/복원 성공 — completePurchase 후 콜백
+        // SKU allowlist 검증
+        if (!IapProducts.allIds.contains(purchase.productID)) {
+          debugPrint(
+              '[IapService] unknown SKU: ${purchase.productID} — skipping');
+          if (purchase.pendingCompletePurchase) {
+            await _iap.completePurchase(purchase);
+          }
+          return;
+        }
+        // 구매/복원 성공 — 상태 저장 먼저, completePurchase 후
+        await onPurchased(purchase.productID);
         if (purchase.pendingCompletePurchase) {
           await _iap.completePurchase(purchase);
         }
-        onPurchased(purchase.productID);
 
       case PurchaseStatus.error:
         if (purchase.pendingCompletePurchase) {

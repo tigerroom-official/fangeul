@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -13,7 +15,7 @@ part 'tts_provider.g.dart';
 @Riverpod(keepAlive: true)
 TtsService ttsService(TtsServiceRef ref) {
   final service = TtsService();
-  ref.onDispose(service.dispose);
+  ref.onDispose(() => unawaited(service.dispose()));
   return service;
 }
 
@@ -26,8 +28,16 @@ bool canPlayTts(CanPlayTtsRef ref) {
   if (ref.watch(isHoneymoonProvider)) return true;
   if (ref.watch(isRewardedUnlockActiveProvider)) return true;
 
-  final notifier = ref.read(monetizationNotifierProvider.notifier);
-  return !notifier.isTtsLimitReached;
+  final state = ref.watch(monetizationNotifierProvider).valueOrNull;
+  if (state == null) return false;
+
+  // 날짜가 바뀌었으면 카운트 리셋된 것으로 간주
+  final now = DateTime.now();
+  final todayStr =
+      '${now.year.toString().padLeft(4, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+  if (state.ttsLastResetDate != todayStr) return true;
+
+  return state.ttsPlayCount < MonetizationNotifier.dailyTtsLimit;
 }
 
 /// TTS 재생을 시도한다.

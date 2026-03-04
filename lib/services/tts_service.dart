@@ -47,15 +47,14 @@ class TtsService {
   /// 리소스 해제.
   ///
   /// Provider dispose 시 호출하여 네이티브 리소스를 정리한다.
-  void dispose() {
-    _player?.dispose();
-    _player = null;
+  Future<void> dispose() async {
+    await _disposePlayer();
   }
 
   /// 기존 플레이어를 안전하게 dispose한다.
   Future<void> _disposePlayer() async {
     final old = _player;
     _player = null;
-    old?.dispose();
+    await old?.dispose();
   }
 }

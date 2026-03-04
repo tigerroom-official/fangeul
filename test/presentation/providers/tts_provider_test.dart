@@ -40,7 +40,7 @@ void main() {
         value: any(named: 'value'))).thenAnswer((_) async {});
     when(() => mockTts.play(any())).thenAnswer((_) async {});
     when(() => mockTts.stop()).thenAnswer((_) async {});
-    when(() => mockTts.dispose()).thenReturn(null);
+    when(() => mockTts.dispose()).thenAnswer((_) async {});
     when(() => mockTts.isPlaying).thenReturn(false);
 
     container = ProviderContainer(
@@ -68,7 +68,7 @@ void main() {
         value: any(named: 'value'))).thenAnswer((_) async {});
     when(() => mockTts.play(any())).thenAnswer((_) async {});
     when(() => mockTts.stop()).thenAnswer((_) async {});
-    when(() => mockTts.dispose()).thenReturn(null);
+    when(() => mockTts.dispose()).thenAnswer((_) async {});
     when(() => mockTts.isPlaying).thenReturn(false);
 
     container = ProviderContainer(

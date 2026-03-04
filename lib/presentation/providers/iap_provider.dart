@@ -14,9 +14,11 @@ part 'iap_provider.g.dart';
 IapService iapService(IapServiceRef ref) {
   final service = IapService();
   service.initialize(
-    onPurchased: (packId) {
+    onPurchased: (packId) async {
       debugPrint('[IapProvider] purchased: $packId');
-      ref.read(monetizationNotifierProvider.notifier).addPurchasedPack(packId);
+      await ref
+          .read(monetizationNotifierProvider.notifier)
+          .addPurchasedPack(packId);
     },
     onError: (error) {
       debugPrint('[IapProvider] error: $error');

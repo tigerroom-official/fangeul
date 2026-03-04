@@ -20,14 +20,19 @@ bool shouldShowConversionTrigger(ShouldShowConversionTriggerRef ref) {
   final installDate = state.installDate;
   if (installDate == null) return false;
 
-  // 설치 후 경과 일수 계산
-  final parts = installDate.split('-');
-  final install = DateTime(
-    int.parse(parts[0]),
-    int.parse(parts[1]),
-    int.parse(parts[2]),
-  );
-  final daysSince = DateTime.now().difference(install).inDays;
+  // 설치 후 경과 일수 계산 — malformed 데이터 방어
+  final int daysSince;
+  try {
+    final parts = installDate.split('-');
+    final install = DateTime(
+      int.parse(parts[0]),
+      int.parse(parts[1]),
+      int.parse(parts[2]),
+    );
+    daysSince = DateTime.now().difference(install).inDays;
+  } catch (_) {
+    return false;
+  }
 
   // 즐겨찾기 수
   final favCount =

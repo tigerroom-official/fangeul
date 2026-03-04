@@ -14,7 +14,8 @@ class _TestMonetizationNotifier extends MonetizationNotifier {
   final MonetizationState _initialState;
 
   /// activateDdayUnlock 호출 기록.
-  final List<({String date, String eventId})> ddayUnlockCalls = [];
+  final List<({String date, String artist, String eventType})>
+      ddayUnlockCalls = [];
 
   @override
   Future<MonetizationState> build() async => _initialState;
@@ -22,9 +23,10 @@ class _TestMonetizationNotifier extends MonetizationNotifier {
   @override
   Future<bool> activateDdayUnlock({
     required String date,
-    required String eventId,
+    required String artist,
+    required String eventType,
   }) async {
-    ddayUnlockCalls.add((date: date, eventId: eventId));
+    ddayUnlockCalls.add((date: date, artist: artist, eventType: eventType));
     return true;
   }
 }
@@ -32,7 +34,8 @@ class _TestMonetizationNotifier extends MonetizationNotifier {
 void main() {
   const testEventName = '슈가 생일';
   const testDate = '2026-03-09';
-  const testEventId = 'suga_birthday';
+  const testArtist = 'suga';
+  const testEventType = 'birthday';
 
   /// 테스트용 위젯 빌더. 버튼 탭으로 팝업을 표시한다.
   Widget buildTestWidget({
@@ -55,7 +58,8 @@ void main() {
                 context,
                 eventName: testEventName,
                 date: testDate,
-                eventId: testEventId,
+                artist: testArtist,
+                eventType: testEventType,
               ),
               child: const Text('show'),
             ),
@@ -155,7 +159,8 @@ void main() {
 
         expect(notifier.ddayUnlockCalls, hasLength(1));
         expect(notifier.ddayUnlockCalls.first.date, testDate);
-        expect(notifier.ddayUnlockCalls.first.eventId, testEventId);
+        expect(notifier.ddayUnlockCalls.first.artist, testArtist);
+        expect(notifier.ddayUnlockCalls.first.eventType, testEventType);
       },
     );
 

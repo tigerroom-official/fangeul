@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:fangeul/core/entities/color_pack.dart';
+import 'package:fangeul/data/models/color_pack.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 
 /// 감성 컬러 팩 카드 — 그리드에 표시되는 팩 정보 카드.

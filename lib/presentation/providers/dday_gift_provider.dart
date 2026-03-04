@@ -37,7 +37,7 @@ Future<KpopEvent?> ddayGiftEvent(DdayGiftEventRef ref) async {
       '${today.year.toString().padLeft(4, '0')}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
 
   for (final event in idolEvents) {
-    final key = '${dateStr}_${event.artist}_${event.type}';
+    final key = MonetizationNotifier.ddayKey(dateStr, event.artist, event.type);
     if (!claimedKeys.contains(key)) {
       return event;
     }

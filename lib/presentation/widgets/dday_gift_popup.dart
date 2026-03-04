@@ -8,13 +8,14 @@ import 'package:fangeul/presentation/providers/monetization_provider.dart';
 ///
 /// 유저가 설정한 아이돌의 이벤트(생일, 데뷔 기념일 등)가 오늘인 경우
 /// 24시간 전체 콘텐츠 해금을 선물로 제공하는 다이얼로그를 표시한다.
-/// [eventName]은 이벤트 표시 이름, [date]와 [eventId]는
+/// [eventName]은 이벤트 표시 이름, [date]/[artist]/[eventType]은
 /// [MonetizationNotifier.activateDdayUnlock]에 전달되어 중복 해금을 방지한다.
 Future<void> showDdayGiftPopup(
   BuildContext context, {
   required String eventName,
   required String date,
-  required String eventId,
+  required String artist,
+  required String eventType,
 }) {
   return showDialog<void>(
     context: context,
@@ -22,7 +23,8 @@ Future<void> showDdayGiftPopup(
     builder: (dialogContext) => DdayGiftPopup(
       eventName: eventName,
       date: date,
-      eventId: eventId,
+      artist: artist,
+      eventType: eventType,
     ),
   );
 }
@@ -37,7 +39,8 @@ class DdayGiftPopup extends ConsumerStatefulWidget {
   const DdayGiftPopup({
     required this.eventName,
     required this.date,
-    required this.eventId,
+    required this.artist,
+    required this.eventType,
     super.key,
   });
 
@@ -47,8 +50,11 @@ class DdayGiftPopup extends ConsumerStatefulWidget {
   /// 이벤트 날짜 (yyyy-MM-dd 형식).
   final String date;
 
-  /// 이벤트 고유 식별자 (중복 해금 방지용).
-  final String eventId;
+  /// 이벤트 아티스트명.
+  final String artist;
+
+  /// 이벤트 타입 (birthday, debut 등).
+  final String eventType;
 
   @override
   ConsumerState<DdayGiftPopup> createState() => _DdayGiftPopupState();
@@ -90,7 +96,8 @@ class _DdayGiftPopupState extends ConsumerState<DdayGiftPopup>
   Future<void> _onAccept() async {
     await ref.read(monetizationNotifierProvider.notifier).activateDdayUnlock(
           date: widget.date,
-          eventId: widget.eventId,
+          artist: widget.artist,
+          eventType: widget.eventType,
         );
     if (mounted) {
       Navigator.of(context).pop();

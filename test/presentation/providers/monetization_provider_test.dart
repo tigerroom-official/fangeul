@@ -356,7 +356,8 @@ void main() {
 
         final result = await notifier.activateDdayUnlock(
           date: '2026-03-04',
-          eventId: 'bts_debut',
+          artist: 'bts',
+          eventType: 'debut',
         );
 
         expect(result, true);
@@ -375,7 +376,8 @@ void main() {
 
         final result = await notifier.activateDdayUnlock(
           date: '2026-03-04',
-          eventId: 'bts_debut',
+          artist: 'bts',
+          eventType: 'debut',
         );
 
         expect(result, false);
@@ -394,7 +396,8 @@ void main() {
 
         final result = await notifier.activateDdayUnlock(
           date: '2026-03-04',
-          eventId: 'new_event',
+          artist: 'new',
+          eventType: 'event',
         );
 
         expect(result, false);

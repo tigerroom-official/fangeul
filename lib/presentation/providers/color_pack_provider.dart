@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'package:fangeul/core/entities/color_pack.dart';
+import 'package:fangeul/data/models/color_pack.dart';
 
 part 'color_pack_provider.g.dart';
 
