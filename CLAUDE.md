@@ -53,6 +53,6 @@ dart format --set-exit-if-changed .  # 포맷 검증
 | `docs/HANDOFF.md` | 세션 핸드오프 (최신 작업 상태) |
 
 ## 현재 작업 상태
-> 마지막 핸드오프: 2026-03-04
+> 마지막 핸드오프: 2026-03-05
 > 상세: `docs/HANDOFF.md` 참조
-> 요약: 멀티모드 키보드 + 패널 UX 개선 + 버블 버그 4건 수정. 616 tests pass. 다음: Phase 7 릴리즈 준비.
+> 요약: i18n 인프라(7개 언어 ARB) + Firebase Remote Config 통합. 627 tests pass. 다음: Firebase 콘솔 RC 설정 + Analytics 학습 + Phase 7 릴리즈.
