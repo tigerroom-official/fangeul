@@ -6,7 +6,7 @@ import 'package:flutter/services.dart' hide KeyboardKey;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:fangeul/core/engines/keyboard_converter.dart';
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/keyboard_providers.dart';
 import 'package:fangeul/presentation/theme/fangeul_colors.dart';
 import 'package:fangeul/presentation/widgets/keyboard_key.dart';
@@ -211,8 +211,7 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
       if (_mode == InputMode.korean && _jamoList.isNotEmpty) {
         _jamoList = _jamoList.sublist(0, _jamoList.length - 1);
       } else if (_committedText.isNotEmpty) {
-        _committedText =
-            _committedText.substring(0, _committedText.length - 1);
+        _committedText = _committedText.substring(0, _committedText.length - 1);
       }
     });
     _emitText();
@@ -290,18 +289,18 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
         children: [
           Expanded(
             child: SegmentedButton<InputMode>(
-              segments: const [
+              segments: [
                 ButtonSegment(
                   value: InputMode.korean,
-                  label: Text(UiStrings.keyboardModeKorean),
+                  label: Text(L.of(context).keyboardModeKorean),
                 ),
                 ButtonSegment(
                   value: InputMode.abc,
-                  label: Text(UiStrings.keyboardModeAbc),
+                  label: Text(L.of(context).keyboardModeAbc),
                 ),
                 ButtonSegment(
                   value: InputMode.numbers,
-                  label: Text(UiStrings.keyboardModeNumbers),
+                  label: Text(L.of(context).keyboardModeNumbers),
                 ),
               ],
               selected: {_mode},
@@ -322,7 +321,7 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
               _flushJamo();
               widget.onDone();
             },
-            child: const Text(UiStrings.keyboardDone),
+            child: Text(L.of(context).keyboardDone),
           ),
         ],
       ),
@@ -345,8 +344,7 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
     KeyboardState kbState, {
     required bool isEngToKor,
   }) {
-    void Function(KeyData) onChar =
-        isEngToKor ? _onAbcChar : _onKoreanChar;
+    void Function(KeyData) onChar = isEngToKor ? _onAbcChar : _onKoreanChar;
 
     return [
       _buildCharRow(_row1, kbState, isEngToKor: isEngToKor, onChar: onChar),
@@ -489,7 +487,7 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
         Expanded(
           flex: 13,
           child: _ModeButton(
-            label: UiStrings.keyboardModeAbc,
+            label: L.of(context).keyboardModeAbc,
             onTap: () => _switchMode(InputMode.abc),
           ),
         ),

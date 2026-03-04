@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/platform/bubble_state.dart';
-import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/bubble_providers.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
@@ -15,11 +15,12 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L.of(context);
     final themeMode = ref.watch(themeModeNotifierProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text(UiStrings.settingsTitle)),
+      appBar: AppBar(title: Text(l.settingsTitle)),
       body: ListView(
         children: [
           // 테마 모드
@@ -28,24 +29,24 @@ class SettingsScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(UiStrings.themeLabel, style: theme.textTheme.titleMedium),
+                Text(l.themeLabel, style: theme.textTheme.titleMedium),
                 const SizedBox(height: 12),
                 SegmentedButton<ThemeMode>(
-                  segments: const [
+                  segments: [
                     ButtonSegment(
                       value: ThemeMode.dark,
-                      icon: Icon(Icons.dark_mode_outlined),
-                      label: Text(UiStrings.themeDark),
+                      icon: const Icon(Icons.dark_mode_outlined),
+                      label: Text(l.themeDark),
                     ),
                     ButtonSegment(
                       value: ThemeMode.light,
-                      icon: Icon(Icons.light_mode_outlined),
-                      label: Text(UiStrings.themeLight),
+                      icon: const Icon(Icons.light_mode_outlined),
+                      label: Text(l.themeLight),
                     ),
                     ButtonSegment(
                       value: ThemeMode.system,
-                      icon: Icon(Icons.settings_suggest_outlined),
-                      label: Text(UiStrings.themeSystem),
+                      icon: const Icon(Icons.settings_suggest_outlined),
+                      label: Text(l.themeSystem),
                     ),
                   ],
                   selected: {themeMode},
@@ -68,14 +69,14 @@ class SettingsScreen extends ConsumerWidget {
           // 앱 정보
           ListTile(
             leading: const Icon(Icons.info_outline),
-            title: const Text(UiStrings.appInfoTitle),
-            subtitle: const Text(UiStrings.appInfoSubtitle),
+            title: Text(l.appInfoTitle),
+            subtitle: Text(l.appInfoSubtitle(l.appVersion)),
             onTap: () {
               showAboutDialog(
                 context: context,
-                applicationName: UiStrings.appName,
-                applicationVersion: UiStrings.appVersion,
-                applicationLegalese: UiStrings.appLegalese,
+                applicationName: l.appName,
+                applicationVersion: l.appVersion,
+                applicationLegalese: l.appLegalese,
               );
             },
           ),
@@ -91,19 +92,18 @@ class _MyIdolTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L.of(context);
     final idolNameAsync = ref.watch(myIdolDisplayNameProvider);
 
     return ListTile(
       leading: const Icon(Icons.favorite_outline),
-      title: const Text(UiStrings.idolSettingLabel),
+      title: Text(l.idolSettingLabel),
       subtitle: idolNameAsync.when(
         data: (name) => Text(
-          name != null
-              ? UiStrings.idolSettingCurrent(name)
-              : UiStrings.idolSettingEmpty,
+          name != null ? l.idolSettingCurrent(name) : l.idolSettingEmpty,
         ),
         loading: () => const Text('...'),
-        error: (_, __) => const Text(UiStrings.idolSettingEmpty),
+        error: (_, __) => Text(l.idolSettingEmpty),
       ),
       trailing: const Icon(Icons.chevron_right),
       onTap: () => context.push('/settings/idol-select'),
@@ -117,13 +117,14 @@ class _BubbleToggleTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L.of(context);
     final bubbleState = ref.watch(bubbleNotifierProvider);
     final isOn = bubbleState != BubbleState.off;
 
     return SwitchListTile(
       secondary: const Icon(Icons.bubble_chart_outlined),
-      title: const Text(UiStrings.bubbleLabel),
-      subtitle: const Text(UiStrings.bubbleDescription),
+      title: Text(l.bubbleLabel),
+      subtitle: Text(l.bubbleDescription),
       value: isOn,
       onChanged: (value) async {
         if (value) {
@@ -146,22 +147,26 @@ class _BubbleToggleTile extends ConsumerWidget {
     }
 
     if (!context.mounted) return;
+    final l = L.of(context);
     final shouldRequest = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text(UiStrings.bubblePermissionTitle),
-        content: const Text(UiStrings.bubblePermissionMessage),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text(UiStrings.bubblePermissionDeny),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text(UiStrings.bubblePermissionAllow),
-          ),
-        ],
-      ),
+      builder: (ctx) {
+        final dl = L.of(ctx);
+        return AlertDialog(
+          title: Text(dl.bubblePermissionTitle),
+          content: Text(dl.bubblePermissionMessage),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text(dl.bubblePermissionDeny),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: Text(dl.bubblePermissionAllow),
+            ),
+          ],
+        );
+      },
     );
 
     if (shouldRequest == true) {
@@ -173,7 +178,7 @@ class _BubbleToggleTile extends ConsumerWidget {
       }
     } else if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(UiStrings.bubblePermissionDenied)),
+        SnackBar(content: Text(l.bubblePermissionDenied)),
       );
     }
   }
@@ -189,20 +194,23 @@ class _BubbleToggleTile extends ConsumerWidget {
     if (!context.mounted) return;
     final shouldOpen = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text(UiStrings.bubbleBatteryTitle),
-        content: const Text(UiStrings.bubbleBatteryMessage),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text(UiStrings.bubbleBatteryDeny),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text(UiStrings.bubbleBatteryAllow),
-          ),
-        ],
-      ),
+      builder: (ctx) {
+        final dl = L.of(ctx);
+        return AlertDialog(
+          title: Text(dl.bubbleBatteryTitle),
+          content: Text(dl.bubbleBatteryMessage),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text(dl.bubbleBatteryDeny),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: Text(dl.bubbleBatteryAllow),
+            ),
+          ],
+        );
+      },
     );
 
     if (shouldOpen == true) {

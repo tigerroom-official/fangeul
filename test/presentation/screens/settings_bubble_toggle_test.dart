@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/platform/bubble_state.dart';
 import 'package:fangeul/platform/floating_bubble_channel.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
@@ -40,6 +41,9 @@ void main() {
         sharedPreferencesProvider.overrideWithValue(prefs),
       ],
       child: const MaterialApp(
+        localizationsDelegates: L.localizationsDelegates,
+        supportedLocales: L.supportedLocales,
+        locale: Locale('ko'),
         home: SettingsScreen(),
       ),
     );

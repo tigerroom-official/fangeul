@@ -1,0 +1,171 @@
+{
+  "@@locale": "id",
+
+  "appName": "Fangeul",
+  "appVersion": "0.1.0",
+  "appLegalese": "\u00a9 2026 Tiger Room",
+
+  "copied": "Tersalin",
+  "errorPrefix": "Error:",
+  "copyTooltip": "Salin",
+  "favoriteTooltip": "Favorit",
+  "complete": "Selesai",
+  "share": "Bagikan",
+
+  "streakDays": "{streak} hari berturut-turut",
+
+  "navHome": "Beranda",
+  "navConverter": "Konverter",
+  "navPhrases": "Frasa",
+
+  "dailyCardLoadError": "Tidak bisa memuat kartu hari ini",
+
+  "converterTitle": "Konverter",
+  "converterTabEngToKor": "Ing→Kor",
+  "converterTabKorToEng": "Kor→Ing",
+  "converterTabRomanize": "Romanisasi",
+  "converterHintEngToKor": "Ketik dalam bahasa Inggris (cth: gksrmf)",
+  "converterHintKorToEng": "Ketik dalam bahasa Korea (cth: 한글)",
+  "converterHintRomanize": "Ketik dalam bahasa Korea (cth: 사랑해요)",
+
+  "phrasesTitle": "Frasa",
+  "phrasesEmpty": "Tidak ada frasa",
+  "phrasesMyIdolEmpty": "Pilih idol kamu di Pengaturan\nuntuk melihat frasa khusus",
+
+  "phrasesMyIdolChip": "♡ {name}",
+
+  "settingsTitle": "Pengaturan",
+  "themeLabel": "Tema",
+  "themeDark": "Gelap",
+  "themeLight": "Terang",
+  "themeSystem": "Sistem",
+  "appInfoTitle": "Info Aplikasi",
+  "appInfoSubtitle": "Fangeul v{version}",
+
+  "tagAll": "Semua",
+  "tagLove": "Cinta",
+  "tagCheer": "Semangat",
+  "tagDaily": "Harian",
+  "tagGreeting": "Sapaan",
+  "tagEmotional": "Emosi",
+  "tagPraise": "Pujian",
+  "tagFandom": "Fandom",
+  "tagBirthday": "Ulang Tahun",
+  "tagComeback": "Comeback",
+
+  "keyboardSpace": "Space",
+  "keyboardModeKorean": "Korea",
+  "keyboardModeAbc": "ABC",
+  "keyboardModeNumbers": "123",
+  "keyboardDone": "Selesai",
+
+  "defaultTranslationLang": "en",
+
+  "bubbleLabel": "Bubble Melayang",
+  "bubbleDescription": "Gunakan konverter di luar aplikasi",
+  "bubblePermissionTitle": "Izin Overlay Diperlukan",
+  "bubblePermissionMessage": "Untuk menampilkan bubble melayang, kami perlu izin untuk tampil di atas aplikasi lain.",
+  "bubblePermissionAllow": "Izinkan",
+  "bubblePermissionDeny": "Batal",
+  "bubblePermissionDenied": "Kamu tetap bisa menggunakan semua fitur di dalam aplikasi",
+  "bubbleBatteryTitle": "Nonaktifkan Optimisasi Baterai",
+  "bubbleBatteryMessage": "Agar bubble berjalan stabil, mohon nonaktifkan optimisasi baterai.\nDi beberapa perangkat, optimisasi baterai bisa menutup bubble secara otomatis.",
+  "bubbleBatteryAllow": "Buka Pengaturan",
+  "bubbleBatteryDeny": "Nanti",
+
+  "miniConverterTitle": "Fangeul",
+  "miniTabPhrases": "Frasa",
+  "miniTabFavorites": "Favorit",
+  "miniTabRecent": "Terakhir",
+  "miniChipFavorites": "★Fav",
+  "miniChipToday": "Hari ini",
+  "miniPackLocked": "Paket ini terkunci\nSegera bisa kamu buka!",
+  "miniPackEmpty": "Tidak ada frasa",
+  "miniOpenConverter": "Buka Konverter",
+  "miniBackToCompact": "Mode Ringkas",
+  "miniFavoritesEmpty": "Ketuk ⭐ pada frasa\nuntuk menambahkan ke favorit",
+  "miniMyIdolEmpty": "Pilih idol kamu di Pengaturan\nuntuk melihat frasa khusus",
+  "miniTodayEmpty": "Tidak ada event hari ini",
+  "miniRecentEmpty": "Belum ada teks yang disalin",
+
+  "idolSelectTitle": "Pilih grup favoritmu",
+  "idolSelectSubtitle": "Kamu bisa mengubahnya kapan saja di Pengaturan",
+  "idolSelectSkip": "Atur nanti",
+  "idolSelectOther": "Lainnya (ketik sendiri)",
+  "idolSelectOtherHint": "Masukkan nama grup",
+  "idolSelectConfirm": "Konfirmasi",
+  "idolSettingLabel": "Idol Saya",
+  "idolSettingEmpty": "Belum dipilih",
+
+  "idolSettingCurrent": "Saat ini: {name}",
+
+  "homeGreeting": "Hai, fans {name}!",
+
+  "idolSettingChange": "Ubah",
+
+  "idolMemberHint": "Nama member (opsional)",
+  "idolMemberLabel": "Bias",
+
+  "phrasesMemberChip": "♡ {name}",
+
+  "phrasesGroupChip": "{name}",
+
+  "phrasesMemberEmpty": "Tidak ada frasa khusus member",
+
+  "fanPassButton": "Fan Pass",
+
+  "fanPassRemaining": "({current}/{max})",
+
+  "fanPassCooldown": "Coba lagi sebentar ya",
+  "fanPassAdLoading": "Memuat iklan...",
+  "fanPassLimitReached": "Sudah selesai untuk hari ini",
+  "fanPassPopupTitle": "Fan Pass diperoleh!",
+  "fanPassPopupConfirm": "OK",
+
+  "fanPassUnlockRemaining": "{time} tersisa",
+
+  "unlockRemaining": "{time} tersisa",
+
+  "unlockMidnightLabel": "Berakhir tengah malam",
+
+  "unlockMidnightExpiry": "{time} tersisa (berakhir tengah malam)",
+
+  "shopTitle": "Paket Warna Emosi",
+  "shopRestore": "Pulihkan Pembelian",
+  "shopBuyButton": "Beli",
+  "shopPurchased": "Sudah Dibeli",
+
+  "shopPhraseCount": "{count} frasa",
+
+  "shopPronunciationCount": "{count} pelafalan",
+
+  "shopRestoreSuccess": "Pembelian berhasil dipulihkan",
+  "shopRestoreFailed": "Tidak ada pembelian yang bisa dipulihkan",
+
+  "ddayGiftTitle": "Selamat {eventName}!",
+
+  "ddayGiftMessage": "Semua konten gratis hari ini",
+  "ddayGiftButton": "Ambil Hadiah",
+
+  "ttsLimitTitle": "Kuota mendengarkan hari ini habis!",
+
+  "ttsLimitMessage": "Besok kamu bisa mendengarkan {limit} kali lagi",
+
+  "ttsLimitAdButton": "Dengar lebih banyak dengan Fan Pass",
+
+  "conversionTriggerTitle": "Nikmati lebih banyak konten",
+  "conversionTriggerMessage": "Buka semuanya dengan Paket Warna Emosi\ndan mulai pengalaman spesial",
+  "conversionTriggerButton": "Lihat Paket Warna Emosi",
+  "conversionTriggerDismiss": "Nanti",
+
+  "favLimitTitle": "Wah, kamu suka banyak frasa banget!",
+  "favLimitMessage": "Simpan lebih banyak frasa dengan Fan Pass\natau simpan tanpa batas dengan Paket Warna Emosi",
+  "favLimitAdButton": "Dapatkan Fan Pass",
+  "favLimitIapButton": "Lihat Paket Warna Emosi",
+
+  "shopPurchaseSuccess": "Pembelian berhasil! Konten terbuka",
+  "shopPurchaseFailed": "Pembelian gagal. Silakan coba lagi",
+  "shopPurchasePending": "Memproses pembayaran...",
+
+  "honeymoonDaysLeft": "{days} hari uji coba gratis tersisa"
+}

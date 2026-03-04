@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/core/entities/phrase.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/widgets/phrase_card.dart';
@@ -19,6 +20,9 @@ void main() {
           myIdolMemberNameProvider.overrideWith((ref) async => memberName),
         ],
         child: MaterialApp(
+          localizationsDelegates: L.localizationsDelegates,
+          supportedLocales: L.supportedLocales,
+          locale: const Locale('ko'),
           home: Scaffold(
             body: SingleChildScrollView(
               child: PhraseCard(

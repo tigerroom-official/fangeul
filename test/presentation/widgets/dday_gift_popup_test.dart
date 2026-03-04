@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:fangeul/core/entities/monetization_state.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/presentation/widgets/dday_gift_popup.dart';
@@ -14,8 +15,8 @@ class _TestMonetizationNotifier extends MonetizationNotifier {
   final MonetizationState _initialState;
 
   /// activateDdayUnlock 호출 기록.
-  final List<({String date, String artist, String eventType})>
-      ddayUnlockCalls = [];
+  final List<({String date, String artist, String eventType})> ddayUnlockCalls =
+      [];
 
   @override
   Future<MonetizationState> build() async => _initialState;
@@ -51,6 +52,9 @@ void main() {
         monetizationNotifierProvider.overrideWith(() => testNotifier),
       ],
       child: MaterialApp(
+        localizationsDelegates: L.localizationsDelegates,
+        supportedLocales: L.supportedLocales,
+        locale: const Locale('ko'),
         home: Scaffold(
           body: Builder(
             builder: (context) => FilledButton(

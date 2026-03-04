@@ -9,6 +9,7 @@ import 'package:fangeul/core/repositories/monetization_repository.dart';
 import 'package:fangeul/core/usecases/check_honeymoon_usecase.dart';
 import 'package:fangeul/data/datasources/monetization_local_datasource.dart';
 import 'package:fangeul/data/repositories/monetization_repository_impl.dart';
+import 'package:fangeul/presentation/providers/remote_config_providers.dart';
 
 part 'monetization_provider.g.dart';
 
@@ -24,8 +25,7 @@ FlutterSecureStorage monetizationStorage(MonetizationStorageRef ref) =>
 /// presentation → core/ 인터페이스만 노출. data/ 구현은 여기서 조립.
 /// 테스트에서 mock MonetizationRepository로 override 가능.
 @Riverpod(keepAlive: true)
-MonetizationRepository monetizationRepository(
-    MonetizationRepositoryRef ref) {
+MonetizationRepository monetizationRepository(MonetizationRepositoryRef ref) {
   final storage = ref.read(monetizationStorageProvider);
   return MonetizationRepositoryImpl(MonetizationLocalDataSource(storage));
 }
@@ -39,20 +39,35 @@ MonetizationRepository monetizationRepository(
 class MonetizationNotifier extends _$MonetizationNotifier {
   late MonetizationRepository _repository;
 
-  /// 일일 보상형 광고 시청 제한.
+  /// 일일 보상형 광고 시청 제한 (기본값, 외부 참조용).
   static const int dailyAdLimit = 3;
 
-  /// 광고 시청 간 쿨다운 (5분, 밀리초).
+  /// 광고 시청 간 쿨다운 기본값 (5분, 밀리초, 외부 참조용).
   static const int cooldownMs = 5 * 60 * 1000;
 
-  /// 보상형 해금 지속 시간 (4시간, 밀리초).
+  /// 보상형 해금 지속 시간 기본값 (4시간, 밀리초, 외부 참조용).
   static const int unlockDurationMs = 4 * 60 * 60 * 1000;
 
-  /// 허니문 종료 후 기본 즐겨찾기 슬롯 제한.
+  /// 허니문 종료 후 기본 즐겨찾기 슬롯 제한 (기본값, 외부 참조용).
   static const int defaultSlotLimit = 5;
 
-  /// 일일 TTS 재생 제한.
+  /// 일일 TTS 재생 제한 (기본값, 외부 참조용).
   static const int dailyTtsLimit = 5;
+
+  /// Remote Config에서 읽은 일일 광고 제한.
+  late int _dailyAdLimit;
+
+  /// Remote Config에서 읽은 쿨다운 (밀리초).
+  late int _cooldownMs;
+
+  /// Remote Config에서 읽은 해금 지속 시간 (밀리초).
+  late int _unlockDurationMs;
+
+  /// Remote Config에서 읽은 기본 슬롯 제한.
+  late int _defaultSlotLimit;
+
+  /// Remote Config에서 읽은 일일 TTS 제한.
+  late int _dailyTtsLimit;
 
   /// D-day dedup 키를 생성한다.
   ///
@@ -63,8 +78,21 @@ class MonetizationNotifier extends _$MonetizationNotifier {
   @override
   Future<MonetizationState> build() async {
     _repository = ref.read(monetizationRepositoryProvider);
-    // 허니문 체크 (설치일 기록 + Day 7 전환)
-    final usecase = CheckHoneymoonUseCase(_repository);
+
+    // Remote Config 값 읽기
+    final config = ref.read(remoteConfigValuesProvider);
+    _dailyAdLimit = config.dailyAdLimit;
+    _cooldownMs = config.adCooldownMinutes * 60 * 1000;
+    _unlockDurationMs = config.unlockDurationHours * 60 * 60 * 1000;
+    _defaultSlotLimit = config.defaultSlotLimit;
+    _dailyTtsLimit = config.dailyTtsLimit;
+
+    // 허니문 체크 (설치일 기록 + Day 14 전환)
+    final usecase = CheckHoneymoonUseCase(
+      _repository,
+      honeymoonDays: config.honeymoonDays,
+      defaultSlotLimit: config.defaultSlotLimit,
+    );
     return usecase.execute();
   }
 
@@ -122,7 +150,8 @@ class MonetizationNotifier extends _$MonetizationNotifier {
 
     // 시간 조작 감지 (단조증가 검증)
     if (current.lastTimestamp > 0 && nowMs < current.lastTimestamp) {
-      debugPrint('[MonetizationNotifier] time manipulation detected in recordAdWatch');
+      debugPrint(
+          '[MonetizationNotifier] time manipulation detected in recordAdWatch');
       return false;
     }
 
@@ -137,13 +166,13 @@ class MonetizationNotifier extends _$MonetizationNotifier {
     }
 
     // 일일 제한 확인
-    if (current.adWatchCount >= dailyAdLimit) {
+    if (current.adWatchCount >= _dailyAdLimit) {
       return false;
     }
 
     // 쿨다운 확인
     final elapsed = now.millisecondsSinceEpoch - current.lastAdWatchTimestamp;
-    if (current.lastAdWatchTimestamp > 0 && elapsed < cooldownMs) {
+    if (current.lastAdWatchTimestamp > 0 && elapsed < _cooldownMs) {
       return false;
     }
 
@@ -175,7 +204,7 @@ class MonetizationNotifier extends _$MonetizationNotifier {
   /// min(현재 + 4시간, 다음 자정) 밀리초 반환.
   @visibleForTesting
   int computeUnlockExpiry({required DateTime now}) {
-    final fourHoursLater = now.millisecondsSinceEpoch + unlockDurationMs;
+    final fourHoursLater = now.millisecondsSinceEpoch + _unlockDurationMs;
     final nextMidnight = DateTime(now.year, now.month, now.day + 1);
     final midnightMs = nextMidnight.millisecondsSinceEpoch;
     return fourHoursLater < midnightMs ? fourHoursLater : midnightMs;
@@ -197,8 +226,7 @@ class MonetizationNotifier extends _$MonetizationNotifier {
     final now = DateTime.now().millisecondsSinceEpoch;
     final updated = current.copyWith(
       purchasedPackIds: [...current.purchasedPackIds, packId],
-      lastTimestamp:
-          now > current.lastTimestamp ? now : current.lastTimestamp,
+      lastTimestamp: now > current.lastTimestamp ? now : current.lastTimestamp,
     );
     state = AsyncData(updated);
     // IAP 상태는 silent swallow 없이 예외 전파
@@ -217,7 +245,7 @@ class MonetizationNotifier extends _$MonetizationNotifier {
 
     await _updateState(current.copyWith(
       honeymoonActive: false,
-      favoriteSlotLimit: defaultSlotLimit,
+      favoriteSlotLimit: _defaultSlotLimit,
     ));
   }
 
@@ -328,7 +356,8 @@ class MonetizationNotifier extends _$MonetizationNotifier {
 
     // 시간 조작 감지 (단조증가 검증)
     if (current.lastTimestamp > 0 && nowMs < current.lastTimestamp) {
-      debugPrint('[MonetizationNotifier] time manipulation detected in recordTtsPlay');
+      debugPrint(
+          '[MonetizationNotifier] time manipulation detected in recordTtsPlay');
       return false;
     }
 
@@ -343,7 +372,7 @@ class MonetizationNotifier extends _$MonetizationNotifier {
     }
 
     // 일일 제한 확인
-    if (current.ttsPlayCount >= dailyTtsLimit) {
+    if (current.ttsPlayCount >= _dailyTtsLimit) {
       return false;
     }
 
@@ -362,7 +391,7 @@ class MonetizationNotifier extends _$MonetizationNotifier {
     if (current == null) return false;
     final todayStr = _formatDate(DateTime.now());
     if (current.adLastResetDate != todayStr) return false;
-    return current.adWatchCount >= dailyAdLimit;
+    return current.adWatchCount >= _dailyAdLimit;
   }
 
   /// 일일 TTS 재생 제한에 도달했는지 확인한다.
@@ -373,7 +402,7 @@ class MonetizationNotifier extends _$MonetizationNotifier {
     if (current == null) return false;
     final todayStr = _formatDate(DateTime.now());
     if (current.ttsLastResetDate != todayStr) return false;
-    return current.ttsPlayCount >= dailyTtsLimit;
+    return current.ttsPlayCount >= _dailyTtsLimit;
   }
 
   /// 보상형 해금이 현재 활성 상태인지 확인한다.

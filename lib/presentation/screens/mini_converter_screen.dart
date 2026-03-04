@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:fangeul/core/engines/keyboard_converter.dart';
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/compact_phrase_filter_provider.dart';
 import 'package:fangeul/presentation/providers/converter_providers.dart';
 import 'package:fangeul/presentation/providers/copy_history_provider.dart';
@@ -45,16 +45,20 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
   double _dragDelta = 0;
 
   static const _modes = ConvertMode.values;
-  static const _modeLabels = [
-    UiStrings.converterTabEngToKor,
-    UiStrings.converterTabKorToEng,
-    UiStrings.converterTabRomanize,
-  ];
-  static const _modeHints = [
-    UiStrings.converterHintEngToKor,
-    UiStrings.converterHintKorToEng,
-    UiStrings.converterHintRomanize,
-  ];
+
+  /// 변환 모드별 탭 레이블 목록 (context 기반 i18n).
+  List<String> _modeLabels(L l) => [
+        l.converterTabEngToKor,
+        l.converterTabKorToEng,
+        l.converterTabRomanize,
+      ];
+
+  /// 변환 모드별 힌트 텍스트 목록 (context 기반 i18n).
+  List<String> _modeHints(L l) => [
+        l.converterHintEngToKor,
+        l.converterHintKorToEng,
+        l.converterHintRomanize,
+      ];
 
   ConvertMode get _currentMode => _modes[_converterTabController.index];
   bool get _isEngToKor => _currentMode == ConvertMode.engToKor;
@@ -279,6 +283,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
   }
 
   Widget _buildExpandedMode() {
+    final l = L.of(context);
     final converterState = ref.watch(converterNotifierProvider);
 
     final output = switch (converterState) {
@@ -293,7 +298,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
         _buildExpandedHeader(),
         TabBar(
           controller: _converterTabController,
-          tabs: _modeLabels.map((l) => Tab(text: l)).toList(),
+          tabs: _modeLabels(l).map((label) => Tab(text: label)).toList(),
         ),
         Expanded(
           child: SingleChildScrollView(
@@ -301,7 +306,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
             child: ConverterInput(
               controller: _textController,
               output: output,
-              hintText: _modeHints[_converterTabController.index],
+              hintText: _modeHints(l)[_converterTabController.index],
               onClear: _clearConverter,
               onCopied: (text) {
                 ref.read(copyHistoryNotifierProvider.notifier).addEntry(text);
@@ -323,6 +328,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
   }
 
   Widget _buildExpandedHeader() {
+    final l = L.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Row(
@@ -330,11 +336,11 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
           TextButton.icon(
             onPressed: _collapseToCompact,
             icon: const Icon(Icons.arrow_back_rounded, size: 18),
-            label: const Text(UiStrings.miniBackToCompact),
+            label: Text(l.miniBackToCompact),
           ),
           const Spacer(),
           Text(
-            UiStrings.miniConverterTitle,
+            l.miniConverterTitle,
             style: Theme.of(context).textTheme.titleSmall,
           ),
           const SizedBox(width: 8),

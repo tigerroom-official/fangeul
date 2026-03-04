@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
@@ -72,21 +72,21 @@ class _ShellScaffoldState extends ConsumerState<ShellScaffold>
           index,
           initialLocation: index == widget.navigationShell.currentIndex,
         ),
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: UiStrings.navHome,
+            icon: const Icon(Icons.home_outlined),
+            selectedIcon: const Icon(Icons.home),
+            label: L.of(context).navHome,
           ),
           NavigationDestination(
-            icon: Icon(Icons.translate_outlined),
-            selectedIcon: Icon(Icons.translate),
-            label: UiStrings.navConverter,
+            icon: const Icon(Icons.translate_outlined),
+            selectedIcon: const Icon(Icons.translate),
+            label: L.of(context).navConverter,
           ),
           NavigationDestination(
-            icon: Icon(Icons.chat_bubble_outline),
-            selectedIcon: Icon(Icons.chat_bubble),
-            label: UiStrings.navPhrases,
+            icon: const Icon(Icons.chat_bubble_outline),
+            selectedIcon: const Icon(Icons.chat_bubble),
+            label: L.of(context).navPhrases,
           ),
         ],
       ),

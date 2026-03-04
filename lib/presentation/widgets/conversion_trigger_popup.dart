@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 
 /// 전환 트리거 팝업 — IAP 구매를 유도하는 소프트 CTA 다이얼로그.
 ///
@@ -32,6 +32,7 @@ class ConversionTriggerPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
 
     return AlertDialog(
@@ -48,7 +49,7 @@ class ConversionTriggerPopup extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            UiStrings.conversionTriggerTitle,
+            l.conversionTriggerTitle,
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -56,7 +57,7 @@ class ConversionTriggerPopup extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            UiStrings.conversionTriggerMessage,
+            l.conversionTriggerMessage,
             style: theme.textTheme.bodyLarge?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -67,14 +68,14 @@ class ConversionTriggerPopup extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text(UiStrings.conversionTriggerDismiss),
+          child: Text(l.conversionTriggerDismiss),
         ),
         FilledButton(
           onPressed: () {
             Navigator.of(context).pop();
             onViewShop();
           },
-          child: const Text(UiStrings.conversionTriggerButton),
+          child: Text(l.conversionTriggerButton),
         ),
       ],
     );

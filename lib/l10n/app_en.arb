@@ -1,0 +1,171 @@
+{
+  "@@locale": "en",
+
+  "appName": "Fangeul",
+  "appVersion": "0.1.0",
+  "appLegalese": "\u00a9 2026 Tiger Room",
+
+  "copied": "Copied",
+  "errorPrefix": "Error:",
+  "copyTooltip": "Copy",
+  "favoriteTooltip": "Favorite",
+  "complete": "Done",
+  "share": "Share",
+
+  "streakDays": "{streak}-day streak",
+
+  "navHome": "Home",
+  "navConverter": "Converter",
+  "navPhrases": "Phrases",
+
+  "dailyCardLoadError": "Couldn't load today's card",
+
+  "converterTitle": "Converter",
+  "converterTabEngToKor": "Eng→Kor",
+  "converterTabKorToEng": "Kor→Eng",
+  "converterTabRomanize": "Romanize",
+  "converterHintEngToKor": "Type in English (e.g. gksrmf)",
+  "converterHintKorToEng": "Type in Korean (e.g. 한글)",
+  "converterHintRomanize": "Type in Korean (e.g. 사랑해요)",
+
+  "phrasesTitle": "Phrases",
+  "phrasesEmpty": "No phrases available",
+  "phrasesMyIdolEmpty": "Select your idol in Settings\nto see personalized phrases",
+
+  "phrasesMyIdolChip": "♡ {name}",
+
+  "settingsTitle": "Settings",
+  "themeLabel": "Theme",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeSystem": "System",
+  "appInfoTitle": "App Info",
+  "appInfoSubtitle": "Fangeul v{version}",
+
+  "tagAll": "All",
+  "tagLove": "Love",
+  "tagCheer": "Cheer",
+  "tagDaily": "Daily",
+  "tagGreeting": "Greeting",
+  "tagEmotional": "Emotion",
+  "tagPraise": "Praise",
+  "tagFandom": "Fandom",
+  "tagBirthday": "Birthday",
+  "tagComeback": "Comeback",
+
+  "keyboardSpace": "Space",
+  "keyboardModeKorean": "Korean",
+  "keyboardModeAbc": "ABC",
+  "keyboardModeNumbers": "123",
+  "keyboardDone": "Done",
+
+  "defaultTranslationLang": "en",
+
+  "bubbleLabel": "Floating Bubble",
+  "bubbleDescription": "Use the converter outside the app",
+  "bubblePermissionTitle": "Overlay Permission Required",
+  "bubblePermissionMessage": "To show the floating bubble, we need permission to display over other apps.",
+  "bubblePermissionAllow": "Allow",
+  "bubblePermissionDeny": "Cancel",
+  "bubblePermissionDenied": "You can still use all features inside the app",
+  "bubbleBatteryTitle": "Disable Battery Optimization",
+  "bubbleBatteryMessage": "For the bubble to work reliably, please disable battery optimization.\nOn some devices, battery optimization may close the bubble automatically.",
+  "bubbleBatteryAllow": "Open Settings",
+  "bubbleBatteryDeny": "Later",
+
+  "miniConverterTitle": "Fangeul",
+  "miniTabPhrases": "Phrases",
+  "miniTabFavorites": "Favorites",
+  "miniTabRecent": "Recent",
+  "miniChipFavorites": "★Favs",
+  "miniChipToday": "Today",
+  "miniPackLocked": "This pack is locked\nYou'll be able to unlock it soon!",
+  "miniPackEmpty": "No phrases available",
+  "miniOpenConverter": "Open Converter",
+  "miniBackToCompact": "Compact Mode",
+  "miniFavoritesEmpty": "Tap ⭐ on a phrase\nto add it to your favorites",
+  "miniMyIdolEmpty": "Select your idol in Settings\nto see personalized phrases",
+  "miniTodayEmpty": "No events related to today",
+  "miniRecentEmpty": "No copied text yet",
+
+  "idolSelectTitle": "Choose your favorite group",
+  "idolSelectSubtitle": "You can change this anytime in Settings",
+  "idolSelectSkip": "Set up later",
+  "idolSelectOther": "Other (enter manually)",
+  "idolSelectOtherHint": "Enter the group name",
+  "idolSelectConfirm": "Confirm",
+  "idolSettingLabel": "My Idol",
+  "idolSettingEmpty": "Not selected yet",
+
+  "idolSettingCurrent": "Current: {name}",
+
+  "homeGreeting": "Hi, {name} fan!",
+
+  "idolSettingChange": "Change",
+
+  "idolMemberHint": "Member name (optional)",
+  "idolMemberLabel": "Bias",
+
+  "phrasesMemberChip": "♡ {name}",
+
+  "phrasesGroupChip": "{name}",
+
+  "phrasesMemberEmpty": "No member-specific phrases",
+
+  "fanPassButton": "Fan Pass",
+
+  "fanPassRemaining": "({current}/{max})",
+
+  "fanPassCooldown": "Please try again in a moment",
+  "fanPassAdLoading": "Loading ad...",
+  "fanPassLimitReached": "All done for today",
+  "fanPassPopupTitle": "Fan Pass earned!",
+  "fanPassPopupConfirm": "OK",
+
+  "fanPassUnlockRemaining": "{time} remaining",
+
+  "unlockRemaining": "{time} remaining",
+
+  "unlockMidnightLabel": "Expires at midnight",
+
+  "unlockMidnightExpiry": "{time} remaining (expires at midnight)",
+
+  "shopTitle": "Color Vibe Packs",
+  "shopRestore": "Restore Purchases",
+  "shopBuyButton": "Buy",
+  "shopPurchased": "Purchased",
+
+  "shopPhraseCount": "{count} phrases",
+
+  "shopPronunciationCount": "{count} pronunciations",
+
+  "shopRestoreSuccess": "Purchases restored",
+  "shopRestoreFailed": "No purchases to restore",
+
+  "ddayGiftTitle": "Happy {eventName}!",
+
+  "ddayGiftMessage": "All content is free for today",
+  "ddayGiftButton": "Claim Gift",
+
+  "ttsLimitTitle": "That's all for today's listening!",
+
+  "ttsLimitMessage": "You'll get {limit} more listens tomorrow",
+
+  "ttsLimitAdButton": "Listen more with Fan Pass",
+
+  "conversionTriggerTitle": "Enjoy even more content",
+  "conversionTriggerMessage": "Unlock everything with a Color Vibe Pack\nand start a special experience",
+  "conversionTriggerButton": "View Color Vibe Packs",
+  "conversionTriggerDismiss": "Later",
+
+  "favLimitTitle": "You really love a lot of phrases!",
+  "favLimitMessage": "Save more phrases with a Fan Pass\nor keep unlimited with a Color Vibe Pack",
+  "favLimitAdButton": "Get Fan Pass",
+  "favLimitIapButton": "Browse Color Vibe Packs",
+
+  "shopPurchaseSuccess": "Purchase complete! Content unlocked",
+  "shopPurchaseFailed": "Purchase failed. Please try again",
+  "shopPurchasePending": "Processing payment...",
+
+  "honeymoonDaysLeft": "{days} days of free trial left"
+}

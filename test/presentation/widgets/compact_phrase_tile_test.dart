@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:fangeul/core/entities/phrase.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/widgets/compact_phrase_tile.dart';
@@ -27,6 +28,9 @@ void main() {
     return ProviderScope(
       overrides: overrides,
       child: MaterialApp(
+        localizationsDelegates: L.localizationsDelegates,
+        supportedLocales: L.supportedLocales,
+        locale: const Locale('ko'),
         home: Scaffold(
           body: CompactPhraseTile(
             phrase: phrase,
@@ -178,8 +182,7 @@ void main() {
 
       final richTexts = tester
           .widgetList<RichText>(find.byType(RichText))
-          .where(
-              (w) => w.text.toPlainText().contains('정국 saengil chukahaeyo'));
+          .where((w) => w.text.toPlainText().contains('정국 saengil chukahaeyo'));
       expect(richTexts, isNotEmpty);
     });
 

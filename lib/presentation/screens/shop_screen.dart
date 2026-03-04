@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/color_pack_provider.dart';
 import 'package:fangeul/presentation/providers/iap_provider.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
@@ -17,6 +17,7 @@ class ShopScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L.of(context);
     final colorPacksAsync = ref.watch(colorPacksProvider);
     final monetizationAsync = ref.watch(monetizationNotifierProvider);
     final purchasedIds =
@@ -24,11 +25,11 @@ class ShopScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(UiStrings.shopTitle),
+        title: Text(l.shopTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.restore),
-            tooltip: UiStrings.shopRestore,
+            tooltip: l.shopRestore,
             onPressed: () => _restorePurchases(context, ref),
           ),
         ],
@@ -55,7 +56,7 @@ class ShopScreen extends ConsumerWidget {
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
-          child: Text('${UiStrings.errorPrefix} $error'),
+          child: Text('${l.errorPrefix} $error'),
         ),
       ),
     );
@@ -78,7 +79,7 @@ class ShopScreen extends ConsumerWidget {
 
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text(UiStrings.shopRestoreSuccess)),
+      SnackBar(content: Text(L.of(context).shopRestoreSuccess)),
     );
   }
 }

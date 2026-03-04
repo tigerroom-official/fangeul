@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:fangeul/core/entities/phrase.dart';
 import 'package:fangeul/core/entities/phrase_pack.dart';
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/phrase_providers.dart';
 import 'package:fangeul/presentation/providers/template_phrase_provider.dart';
@@ -48,6 +48,7 @@ class PhrasesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L.of(context);
     final selectedTag = ref.watch(selectedTagProvider);
     final idolNameAsync = ref.watch(myIdolDisplayNameProvider);
     final idolName = idolNameAsync.valueOrNull;
@@ -59,15 +60,14 @@ class PhrasesScreen extends ConsumerWidget {
 
     // 필터 상태 해석 — 멤버 > 아이돌 > 전체 우선순위
     final isMemberSelected =
-        hasMember &&
-        (selectedTag == _filterMyMember || selectedTag == null);
+        hasMember && (selectedTag == _filterMyMember || selectedTag == null);
     final isMyIdolSelected = selectedTag == _filterMyIdol ||
         (selectedTag == null && hasIdol && !hasMember);
     final isAllSelected =
         selectedTag == _filterAll || (selectedTag == null && !hasIdol);
 
     return Scaffold(
-      appBar: AppBar(title: const Text(UiStrings.phrasesTitle)),
+      appBar: AppBar(title: Text(l.phrasesTitle)),
       body: Column(
         children: [
           TagFilterChips(
@@ -89,8 +89,7 @@ class PhrasesScreen extends ConsumerWidget {
             isMemberSelected: isMemberSelected,
             onMemberSelected: () =>
                 ref.read(selectedTagProvider.notifier).state = _filterMyMember,
-            memberLabel:
-                hasMember ? UiStrings.phrasesMemberChip(memberName) : null,
+            memberLabel: hasMember ? l.phrasesMemberChip(memberName) : null,
             // idol (label changes when member is set)
             showMyIdolChip: hasIdol,
             isMyIdolSelected: isMyIdolSelected,
@@ -98,19 +97,20 @@ class PhrasesScreen extends ConsumerWidget {
                 ref.read(selectedTagProvider.notifier).state = _filterMyIdol,
             myIdolLabel: hasIdol
                 ? (hasMember
-                    ? UiStrings.phrasesGroupChip(idolName)
-                    : UiStrings.phrasesMyIdolChip(idolName))
+                    ? l.phrasesGroupChip(idolName)
+                    : l.phrasesMyIdolChip(idolName))
                 : null,
           ),
           const SizedBox(height: 8),
           Expanded(
             child: isMemberSelected
-                ? _buildMyMemberPhrases(ref, idolName, memberName)
+                ? _buildMyMemberPhrases(ref, idolName, memberName, l)
                 : isMyIdolSelected
-                    ? _buildMyIdolPhrases(ref, idolName, memberName: memberName)
+                    ? _buildMyIdolPhrases(ref, idolName, l,
+                        memberName: memberName)
                     : isAllSelected
-                        ? _buildAllPhrases(ref)
-                        : _buildFilteredPhrases(ref, selectedTag!),
+                        ? _buildAllPhrases(ref, l)
+                        : _buildFilteredPhrases(ref, selectedTag!, l),
           ),
         ],
       ),
@@ -119,9 +119,9 @@ class PhrasesScreen extends ConsumerWidget {
 
   /// 멤버 전용 문구 표시 (`{{member_name}}` 포함 템플릿만).
   Widget _buildMyMemberPhrases(
-      WidgetRef ref, String? idolName, String? memberName) {
+      WidgetRef ref, String? idolName, String? memberName, L l) {
     if (idolName == null || memberName == null) {
-      return const Center(child: Text(UiStrings.phrasesMemberEmpty));
+      return Center(child: Text(l.phrasesMemberEmpty));
     }
 
     final packsAsync = ref.watch(allPhrasesProvider);
@@ -136,18 +136,18 @@ class PhrasesScreen extends ConsumerWidget {
                 resolveTemplatePhrase(p, idolName, memberName: memberName))
             .toList();
         if (phrases.isEmpty) {
-          return const Center(child: Text(UiStrings.phrasesMemberEmpty));
+          return Center(child: Text(l.phrasesMemberEmpty));
         }
         return ListView.builder(
           itemCount: phrases.length,
           itemBuilder: (context, index) => PhraseCard(
             phrase: phrases[index],
-            translationLang: UiStrings.defaultTranslationLang,
+            translationLang: l.defaultTranslationLang,
           ),
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('${UiStrings.errorPrefix} $e')),
+      error: (e, _) => Center(child: Text('${l.errorPrefix} $e')),
     );
   }
 
@@ -155,10 +155,10 @@ class PhrasesScreen extends ConsumerWidget {
   ///
   /// `{{member_name}}` 슬롯을 포함하는 템플릿은 항상 제외한다.
   /// 멤버 설정 시 해당 템플릿은 [_buildMyMemberPhrases]에서 표시한다.
-  Widget _buildMyIdolPhrases(WidgetRef ref, String? idolName,
+  Widget _buildMyIdolPhrases(WidgetRef ref, String? idolName, L l,
       {String? memberName}) {
     if (idolName == null) {
-      return const Center(child: Text(UiStrings.phrasesMyIdolEmpty));
+      return Center(child: Text(l.phrasesMyIdolEmpty));
     }
 
     final packsAsync = ref.watch(allPhrasesProvider);
@@ -173,46 +173,46 @@ class PhrasesScreen extends ConsumerWidget {
             .map((p) => resolveTemplatePhrase(p, idolName))
             .toList();
         if (phrases.isEmpty) {
-          return const Center(child: Text(UiStrings.phrasesMyIdolEmpty));
+          return Center(child: Text(l.phrasesMyIdolEmpty));
         }
         return ListView.builder(
           itemCount: phrases.length,
           itemBuilder: (context, index) => PhraseCard(
             phrase: phrases[index],
-            translationLang: UiStrings.defaultTranslationLang,
+            translationLang: l.defaultTranslationLang,
           ),
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('${UiStrings.errorPrefix} $e')),
+      error: (e, _) => Center(child: Text('${l.errorPrefix} $e')),
     );
   }
 
   /// 전체 문구 (팩 기반) 표시.
-  Widget _buildAllPhrases(WidgetRef ref) {
+  Widget _buildAllPhrases(WidgetRef ref, L l) {
     final packsAsync = ref.watch(allPhrasesProvider);
 
     return packsAsync.when(
       data: (packs) {
         final phrases = _flattenPacks(packs);
         if (phrases.isEmpty) {
-          return const Center(child: Text(UiStrings.phrasesEmpty));
+          return Center(child: Text(l.phrasesEmpty));
         }
         return ListView.builder(
           itemCount: phrases.length,
           itemBuilder: (context, index) => PhraseCard(
             phrase: phrases[index],
-            translationLang: UiStrings.defaultTranslationLang,
+            translationLang: l.defaultTranslationLang,
           ),
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('${UiStrings.errorPrefix} $e')),
+      error: (e, _) => Center(child: Text('${l.errorPrefix} $e')),
     );
   }
 
   /// 태그 필터링된 문구 표시.
-  Widget _buildFilteredPhrases(WidgetRef ref, String tag) {
+  Widget _buildFilteredPhrases(WidgetRef ref, String tag, L l) {
     final phrasesAsync = ref.watch(phrasesByTagProvider(tag));
 
     return phrasesAsync.when(
@@ -220,18 +220,18 @@ class PhrasesScreen extends ConsumerWidget {
         // 템플릿 문구 제외 — {{group_name}} 원문 노출 방지
         final filtered = phrases.where((p) => !p.isTemplate).toList();
         if (filtered.isEmpty) {
-          return const Center(child: Text(UiStrings.phrasesEmpty));
+          return Center(child: Text(l.phrasesEmpty));
         }
         return ListView.builder(
           itemCount: filtered.length,
           itemBuilder: (context, index) => PhraseCard(
             phrase: filtered[index],
-            translationLang: UiStrings.defaultTranslationLang,
+            translationLang: l.defaultTranslationLang,
           ),
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('${UiStrings.errorPrefix} $e')),
+      error: (e, _) => Center(child: Text('${l.errorPrefix} $e')),
     );
   }
 

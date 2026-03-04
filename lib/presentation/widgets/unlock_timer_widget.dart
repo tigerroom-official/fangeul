@@ -4,7 +4,7 @@ import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
 
 /// 보상형 해금 남은 시간 카운트다운 위젯.
@@ -82,8 +82,8 @@ class _UnlockTimerWidgetState extends ConsumerState<UnlockTimerWidget> {
         const SizedBox(width: 4),
         Text(
           isMidnight
-              ? UiStrings.unlockMidnightExpiry(timeStr)
-              : UiStrings.unlockRemaining(timeStr),
+              ? L.of(context).unlockMidnightExpiry(timeStr)
+              : L.of(context).unlockRemaining(timeStr),
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.primary,
           ),

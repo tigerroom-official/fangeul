@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/phrase_providers.dart';
 import 'package:fangeul/presentation/providers/progress_providers.dart';
@@ -42,13 +42,13 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Consumer(
           builder: (context, ref, _) {
+            final l = L.of(context);
             final idolName = ref.watch(myIdolDisplayNameProvider);
             return idolName.when(
-              data: (name) => name != null
-                  ? Text(UiStrings.homeGreeting(name))
-                  : const Text(UiStrings.appName),
-              loading: () => const Text(UiStrings.appName),
-              error: (_, __) => const Text(UiStrings.appName),
+              data: (name) =>
+                  name != null ? Text(l.homeGreeting(name)) : Text(l.appName),
+              loading: () => Text(l.appName),
+              error: (_, __) => Text(l.appName),
             );
           },
         ),
@@ -76,16 +76,17 @@ class HomeScreen extends ConsumerWidget {
               Expanded(
                 child: dailyCard.when(
                   data: (card) {
+                    final l = L.of(context);
                     if (card == null) {
-                      return const Center(
-                        child: Text(UiStrings.dailyCardLoadError),
+                      return Center(
+                        child: Text(l.dailyCardLoadError),
                       );
                     }
                     final isCompleted =
                         progress.valueOrNull?.lastCompletedDate == today;
                     return DailyCardWidget(
                       card: card,
-                      translationLang: UiStrings.defaultTranslationLang,
+                      translationLang: l.defaultTranslationLang,
                       isCompleted: isCompleted,
                       onComplete: isCompleted
                           ? null
@@ -100,14 +101,14 @@ class HomeScreen extends ConsumerWidget {
                       onShare: () => shareCard(
                         card: card,
                         isDark: theme.brightness == Brightness.dark,
-                        translationLang: UiStrings.defaultTranslationLang,
+                        translationLang: l.defaultTranslationLang,
                       ),
                     );
                   },
                   loading: () =>
                       const Center(child: CircularProgressIndicator()),
                   error: (e, _) =>
-                      Center(child: Text('${UiStrings.errorPrefix} $e')),
+                      Center(child: Text('${L.of(context).errorPrefix} $e')),
                 ),
               ),
             ],

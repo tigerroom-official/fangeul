@@ -6,8 +6,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'package:fangeul/core/entities/monetization_state.dart';
+import 'package:fangeul/core/entities/remote_config_values.dart';
 import 'package:fangeul/data/datasources/monetization_local_datasource.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
+import 'package:fangeul/presentation/providers/remote_config_providers.dart';
 import 'package:fangeul/presentation/providers/tts_provider.dart';
 import 'package:fangeul/services/tts_service.dart';
 
@@ -47,6 +49,8 @@ void main() {
       overrides: [
         monetizationStorageProvider.overrideWithValue(mockStorage),
         ttsServiceProvider.overrideWithValue(mockTts),
+        remoteConfigValuesProvider
+            .overrideWithValue(const RemoteConfigValues()),
       ],
     );
   }
@@ -75,6 +79,8 @@ void main() {
       overrides: [
         monetizationStorageProvider.overrideWithValue(mockStorage),
         ttsServiceProvider.overrideWithValue(mockTts),
+        remoteConfigValuesProvider
+            .overrideWithValue(const RemoteConfigValues()),
       ],
     );
   }
@@ -167,8 +173,8 @@ void main() {
 
       await container.read(monetizationNotifierProvider.future);
 
-      final result = await container
-          .read(playTtsProvider('assets/audio/test.mp3').future);
+      final result =
+          await container.read(playTtsProvider('assets/audio/test.mp3').future);
 
       expect(result, true);
       verify(() => mockTts.play('assets/audio/test.mp3')).called(1);
@@ -208,8 +214,8 @@ void main() {
 
       await container.read(monetizationNotifierProvider.future);
 
-      final result = await container
-          .read(playTtsProvider('assets/audio/test.mp3').future);
+      final result =
+          await container.read(playTtsProvider('assets/audio/test.mp3').future);
 
       expect(result, true);
       verify(() => mockTts.play('assets/audio/test.mp3')).called(1);
@@ -228,8 +234,8 @@ void main() {
 
       await container.read(monetizationNotifierProvider.future);
 
-      final result = await container
-          .read(playTtsProvider('assets/audio/test.mp3').future);
+      final result =
+          await container.read(playTtsProvider('assets/audio/test.mp3').future);
 
       expect(result, false);
       verifyNever(() => mockTts.play(any()));
@@ -244,8 +250,8 @@ void main() {
 
       await container.read(monetizationNotifierProvider.future);
 
-      final result = await container
-          .read(playTtsProvider('assets/audio/bad.mp3').future);
+      final result =
+          await container.read(playTtsProvider('assets/audio/bad.mp3').future);
 
       expect(result, false);
     });
@@ -257,8 +263,8 @@ void main() {
 
       await container.read(monetizationNotifierProvider.future);
 
-      final result = await container
-          .read(playTtsProvider('assets/audio/bad.mp3').future);
+      final result =
+          await container.read(playTtsProvider('assets/audio/bad.mp3').future);
 
       expect(result, false);
     });
@@ -268,8 +274,8 @@ void main() {
 
       await container.read(monetizationNotifierProvider.future);
 
-      await container.read(
-          playTtsProvider('https://cdn.example.com/ko/hello.mp3').future);
+      await container
+          .read(playTtsProvider('https://cdn.example.com/ko/hello.mp3').future);
 
       verify(() => mockTts.play('https://cdn.example.com/ko/hello.mp3'))
           .called(1);

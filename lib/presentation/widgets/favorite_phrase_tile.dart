@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 
 /// 간편모드 즐겨찾기 문구 타일.
 ///
@@ -26,6 +26,7 @@ class FavoritePhraseTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
 
     return ListTile(
@@ -48,7 +49,7 @@ class FavoritePhraseTile extends StatelessWidget {
           : null,
       trailing: IconButton(
         icon: const Icon(Icons.copy_rounded, size: 18),
-        tooltip: UiStrings.copyTooltip,
+        tooltip: l.copyTooltip,
         onPressed: () => _copy(context),
       ),
       onTap: () => _copy(context),
@@ -56,10 +57,11 @@ class FavoritePhraseTile extends StatelessWidget {
   }
 
   void _copy(BuildContext context) {
+    final l = L.of(context);
     Clipboard.setData(ClipboardData(text: text));
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(UiStrings.copied),
+      SnackBar(
+        content: Text(l.copied),
         duration: Duration(seconds: 1),
         behavior: SnackBarBehavior.floating,
       ),

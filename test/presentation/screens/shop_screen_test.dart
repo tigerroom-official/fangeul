@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/data/models/color_pack.dart';
 import 'package:fangeul/core/entities/monetization_state.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
@@ -72,6 +73,9 @@ Widget _buildTestWidget({
       }),
     ],
     child: const MaterialApp(
+      localizationsDelegates: L.localizationsDelegates,
+      supportedLocales: L.supportedLocales,
+      locale: Locale('ko'),
       home: ShopScreen(),
     ),
   );
@@ -208,6 +212,9 @@ void main() {
             }),
           ],
           child: const MaterialApp(
+            localizationsDelegates: L.localizationsDelegates,
+            supportedLocales: L.supportedLocales,
+            locale: Locale('ko'),
             home: ShopScreen(),
           ),
         ),

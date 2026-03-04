@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
 
 /// 팬 패스 획득 축하 팝업을 표시한다.
@@ -75,6 +75,7 @@ class _FanPassPopupState extends ConsumerState<FanPassPopup>
     final expiresAt = asyncState.valueOrNull?.unlockExpiresAt ?? 0;
     final remainingText = _formatRemainingTime(expiresAt);
     final theme = Theme.of(context);
+    final l = L.of(context);
 
     return FadeTransition(
       opacity: _fadeAnimation,
@@ -95,14 +96,14 @@ class _FanPassPopupState extends ConsumerState<FanPassPopup>
               ),
               const SizedBox(height: 16),
               Text(
-                UiStrings.fanPassPopupTitle,
+                l.fanPassPopupTitle,
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
-                UiStrings.fanPassUnlockRemaining(remainingText),
+                l.fanPassUnlockRemaining(remainingText),
                 style: theme.textTheme.bodyLarge?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -114,7 +115,7 @@ class _FanPassPopupState extends ConsumerState<FanPassPopup>
               width: double.infinity,
               child: FilledButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text(UiStrings.fanPassPopupConfirm),
+                child: Text(l.fanPassPopupConfirm),
               ),
             ),
           ],

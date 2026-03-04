@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/theme/fangeul_text_styles.dart';
 import 'package:fangeul/presentation/widgets/copy_feedback_overlay.dart';
 
@@ -41,6 +41,7 @@ class ConverterInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
 
     return Column(
@@ -90,11 +91,11 @@ class ConverterInput extends StatelessWidget {
                         CopyFeedback.trigger(context);
                         onCopied?.call(output);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text(UiStrings.copied)),
+                          SnackBar(content: Text(l.copied)),
                         );
                       },
                       icon: const Icon(Icons.copy_outlined),
-                      tooltip: UiStrings.copyTooltip,
+                      tooltip: l.copyTooltip,
                     ),
                   ],
                 ),

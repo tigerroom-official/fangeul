@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:fangeul/core/entities/phrase.dart';
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/analytics_providers.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
@@ -85,7 +85,7 @@ class PhraseCard extends ConsumerWidget {
                       .read(favoritePhrasesNotifierProvider.notifier)
                       .toggle(phrase.ko);
                 },
-                tooltip: UiStrings.favoriteTooltip,
+                tooltip: L.of(context).favoriteTooltip,
               ),
               IconButton(
                 icon: const Icon(Icons.copy_outlined, size: 20),
@@ -100,10 +100,10 @@ class PhraseCard extends ConsumerWidget {
                     },
                   );
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text(UiStrings.copied)),
+                    SnackBar(content: Text(L.of(context).copied)),
                   );
                 },
-                tooltip: UiStrings.copyTooltip,
+                tooltip: L.of(context).copyTooltip,
               ),
               // TODO(fangeul): TTS 버튼 (Phase 5 서비스 연동)
             ],
@@ -140,7 +140,8 @@ class PhraseCard extends ConsumerWidget {
     );
 
     return Text.rich(
-      TextSpan(children: _splitByNames(phrase.roman, names, romanStyle, nameStyle)),
+      TextSpan(
+          children: _splitByNames(phrase.roman, names, romanStyle, nameStyle)),
     );
   }
 

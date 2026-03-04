@@ -50,7 +50,7 @@ mixin _$MonetizationState {
   /// 구매 완료된 팩 ID 목록.
   List<String> get purchasedPackIds => throw _privateConstructorUsedError;
 
-  /// D-day 해금 날짜 목록 ('{date}_{eventId}' 형식).
+  /// D-day 해금 날짜 목록 ('{date}_{artist}_{type}' 형식).
   List<String> get ddayUnlockedDates => throw _privateConstructorUsedError;
 
   /// 단조증가 타임스탬프 (밀리초). 시간 조작 방어용.
@@ -347,10 +347,10 @@ class _$MonetizationStateImpl implements _MonetizationState {
     return EqualUnmodifiableListView(_purchasedPackIds);
   }
 
-  /// D-day 해금 날짜 목록 ('{date}_{eventId}' 형식).
+  /// D-day 해금 날짜 목록 ('{date}_{artist}_{type}' 형식).
   final List<String> _ddayUnlockedDates;
 
-  /// D-day 해금 날짜 목록 ('{date}_{eventId}' 형식).
+  /// D-day 해금 날짜 목록 ('{date}_{artist}_{type}' 형식).
   @override
   @JsonKey()
   List<String> get ddayUnlockedDates {
@@ -493,7 +493,7 @@ abstract class _MonetizationState implements MonetizationState {
   @override
   List<String> get purchasedPackIds;
 
-  /// D-day 해금 날짜 목록 ('{date}_{eventId}' 형식).
+  /// D-day 해금 날짜 목록 ('{date}_{artist}_{type}' 형식).
   @override
   List<String> get ddayUnlockedDates;
 

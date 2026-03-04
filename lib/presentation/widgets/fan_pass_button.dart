@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:fangeul/core/entities/monetization_state.dart';
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/ad_service_provider.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/presentation/providers/session_state_provider.dart';
@@ -51,8 +51,8 @@ class FanPassButtonState extends ConsumerState<FanPassButton> {
     _cooldownInitialized = true;
 
     if (monState.lastAdWatchTimestamp > 0) {
-      final elapsed = DateTime.now().millisecondsSinceEpoch -
-          monState.lastAdWatchTimestamp;
+      final elapsed =
+          DateTime.now().millisecondsSinceEpoch - monState.lastAdWatchTimestamp;
       final remaining = MonetizationNotifier.cooldownMs - elapsed;
       if (remaining > 0) {
         _startCooldownTimer(remaining);
@@ -166,16 +166,17 @@ class FanPassButtonState extends ConsumerState<FanPassButton> {
         isLimitReached || isCooldown || !isAdReady || isShowingAd;
 
     // 버튼 레이블 결정
+    final l = L.of(context);
     String label;
     if (isLimitReached) {
-      label = UiStrings.fanPassLimitReached;
+      label = l.fanPassLimitReached;
     } else if (isCooldown) {
-      label = '${UiStrings.fanPassButton} ${_formatCooldown(cooldownSeconds)}';
+      label = '${l.fanPassButton} ${_formatCooldown(cooldownSeconds)}';
     } else if (!isAdReady) {
-      label = UiStrings.fanPassAdLoading;
+      label = l.fanPassAdLoading;
     } else {
       label =
-          '${UiStrings.fanPassButton} ${UiStrings.fanPassRemaining(watchCount, MonetizationNotifier.dailyAdLimit)}';
+          '${l.fanPassButton} ${l.fanPassRemaining(watchCount, MonetizationNotifier.dailyAdLimit)}';
     }
 
     final theme = Theme.of(context);

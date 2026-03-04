@@ -6,7 +6,7 @@ part of 'dday_gift_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ddayGiftEventHash() => r'ad7d1033d1b96c225b823309f0dc5e5cbbe727b3';
+String _$ddayGiftEventHash() => r'3c09097bb4bd0ea45f1679432faa414c9854ca3b';
 
 /// D-day 선물 대상 이벤트.
 ///

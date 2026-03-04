@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:fangeul/core/entities/phrase_pack.dart';
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 
 /// 팩 필터 칩 바 — 즐겨찾기 + 팩별 필터 칩 수평 스크롤.
 ///
@@ -95,7 +95,7 @@ class PackFilterChips extends StatelessWidget {
 
     return FilterChip(
       label: Text(
-        UiStrings.miniChipFavorites,
+        L.of(context).miniChipFavorites,
         style: TextStyle(
           color: isFavoritesSelected
               ? theme.colorScheme.onPrimary
@@ -121,7 +121,7 @@ class PackFilterChips extends StatelessWidget {
 
     return FilterChip(
       label: Text(
-        myIdolLabel ?? UiStrings.idolSettingLabel,
+        myIdolLabel ?? L.of(context).idolSettingLabel,
         style: TextStyle(
           color: isMyIdolSelected
               ? theme.colorScheme.onPrimary
@@ -147,7 +147,7 @@ class PackFilterChips extends StatelessWidget {
 
     return FilterChip(
       label: Text(
-        UiStrings.miniChipToday,
+        L.of(context).miniChipToday,
         style: TextStyle(
           color: isTodaySelected
               ? theme.colorScheme.onPrimary

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:fangeul/data/models/color_pack.dart';
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 
 /// 감성 컬러 팩 카드 — 그리드에 표시되는 팩 정보 카드.
 ///
@@ -40,6 +40,7 @@ class ColorPackCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
     final primary = _parseHex(pack.primaryColor);
     final secondary = _parseHex(pack.secondaryColor);
@@ -80,7 +81,7 @@ class ColorPackCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            UiStrings.shopPurchased,
+                            l.shopPurchased,
                             style: theme.textTheme.labelSmall?.copyWith(
                               color: Colors.white,
                             ),
@@ -105,11 +106,11 @@ class ColorPackCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  UiStrings.shopPhraseCount(pack.phraseCount),
+                  l.shopPhraseCount(pack.phraseCount),
                   style: theme.textTheme.bodySmall,
                 ),
                 Text(
-                  UiStrings.shopPronunciationCount(pack.pronunciationCount),
+                  l.shopPronunciationCount(pack.pronunciationCount),
                   style: theme.textTheme.bodySmall,
                 ),
                 const SizedBox(height: 8),

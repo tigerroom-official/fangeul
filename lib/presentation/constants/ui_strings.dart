@@ -212,8 +212,7 @@ abstract final class UiStrings {
   static const conversionTriggerTitle = '더 많은 콘텐츠를 즐기세요';
 
   /// 전환 트리거 팝업 메시지.
-  static const conversionTriggerMessage =
-      '감성 컬러 팩으로\n무제한 해금하고 특별한 경험을 시작하세요';
+  static const conversionTriggerMessage = '감성 컬러 팩으로\n무제한 해금하고 특별한 경험을 시작하세요';
 
   /// 전환 트리거 팝업 CTA 버튼.
   static const conversionTriggerButton = '감성 컬러 팩 보기';

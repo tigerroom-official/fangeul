@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 
 /// 태그 필터 칩 -- 문구 카테고리 필터링.
 ///
@@ -57,22 +57,24 @@ class TagFilterChips extends StatelessWidget {
   /// 마이아이돌 칩 레이블. 예: '♡ BTS'.
   final String? myIdolLabel;
 
-  static const _tagLabels = {
-    'love': UiStrings.tagLove,
-    'cheer': UiStrings.tagCheer,
-    'daily': UiStrings.tagDaily,
-    'greeting': UiStrings.tagGreeting,
-    'emotional': UiStrings.tagEmotional,
-    'praise': UiStrings.tagPraise,
-    'fandom': UiStrings.tagFandom,
-    'birthday': UiStrings.tagBirthday,
-    'comeback': UiStrings.tagComeback,
-  };
+  static Map<String, String> _tagLabels(L l) => {
+        'love': l.tagLove,
+        'cheer': l.tagCheer,
+        'daily': l.tagDaily,
+        'greeting': l.tagGreeting,
+        'emotional': l.tagEmotional,
+        'praise': l.tagPraise,
+        'fandom': l.tagFandom,
+        'birthday': l.tagBirthday,
+        'comeback': l.tagComeback,
+      };
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
     final primary = theme.colorScheme.primary;
+    final labels = _tagLabels(l);
 
     return SizedBox(
       height: 48,
@@ -86,7 +88,7 @@ class TagFilterChips extends StatelessWidget {
               padding: const EdgeInsets.only(right: 8),
               child: _buildChip(
                 context,
-                label: memberLabel ?? UiStrings.idolMemberLabel,
+                label: memberLabel ?? l.idolMemberLabel,
                 selected: isMemberSelected,
                 onSelected: (_) => onMemberSelected?.call(),
                 primary: primary,
@@ -99,7 +101,7 @@ class TagFilterChips extends StatelessWidget {
               padding: const EdgeInsets.only(right: 8),
               child: _buildChip(
                 context,
-                label: myIdolLabel ?? UiStrings.idolSettingLabel,
+                label: myIdolLabel ?? l.idolSettingLabel,
                 selected: isMyIdolSelected,
                 onSelected: (_) => onMyIdolSelected?.call(),
                 primary: primary,
@@ -111,7 +113,7 @@ class TagFilterChips extends StatelessWidget {
             padding: const EdgeInsets.only(right: 8),
             child: _buildChip(
               context,
-              label: UiStrings.tagAll,
+              label: l.tagAll,
               selected:
                   !isMyIdolSelected && !isMemberSelected && selectedTag == null,
               onSelected: (_) => onTagSelected(null),
@@ -125,7 +127,7 @@ class TagFilterChips extends StatelessWidget {
               padding: const EdgeInsets.only(right: 8),
               child: _buildChip(
                 context,
-                label: _tagLabels[tag] ?? tag,
+                label: labels[tag] ?? tag,
                 selected: !isMyIdolSelected &&
                     !isMemberSelected &&
                     selectedTag == tag,

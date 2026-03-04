@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
 import 'package:fangeul/presentation/router/app_router.dart';
@@ -57,6 +58,9 @@ class FangeulApp extends ConsumerWidget {
       child: MaterialApp.router(
         title: UiStrings.appName,
         debugShowCheckedModeBanner: false,
+        localizationsDelegates: L.localizationsDelegates,
+        supportedLocales: L.supportedLocales,
+        locale: const Locale('ko'),
         theme: FangeulTheme.light(),
         darkTheme: FangeulTheme.dark(),
         themeMode: themeMode,

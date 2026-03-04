@@ -1,0 +1,171 @@
+{
+  "@@locale": "pt",
+
+  "appName": "Fangeul",
+  "appVersion": "0.1.0",
+  "appLegalese": "\u00a9 2026 Tiger Room",
+
+  "copied": "Copiado",
+  "errorPrefix": "Erro:",
+  "copyTooltip": "Copiar",
+  "favoriteTooltip": "Favorito",
+  "complete": "Concluído",
+  "share": "Compartilhar",
+
+  "streakDays": "{streak} dias seguidos",
+
+  "navHome": "Início",
+  "navConverter": "Conversor",
+  "navPhrases": "Frases",
+
+  "dailyCardLoadError": "Não foi possível carregar o card de hoje",
+
+  "converterTitle": "Conversor",
+  "converterTabEngToKor": "Ing->Kor",
+  "converterTabKorToEng": "Kor->Ing",
+  "converterTabRomanize": "Pronúncia",
+  "converterHintEngToKor": "Digite em inglês (ex: gksrmf)",
+  "converterHintKorToEng": "Digite em coreano (ex: 한글)",
+  "converterHintRomanize": "Digite em coreano (ex: 사랑해요)",
+
+  "phrasesTitle": "Frases",
+  "phrasesEmpty": "Nenhuma frase encontrada",
+  "phrasesMyIdolEmpty": "Selecione seu idol nas configurações\npara ver frases personalizadas",
+
+  "phrasesMyIdolChip": "♡ {name}",
+
+  "settingsTitle": "Configurações",
+  "themeLabel": "Tema",
+  "themeDark": "Escuro",
+  "themeLight": "Claro",
+  "themeSystem": "Sistema",
+  "appInfoTitle": "Sobre o app",
+  "appInfoSubtitle": "Fangeul v{version}",
+
+  "tagAll": "Todos",
+  "tagLove": "Amor",
+  "tagCheer": "Torcida",
+  "tagDaily": "Cotidiano",
+  "tagGreeting": "Saudação",
+  "tagEmotional": "Emoção",
+  "tagPraise": "Elogio",
+  "tagFandom": "Fandom",
+  "tagBirthday": "Aniversário",
+  "tagComeback": "Comeback",
+
+  "keyboardSpace": "Space",
+  "keyboardModeKorean": "Coreano",
+  "keyboardModeAbc": "ABC",
+  "keyboardModeNumbers": "123",
+  "keyboardDone": "OK",
+
+  "defaultTranslationLang": "en",
+
+  "bubbleLabel": "Bolha flutuante",
+  "bubbleDescription": "Use o conversor fora do app",
+  "bubblePermissionTitle": "Permissão de sobreposição necessária",
+  "bubblePermissionMessage": "Para exibir a bolha flutuante, é necessário permitir a sobreposição sobre outros apps.",
+  "bubblePermissionAllow": "Permitir",
+  "bubblePermissionDeny": "Cancelar",
+  "bubblePermissionDenied": "Você pode usar todos os recursos dentro do app",
+  "bubbleBatteryTitle": "Desativar otimização de bateria",
+  "bubbleBatteryMessage": "Para que a bolha funcione de forma estável, desative a otimização de bateria.\nEm alguns dispositivos, a otimização pode encerrar a bolha automaticamente.",
+  "bubbleBatteryAllow": "Abrir configurações",
+  "bubbleBatteryDeny": "Depois",
+
+  "miniConverterTitle": "Fangeul",
+  "miniTabPhrases": "Frases",
+  "miniTabFavorites": "Favoritos",
+  "miniTabRecent": "Recentes",
+  "miniChipFavorites": "★Favs",
+  "miniChipToday": "Hoje",
+  "miniPackLocked": "Este pacote está bloqueado\nEm breve você poderá desbloqueá-lo!",
+  "miniPackEmpty": "Nenhuma frase encontrada",
+  "miniOpenConverter": "Abrir conversor",
+  "miniBackToCompact": "Modo compacto",
+  "miniFavoritesEmpty": "Toque em ⭐ na tela de frases\npara adicionar favoritos",
+  "miniMyIdolEmpty": "Selecione seu idol nas configurações\npara ver frases personalizadas",
+  "miniTodayEmpty": "Nenhum evento relacionado hoje",
+  "miniRecentEmpty": "Nenhum texto copiado ainda",
+
+  "idolSelectTitle": "Escolha seu grupo favorito",
+  "idolSelectSubtitle": "Você pode mudar a qualquer momento nas configurações",
+  "idolSelectSkip": "Configurar depois",
+  "idolSelectOther": "Outro (digitar manualmente)",
+  "idolSelectOtherHint": "Digite o nome do grupo",
+  "idolSelectConfirm": "Confirmar",
+  "idolSettingLabel": "Meu idol",
+  "idolSettingEmpty": "Ainda não selecionado",
+
+  "idolSettingCurrent": "Atual: {name}",
+
+  "homeGreeting": "Olá, fã de {name}!",
+
+  "idolSettingChange": "Alterar",
+
+  "idolMemberHint": "Nome do membro (opcional)",
+  "idolMemberLabel": "Meu bias",
+
+  "phrasesMemberChip": "♡ {name}",
+
+  "phrasesGroupChip": "{name}",
+
+  "phrasesMemberEmpty": "Nenhuma frase exclusiva do membro",
+
+  "fanPassButton": "Fan Pass",
+
+  "fanPassRemaining": "({current}/{max})",
+
+  "fanPassCooldown": "Tente novamente em breve",
+  "fanPassAdLoading": "Preparando anúncio...",
+  "fanPassLimitReached": "Visualizações de hoje concluídas",
+  "fanPassPopupTitle": "Fan Pass obtido!",
+  "fanPassPopupConfirm": "OK",
+
+  "fanPassUnlockRemaining": "{time} restante",
+
+  "unlockRemaining": "{time} restante",
+
+  "unlockMidnightLabel": "Expira à meia-noite",
+
+  "unlockMidnightExpiry": "{time} restante (expira à meia-noite)",
+
+  "shopTitle": "Pacotes Color Vibe",
+  "shopRestore": "Restaurar compras",
+  "shopBuyButton": "Comprar",
+  "shopPurchased": "Comprado",
+
+  "shopPhraseCount": "{count} frases",
+
+  "shopPronunciationCount": "{count} pronúncias",
+
+  "shopRestoreSuccess": "Compras restauradas com sucesso",
+  "shopRestoreFailed": "Nenhuma compra para restaurar",
+
+  "ddayGiftTitle": "Parabéns pelo {eventName}!",
+
+  "ddayGiftMessage": "Todo o conteúdo é gratuito hoje",
+  "ddayGiftButton": "Receber presente",
+
+  "ttsLimitTitle": "As pronúncias de hoje acabaram!",
+
+  "ttsLimitMessage": "Amanhã você pode ouvir mais {limit} vezes",
+
+  "ttsLimitAdButton": "Ouvir mais com Fan Pass",
+
+  "conversionTriggerTitle": "Aproveite mais conteúdo",
+  "conversionTriggerMessage": "Desbloqueie tudo com um Pacote Color Vibe\ne comece uma experiência especial",
+  "conversionTriggerButton": "Ver Pacotes Color Vibe",
+  "conversionTriggerDismiss": "Depois",
+
+  "favLimitTitle": "Você tem muitas frases favoritas!",
+  "favLimitMessage": "Salve mais frases com o Fan Pass\nOu desbloqueie armazenamento ilimitado com um Pacote Color Vibe",
+  "favLimitAdButton": "Obter Fan Pass",
+  "favLimitIapButton": "Ver Pacotes Color Vibe",
+
+  "shopPurchaseSuccess": "Compra concluída! Conteúdo desbloqueado",
+  "shopPurchaseFailed": "A compra falhou. Tente novamente",
+  "shopPurchasePending": "Processando pagamento...",
+
+  "honeymoonDaysLeft": "{days} dias de teste grátis restantes"
+}

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/widgets/copy_feedback_overlay.dart';
 
 /// 간편모드 최근 복사 타일.
@@ -23,6 +23,7 @@ class RecentCopyTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
 
     return ListTile(
@@ -40,7 +41,7 @@ class RecentCopyTile extends StatelessWidget {
       ),
       trailing: IconButton(
         icon: const Icon(Icons.copy_rounded, size: 18),
-        tooltip: UiStrings.copyTooltip,
+        tooltip: l.copyTooltip,
         onPressed: () => _copy(context),
       ),
       onTap: () => _copy(context),
@@ -48,11 +49,12 @@ class RecentCopyTile extends StatelessWidget {
   }
 
   void _copy(BuildContext context) {
+    final l = L.of(context);
     Clipboard.setData(ClipboardData(text: text));
     CopyFeedback.trigger(context);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(UiStrings.copied),
+      SnackBar(
+        content: Text(l.copied),
         duration: Duration(seconds: 1),
         behavior: SnackBarBehavior.floating,
       ),

@@ -53,7 +53,8 @@ void main() {
       verifyNever(() => mockRepository.save(any()));
     });
 
-    test('should end honeymoon after Day 13 (Day 14+) — set honeymoonActive=false, favoriteSlotLimit=5',
+    test(
+        'should end honeymoon after Day 13 (Day 14+) — set honeymoonActive=false, favoriteSlotLimit=5',
         () async {
       final now = DateTime(2026, 3, 15); // Day 14
 
@@ -127,6 +128,43 @@ void main() {
       final result14 = await useCase.execute(now: day14);
       expect(result14.honeymoonActive, false);
       expect(result14.favoriteSlotLimit, 5);
+    });
+
+    test('should use custom honeymoonDays when provided', () async {
+      final fiveDaysLater = DateTime(2026, 3, 6); // Day 5
+
+      when(() => mockRepository.load()).thenAnswer(
+        (_) async => const MonetizationState(
+          installDate: '2026-03-01',
+          honeymoonActive: true,
+        ),
+      );
+      when(() => mockRepository.save(any())).thenAnswer((_) async {});
+
+      final customUseCase =
+          CheckHoneymoonUseCase(mockRepository, honeymoonDays: 3);
+      final result = await customUseCase.execute(now: fiveDaysLater);
+      expect(result.honeymoonActive, false);
+    });
+
+    test('should use custom defaultSlotLimit when provided', () async {
+      final fiveDaysLater = DateTime(2026, 3, 6); // Day 5
+
+      when(() => mockRepository.load()).thenAnswer(
+        (_) async => const MonetizationState(
+          installDate: '2026-03-01',
+          honeymoonActive: true,
+        ),
+      );
+      when(() => mockRepository.save(any())).thenAnswer((_) async {});
+
+      final customUseCase = CheckHoneymoonUseCase(
+        mockRepository,
+        honeymoonDays: 3,
+        defaultSlotLimit: 10,
+      );
+      final result = await customUseCase.execute(now: fiveDaysLater);
+      expect(result.favoriteSlotLimit, 10);
     });
   });
 }

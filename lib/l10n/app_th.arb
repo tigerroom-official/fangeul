@@ -1,0 +1,171 @@
+{
+  "@@locale": "th",
+
+  "appName": "Fangeul",
+  "appVersion": "0.1.0",
+  "appLegalese": "\u00a9 2026 Tiger Room",
+
+  "copied": "คัดลอกแล้ว",
+  "errorPrefix": "ข้อผิดพลาด:",
+  "copyTooltip": "คัดลอก",
+  "favoriteTooltip": "รายการโปรด",
+  "complete": "เสร็จ",
+  "share": "แชร์",
+
+  "streakDays": "ต่อเนื่อง {streak} วัน",
+
+  "navHome": "หน้าหลัก",
+  "navConverter": "แปลงภาษา",
+  "navPhrases": "วลี",
+
+  "dailyCardLoadError": "ไม่สามารถโหลดการ์ดวันนี้ได้",
+
+  "converterTitle": "แปลงภาษา",
+  "converterTabEngToKor": "อังกฤษ→เกาหลี",
+  "converterTabKorToEng": "เกาหลี→อังกฤษ",
+  "converterTabRomanize": "คำอ่าน",
+  "converterHintEngToKor": "พิมพ์ภาษาอังกฤษ (เช่น gksrmf)",
+  "converterHintKorToEng": "พิมพ์ภาษาเกาหลี (เช่น 한글)",
+  "converterHintRomanize": "พิมพ์ภาษาเกาหลี (เช่น 사랑해요)",
+
+  "phrasesTitle": "วลี",
+  "phrasesEmpty": "ไม่มีวลี",
+  "phrasesMyIdolEmpty": "เลือกไอดอลในการตั้งค่า\nเพื่อดูวลีที่เหมาะกับคุณ",
+
+  "phrasesMyIdolChip": "♡ {name}",
+
+  "settingsTitle": "การตั้งค่า",
+  "themeLabel": "ธีม",
+  "themeDark": "มืด",
+  "themeLight": "สว่าง",
+  "themeSystem": "ระบบ",
+  "appInfoTitle": "ข้อมูลแอป",
+  "appInfoSubtitle": "Fangeul v{version}",
+
+  "tagAll": "ทั้งหมด",
+  "tagLove": "ความรัก",
+  "tagCheer": "เชียร์",
+  "tagDaily": "ประจำวัน",
+  "tagGreeting": "ทักทาย",
+  "tagEmotional": "อารมณ์",
+  "tagPraise": "ชื่นชม",
+  "tagFandom": "แฟนด้อม",
+  "tagBirthday": "วันเกิด",
+  "tagComeback": "คัมแบ็ก",
+
+  "keyboardSpace": "Space",
+  "keyboardModeKorean": "เกาหลี",
+  "keyboardModeAbc": "ABC",
+  "keyboardModeNumbers": "123",
+  "keyboardDone": "เสร็จ",
+
+  "defaultTranslationLang": "en",
+
+  "bubbleLabel": "บับเบิลลอย",
+  "bubbleDescription": "ใช้ตัวแปลงนอกแอปได้",
+  "bubblePermissionTitle": "ต้องการสิทธิ์การแสดงผลทับ",
+  "bubblePermissionMessage": "เพื่อแสดงบับเบิลลอย จำเป็นต้องได้รับอนุญาตให้แสดงผลทับแอปอื่น",
+  "bubblePermissionAllow": "อนุญาต",
+  "bubblePermissionDeny": "ยกเลิก",
+  "bubblePermissionDenied": "คุณยังสามารถใช้ทุกฟีเจอร์ได้ในแอป",
+  "bubbleBatteryTitle": "ปิดการเพิ่มประสิทธิภาพแบตเตอรี่",
+  "bubbleBatteryMessage": "เพื่อให้บับเบิลทำงานได้เสถียร กรุณาปิดการเพิ่มประสิทธิภาพแบตเตอรี่\nในบางอุปกรณ์ การเพิ่มประสิทธิภาพแบตเตอรี่อาจปิดบับเบิลโดยอัตโนมัติ",
+  "bubbleBatteryAllow": "เปิดการตั้งค่า",
+  "bubbleBatteryDeny": "ไว้ทีหลัง",
+
+  "miniConverterTitle": "Fangeul",
+  "miniTabPhrases": "วลี",
+  "miniTabFavorites": "รายการโปรด",
+  "miniTabRecent": "ล่าสุด",
+  "miniChipFavorites": "★โปรด",
+  "miniChipToday": "วันนี้",
+  "miniPackLocked": "แพ็คนี้ยังล็อกอยู่\nเร็วๆ นี้จะปลดล็อกได้!",
+  "miniPackEmpty": "ไม่มีวลี",
+  "miniOpenConverter": "เปิดตัวแปลง",
+  "miniBackToCompact": "โหมดย่อ",
+  "miniFavoritesEmpty": "แตะ ⭐ ที่วลี\nเพื่อเพิ่มในรายการโปรด",
+  "miniMyIdolEmpty": "เลือกไอดอลในการตั้งค่า\nเพื่อดูวลีที่เหมาะกับคุณ",
+  "miniTodayEmpty": "ไม่มีอีเวนต์ที่เกี่ยวข้องวันนี้",
+  "miniRecentEmpty": "ยังไม่มีข้อความที่คัดลอก",
+
+  "idolSelectTitle": "เลือกกรุ๊ปที่ชอบ",
+  "idolSelectSubtitle": "เปลี่ยนได้ทุกเมื่อในการตั้งค่า",
+  "idolSelectSkip": "ตั้งค่าทีหลัง",
+  "idolSelectOther": "อื่นๆ (พิมพ์เอง)",
+  "idolSelectOtherHint": "ใส่ชื่อกรุ๊ป",
+  "idolSelectConfirm": "ยืนยัน",
+  "idolSettingLabel": "ไอดอลของฉัน",
+  "idolSettingEmpty": "ยังไม่ได้เลือก",
+
+  "idolSettingCurrent": "ตอนนี้: {name}",
+
+  "homeGreeting": "สวัสดี แฟน {name}!",
+
+  "idolSettingChange": "เปลี่ยน",
+
+  "idolMemberHint": "ชื่อเมมเบอร์ (ไม่บังคับ)",
+  "idolMemberLabel": "ไบแอส",
+
+  "phrasesMemberChip": "♡ {name}",
+
+  "phrasesGroupChip": "{name}",
+
+  "phrasesMemberEmpty": "ไม่มีวลีเฉพาะเมมเบอร์",
+
+  "fanPassButton": "Fan Pass",
+
+  "fanPassRemaining": "({current}/{max})",
+
+  "fanPassCooldown": "กรุณาลองใหม่อีกครู่",
+  "fanPassAdLoading": "กำลังโหลดโฆษณา...",
+  "fanPassLimitReached": "วันนี้ครบแล้ว",
+  "fanPassPopupTitle": "ได้รับ Fan Pass แล้ว!",
+  "fanPassPopupConfirm": "ตกลง",
+
+  "fanPassUnlockRemaining": "เหลืออีก {time}",
+
+  "unlockRemaining": "เหลืออีก {time}",
+
+  "unlockMidnightLabel": "หมดอายุตอนเที่ยงคืน",
+
+  "unlockMidnightExpiry": "เหลืออีก {time} (หมดอายุตอนเที่ยงคืน)",
+
+  "shopTitle": "แพ็คสีอารมณ์",
+  "shopRestore": "กู้คืนการซื้อ",
+  "shopBuyButton": "ซื้อ",
+  "shopPurchased": "ซื้อแล้ว",
+
+  "shopPhraseCount": "{count} วลี",
+
+  "shopPronunciationCount": "{count} คำอ่าน",
+
+  "shopRestoreSuccess": "กู้คืนการซื้อสำเร็จ",
+  "shopRestoreFailed": "ไม่พบรายการซื้อที่จะกู้คืน",
+
+  "ddayGiftTitle": "สุขสันต์ {eventName}!",
+
+  "ddayGiftMessage": "วันนี้คอนเทนต์ทั้งหมดฟรี",
+  "ddayGiftButton": "รับของขวัญ",
+
+  "ttsLimitTitle": "หมดโควต้าฟังวันนี้แล้ว!",
+
+  "ttsLimitMessage": "พรุ่งนี้จะฟังได้อีก {limit} ครั้ง",
+
+  "ttsLimitAdButton": "ฟังเพิ่มด้วย Fan Pass",
+
+  "conversionTriggerTitle": "เพลิดเพลินกับคอนเทนต์มากขึ้น",
+  "conversionTriggerMessage": "ปลดล็อกทั้งหมดด้วยแพ็คสีอารมณ์\nเริ่มต้นประสบการณ์พิเศษ",
+  "conversionTriggerButton": "ดูแพ็คสีอารมณ์",
+  "conversionTriggerDismiss": "ไว้ทีหลัง",
+
+  "favLimitTitle": "คุณชอบวลีเยอะมากเลย!",
+  "favLimitMessage": "บันทึกวลีเพิ่มด้วย Fan Pass\nหรือเก็บไม่จำกัดด้วยแพ็คสีอารมณ์",
+  "favLimitAdButton": "รับ Fan Pass",
+  "favLimitIapButton": "ดูแพ็คสี",
+
+  "shopPurchaseSuccess": "ซื้อสำเร็จ! ปลดล็อกคอนเทนต์แล้ว",
+  "shopPurchaseFailed": "การซื้อล้มเหลว กรุณาลองใหม่",
+  "shopPurchasePending": "กำลังดำเนินการชำระเงิน...",
+
+  "honeymoonDaysLeft": "ทดลองใช้ฟรีเหลืออีก {days} วัน"
+}

@@ -105,8 +105,10 @@ void main() {
       expect(AnalyticsEvents.iapRestorePurchase, 'iap_restore_purchase');
       expect(AnalyticsEvents.favLimitReached, 'fav_limit_reached');
       expect(AnalyticsEvents.ttsLimitReached, 'tts_limit_reached');
-      expect(AnalyticsEvents.conversionTriggerShown, 'conversion_trigger_shown');
-      expect(AnalyticsEvents.conversionTriggerClicked, 'conversion_trigger_clicked');
+      expect(
+          AnalyticsEvents.conversionTriggerShown, 'conversion_trigger_shown');
+      expect(AnalyticsEvents.conversionTriggerClicked,
+          'conversion_trigger_clicked');
       expect(AnalyticsEvents.ddayGiftActivated, 'dday_gift_activated');
       expect(AnalyticsEvents.honeymoonEnded, 'honeymoon_ended');
     });

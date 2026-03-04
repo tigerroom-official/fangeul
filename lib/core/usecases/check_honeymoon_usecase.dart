@@ -8,12 +8,20 @@ import 'package:fangeul/core/repositories/monetization_repository.dart';
 /// Day 0~13은 모든 기능이 무료로 제공되는 허니문 기간이다.
 class CheckHoneymoonUseCase {
   /// [repository]를 통해 수익화 상태를 로드/저장한다.
-  CheckHoneymoonUseCase(this._repository);
+  ///
+  /// [honeymoonDays]와 [defaultSlotLimit]은 Remote Config에서 주입 가능.
+  /// 기본값은 기존 하드코딩 수치와 동일.
+  CheckHoneymoonUseCase(
+    this._repository, {
+    int honeymoonDays = 14,
+    int defaultSlotLimit = 5,
+  })  : _honeymoonDays = honeymoonDays,
+        _defaultSlotLimit = defaultSlotLimit;
 
   final MonetizationRepository _repository;
 
-  static const int _honeymoonDays = 14; // Day 0~13
-  static const int _defaultSlotLimit = 5;
+  final int _honeymoonDays;
+  final int _defaultSlotLimit;
 
   /// 앱 진입 시 허니문 상태를 체크한다.
   ///

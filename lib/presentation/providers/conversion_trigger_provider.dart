@@ -2,6 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
+import 'package:fangeul/presentation/providers/remote_config_providers.dart';
 
 part 'conversion_trigger_provider.g.dart';
 
@@ -38,8 +39,10 @@ bool shouldShowConversionTrigger(ShouldShowConversionTriggerRef ref) {
   final favCount =
       ref.watch(favoritePhrasesNotifierProvider).valueOrNull?.length ?? 0;
 
-  return daysSince >= 14 &&
-      state.adWatchCount >= 3 &&
+  final config = ref.watch(remoteConfigValuesProvider);
+
+  return daysSince >= config.honeymoonDays &&
+      state.adWatchCount >= config.conversionTriggerAdCount &&
       state.favoriteSlotLimit > 0 &&
       favCount >= state.favoriteSlotLimit &&
       state.purchasedPackIds.isEmpty;

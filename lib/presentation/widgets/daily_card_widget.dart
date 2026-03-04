@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:fangeul/core/entities/daily_card.dart';
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/theme/fangeul_text_styles.dart';
 
 /// 데일리 카드 -- 큰 한글 중앙 배치 + 발음 + 번역.
@@ -36,6 +36,7 @@ class DailyCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
     final translation = card.phrase.translations[translationLang] ?? '';
 
@@ -90,25 +91,25 @@ class DailyCardWidget extends StatelessWidget {
                 FilledButton.icon(
                   onPressed: onComplete,
                   icon: const Icon(Icons.check_circle_outline),
-                  label: const Text(UiStrings.complete),
+                  label: Text(l.complete),
                 ),
                 const SizedBox(width: 12),
               ],
               OutlinedButton.icon(
                 onPressed: onShare,
                 icon: const Icon(Icons.share_outlined),
-                label: const Text(UiStrings.share),
+                label: Text(l.share),
               ),
               const SizedBox(width: 12),
               IconButton(
                 onPressed: () {
                   Clipboard.setData(ClipboardData(text: card.phrase.ko));
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text(UiStrings.copied)),
+                    SnackBar(content: Text(l.copied)),
                   );
                 },
                 icon: const Icon(Icons.copy_outlined),
-                tooltip: UiStrings.copyTooltip,
+                tooltip: l.copyTooltip,
               ),
             ],
           ),

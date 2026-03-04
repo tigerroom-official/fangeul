@@ -6,8 +6,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'package:fangeul/core/entities/monetization_state.dart';
+import 'package:fangeul/core/entities/remote_config_values.dart';
 import 'package:fangeul/data/datasources/monetization_local_datasource.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
+import 'package:fangeul/presentation/providers/remote_config_providers.dart';
 
 class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
 
@@ -27,6 +29,8 @@ void main() {
     container = ProviderContainer(
       overrides: [
         monetizationStorageProvider.overrideWithValue(mockStorage),
+        remoteConfigValuesProvider
+            .overrideWithValue(const RemoteConfigValues()),
       ],
     );
   }
@@ -49,6 +53,8 @@ void main() {
     container = ProviderContainer(
       overrides: [
         monetizationStorageProvider.overrideWithValue(mockStorage),
+        remoteConfigValuesProvider
+            .overrideWithValue(const RemoteConfigValues()),
       ],
     );
   }
@@ -571,6 +577,8 @@ void main() {
       container = ProviderContainer(
         overrides: [
           monetizationStorageProvider.overrideWithValue(mockStorage),
+          remoteConfigValuesProvider
+              .overrideWithValue(const RemoteConfigValues()),
         ],
       );
 
@@ -595,6 +603,8 @@ void main() {
       container = ProviderContainer(
         overrides: [
           monetizationStorageProvider.overrideWithValue(mockStorage),
+          remoteConfigValuesProvider
+              .overrideWithValue(const RemoteConfigValues()),
         ],
       );
 
@@ -620,6 +630,8 @@ void main() {
       container = ProviderContainer(
         overrides: [
           monetizationStorageProvider.overrideWithValue(mockStorage),
+          remoteConfigValuesProvider
+              .overrideWithValue(const RemoteConfigValues()),
         ],
       );
 
@@ -648,6 +660,8 @@ void main() {
       container = ProviderContainer(
         overrides: [
           monetizationStorageProvider.overrideWithValue(mockStorage),
+          remoteConfigValuesProvider
+              .overrideWithValue(const RemoteConfigValues()),
         ],
       );
 

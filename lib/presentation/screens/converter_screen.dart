@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:fangeul/core/engines/keyboard_converter.dart';
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/converter_providers.dart';
 import 'package:fangeul/presentation/widgets/converter_input.dart';
 import 'package:fangeul/presentation/widgets/korean_keyboard.dart';
@@ -37,16 +37,20 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
   List<String> _jamoList = [];
 
   static const _modes = ConvertMode.values;
-  static const _labels = [
-    UiStrings.converterTabEngToKor,
-    UiStrings.converterTabKorToEng,
-    UiStrings.converterTabRomanize,
-  ];
-  static const _hints = [
-    UiStrings.converterHintEngToKor,
-    UiStrings.converterHintKorToEng,
-    UiStrings.converterHintRomanize,
-  ];
+
+  /// 변환 모드별 탭 레이블 목록 (context 기반 i18n).
+  List<String> _labels(L l) => [
+        l.converterTabEngToKor,
+        l.converterTabKorToEng,
+        l.converterTabRomanize,
+      ];
+
+  /// 변환 모드별 힌트 텍스트 목록 (context 기반 i18n).
+  List<String> _hints(L l) => [
+        l.converterHintEngToKor,
+        l.converterHintKorToEng,
+        l.converterHintRomanize,
+      ];
 
   /// 현재 선택된 변환 모드.
   ConvertMode get _currentMode => _modes[_tabController.index];
@@ -191,6 +195,7 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final state = ref.watch(converterNotifierProvider);
 
     final output = switch (state) {
@@ -202,10 +207,10 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(UiStrings.converterTitle),
+        title: Text(l.converterTitle),
         bottom: TabBar(
           controller: _tabController,
-          tabs: _labels.map((l) => Tab(text: l)).toList(),
+          tabs: _labels(l).map((label) => Tab(text: label)).toList(),
         ),
       ),
       body: Column(
@@ -216,7 +221,7 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
               child: ConverterInput(
                 controller: _textController,
                 output: output,
-                hintText: _hints[_tabController.index],
+                hintText: _hints(l)[_tabController.index],
                 onClear: _clear,
               ),
             ),

@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:fangeul/core/entities/phrase.dart';
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/compact_phrase_filter_provider.dart';
 import 'package:fangeul/presentation/providers/calendar_providers.dart';
 import 'package:fangeul/presentation/providers/copy_history_provider.dart';
@@ -43,9 +43,9 @@ class CompactPhraseList extends ConsumerWidget {
       children: [
         TabBar(
           controller: tabController,
-          tabs: const [
-            Tab(text: UiStrings.miniTabPhrases),
-            Tab(text: UiStrings.miniTabRecent),
+          tabs: [
+            Tab(text: L.of(context).miniTabPhrases),
+            Tab(text: L.of(context).miniTabRecent),
           ],
         ),
         Expanded(
@@ -53,7 +53,7 @@ class CompactPhraseList extends ConsumerWidget {
             controller: tabController,
             children: [
               _PhrasesTab(onCopied: onCopied),
-              _buildRecentTab(history),
+              _buildRecentTab(context, history),
             ],
           ),
         ),
@@ -61,10 +61,10 @@ class CompactPhraseList extends ConsumerWidget {
     );
   }
 
-  Widget _buildRecentTab(List<String> history) {
+  Widget _buildRecentTab(BuildContext context, List<String> history) {
     if (history.isEmpty) {
-      return const Center(
-        child: Text(UiStrings.miniRecentEmpty),
+      return Center(
+        child: Text(L.of(context).miniRecentEmpty),
       );
     }
 
@@ -143,9 +143,9 @@ class _PhrasesTabState extends ConsumerState<_PhrasesTab>
     final memberName = ref.watch(myIdolMemberNameProvider).valueOrNull;
 
     // 마이 아이돌 칩 레이블: ♡ {멤버명 or 그룹명}
-    final myIdolLabel = hasIdol
-        ? UiStrings.phrasesMyIdolChip(memberName ?? idolName)
-        : null;
+    final l = L.of(context);
+    final myIdolLabel =
+        hasIdol ? l.phrasesMyIdolChip(memberName ?? idolName) : null;
 
     // "오늘" 칩 표시 조건 — 오늘 이벤트가 있는지
     final todayAsync = ref.watch(todaySuggestedPhrasesProvider);
@@ -199,12 +199,12 @@ class _PhrasesTabState extends ConsumerState<_PhrasesTab>
             lockedAsync,
             useList: isFavoritesSelected || isMyIdolSelected || isTodaySelected,
             emptyMessage: isMyIdolSelected
-                ? UiStrings.miniMyIdolEmpty
+                ? l.miniMyIdolEmpty
                 : isTodaySelected
-                    ? UiStrings.miniTodayEmpty
+                    ? l.miniTodayEmpty
                     : isFavoritesSelected
-                        ? UiStrings.miniFavoritesEmpty
-                        : UiStrings.miniPackEmpty,
+                        ? l.miniFavoritesEmpty
+                        : l.miniPackEmpty,
           ),
         ),
       ],
@@ -221,9 +221,9 @@ class _PhrasesTabState extends ConsumerState<_PhrasesTab>
     // 잠금 팩
     final isLocked = lockedAsync.valueOrNull ?? false;
     if (isLocked) {
-      return const Center(
+      return Center(
         child: Text(
-          UiStrings.miniPackLocked,
+          L.of(context).miniPackLocked,
           textAlign: TextAlign.center,
         ),
       );
@@ -249,7 +249,7 @@ class _PhrasesTabState extends ConsumerState<_PhrasesTab>
         return _buildPackSwiper(context, phrases);
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, __) => const Center(child: Text(UiStrings.miniPackEmpty)),
+      error: (_, __) => Center(child: Text(L.of(context).miniPackEmpty)),
     );
   }
 
@@ -353,7 +353,7 @@ class _PhraseCard extends ConsumerWidget {
                   isFavorite ? Icons.star_rounded : Icons.star_border_rounded,
                   color: isFavorite ? theme.colorScheme.primary : null,
                 ),
-                tooltip: UiStrings.favoriteTooltip,
+                tooltip: L.of(context).favoriteTooltip,
                 onPressed: () {
                   ref
                       .read(favoritePhrasesNotifierProvider.notifier)
@@ -363,7 +363,7 @@ class _PhraseCard extends ConsumerWidget {
               const SizedBox(width: 16),
               IconButton(
                 icon: const Icon(Icons.copy_rounded),
-                tooltip: UiStrings.copyTooltip,
+                tooltip: L.of(context).copyTooltip,
                 onPressed: () => _copy(context, ref),
               ),
             ],

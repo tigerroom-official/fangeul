@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/widgets/korean_keyboard.dart';
 
 void main() {
@@ -13,6 +14,9 @@ void main() {
   }) {
     return ProviderScope(
       child: MaterialApp(
+        localizationsDelegates: L.localizationsDelegates,
+        supportedLocales: L.supportedLocales,
+        locale: const Locale('ko'),
         home: Scaffold(
           body: KoreanKeyboard(
             isEngToKor: isEngToKor,

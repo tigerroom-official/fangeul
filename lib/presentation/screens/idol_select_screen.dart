@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:fangeul/core/entities/idol_group.dart';
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/widgets/multi_mode_keyboard.dart';
 
@@ -88,8 +88,7 @@ class _IdolSelectScreenState extends ConsumerState<IdolSelectScreen> {
   void _onFieldFocus(_ActiveField field) {
     if (_activeField != null && _activeField != field) {
       // 이전 필드에 현재 키보드 텍스트 저장
-      _activeController?.text =
-          _keyboardKey.currentState?.currentText ?? '';
+      _activeController?.text = _keyboardKey.currentState?.currentText ?? '';
     }
     _activeField = field;
     final text = _activeController?.text ?? '';
@@ -111,8 +110,7 @@ class _IdolSelectScreenState extends ConsumerState<IdolSelectScreen> {
   void _dismissKeyboard() {
     if (!_showKeyboard) return;
     // flush 후 활성 필드에 최종 텍스트 저장
-    _activeController?.text =
-        _keyboardKey.currentState?.currentText ?? '';
+    _activeController?.text = _keyboardKey.currentState?.currentText ?? '';
     setState(() {
       _showKeyboard = false;
       _activeField = null;
@@ -121,13 +119,13 @@ class _IdolSelectScreenState extends ConsumerState<IdolSelectScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final groupsAsync = ref.watch(availableGroupsProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: widget.isOnboarding
-          ? null
-          : AppBar(title: const Text(UiStrings.idolSettingLabel)),
+      appBar:
+          widget.isOnboarding ? null : AppBar(title: Text(l.idolSettingLabel)),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
@@ -137,13 +135,13 @@ class _IdolSelectScreenState extends ConsumerState<IdolSelectScreen> {
               if (widget.isOnboarding) ...[
                 const SizedBox(height: 32),
                 Text(
-                  UiStrings.idolSelectTitle,
+                  l.idolSelectTitle,
                   style: theme.textTheme.headlineSmall,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  UiStrings.idolSelectSubtitle,
+                  l.idolSelectSubtitle,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -153,8 +151,7 @@ class _IdolSelectScreenState extends ConsumerState<IdolSelectScreen> {
               ],
               Expanded(
                 child: groupsAsync.when(
-                  data: (groups) =>
-                      _buildScrollableContent(groups, theme),
+                  data: (groups) => _buildScrollableContent(groups, theme),
                   loading: () =>
                       const Center(child: CircularProgressIndicator()),
                   error: (e, _) => Center(child: Text('$e')),
@@ -195,7 +192,7 @@ class _IdolSelectScreenState extends ConsumerState<IdolSelectScreen> {
           const SizedBox(height: 8),
           TextButton(
             onPressed: _skip,
-            child: const Text(UiStrings.idolSelectSkip),
+            child: Text(L.of(context).idolSelectSkip),
           ),
         ],
         // 키보드 올라왔을 때 하단 여백
@@ -241,6 +238,7 @@ class _IdolSelectScreenState extends ConsumerState<IdolSelectScreen> {
   }
 
   Widget _buildCustomInputTile(ThemeData theme) {
+    final l = L.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Material(
@@ -265,16 +263,15 @@ class _IdolSelectScreenState extends ConsumerState<IdolSelectScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(UiStrings.idolSelectOther,
-                    style: theme.textTheme.titleMedium),
+                Text(l.idolSelectOther, style: theme.textTheme.titleMedium),
                 if (_isCustomInput) ...[
                   const SizedBox(height: 8),
                   TextField(
                     controller: _customController,
                     readOnly: true,
                     showCursor: true,
-                    decoration: const InputDecoration(
-                      hintText: UiStrings.idolSelectOtherHint,
+                    decoration: InputDecoration(
+                      hintText: l.idolSelectOtherHint,
                       isDense: true,
                     ),
                     onTap: () => _onFieldFocus(_ActiveField.custom),
@@ -294,9 +291,9 @@ class _IdolSelectScreenState extends ConsumerState<IdolSelectScreen> {
       controller: _memberController,
       readOnly: true,
       showCursor: true,
-      decoration: const InputDecoration(
-        hintText: UiStrings.idolMemberHint,
-        prefixIcon: Icon(Icons.person_outline),
+      decoration: InputDecoration(
+        hintText: L.of(context).idolMemberHint,
+        prefixIcon: const Icon(Icons.person_outline),
       ),
       onTap: () => _onFieldFocus(_ActiveField.member),
     );
@@ -306,7 +303,7 @@ class _IdolSelectScreenState extends ConsumerState<IdolSelectScreen> {
   Widget _buildConfirmButton() {
     return FilledButton(
       onPressed: _confirmSelection,
-      child: const Text(UiStrings.idolSelectConfirm),
+      child: Text(L.of(context).idolSelectConfirm),
     );
   }
 

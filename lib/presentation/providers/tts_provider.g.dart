@@ -6,7 +6,7 @@ part of 'tts_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ttsServiceHash() => r'279b1c4408e509b894602492943e5a98871893c0';
+String _$ttsServiceHash() => r'a08a6921cd67b3920f0affe7ded798623d538315';
 
 /// TtsService 인스턴스 Provider.
 ///
@@ -27,7 +27,7 @@ final ttsServiceProvider = Provider<TtsService>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef TtsServiceRef = ProviderRef<TtsService>;
-String _$canPlayTtsHash() => r'267cc2300998731072efcb1797c8da24f01c4b3a';
+String _$canPlayTtsHash() => r'cca3785aecef9b4e097212f8f7e988f17f339346';
 
 /// TTS 재생 가능 여부 편의 Provider.
 ///

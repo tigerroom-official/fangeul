@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'package:fangeul/core/entities/monetization_state.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/ad_service_provider.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
@@ -62,8 +63,11 @@ void main() {
           return _TestSessionBannerHidden(sessionBannerHidden);
         }),
       ],
-      child: const MaterialApp(
-        home: Scaffold(
+      child: MaterialApp(
+        localizationsDelegates: L.localizationsDelegates,
+        supportedLocales: L.supportedLocales,
+        locale: const Locale('ko'),
+        home: const Scaffold(
           body: Center(child: FanPassButton()),
         ),
       ),
@@ -299,6 +303,9 @@ void main() {
               }),
             ],
             child: MaterialApp(
+              localizationsDelegates: L.localizationsDelegates,
+              supportedLocales: L.supportedLocales,
+              locale: const Locale('ko'),
               home: Scaffold(
                 body: Builder(
                   builder: (context) => FilledButton(
@@ -340,6 +347,9 @@ void main() {
               }),
             ],
             child: MaterialApp(
+              localizationsDelegates: L.localizationsDelegates,
+              supportedLocales: L.supportedLocales,
+              locale: const Locale('ko'),
               home: Scaffold(
                 body: Builder(
                   builder: (context) => FilledButton(
@@ -387,6 +397,9 @@ void main() {
               }),
             ],
             child: MaterialApp(
+              localizationsDelegates: L.localizationsDelegates,
+              supportedLocales: L.supportedLocales,
+              locale: const Locale('ko'),
               home: Scaffold(
                 body: Builder(
                   builder: (context) => FilledButton(
@@ -430,6 +443,9 @@ void main() {
               }),
             ],
             child: MaterialApp(
+              localizationsDelegates: L.localizationsDelegates,
+              supportedLocales: L.supportedLocales,
+              locale: const Locale('ko'),
               home: Scaffold(
                 body: Builder(
                   builder: (context) => FilledButton(
@@ -475,6 +491,9 @@ void main() {
               }),
             ],
             child: MaterialApp(
+              localizationsDelegates: L.localizationsDelegates,
+              supportedLocales: L.supportedLocales,
+              locale: const Locale('ko'),
               home: Scaffold(
                 body: Builder(
                   builder: (context) => FilledButton(

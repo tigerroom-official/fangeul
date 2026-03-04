@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:fangeul/core/entities/monetization_state.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/presentation/widgets/unlock_timer_widget.dart';
@@ -23,8 +24,11 @@ void main() {
           return _TestMonetizationNotifier(monState);
         }),
       ],
-      child: const MaterialApp(
-        home: Scaffold(
+      child: MaterialApp(
+        localizationsDelegates: L.localizationsDelegates,
+        supportedLocales: L.supportedLocales,
+        locale: const Locale('ko'),
+        home: const Scaffold(
           body: UnlockTimerWidget(),
         ),
       ),
@@ -109,8 +113,7 @@ void main() {
         expect(find.textContaining('남음'), findsNothing);
 
         // SizedBox.shrink 확인
-        final sizedBoxes =
-            tester.widgetList<SizedBox>(find.byType(SizedBox));
+        final sizedBoxes = tester.widgetList<SizedBox>(find.byType(SizedBox));
         final shrink = sizedBoxes.where(
           (sb) => sb.width == 0.0 && sb.height == 0.0,
         );
@@ -133,8 +136,7 @@ void main() {
         expect(find.textContaining('남음'), findsNothing);
 
         // SizedBox.shrink 확인
-        final sizedBoxes =
-            tester.widgetList<SizedBox>(find.byType(SizedBox));
+        final sizedBoxes = tester.widgetList<SizedBox>(find.byType(SizedBox));
         final shrink = sizedBoxes.where(
           (sb) => sb.width == 0.0 && sb.height == 0.0,
         );
@@ -146,8 +148,7 @@ void main() {
       'should update display when timer ticks',
       (tester) async {
         // 5초 후 만료 — 짧은 시간으로 테스트
-        final expiresAt =
-            DateTime.now().millisecondsSinceEpoch + (5 * 1000);
+        final expiresAt = DateTime.now().millisecondsSinceEpoch + (5 * 1000);
 
         await tester.pumpWidget(buildTestWidget(
           unlockExpiresAt: expiresAt,
@@ -204,8 +205,7 @@ void main() {
       (tester) async {
         // 내일 오후 2시 만료
         final now = DateTime.now();
-        final nonMidnight =
-            DateTime(now.year, now.month, now.day + 1, 14, 30);
+        final nonMidnight = DateTime(now.year, now.month, now.day + 1, 14, 30);
         final expiresAt = nonMidnight.millisecondsSinceEpoch;
 
         await tester.pumpWidget(buildTestWidget(

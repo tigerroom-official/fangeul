@@ -7,9 +7,11 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:fangeul/core/entities/monetization_state.dart';
+import 'package:fangeul/core/entities/remote_config_values.dart';
 import 'package:fangeul/data/datasources/monetization_local_datasource.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
+import 'package:fangeul/presentation/providers/remote_config_providers.dart';
 
 class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
 
@@ -91,11 +93,9 @@ void main() {
         final dataStr = jsonEncode(monetizationState.toJson());
         final sig = dataSource.computeHmac(dataStr);
 
-        when(() => mockStorage.read(
-                key: MonetizationLocalDataSource.dataKey))
+        when(() => mockStorage.read(key: MonetizationLocalDataSource.dataKey))
             .thenAnswer((_) async => dataStr);
-        when(() =>
-                mockStorage.read(key: MonetizationLocalDataSource.sigKey))
+        when(() => mockStorage.read(key: MonetizationLocalDataSource.sigKey))
             .thenAnswer((_) async => sig);
         when(() => mockStorage.write(
             key: any(named: 'key'),
@@ -118,6 +118,8 @@ void main() {
         final c = ProviderContainer(
           overrides: [
             monetizationStorageProvider.overrideWithValue(mockStorage),
+            remoteConfigValuesProvider
+                .overrideWithValue(const RemoteConfigValues()),
           ],
         );
         addTearDown(c.dispose);
@@ -132,8 +134,7 @@ void main() {
         final result = await notifier.toggle('행복해요');
         expect(result, isFalse);
 
-        final favorites =
-            c.read(favoritePhrasesNotifierProvider).valueOrNull;
+        final favorites = c.read(favoritePhrasesNotifierProvider).valueOrNull;
         expect(favorites, hasLength(5));
         expect(favorites, isNot(contains('행복해요')));
       });
@@ -153,6 +154,8 @@ void main() {
         final c = ProviderContainer(
           overrides: [
             monetizationStorageProvider.overrideWithValue(mockStorage),
+            remoteConfigValuesProvider
+                .overrideWithValue(const RemoteConfigValues()),
           ],
         );
         addTearDown(c.dispose);
@@ -166,8 +169,7 @@ void main() {
         final result = await notifier.toggle('사랑해요');
         expect(result, isTrue);
 
-        final favorites =
-            c.read(favoritePhrasesNotifierProvider).valueOrNull;
+        final favorites = c.read(favoritePhrasesNotifierProvider).valueOrNull;
         expect(favorites, hasLength(4));
         expect(favorites, isNot(contains('사랑해요')));
       });
@@ -184,6 +186,8 @@ void main() {
         final c = ProviderContainer(
           overrides: [
             monetizationStorageProvider.overrideWithValue(mockStorage),
+            remoteConfigValuesProvider
+                .overrideWithValue(const RemoteConfigValues()),
           ],
         );
         addTearDown(c.dispose);
@@ -194,15 +198,13 @@ void main() {
 
         final notifier = c.read(favoritePhrasesNotifierProvider.notifier);
         // 10개 이상 추가 → 모두 성공
-        final phrases = List.generate(
-            10, (i) => '문구$i');
+        final phrases = List.generate(10, (i) => '문구$i');
         for (final p in phrases) {
           final result = await notifier.toggle(p);
           expect(result, isTrue, reason: '$p 추가가 허용되어야 함');
         }
 
-        final favorites =
-            c.read(favoritePhrasesNotifierProvider).valueOrNull;
+        final favorites = c.read(favoritePhrasesNotifierProvider).valueOrNull;
         expect(favorites, hasLength(10));
       });
 
@@ -222,6 +224,8 @@ void main() {
         final c = ProviderContainer(
           overrides: [
             monetizationStorageProvider.overrideWithValue(mockStorage),
+            remoteConfigValuesProvider
+                .overrideWithValue(const RemoteConfigValues()),
           ],
         );
         addTearDown(c.dispose);
@@ -235,8 +239,7 @@ void main() {
         final result = await notifier.toggle('행복해요');
         expect(result, isTrue);
 
-        final favorites =
-            c.read(favoritePhrasesNotifierProvider).valueOrNull;
+        final favorites = c.read(favoritePhrasesNotifierProvider).valueOrNull;
         expect(favorites, hasLength(6));
         expect(favorites, contains('행복해요'));
       });
@@ -253,6 +256,8 @@ void main() {
         final c = ProviderContainer(
           overrides: [
             monetizationStorageProvider.overrideWithValue(mockStorage),
+            remoteConfigValuesProvider
+                .overrideWithValue(const RemoteConfigValues()),
           ],
         );
         addTearDown(c.dispose);

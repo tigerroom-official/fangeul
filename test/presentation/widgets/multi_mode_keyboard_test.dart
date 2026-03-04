@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/widgets/multi_mode_keyboard.dart';
 
@@ -15,6 +16,9 @@ void main() {
   }) {
     return ProviderScope(
       child: MaterialApp(
+        localizationsDelegates: L.localizationsDelegates,
+        supportedLocales: L.supportedLocales,
+        locale: const Locale('ko'),
         home: Scaffold(
           body: SingleChildScrollView(
             child: MultiModeKeyboard(
@@ -30,8 +34,7 @@ void main() {
   }
 
   group('MultiModeKeyboard — Korean mode', () {
-    testWidgets('should assemble Korean jamos: ㅎ+ㅏ+ㄴ → 한',
-        (tester) async {
+    testWidgets('should assemble Korean jamos: ㅎ+ㅏ+ㄴ → 한', (tester) async {
       String? emittedText;
       await tester.pumpWidget(
         buildTestApp(onText: (t) => emittedText = t),

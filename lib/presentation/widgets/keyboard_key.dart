@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' hide KeyboardKey;
 
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/theme/fangeul_colors.dart';
 
 /// 키 하나의 메타데이터.
@@ -115,6 +115,7 @@ class KeyboardKey extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final accentColor = theme.colorScheme.primary;
@@ -147,7 +148,7 @@ class KeyboardKey extends StatelessWidget {
                 onTap();
               },
               child: Center(
-                child: _buildContent(subColor, accentColor),
+                child: _buildContent(l, subColor, accentColor),
               ),
             ),
           ),
@@ -169,7 +170,7 @@ class KeyboardKey extends StatelessWidget {
     }
   }
 
-  Widget _buildContent(Color subColor, Color accentColor) {
+  Widget _buildContent(L l, Color subColor, Color accentColor) {
     switch (keyType) {
       case KeyType.character:
         return _buildCharacterContent(subColor, accentColor);
@@ -183,7 +184,7 @@ class KeyboardKey extends StatelessWidget {
         );
       case KeyType.space:
         return Text(
-          UiStrings.keyboardSpace,
+          l.keyboardSpace,
           style: TextStyle(
             fontFamily: 'NotoSansKR',
             fontSize: 12,

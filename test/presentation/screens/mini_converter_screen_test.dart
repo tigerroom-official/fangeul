@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/core/entities/phrase.dart';
 import 'package:fangeul/core/entities/phrase_pack.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
@@ -34,6 +35,9 @@ void main() {
         ...overrides,
       ],
       child: MaterialApp(
+        localizationsDelegates: L.localizationsDelegates,
+        supportedLocales: L.supportedLocales,
+        locale: const Locale('ko'),
         home: const MiniConverterScreen(),
       ),
     );

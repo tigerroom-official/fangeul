@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:fangeul/core/entities/phrase_pack.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/widgets/pack_filter_chips.dart';
 
@@ -39,6 +40,9 @@ void main() {
     VoidCallback? onTodaySelected,
   }) {
     return MaterialApp(
+      localizationsDelegates: L.localizationsDelegates,
+      supportedLocales: L.supportedLocales,
+      locale: const Locale('ko'),
       home: Scaffold(
         body: PackFilterChips(
           packs: testPacks,

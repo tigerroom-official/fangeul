@@ -1,0 +1,252 @@
+{
+  "@@locale": "ko",
+
+  "appName": "Fangeul",
+  "appVersion": "0.1.0",
+  "appLegalese": "\u00a9 2026 Tiger Room",
+
+  "copied": "복사되었습니다",
+  "errorPrefix": "오류:",
+  "copyTooltip": "복사",
+  "favoriteTooltip": "즐겨찾기",
+  "complete": "완료",
+  "share": "공유",
+
+  "streakDays": "{streak}일 연속",
+  "@streakDays": {
+    "placeholders": {
+      "streak": {"type": "int"}
+    }
+  },
+
+  "navHome": "홈",
+  "navConverter": "변환기",
+  "navPhrases": "문구",
+
+  "dailyCardLoadError": "오늘의 카드를 불러올 수 없습니다",
+
+  "converterTitle": "변환기",
+  "converterTabEngToKor": "영->한",
+  "converterTabKorToEng": "한->영",
+  "converterTabRomanize": "발음",
+  "converterHintEngToKor": "영문을 입력하세요 (예: gksrmf)",
+  "converterHintKorToEng": "한글을 입력하세요 (예: 한글)",
+  "converterHintRomanize": "한글을 입력하세요 (예: 사랑해요)",
+
+  "phrasesTitle": "문구",
+  "phrasesEmpty": "문구가 없습니다",
+  "phrasesMyIdolEmpty": "설정에서 아이돌을 선택하면\n맞춤 문구가 표시됩니다",
+
+  "phrasesMyIdolChip": "♡ {name}",
+  "@phrasesMyIdolChip": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+
+  "settingsTitle": "설정",
+  "themeLabel": "테마",
+  "themeDark": "다크",
+  "themeLight": "라이트",
+  "themeSystem": "시스템",
+  "appInfoTitle": "앱 정보",
+  "appInfoSubtitle": "Fangeul v{version}",
+  "@appInfoSubtitle": {
+    "placeholders": {
+      "version": {"type": "String"}
+    }
+  },
+
+  "tagAll": "전체",
+  "tagLove": "사랑",
+  "tagCheer": "응원",
+  "tagDaily": "일상",
+  "tagGreeting": "인사",
+  "tagEmotional": "감정",
+  "tagPraise": "칭찬",
+  "tagFandom": "팬덤",
+  "tagBirthday": "생일",
+  "tagComeback": "컴백",
+
+  "keyboardSpace": "Space",
+  "keyboardModeKorean": "한글",
+  "keyboardModeAbc": "ABC",
+  "keyboardModeNumbers": "123",
+  "keyboardDone": "완료",
+
+  "defaultTranslationLang": "en",
+
+  "bubbleLabel": "플로팅 버블",
+  "bubbleDescription": "앱 밖에서도 변환기를 사용합니다",
+  "bubblePermissionTitle": "오버레이 권한 필요",
+  "bubblePermissionMessage": "플로팅 버블을 표시하려면 다른 앱 위에 표시 권한이 필요합니다.",
+  "bubblePermissionAllow": "허용",
+  "bubblePermissionDeny": "취소",
+  "bubblePermissionDenied": "앱 내에서도 모든 기능을 사용할 수 있습니다",
+  "bubbleBatteryTitle": "배터리 최적화 해제",
+  "bubbleBatteryMessage": "버블이 안정적으로 동작하려면 배터리 최적화를 해제해주세요.\n일부 기기에서는 배터리 최적화가 버블을 자동 종료할 수 있습니다.",
+  "bubbleBatteryAllow": "설정 열기",
+  "bubbleBatteryDeny": "나중에",
+
+  "miniConverterTitle": "Fangeul",
+  "miniTabPhrases": "문구",
+  "miniTabFavorites": "즐겨찾기",
+  "miniTabRecent": "최근",
+  "miniChipFavorites": "★즐찾",
+  "miniChipToday": "오늘",
+  "miniPackLocked": "이 팩은 잠겨있습니다\n곧 해금할 수 있어요!",
+  "miniPackEmpty": "문구가 없습니다",
+  "miniOpenConverter": "변환기 열기",
+  "miniBackToCompact": "간편모드",
+  "miniFavoritesEmpty": "문구 화면에서 ⭐ 탭하여\n즐겨찾기를 추가하세요",
+  "miniMyIdolEmpty": "설정에서 아이돌을 선택하면\n맞춤 문구가 표시됩니다",
+  "miniTodayEmpty": "오늘은 관련 이벤트가 없습니다",
+  "miniRecentEmpty": "아직 복사한 텍스트가 없습니다",
+
+  "idolSelectTitle": "좋아하는 그룹을 선택하세요",
+  "idolSelectSubtitle": "설정에서 언제든 바꿀 수 있어요",
+  "idolSelectSkip": "나중에 설정하기",
+  "idolSelectOther": "기타 (직접 입력)",
+  "idolSelectOtherHint": "그룹 이름을 입력하세요",
+  "idolSelectConfirm": "확인",
+  "idolSettingLabel": "마이 아이돌",
+  "idolSettingEmpty": "아직 선택하지 않았어요",
+
+  "idolSettingCurrent": "현재: {name}",
+  "@idolSettingCurrent": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+
+  "homeGreeting": "안녕하세요, {name} 팬님!",
+  "@homeGreeting": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+
+  "idolSettingChange": "변경",
+
+  "idolMemberHint": "멤버 이름 (선택사항)",
+  "idolMemberLabel": "최애 멤버",
+
+  "phrasesMemberChip": "♡ {name}",
+  "@phrasesMemberChip": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+
+  "phrasesGroupChip": "{name}",
+  "@phrasesGroupChip": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+
+  "phrasesMemberEmpty": "멤버 전용 문구가 없습니다",
+
+  "fanPassButton": "팬 패스",
+
+  "fanPassRemaining": "({current}/{max})",
+  "@fanPassRemaining": {
+    "placeholders": {
+      "current": {"type": "int"},
+      "max": {"type": "int"}
+    }
+  },
+
+  "fanPassCooldown": "잠시 후 다시 시도하세요",
+  "fanPassAdLoading": "광고 준비 중...",
+  "fanPassLimitReached": "오늘 시청 완료",
+  "fanPassPopupTitle": "팬 패스 획득!",
+  "fanPassPopupConfirm": "확인",
+
+  "fanPassUnlockRemaining": "{time} 남음",
+  "@fanPassUnlockRemaining": {
+    "placeholders": {
+      "time": {"type": "String"}
+    }
+  },
+
+  "unlockRemaining": "{time} 남음",
+  "@unlockRemaining": {
+    "placeholders": {
+      "time": {"type": "String"}
+    }
+  },
+
+  "unlockMidnightLabel": "자정에 만료",
+
+  "unlockMidnightExpiry": "{time} 남음 (자정에 만료)",
+  "@unlockMidnightExpiry": {
+    "placeholders": {
+      "time": {"type": "String"}
+    }
+  },
+
+  "shopTitle": "감성 컬러 팩",
+  "shopRestore": "구매 복원",
+  "shopBuyButton": "구매하기",
+  "shopPurchased": "구매 완료",
+
+  "shopPhraseCount": "문구 {count}개",
+  "@shopPhraseCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+
+  "shopPronunciationCount": "발음 {count}개",
+  "@shopPronunciationCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+
+  "shopRestoreSuccess": "구매가 복원되었습니다",
+  "shopRestoreFailed": "복원할 구매가 없습니다",
+
+  "ddayGiftTitle": "{eventName} 축하해요!",
+  "@ddayGiftTitle": {
+    "placeholders": {
+      "eventName": {"type": "String"}
+    }
+  },
+
+  "ddayGiftMessage": "오늘 하루 모든 콘텐츠가 무료예요",
+  "ddayGiftButton": "선물 받기",
+
+  "ttsLimitTitle": "오늘의 발음 듣기는 여기까지!",
+
+  "ttsLimitMessage": "내일 다시 {limit}회 들을 수 있어요",
+  "@ttsLimitMessage": {
+    "placeholders": {
+      "limit": {"type": "int"}
+    }
+  },
+
+  "ttsLimitAdButton": "팬 패스로 더 듣기",
+
+  "conversionTriggerTitle": "더 많은 콘텐츠를 즐기세요",
+  "conversionTriggerMessage": "감성 컬러 팩으로\n무제한 해금하고 특별한 경험을 시작하세요",
+  "conversionTriggerButton": "감성 컬러 팩 보기",
+  "conversionTriggerDismiss": "나중에",
+
+  "favLimitTitle": "좋아하는 문구가 정말 많네요!",
+  "favLimitMessage": "팬 패스로 더 많은 문구를 저장해보세요\n감성 컬러 팩으로 무제한 보관도 가능해요",
+  "favLimitAdButton": "팬 패스 받기",
+  "favLimitIapButton": "컬러 팩 구경하기",
+
+  "shopPurchaseSuccess": "구매 완료! 콘텐츠가 해금되었어요",
+  "shopPurchaseFailed": "구매에 실패했어요. 다시 시도해주세요",
+  "shopPurchasePending": "결제 처리 중...",
+
+  "honeymoonDaysLeft": "무료 체험 {days}일 남음",
+  "@honeymoonDaysLeft": {
+    "placeholders": {
+      "days": {"type": "int"}
+    }
+  }
+}

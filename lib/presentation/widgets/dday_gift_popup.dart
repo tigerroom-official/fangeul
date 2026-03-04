@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
 
 /// D-day 선물 팝업을 표시한다.
@@ -107,6 +107,7 @@ class _DdayGiftPopupState extends ConsumerState<DdayGiftPopup>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l = L.of(context);
 
     return FadeTransition(
       opacity: _fadeAnimation,
@@ -127,7 +128,7 @@ class _DdayGiftPopupState extends ConsumerState<DdayGiftPopup>
               ),
               const SizedBox(height: 16),
               Text(
-                UiStrings.ddayGiftTitle(widget.eventName),
+                l.ddayGiftTitle(widget.eventName),
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -135,7 +136,7 @@ class _DdayGiftPopupState extends ConsumerState<DdayGiftPopup>
               ),
               const SizedBox(height: 8),
               Text(
-                UiStrings.ddayGiftMessage,
+                l.ddayGiftMessage,
                 style: theme.textTheme.bodyLarge?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -148,7 +149,7 @@ class _DdayGiftPopupState extends ConsumerState<DdayGiftPopup>
               width: double.infinity,
               child: FilledButton(
                 onPressed: _onAccept,
-                child: const Text(UiStrings.ddayGiftButton),
+                child: Text(l.ddayGiftButton),
               ),
             ),
           ],

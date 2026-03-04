@@ -114,8 +114,7 @@ void main() {
 
     group('Member name', () {
       test('should return null member name when not set', () async {
-        final result =
-            await container.read(myIdolMemberNameProvider.future);
+        final result = await container.read(myIdolMemberNameProvider.future);
         expect(result, isNull);
       });
 
@@ -124,8 +123,7 @@ void main() {
         await container.read(myIdolNotifierProvider.future);
         await notifier.select('bts');
         await notifier.selectMember('정국');
-        final result =
-            await container.read(myIdolMemberNameProvider.future);
+        final result = await container.read(myIdolMemberNameProvider.future);
         expect(result, '정국');
       });
 
@@ -144,8 +142,7 @@ void main() {
         await notifier.select('bts');
         await notifier.selectMember('정국');
         await notifier.clearMember();
-        final result =
-            await container.read(myIdolMemberNameProvider.future);
+        final result = await container.read(myIdolMemberNameProvider.future);
         expect(result, isNull);
       });
 
@@ -165,8 +162,7 @@ void main() {
         });
         final container2 = ProviderContainer();
         addTearDown(() => container2.dispose());
-        final result =
-            await container2.read(myIdolMemberNameProvider.future);
+        final result = await container2.read(myIdolMemberNameProvider.future);
         expect(result, isNull);
       });
 
@@ -177,8 +173,7 @@ void main() {
         });
         final container2 = ProviderContainer();
         addTearDown(() => container2.dispose());
-        final result =
-            await container2.read(myIdolMemberNameProvider.future);
+        final result = await container2.read(myIdolMemberNameProvider.future);
         expect(result, '정국');
       });
 

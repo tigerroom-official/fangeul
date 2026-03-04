@@ -1,0 +1,430 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for Portuguese (`pt`).
+class LPt extends L {
+  LPt([String locale = 'pt']) : super(locale);
+
+  @override
+  String get appName => 'Fangeul';
+
+  @override
+  String get appVersion => '0.1.0';
+
+  @override
+  String get appLegalese => '© 2026 Tiger Room';
+
+  @override
+  String get copied => 'Copiado';
+
+  @override
+  String get errorPrefix => 'Erro:';
+
+  @override
+  String get copyTooltip => 'Copiar';
+
+  @override
+  String get favoriteTooltip => 'Favorito';
+
+  @override
+  String get complete => 'Concluído';
+
+  @override
+  String get share => 'Compartilhar';
+
+  @override
+  String streakDays(int streak) {
+    return '$streak dias seguidos';
+  }
+
+  @override
+  String get navHome => 'Início';
+
+  @override
+  String get navConverter => 'Conversor';
+
+  @override
+  String get navPhrases => 'Frases';
+
+  @override
+  String get dailyCardLoadError => 'Não foi possível carregar o card de hoje';
+
+  @override
+  String get converterTitle => 'Conversor';
+
+  @override
+  String get converterTabEngToKor => 'Ing->Kor';
+
+  @override
+  String get converterTabKorToEng => 'Kor->Ing';
+
+  @override
+  String get converterTabRomanize => 'Pronúncia';
+
+  @override
+  String get converterHintEngToKor => 'Digite em inglês (ex: gksrmf)';
+
+  @override
+  String get converterHintKorToEng => 'Digite em coreano (ex: 한글)';
+
+  @override
+  String get converterHintRomanize => 'Digite em coreano (ex: 사랑해요)';
+
+  @override
+  String get phrasesTitle => 'Frases';
+
+  @override
+  String get phrasesEmpty => 'Nenhuma frase encontrada';
+
+  @override
+  String get phrasesMyIdolEmpty =>
+      'Selecione seu idol nas configurações\npara ver frases personalizadas';
+
+  @override
+  String phrasesMyIdolChip(String name) {
+    return '♡ $name';
+  }
+
+  @override
+  String get settingsTitle => 'Configurações';
+
+  @override
+  String get themeLabel => 'Tema';
+
+  @override
+  String get themeDark => 'Escuro';
+
+  @override
+  String get themeLight => 'Claro';
+
+  @override
+  String get themeSystem => 'Sistema';
+
+  @override
+  String get appInfoTitle => 'Sobre o app';
+
+  @override
+  String appInfoSubtitle(String version) {
+    return 'Fangeul v$version';
+  }
+
+  @override
+  String get tagAll => 'Todos';
+
+  @override
+  String get tagLove => 'Amor';
+
+  @override
+  String get tagCheer => 'Torcida';
+
+  @override
+  String get tagDaily => 'Cotidiano';
+
+  @override
+  String get tagGreeting => 'Saudação';
+
+  @override
+  String get tagEmotional => 'Emoção';
+
+  @override
+  String get tagPraise => 'Elogio';
+
+  @override
+  String get tagFandom => 'Fandom';
+
+  @override
+  String get tagBirthday => 'Aniversário';
+
+  @override
+  String get tagComeback => 'Comeback';
+
+  @override
+  String get keyboardSpace => 'Space';
+
+  @override
+  String get keyboardModeKorean => 'Coreano';
+
+  @override
+  String get keyboardModeAbc => 'ABC';
+
+  @override
+  String get keyboardModeNumbers => '123';
+
+  @override
+  String get keyboardDone => 'OK';
+
+  @override
+  String get defaultTranslationLang => 'en';
+
+  @override
+  String get bubbleLabel => 'Bolha flutuante';
+
+  @override
+  String get bubbleDescription => 'Use o conversor fora do app';
+
+  @override
+  String get bubblePermissionTitle => 'Permissão de sobreposição necessária';
+
+  @override
+  String get bubblePermissionMessage =>
+      'Para exibir a bolha flutuante, é necessário permitir a sobreposição sobre outros apps.';
+
+  @override
+  String get bubblePermissionAllow => 'Permitir';
+
+  @override
+  String get bubblePermissionDeny => 'Cancelar';
+
+  @override
+  String get bubblePermissionDenied =>
+      'Você pode usar todos os recursos dentro do app';
+
+  @override
+  String get bubbleBatteryTitle => 'Desativar otimização de bateria';
+
+  @override
+  String get bubbleBatteryMessage =>
+      'Para que a bolha funcione de forma estável, desative a otimização de bateria.\nEm alguns dispositivos, a otimização pode encerrar a bolha automaticamente.';
+
+  @override
+  String get bubbleBatteryAllow => 'Abrir configurações';
+
+  @override
+  String get bubbleBatteryDeny => 'Depois';
+
+  @override
+  String get miniConverterTitle => 'Fangeul';
+
+  @override
+  String get miniTabPhrases => 'Frases';
+
+  @override
+  String get miniTabFavorites => 'Favoritos';
+
+  @override
+  String get miniTabRecent => 'Recentes';
+
+  @override
+  String get miniChipFavorites => '★Favs';
+
+  @override
+  String get miniChipToday => 'Hoje';
+
+  @override
+  String get miniPackLocked =>
+      'Este pacote está bloqueado\nEm breve você poderá desbloqueá-lo!';
+
+  @override
+  String get miniPackEmpty => 'Nenhuma frase encontrada';
+
+  @override
+  String get miniOpenConverter => 'Abrir conversor';
+
+  @override
+  String get miniBackToCompact => 'Modo compacto';
+
+  @override
+  String get miniFavoritesEmpty =>
+      'Toque em ⭐ na tela de frases\npara adicionar favoritos';
+
+  @override
+  String get miniMyIdolEmpty =>
+      'Selecione seu idol nas configurações\npara ver frases personalizadas';
+
+  @override
+  String get miniTodayEmpty => 'Nenhum evento relacionado hoje';
+
+  @override
+  String get miniRecentEmpty => 'Nenhum texto copiado ainda';
+
+  @override
+  String get idolSelectTitle => 'Escolha seu grupo favorito';
+
+  @override
+  String get idolSelectSubtitle =>
+      'Você pode mudar a qualquer momento nas configurações';
+
+  @override
+  String get idolSelectSkip => 'Configurar depois';
+
+  @override
+  String get idolSelectOther => 'Outro (digitar manualmente)';
+
+  @override
+  String get idolSelectOtherHint => 'Digite o nome do grupo';
+
+  @override
+  String get idolSelectConfirm => 'Confirmar';
+
+  @override
+  String get idolSettingLabel => 'Meu idol';
+
+  @override
+  String get idolSettingEmpty => 'Ainda não selecionado';
+
+  @override
+  String idolSettingCurrent(String name) {
+    return 'Atual: $name';
+  }
+
+  @override
+  String homeGreeting(String name) {
+    return 'Olá, fã de $name!';
+  }
+
+  @override
+  String get idolSettingChange => 'Alterar';
+
+  @override
+  String get idolMemberHint => 'Nome do membro (opcional)';
+
+  @override
+  String get idolMemberLabel => 'Meu bias';
+
+  @override
+  String phrasesMemberChip(String name) {
+    return '♡ $name';
+  }
+
+  @override
+  String phrasesGroupChip(String name) {
+    return '$name';
+  }
+
+  @override
+  String get phrasesMemberEmpty => 'Nenhuma frase exclusiva do membro';
+
+  @override
+  String get fanPassButton => 'Fan Pass';
+
+  @override
+  String fanPassRemaining(int current, int max) {
+    return '($current/$max)';
+  }
+
+  @override
+  String get fanPassCooldown => 'Tente novamente em breve';
+
+  @override
+  String get fanPassAdLoading => 'Preparando anúncio...';
+
+  @override
+  String get fanPassLimitReached => 'Visualizações de hoje concluídas';
+
+  @override
+  String get fanPassPopupTitle => 'Fan Pass obtido!';
+
+  @override
+  String get fanPassPopupConfirm => 'OK';
+
+  @override
+  String fanPassUnlockRemaining(String time) {
+    return '$time restante';
+  }
+
+  @override
+  String unlockRemaining(String time) {
+    return '$time restante';
+  }
+
+  @override
+  String get unlockMidnightLabel => 'Expira à meia-noite';
+
+  @override
+  String unlockMidnightExpiry(String time) {
+    return '$time restante (expira à meia-noite)';
+  }
+
+  @override
+  String get shopTitle => 'Pacotes Color Vibe';
+
+  @override
+  String get shopRestore => 'Restaurar compras';
+
+  @override
+  String get shopBuyButton => 'Comprar';
+
+  @override
+  String get shopPurchased => 'Comprado';
+
+  @override
+  String shopPhraseCount(int count) {
+    return '$count frases';
+  }
+
+  @override
+  String shopPronunciationCount(int count) {
+    return '$count pronúncias';
+  }
+
+  @override
+  String get shopRestoreSuccess => 'Compras restauradas com sucesso';
+
+  @override
+  String get shopRestoreFailed => 'Nenhuma compra para restaurar';
+
+  @override
+  String ddayGiftTitle(String eventName) {
+    return 'Parabéns pelo $eventName!';
+  }
+
+  @override
+  String get ddayGiftMessage => 'Todo o conteúdo é gratuito hoje';
+
+  @override
+  String get ddayGiftButton => 'Receber presente';
+
+  @override
+  String get ttsLimitTitle => 'As pronúncias de hoje acabaram!';
+
+  @override
+  String ttsLimitMessage(int limit) {
+    return 'Amanhã você pode ouvir mais $limit vezes';
+  }
+
+  @override
+  String get ttsLimitAdButton => 'Ouvir mais com Fan Pass';
+
+  @override
+  String get conversionTriggerTitle => 'Aproveite mais conteúdo';
+
+  @override
+  String get conversionTriggerMessage =>
+      'Desbloqueie tudo com um Pacote Color Vibe\ne comece uma experiência especial';
+
+  @override
+  String get conversionTriggerButton => 'Ver Pacotes Color Vibe';
+
+  @override
+  String get conversionTriggerDismiss => 'Depois';
+
+  @override
+  String get favLimitTitle => 'Você tem muitas frases favoritas!';
+
+  @override
+  String get favLimitMessage =>
+      'Salve mais frases com o Fan Pass\nOu desbloqueie armazenamento ilimitado com um Pacote Color Vibe';
+
+  @override
+  String get favLimitAdButton => 'Obter Fan Pass';
+
+  @override
+  String get favLimitIapButton => 'Ver Pacotes Color Vibe';
+
+  @override
+  String get shopPurchaseSuccess => 'Compra concluída! Conteúdo desbloqueado';
+
+  @override
+  String get shopPurchaseFailed => 'A compra falhou. Tente novamente';
+
+  @override
+  String get shopPurchasePending => 'Processando pagamento...';
+
+  @override
+  String honeymoonDaysLeft(int days) {
+    return '$days dias de teste grátis restantes';
+  }
+}

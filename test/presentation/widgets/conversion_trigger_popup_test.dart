@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/widgets/conversion_trigger_popup.dart';
 
@@ -13,6 +14,9 @@ void main() {
 
   Widget buildTestWidget() {
     return MaterialApp(
+      localizationsDelegates: L.localizationsDelegates,
+      supportedLocales: L.supportedLocales,
+      locale: const Locale('ko'),
       home: Scaffold(
         body: Builder(
           builder: (context) => FilledButton(

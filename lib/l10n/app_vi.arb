@@ -1,0 +1,171 @@
+{
+  "@@locale": "vi",
+
+  "appName": "Fangeul",
+  "appVersion": "0.1.0",
+  "appLegalese": "\u00a9 2026 Tiger Room",
+
+  "copied": "Đã sao chép",
+  "errorPrefix": "Lỗi:",
+  "copyTooltip": "Sao chép",
+  "favoriteTooltip": "Yêu thích",
+  "complete": "Hoàn tất",
+  "share": "Chia sẻ",
+
+  "streakDays": "{streak} ngày liên tiếp",
+
+  "navHome": "Trang chủ",
+  "navConverter": "Chuyển đổi",
+  "navPhrases": "Câu nói",
+
+  "dailyCardLoadError": "Không thể tải thẻ hôm nay",
+
+  "converterTitle": "Chuyển đổi",
+  "converterTabEngToKor": "Anh->Hàn",
+  "converterTabKorToEng": "Hàn->Anh",
+  "converterTabRomanize": "Phát âm",
+  "converterHintEngToKor": "Nhập tiếng Anh (VD: gksrmf)",
+  "converterHintKorToEng": "Nhập tiếng Hàn (VD: 한글)",
+  "converterHintRomanize": "Nhập tiếng Hàn (VD: 사랑해요)",
+
+  "phrasesTitle": "Câu nói",
+  "phrasesEmpty": "Không có câu nói nào",
+  "phrasesMyIdolEmpty": "Chọn idol trong cài đặt\nđể xem câu nói dành riêng cho bạn",
+
+  "phrasesMyIdolChip": "♡ {name}",
+
+  "settingsTitle": "Cài đặt",
+  "themeLabel": "Giao diện",
+  "themeDark": "Tối",
+  "themeLight": "Sáng",
+  "themeSystem": "Hệ thống",
+  "appInfoTitle": "Thông tin ứng dụng",
+  "appInfoSubtitle": "Fangeul v{version}",
+
+  "tagAll": "Tất cả",
+  "tagLove": "Yêu thương",
+  "tagCheer": "Cổ vũ",
+  "tagDaily": "Hàng ngày",
+  "tagGreeting": "Chào hỏi",
+  "tagEmotional": "Cảm xúc",
+  "tagPraise": "Khen ngợi",
+  "tagFandom": "Fandom",
+  "tagBirthday": "Sinh nhật",
+  "tagComeback": "Comeback",
+
+  "keyboardSpace": "Space",
+  "keyboardModeKorean": "Tiếng Hàn",
+  "keyboardModeAbc": "ABC",
+  "keyboardModeNumbers": "123",
+  "keyboardDone": "Xong",
+
+  "defaultTranslationLang": "en",
+
+  "bubbleLabel": "Bong bóng nổi",
+  "bubbleDescription": "Dùng chuyển đổi ngoài ứng dụng",
+  "bubblePermissionTitle": "Cần quyền hiển thị chồng lên",
+  "bubblePermissionMessage": "Để hiển thị bong bóng nổi, cần cho phép hiển thị trên các ứng dụng khác.",
+  "bubblePermissionAllow": "Cho phép",
+  "bubblePermissionDeny": "Hủy",
+  "bubblePermissionDenied": "Bạn vẫn có thể dùng tất cả tính năng trong ứng dụng",
+  "bubbleBatteryTitle": "Tắt tối ưu hóa pin",
+  "bubbleBatteryMessage": "Để bong bóng hoạt động ổn định, hãy tắt tối ưu hóa pin.\nTrên một số thiết bị, tối ưu hóa pin có thể tự động tắt bong bóng.",
+  "bubbleBatteryAllow": "Mở cài đặt",
+  "bubbleBatteryDeny": "Để sau",
+
+  "miniConverterTitle": "Fangeul",
+  "miniTabPhrases": "Câu nói",
+  "miniTabFavorites": "Yêu thích",
+  "miniTabRecent": "Gần đây",
+  "miniChipFavorites": "★Thích",
+  "miniChipToday": "Hôm nay",
+  "miniPackLocked": "Gói này đang bị khóa\nBạn sẽ sớm mở khóa được!",
+  "miniPackEmpty": "Không có câu nói nào",
+  "miniOpenConverter": "Mở chuyển đổi",
+  "miniBackToCompact": "Chế độ thu gọn",
+  "miniFavoritesEmpty": "Nhấn ⭐ ở màn hình câu nói\nđể thêm vào yêu thích",
+  "miniMyIdolEmpty": "Chọn idol trong cài đặt\nđể xem câu nói dành riêng cho bạn",
+  "miniTodayEmpty": "Hôm nay không có sự kiện liên quan",
+  "miniRecentEmpty": "Chưa có văn bản nào được sao chép",
+
+  "idolSelectTitle": "Chọn nhóm yêu thích của bạn",
+  "idolSelectSubtitle": "Bạn có thể thay đổi bất cứ lúc nào trong cài đặt",
+  "idolSelectSkip": "Cài đặt sau",
+  "idolSelectOther": "Khác (nhập thủ công)",
+  "idolSelectOtherHint": "Nhập tên nhóm",
+  "idolSelectConfirm": "Xác nhận",
+  "idolSettingLabel": "Idol của tôi",
+  "idolSettingEmpty": "Chưa chọn",
+
+  "idolSettingCurrent": "Hiện tại: {name}",
+
+  "homeGreeting": "Xin chào, fan của {name}!",
+
+  "idolSettingChange": "Thay đổi",
+
+  "idolMemberHint": "Tên thành viên (không bắt buộc)",
+  "idolMemberLabel": "Bias của tôi",
+
+  "phrasesMemberChip": "♡ {name}",
+
+  "phrasesGroupChip": "{name}",
+
+  "phrasesMemberEmpty": "Không có câu nói riêng của thành viên",
+
+  "fanPassButton": "Fan Pass",
+
+  "fanPassRemaining": "({current}/{max})",
+
+  "fanPassCooldown": "Vui lòng thử lại sau",
+  "fanPassAdLoading": "Đang chuẩn bị quảng cáo...",
+  "fanPassLimitReached": "Đã xem hết lượt hôm nay",
+  "fanPassPopupTitle": "Nhận Fan Pass thành công!",
+  "fanPassPopupConfirm": "OK",
+
+  "fanPassUnlockRemaining": "Còn {time}",
+
+  "unlockRemaining": "Còn {time}",
+
+  "unlockMidnightLabel": "Hết hạn lúc nửa đêm",
+
+  "unlockMidnightExpiry": "Còn {time} (hết hạn lúc nửa đêm)",
+
+  "shopTitle": "Gói màu sắc cảm xúc",
+  "shopRestore": "Khôi phục mua hàng",
+  "shopBuyButton": "Mua",
+  "shopPurchased": "Đã mua",
+
+  "shopPhraseCount": "{count} câu nói",
+
+  "shopPronunciationCount": "{count} phát âm",
+
+  "shopRestoreSuccess": "Đã khôi phục mua hàng thành công",
+  "shopRestoreFailed": "Không có giao dịch nào để khôi phục",
+
+  "ddayGiftTitle": "Chúc mừng {eventName}!",
+
+  "ddayGiftMessage": "Hôm nay tất cả nội dung đều miễn phí",
+  "ddayGiftButton": "Nhận quà",
+
+  "ttsLimitTitle": "Lượt nghe phát âm hôm nay đã hết!",
+
+  "ttsLimitMessage": "Ngày mai bạn có thể nghe thêm {limit} lần",
+
+  "ttsLimitAdButton": "Nghe thêm với Fan Pass",
+
+  "conversionTriggerTitle": "Khám phá thêm nội dung",
+  "conversionTriggerMessage": "Mở khóa tất cả với gói màu sắc cảm xúc\nvà bắt đầu trải nghiệm đặc biệt",
+  "conversionTriggerButton": "Xem gói màu sắc cảm xúc",
+  "conversionTriggerDismiss": "Để sau",
+
+  "favLimitTitle": "Bạn có rất nhiều câu nói yêu thích!",
+  "favLimitMessage": "Lưu thêm câu nói với Fan Pass\nHoặc mở khóa lưu trữ không giới hạn với gói màu sắc cảm xúc",
+  "favLimitAdButton": "Nhận Fan Pass",
+  "favLimitIapButton": "Xem gói màu sắc cảm xúc",
+
+  "shopPurchaseSuccess": "Mua thành công! Nội dung đã được mở khóa",
+  "shopPurchaseFailed": "Mua thất bại. Vui lòng thử lại",
+  "shopPurchasePending": "Đang xử lý thanh toán...",
+
+  "honeymoonDaysLeft": "Còn {days} ngày dùng thử miễn phí"
+}

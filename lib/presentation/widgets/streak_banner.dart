@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 
 /// 스트릭 배너 -- 현재 연속 학습일수 표시.
 ///
@@ -21,6 +21,7 @@ class StreakBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
 
     return Container(
@@ -43,7 +44,7 @@ class StreakBanner extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Text(
-            UiStrings.streakDays(streak),
+            l.streakDays(streak),
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,
             ),
@@ -57,7 +58,7 @@ class StreakBanner extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                UiStrings.complete,
+                l.complete,
                 style: theme.textTheme.labelMedium?.copyWith(
                   color: theme.colorScheme.primary,
                 ),

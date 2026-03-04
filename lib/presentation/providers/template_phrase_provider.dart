@@ -56,8 +56,7 @@ List<Phrase> filterAndResolveTemplates(
   }
 
   return phrases
-      .where((p) =>
-          !p.isTemplate || !needsMemberName(p) || memberName != null)
+      .where((p) => !p.isTemplate || !needsMemberName(p) || memberName != null)
       .map((p) => resolveTemplatePhrase(p, idolName, memberName: memberName))
       .toList();
 }

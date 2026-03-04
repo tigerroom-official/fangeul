@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:fangeul/core/entities/phrase.dart';
-import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/analytics_providers.dart';
 import 'package:fangeul/presentation/providers/copy_history_provider.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
@@ -40,10 +40,8 @@ class CompactPhraseTile extends ConsumerWidget {
         ref.watch(favoritePhrasesNotifierProvider).valueOrNull ?? {};
     final isFavorite = favorites.contains(phrase.ko);
 
-    final idolName =
-        ref.watch(myIdolDisplayNameProvider).valueOrNull;
-    final memberName =
-        ref.watch(myIdolMemberNameProvider).valueOrNull;
+    final idolName = ref.watch(myIdolDisplayNameProvider).valueOrNull;
+    final memberName = ref.watch(myIdolMemberNameProvider).valueOrNull;
 
     return ListTile(
       dense: true,
@@ -66,7 +64,7 @@ class CompactPhraseTile extends ConsumerWidget {
               size: 20,
               color: isFavorite ? theme.colorScheme.primary : null,
             ),
-            tooltip: UiStrings.favoriteTooltip,
+            tooltip: L.of(context).favoriteTooltip,
             constraints: const BoxConstraints(maxWidth: 32, maxHeight: 32),
             padding: EdgeInsets.zero,
             onPressed: () {
@@ -77,7 +75,7 @@ class CompactPhraseTile extends ConsumerWidget {
           ),
           IconButton(
             icon: const Icon(Icons.copy_rounded, size: 18),
-            tooltip: UiStrings.copyTooltip,
+            tooltip: L.of(context).copyTooltip,
             constraints: const BoxConstraints(maxWidth: 32, maxHeight: 32),
             padding: EdgeInsets.zero,
             onPressed: () => _copy(context, ref),
@@ -120,7 +118,8 @@ class CompactPhraseTile extends ConsumerWidget {
       color: theme.colorScheme.onSurfaceVariant,
     );
 
-    final spans = _splitRomanByNames(phrase.roman, names, romanStyle, nameStyle);
+    final spans =
+        _splitRomanByNames(phrase.roman, names, romanStyle, nameStyle);
     return Text.rich(
       TextSpan(children: spans),
       maxLines: 1,
