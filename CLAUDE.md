@@ -55,4 +55,4 @@ dart format --set-exit-if-changed .  # 포맷 검증
 ## 현재 작업 상태
 > 마지막 핸드오프: 2026-03-05
 > 상세: `docs/HANDOFF.md` 참조
-> 요약: i18n 인프라(7개 언어 ARB) + Firebase Remote Config 통합. 627 tests pass. 다음: Firebase 콘솔 RC 설정 + Analytics 학습 + Phase 7 릴리즈.
+> 요약: Firebase Crashlytics/Analytics 통합 + 버블 헤더 UX 통일(패널 3차 4:0). 627 tests pass. 다음: Firebase 콘솔 RC 설정 + Analytics 학습 + Phase 7 릴리즈.
