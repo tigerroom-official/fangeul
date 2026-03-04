@@ -55,4 +55,4 @@ dart format --set-exit-if-changed .  # 포맷 검증
 ## 현재 작업 상태
 > 마지막 핸드오프: 2026-03-04
 > 상세: `docs/HANDOFF.md` 참조
-> 요약: Phase 6 수익화 구현 완료 (18 tasks + 2라운드 교차 리뷰). 573 tests pass. 다음: Phase 7 릴리즈 준비.
+> 요약: 멀티모드 키보드 + 패널 UX 개선 + 버블 버그 4건 수정. 616 tests pass. 다음: Phase 7 릴리즈 준비.
