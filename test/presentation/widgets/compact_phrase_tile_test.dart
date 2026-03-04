@@ -183,6 +183,47 @@ void main() {
       expect(richTexts, isNotEmpty);
     });
 
+    testWidgets('should not infinite loop when idol name is empty string',
+        (tester) async {
+      await tester.pumpWidget(
+        buildTestWidget(
+          overrides: [
+            myIdolDisplayNameProvider.overrideWith((ref) async => ''),
+            myIdolMemberNameProvider.overrideWith((ref) async => null),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // 빈 이름은 필터되어 plain Text (무한루프 방지)
+      expect(find.text('saranghaeyo'), findsOneWidget);
+    });
+
+    testWidgets('should prefer longest match when names overlap',
+        (tester) async {
+      const templatePhrase = Phrase(
+        ko: 'BTS 사랑해요',
+        roman: 'BTS saranghaeyo',
+        context: 'Template',
+      );
+      await tester.pumpWidget(
+        buildTestWidget(
+          phrase: templatePhrase,
+          overrides: [
+            myIdolDisplayNameProvider.overrideWith((ref) async => 'BT'),
+            myIdolMemberNameProvider.overrideWith((ref) async => 'BTS'),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // "BTS"가 통째로 매칭되어야 함
+      final richTexts = tester
+          .widgetList<RichText>(find.byType(RichText))
+          .where((w) => w.text.toPlainText().contains('BTS saranghaeyo'));
+      expect(richTexts, isNotEmpty);
+    });
+
     testWidgets('should use plain Text when roman has no idol name',
         (tester) async {
       // roman에 이름이 없는 일반 문구

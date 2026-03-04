@@ -111,6 +111,44 @@ void main() {
       expect(spans[0].style?.color, isNot(equals(spans[1].style?.color)));
     });
 
+    testWidgets('should not infinite loop when idol name is empty string',
+        (tester) async {
+      await tester.pumpWidget(buildTestApp(
+        phrase: const Phrase(
+          ko: '사랑해요',
+          roman: 'saranghaeyo',
+          context: 'Love',
+        ),
+        idolName: '',
+      ));
+      await tester.pumpAndSettle();
+
+      // 빈 이름은 필터되어 plain Text로 표시 (무한루프 방지)
+      expect(find.text('saranghaeyo'), findsOneWidget);
+    });
+
+    testWidgets('should prefer longest match when names overlap',
+        (tester) async {
+      // "BT" vs "BTS" — "BTS saranghaeyo"에서 "BTS"를 매칭해야 함
+      await tester.pumpWidget(buildTestApp(
+        phrase: const Phrase(
+          ko: 'BTS 사랑해요',
+          roman: 'BTS saranghaeyo',
+          context: 'Template',
+        ),
+        idolName: 'BT',
+        memberName: 'BTS',
+      ));
+      await tester.pumpAndSettle();
+      await tester.pump();
+
+      final spans = findRomanSpans(tester, 'BTS saranghaeyo');
+      expect(spans, isNotNull);
+      // "BTS"가 통째로 매칭되어야 함 (3글자), "BT"+"S" 분리 아님
+      expect(spans![0].text, 'BTS');
+      expect(spans[1].text, ' saranghaeyo');
+    });
+
     testWidgets('should show plain text when roman has no matching names',
         (tester) async {
       await tester.pumpWidget(buildTestApp(

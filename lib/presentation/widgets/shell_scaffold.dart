@@ -58,6 +58,7 @@ class _ShellScaffoldState extends ConsumerState<ShellScaffold>
     ref.invalidate(favoritePhrasesNotifierProvider);
     ref.invalidate(myIdolNotifierProvider);
     ref.invalidate(myIdolDisplayNameProvider);
+    ref.invalidate(myIdolMemberNameProvider);
     ref.invalidate(themeModeNotifierProvider);
   }
 

@@ -73,6 +73,9 @@ class MainActivity : FlutterActivity() {
             showBubbleRunnable = Runnable {
                 showBubbleRunnable = null
                 bubbleHiddenByUs = false
+                // 500ms 사이에 사용자가 알림 "중지"(ACTION_STOP)로 서비스를 종료한 경우
+                // 버블을 다시 살리지 않는다.
+                if (!FloatingBubbleService.isServiceActive) return@Runnable
                 val intent = Intent(this, FloatingBubbleService::class.java).apply {
                     action = FloatingBubbleService.ACTION_SHOW
                 }

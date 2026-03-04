@@ -104,7 +104,9 @@ class CompactPhraseTile extends ConsumerWidget {
     final names = <String>[
       if (idolName != null) idolName,
       if (memberName != null) memberName,
-    ];
+    ].where((n) => n.isNotEmpty).toList()
+      // longest first — 서브스트링 이름이 더 긴 이름을 가리지 않도록.
+      ..sort((a, b) => b.length.compareTo(a.length));
     if (names.isEmpty || !names.any((n) => phrase.roman.contains(n))) {
       return Text(
         phrase.roman,
