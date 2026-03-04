@@ -27,7 +27,7 @@ void main() {
       const original = MonetizationState(
         installDate: '2026-03-01',
         honeymoonActive: false,
-        favoriteSlotLimit: 3,
+        favoriteSlotLimit: 5,
         ttsPlayCount: 5,
         ttsLastResetDate: '2026-03-04',
         adWatchCount: 2,
@@ -56,7 +56,7 @@ void main() {
 
       final updated = original.copyWith(
         honeymoonActive: false,
-        favoriteSlotLimit: 3,
+        favoriteSlotLimit: 5,
         adWatchCount: 1,
         adLastResetDate: '2026-03-04',
       );
@@ -69,7 +69,7 @@ void main() {
 
       // 업데이트 확인
       expect(updated.honeymoonActive, isFalse);
-      expect(updated.favoriteSlotLimit, 3);
+      expect(updated.favoriteSlotLimit, 5);
       expect(updated.adWatchCount, 1);
       expect(updated.adLastResetDate, '2026-03-04');
     });

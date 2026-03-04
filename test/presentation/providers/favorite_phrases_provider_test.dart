@@ -104,14 +104,15 @@ void main() {
       }
 
       test('should reject adding when slot limit reached', () async {
-        // 허니문 종료, 슬롯 제한 3, 구매 없음
+        // 허니문 종료, 슬롯 제한 5, 구매 없음
         final mockStorage = mockStorageWithState(const MonetizationState(
           honeymoonActive: false,
-          favoriteSlotLimit: 3,
+          favoriteSlotLimit: 5,
         ));
 
         SharedPreferences.setMockInitialValues({
-          'favorite_phrases': jsonEncode(['사랑해요', '화이팅', '보고싶어']),
+          'favorite_phrases':
+              jsonEncode(['사랑해요', '화이팅', '보고싶어', '잘 자요', '응원해요']),
         });
 
         final c = ProviderContainer(
@@ -127,25 +128,26 @@ void main() {
         await c.read(favoritePhrasesNotifierProvider.future);
 
         final notifier = c.read(favoritePhrasesNotifierProvider.notifier);
-        // 4번째 추가 시도 → 거부
-        final result = await notifier.toggle('잘 자요');
+        // 6번째 추가 시도 → 거부
+        final result = await notifier.toggle('행복해요');
         expect(result, isFalse);
 
         final favorites =
             c.read(favoritePhrasesNotifierProvider).valueOrNull;
-        expect(favorites, hasLength(3));
-        expect(favorites, isNot(contains('잘 자요')));
+        expect(favorites, hasLength(5));
+        expect(favorites, isNot(contains('행복해요')));
       });
 
       test('should allow removing even at slot limit', () async {
-        // 3개 즐겨찾기 + 슬롯 제한 3
+        // 5개 즐겨찾기 + 슬롯 제한 5
         final mockStorage = mockStorageWithState(const MonetizationState(
           honeymoonActive: false,
-          favoriteSlotLimit: 3,
+          favoriteSlotLimit: 5,
         ));
 
         SharedPreferences.setMockInitialValues({
-          'favorite_phrases': jsonEncode(['사랑해요', '화이팅', '보고싶어']),
+          'favorite_phrases':
+              jsonEncode(['사랑해요', '화이팅', '보고싶어', '잘 자요', '응원해요']),
         });
 
         final c = ProviderContainer(
@@ -166,7 +168,7 @@ void main() {
 
         final favorites =
             c.read(favoritePhrasesNotifierProvider).valueOrNull;
-        expect(favorites, hasLength(2));
+        expect(favorites, hasLength(4));
         expect(favorites, isNot(contains('사랑해요')));
       });
 
@@ -205,15 +207,16 @@ void main() {
       });
 
       test('should allow unlimited for Pro users', () async {
-        // 슬롯 제한 3이지만 구매 기록 있음 → 무제한
+        // 슬롯 제한 5이지만 구매 기록 있음 → 무제한
         final mockStorage = mockStorageWithState(const MonetizationState(
           honeymoonActive: false,
-          favoriteSlotLimit: 3,
+          favoriteSlotLimit: 5,
           purchasedPackIds: ['color_pack_purple_dream'],
         ));
 
         SharedPreferences.setMockInitialValues({
-          'favorite_phrases': jsonEncode(['사랑해요', '화이팅', '보고싶어']),
+          'favorite_phrases':
+              jsonEncode(['사랑해요', '화이팅', '보고싶어', '잘 자요', '응원해요']),
         });
 
         final c = ProviderContainer(
@@ -228,21 +231,21 @@ void main() {
         await c.read(favoritePhrasesNotifierProvider.future);
 
         final notifier = c.read(favoritePhrasesNotifierProvider.notifier);
-        // 이미 3개 있지만 Pro이므로 4번째 추가 성공
-        final result = await notifier.toggle('잘 자요');
+        // 이미 5개 있지만 Pro이므로 6번째 추가 성공
+        final result = await notifier.toggle('행복해요');
         expect(result, isTrue);
 
         final favorites =
             c.read(favoritePhrasesNotifierProvider).valueOrNull;
-        expect(favorites, hasLength(4));
-        expect(favorites, contains('잘 자요'));
+        expect(favorites, hasLength(6));
+        expect(favorites, contains('행복해요'));
       });
 
       test('should return true for toggle result on normal add', () async {
         // 제한 미도달 시 추가 성공 반환값 확인
         final mockStorage = mockStorageWithState(const MonetizationState(
           honeymoonActive: false,
-          favoriteSlotLimit: 3,
+          favoriteSlotLimit: 5,
         ));
 
         SharedPreferences.setMockInitialValues({});

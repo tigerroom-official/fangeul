@@ -35,7 +35,7 @@ void main() {
       verify(() => mockRepository.save(any())).called(1);
     });
 
-    test('should keep honeymoon active within 7 days (Day 3)', () async {
+    test('should keep honeymoon active within 14 days (Day 3)', () async {
       final installDate = DateTime(2026, 3, 1);
       final now = installDate.add(const Duration(days: 3));
 
@@ -53,9 +53,9 @@ void main() {
       verifyNever(() => mockRepository.save(any()));
     });
 
-    test('should end honeymoon after Day 6 (Day 7+) — set honeymoonActive=false, favoriteSlotLimit=3',
+    test('should end honeymoon after Day 13 (Day 14+) — set honeymoonActive=false, favoriteSlotLimit=5',
         () async {
-      final now = DateTime(2026, 3, 8); // Day 7
+      final now = DateTime(2026, 3, 15); // Day 14
 
       when(() => mockRepository.load()).thenAnswer(
         (_) async => const MonetizationState(
@@ -68,7 +68,7 @@ void main() {
       final result = await useCase.execute(now: now);
 
       expect(result.honeymoonActive, false);
-      expect(result.favoriteSlotLimit, 3);
+      expect(result.favoriteSlotLimit, 5);
       verify(() => mockRepository.save(any())).called(1);
     });
 
@@ -79,14 +79,14 @@ void main() {
         (_) async => const MonetizationState(
           installDate: '2026-03-01',
           honeymoonActive: false,
-          favoriteSlotLimit: 3,
+          favoriteSlotLimit: 5,
         ),
       );
 
       final result = await useCase.execute(now: now);
 
       expect(result.honeymoonActive, false);
-      expect(result.favoriteSlotLimit, 3);
+      expect(result.favoriteSlotLimit, 5);
       verifyNever(() => mockRepository.save(any()));
     });
 
@@ -107,7 +107,7 @@ void main() {
       verifyNever(() => mockRepository.save(any()));
     });
 
-    test('should keep honeymoon on Day 6 but end on Day 7', () async {
+    test('should keep honeymoon on Day 13 but end on Day 14', () async {
       when(() => mockRepository.load()).thenAnswer(
         (_) async => const MonetizationState(
           installDate: '2026-03-01',
@@ -116,17 +116,17 @@ void main() {
       );
       when(() => mockRepository.save(any())).thenAnswer((_) async {});
 
-      // Day 6 — still honeymoon
-      final day6 = DateTime(2026, 3, 7);
-      final result6 = await useCase.execute(now: day6);
-      expect(result6.honeymoonActive, true);
-      expect(result6.favoriteSlotLimit, 0);
+      // Day 13 — still honeymoon
+      final day13 = DateTime(2026, 3, 14);
+      final result13 = await useCase.execute(now: day13);
+      expect(result13.honeymoonActive, true);
+      expect(result13.favoriteSlotLimit, 0);
 
-      // Day 7 — honeymoon ends
-      final day7 = DateTime(2026, 3, 8);
-      final result7 = await useCase.execute(now: day7);
-      expect(result7.honeymoonActive, false);
-      expect(result7.favoriteSlotLimit, 3);
+      // Day 14 — honeymoon ends
+      final day14 = DateTime(2026, 3, 15);
+      final result14 = await useCase.execute(now: day14);
+      expect(result14.honeymoonActive, false);
+      expect(result14.favoriteSlotLimit, 5);
     });
   });
 }

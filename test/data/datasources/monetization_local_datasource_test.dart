@@ -47,7 +47,7 @@ void main() {
         final state = MonetizationState(
           installDate: '2026-03-01',
           honeymoonActive: false,
-          favoriteSlotLimit: 3,
+          favoriteSlotLimit: 5,
           ttsPlayCount: 5,
           adWatchCount: 2,
           lastTimestamp: 1000,
@@ -65,7 +65,7 @@ void main() {
 
         expect(result.installDate, '2026-03-01');
         expect(result.honeymoonActive, false);
-        expect(result.favoriteSlotLimit, 3);
+        expect(result.favoriteSlotLimit, 5);
         expect(result.ttsPlayCount, 5);
         expect(result.adWatchCount, 2);
         expect(result.lastTimestamp, 1000);

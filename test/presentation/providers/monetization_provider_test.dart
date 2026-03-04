@@ -75,7 +75,7 @@ void main() {
         expect(state.unlockExpiresAt, 0);
       });
 
-      test('should end honeymoon when install date is 7+ days ago', () async {
+      test('should end honeymoon when install date is 14+ days ago', () async {
         setUpWithState(const MonetizationState(
           installDate: '2026-02-01',
           honeymoonActive: true,
@@ -84,12 +84,12 @@ void main() {
 
         final state = await container.read(monetizationNotifierProvider.future);
 
-        // Day 7 이상 → 허니문 종료
+        // Day 14 이상 → 허니문 종료
         expect(state.honeymoonActive, false);
-        expect(state.favoriteSlotLimit, 3);
+        expect(state.favoriteSlotLimit, 5);
       });
 
-      test('should keep honeymoon active within 7 days', () async {
+      test('should keep honeymoon active within 14 days', () async {
         // 오늘 날짜로 설치
         final now = DateTime.now();
         final y = now.year.toString().padLeft(4, '0');
@@ -289,7 +289,7 @@ void main() {
     });
 
     group('endHoneymoon', () {
-      test('should set honeymoonActive=false and favoriteSlotLimit=3',
+      test('should set honeymoonActive=false and favoriteSlotLimit=5',
           () async {
         setUpDefault();
 
@@ -301,7 +301,7 @@ void main() {
 
         final state = await container.read(monetizationNotifierProvider.future);
         expect(state.honeymoonActive, false);
-        expect(state.favoriteSlotLimit, 3);
+        expect(state.favoriteSlotLimit, 5);
       });
     });
 
@@ -662,7 +662,7 @@ void main() {
 
       await notifier.endHoneymoon();
 
-      expect(container.read(favoriteSlotLimitProvider), 3);
+      expect(container.read(favoriteSlotLimitProvider), 5);
     });
   });
 }

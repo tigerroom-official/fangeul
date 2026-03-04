@@ -24,8 +24,8 @@ void main() {
     return '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
 
-  /// 트리거 조건 충족 상태: Day14+, 광고 3회, 슬롯 3/3, 미구매.
-  MonetizationState triggerReadyState({int favSlotLimit = 3}) =>
+  /// 트리거 조건 충족 상태: Day14+, 광고 3회, 슬롯 5/5, 미구매.
+  MonetizationState triggerReadyState({int favSlotLimit = 5}) =>
       MonetizationState(
         installDate: oldInstallDate(),
         honeymoonActive: false,
@@ -69,7 +69,7 @@ void main() {
 
   group('shouldShowConversionTriggerProvider', () {
     test('should return true when all conditions met', () async {
-      setUpWithState(triggerReadyState(), favCount: 3);
+      setUpWithState(triggerReadyState(), favCount: 5);
 
       await container.read(monetizationNotifierProvider.future);
       await container.read(favoritePhrasesNotifierProvider.future);
@@ -87,7 +87,7 @@ void main() {
           '${now.year.toString().padLeft(4, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
       setUpWithState(
         triggerReadyState().copyWith(installDate: recent),
-        favCount: 3,
+        favCount: 5,
       );
 
       await container.read(monetizationNotifierProvider.future);
@@ -103,7 +103,7 @@ void main() {
     test('should return false when ad count < 3', () async {
       setUpWithState(
         triggerReadyState().copyWith(adWatchCount: 2),
-        favCount: 3,
+        favCount: 5,
       );
 
       await container.read(monetizationNotifierProvider.future);

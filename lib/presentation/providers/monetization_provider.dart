@@ -49,7 +49,7 @@ class MonetizationNotifier extends _$MonetizationNotifier {
   static const int unlockDurationMs = 4 * 60 * 60 * 1000;
 
   /// 허니문 종료 후 기본 즐겨찾기 슬롯 제한.
-  static const int defaultSlotLimit = 3;
+  static const int defaultSlotLimit = 5;
 
   /// 일일 TTS 재생 제한.
   static const int dailyTtsLimit = 5;
@@ -207,7 +207,7 @@ class MonetizationNotifier extends _$MonetizationNotifier {
 
   /// 허니문 기간을 종료한다.
   ///
-  /// honeymoonActive를 false로, favoriteSlotLimit를 기본 제한(3)으로 설정.
+  /// honeymoonActive를 false로, favoriteSlotLimit를 기본 제한(5)으로 설정.
   Future<void> endHoneymoon() async {
     try {
       await future;
