@@ -7,6 +7,7 @@ import 'package:fangeul/core/entities/phrase.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/analytics_providers.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
+import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/services/analytics_events.dart';
 
 /// 문구 카드 -- 한글 원문 + 발음 + 번역.
@@ -33,6 +34,8 @@ class PhraseCard extends ConsumerWidget {
     final favorites =
         ref.watch(favoritePhrasesNotifierProvider).valueOrNull ?? {};
     final isFavorite = favorites.contains(phrase.ko);
+    final idolName = ref.watch(myIdolDisplayNameProvider).valueOrNull;
+    final memberName = ref.watch(myIdolMemberNameProvider).valueOrNull;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -56,13 +59,8 @@ class PhraseCard extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 4),
-          // 로마자 발음
-          Text(
-            phrase.roman,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.primary,
-            ),
-          ),
+          // 로마자 발음 — 치환된 그룹/멤버명은 muted 색상으로 구분
+          _buildRomanText(theme, idolName, memberName),
           const SizedBox(height: 4),
           // 번역
           if (translation.isNotEmpty)
@@ -113,5 +111,73 @@ class PhraseCard extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  /// roman 텍스트에서 치환된 그룹/멤버명을 muted 색상으로 구분한다.
+  ///
+  /// 아이돌 미설정이거나 roman에 이름이 없으면 단일 Text를 반환한다.
+  Widget _buildRomanText(
+    ThemeData theme,
+    String? idolName,
+    String? memberName,
+  ) {
+    final romanStyle = theme.textTheme.bodyMedium?.copyWith(
+      color: theme.colorScheme.primary,
+    );
+
+    final names = <String>[
+      if (idolName != null) idolName,
+      if (memberName != null) memberName,
+    ];
+    if (names.isEmpty || !names.any((n) => phrase.roman.contains(n))) {
+      return Text(phrase.roman, style: romanStyle);
+    }
+
+    final nameStyle = theme.textTheme.bodyMedium?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
+
+    return Text.rich(
+      TextSpan(children: _splitByNames(phrase.roman, names, romanStyle, nameStyle)),
+    );
+  }
+
+  /// 텍스트를 이름 부분(muted)과 발음 부분(primary)으로 분리.
+  List<TextSpan> _splitByNames(
+    String text,
+    List<String> names,
+    TextStyle? romanStyle,
+    TextStyle? nameStyle,
+  ) {
+    final spans = <TextSpan>[];
+    var remaining = text;
+
+    while (remaining.isNotEmpty) {
+      int nearestIndex = remaining.length;
+      String? matched;
+      for (final name in names) {
+        final idx = remaining.indexOf(name);
+        if (idx >= 0 && idx < nearestIndex) {
+          nearestIndex = idx;
+          matched = name;
+        }
+      }
+
+      if (matched == null) {
+        spans.add(TextSpan(text: remaining, style: romanStyle));
+        break;
+      }
+
+      if (nearestIndex > 0) {
+        spans.add(TextSpan(
+          text: remaining.substring(0, nearestIndex),
+          style: romanStyle,
+        ));
+      }
+      spans.add(TextSpan(text: matched, style: nameStyle));
+      remaining = remaining.substring(nearestIndex + matched.length);
+    }
+
+    return spans;
   }
 }

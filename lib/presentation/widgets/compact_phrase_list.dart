@@ -138,7 +138,14 @@ class _PhrasesTabState extends ConsumerState<_PhrasesTab>
 
     // 마이 아이돌 설정 여부 — 칩 표시 조건
     final idolNameAsync = ref.watch(myIdolDisplayNameProvider);
-    final hasIdol = idolNameAsync.valueOrNull != null;
+    final idolName = idolNameAsync.valueOrNull;
+    final hasIdol = idolName != null;
+    final memberName = ref.watch(myIdolMemberNameProvider).valueOrNull;
+
+    // 마이 아이돌 칩 레이블: ♡ {멤버명 or 그룹명}
+    final myIdolLabel = hasIdol
+        ? UiStrings.phrasesMyIdolChip(memberName ?? idolName)
+        : null;
 
     // "오늘" 칩 표시 조건 — 오늘 이벤트가 있는지
     final todayAsync = ref.watch(todaySuggestedPhrasesProvider);
@@ -166,6 +173,7 @@ class _PhrasesTabState extends ConsumerState<_PhrasesTab>
                   .selectPack(packId);
             },
             showMyIdolChip: hasIdol,
+            myIdolLabel: myIdolLabel,
             isMyIdolSelected: isMyIdolSelected,
             onMyIdolSelected: () {
               ref

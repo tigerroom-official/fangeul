@@ -8,6 +8,7 @@ import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/analytics_providers.dart';
 import 'package:fangeul/presentation/providers/copy_history_provider.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
+import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/widgets/copy_feedback_overlay.dart';
 import 'package:fangeul/services/analytics_events.dart';
 
@@ -15,6 +16,9 @@ import 'package:fangeul/services/analytics_events.dart';
 ///
 /// 팩 탐색 탭에서 각 문구를 표시한다.
 /// ★ 토글로 즐겨찾기 추가/제거, 📋 버튼으로 클립보드 복사.
+///
+/// roman 텍스트 내 그룹/멤버명은 로마자 발음이 아니므로
+/// muted 색상([ColorScheme.onSurfaceVariant])으로 구분하여 표시한다.
 class CompactPhraseTile extends ConsumerWidget {
   /// Creates a [CompactPhraseTile].
   const CompactPhraseTile({
@@ -36,6 +40,11 @@ class CompactPhraseTile extends ConsumerWidget {
         ref.watch(favoritePhrasesNotifierProvider).valueOrNull ?? {};
     final isFavorite = favorites.contains(phrase.ko);
 
+    final idolName =
+        ref.watch(myIdolDisplayNameProvider).valueOrNull;
+    final memberName =
+        ref.watch(myIdolMemberNameProvider).valueOrNull;
+
     return ListTile(
       dense: true,
       visualDensity: VisualDensity.compact,
@@ -46,14 +55,7 @@ class CompactPhraseTile extends ConsumerWidget {
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: phrase.roman.isNotEmpty
-          ? Text(
-              phrase.roman,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.primary,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            )
+          ? _buildRomanSubtitle(theme, idolName, memberName)
           : null,
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
@@ -84,6 +86,88 @@ class CompactPhraseTile extends ConsumerWidget {
       ),
       onTap: () => _copy(context, ref),
     );
+  }
+
+  /// roman 텍스트에서 그룹/멤버명을 다른 색상으로 구분한 위젯.
+  ///
+  /// 아이돌 미설정이거나 roman에 이름이 없으면 단일 Text를 반환한다.
+  Widget _buildRomanSubtitle(
+    ThemeData theme,
+    String? idolName,
+    String? memberName,
+  ) {
+    final romanStyle = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.primary,
+    );
+
+    // 이름이 없으면 단일 텍스트
+    final names = <String>[
+      if (idolName != null) idolName,
+      if (memberName != null) memberName,
+    ];
+    if (names.isEmpty || !names.any((n) => phrase.roman.contains(n))) {
+      return Text(
+        phrase.roman,
+        style: romanStyle,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      );
+    }
+
+    final nameStyle = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
+
+    final spans = _splitRomanByNames(phrase.roman, names, romanStyle, nameStyle);
+    return Text.rich(
+      TextSpan(children: spans),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  /// roman 텍스트를 이름 부분과 로마자 부분으로 분리하여 TextSpan 목록을 반환한다.
+  List<TextSpan> _splitRomanByNames(
+    String text,
+    List<String> names,
+    TextStyle? romanStyle,
+    TextStyle? nameStyle,
+  ) {
+    final spans = <TextSpan>[];
+    var remaining = text;
+
+    while (remaining.isNotEmpty) {
+      // 가장 가까운 이름 매치 찾기
+      int nearestIndex = remaining.length;
+      String? matchedName;
+      for (final name in names) {
+        final idx = remaining.indexOf(name);
+        if (idx >= 0 && idx < nearestIndex) {
+          nearestIndex = idx;
+          matchedName = name;
+        }
+      }
+
+      if (matchedName == null) {
+        // 더 이상 이름 없음
+        spans.add(TextSpan(text: remaining, style: romanStyle));
+        break;
+      }
+
+      // 이름 앞 로마자 부분
+      if (nearestIndex > 0) {
+        spans.add(TextSpan(
+          text: remaining.substring(0, nearestIndex),
+          style: romanStyle,
+        ));
+      }
+
+      // 이름 부분 (muted 색상)
+      spans.add(TextSpan(text: matchedName, style: nameStyle));
+      remaining = remaining.substring(nearestIndex + matchedName.length);
+    }
+
+    return spans;
   }
 
   void _copy(BuildContext context, WidgetRef ref) {

@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:fangeul/core/entities/phrase.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/widgets/compact_phrase_tile.dart';
 
 void main() {
@@ -114,6 +115,89 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(copied, isTrue);
+    });
+  });
+
+  group('CompactPhraseTile — roman name highlighting', () {
+    testWidgets('should use Text.rich when idol name is in roman',
+        (tester) async {
+      const templatePhrase = Phrase(
+        ko: 'BTS 사랑해요',
+        roman: 'BTS saranghaeyo',
+        context: 'Template',
+      );
+      await tester.pumpWidget(
+        buildTestWidget(
+          phrase: templatePhrase,
+          overrides: [
+            myIdolDisplayNameProvider.overrideWith((ref) async => 'BTS'),
+            myIdolMemberNameProvider.overrideWith((ref) async => null),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Text.rich를 사용하면 RichText가 렌더됨
+      final richTexts = tester
+          .widgetList<RichText>(find.byType(RichText))
+          .where((w) => w.text.toPlainText().contains('BTS saranghaeyo'));
+      expect(richTexts, isNotEmpty);
+    });
+
+    testWidgets('should use plain Text when no idol set', (tester) async {
+      await tester.pumpWidget(
+        buildTestWidget(
+          overrides: [
+            myIdolDisplayNameProvider.overrideWith((ref) async => null),
+            myIdolMemberNameProvider.overrideWith((ref) async => null),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // plain Text 위젯으로 roman 표시
+      expect(find.text('saranghaeyo'), findsOneWidget);
+    });
+
+    testWidgets('should highlight member name in roman', (tester) async {
+      const memberPhrase = Phrase(
+        ko: '정국 생일 축하해요',
+        roman: '정국 saengil chukahaeyo',
+        context: 'Member template',
+      );
+      await tester.pumpWidget(
+        buildTestWidget(
+          phrase: memberPhrase,
+          overrides: [
+            myIdolDisplayNameProvider.overrideWith((ref) async => 'BTS'),
+            myIdolMemberNameProvider.overrideWith((ref) async => '정국'),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final richTexts = tester
+          .widgetList<RichText>(find.byType(RichText))
+          .where(
+              (w) => w.text.toPlainText().contains('정국 saengil chukahaeyo'));
+      expect(richTexts, isNotEmpty);
+    });
+
+    testWidgets('should use plain Text when roman has no idol name',
+        (tester) async {
+      // roman에 이름이 없는 일반 문구
+      await tester.pumpWidget(
+        buildTestWidget(
+          overrides: [
+            myIdolDisplayNameProvider.overrideWith((ref) async => 'BTS'),
+            myIdolMemberNameProvider.overrideWith((ref) async => null),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // "saranghaeyo"에 "BTS"가 없으므로 plain Text
+      expect(find.text('saranghaeyo'), findsOneWidget);
     });
   });
 }

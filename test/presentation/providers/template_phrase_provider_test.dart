@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:fangeul/core/entities/phrase.dart';
+import 'package:fangeul/core/entities/phrase_pack.dart';
 import 'package:fangeul/presentation/providers/template_phrase_provider.dart';
 
 void main() {
@@ -176,6 +177,92 @@ void main() {
       );
 
       expect(needsMemberName(phrase), isFalse);
+    });
+  });
+
+  group('collectAndResolveTemplates', () {
+    final testPacks = [
+      PhrasePack(
+        id: 'basic',
+        name: 'Basic',
+        nameKo: '기본',
+        phrases: [
+          const Phrase(ko: '사랑해요', roman: 'saranghaeyo', context: 'A'),
+          const Phrase(
+            ko: '{{group_name}} 화이팅!',
+            roman: '{{group_name}} hwaiting!',
+            context: 'Group template',
+            isTemplate: true,
+          ),
+          const Phrase(
+            ko: '{{member_name}} 최고!',
+            roman: '{{member_name}} choego!',
+            context: 'Member template',
+            isTemplate: true,
+          ),
+          const Phrase(
+            ko: '{{group_name}} {{member_name}} 사랑해!',
+            roman: '{{group_name}} {{member_name}} saranghae!',
+            context: 'Dual template',
+            isTemplate: true,
+          ),
+        ],
+      ),
+    ];
+
+    test('should collect only group templates when memberName is null', () {
+      final result = collectAndResolveTemplates(testPacks, 'BTS');
+      expect(result, hasLength(1));
+      expect(result[0].ko, 'BTS 화이팅!');
+    });
+
+    test('should collect all templates when memberName is set', () {
+      final result = collectAndResolveTemplates(
+        testPacks,
+        'BTS',
+        memberName: '정국',
+      );
+      expect(result, hasLength(3));
+    });
+
+    test('should put member templates first when memberFirst is true', () {
+      final result = collectAndResolveTemplates(
+        testPacks,
+        'BTS',
+        memberName: '정국',
+        memberFirst: true,
+      );
+      expect(result, hasLength(3));
+      // 멤버 전용 2개 먼저
+      expect(result[0].ko, '정국 최고!');
+      expect(result[1].ko, 'BTS 정국 사랑해!');
+      // 그룹 전용 1개 뒤에
+      expect(result[2].ko, 'BTS 화이팅!');
+    });
+
+    test('should not reorder when memberFirst is false', () {
+      final result = collectAndResolveTemplates(
+        testPacks,
+        'BTS',
+        memberName: '정국',
+        memberFirst: false,
+      );
+      expect(result, hasLength(3));
+      // 원본 순서 유지: group → member → dual
+      expect(result[0].ko, 'BTS 화이팅!');
+      expect(result[1].ko, '정국 최고!');
+      expect(result[2].ko, 'BTS 정국 사랑해!');
+    });
+
+    test('should ignore memberFirst when memberName is null', () {
+      final result = collectAndResolveTemplates(
+        testPacks,
+        'BTS',
+        memberFirst: true,
+      );
+      // memberName null → 멤버 템플릿 제외, memberFirst 무시
+      expect(result, hasLength(1));
+      expect(result[0].ko, 'BTS 화이팅!');
     });
   });
 

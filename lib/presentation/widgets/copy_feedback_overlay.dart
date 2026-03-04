@@ -62,7 +62,8 @@ class CopyFeedback {
     controller.play();
 
     // 파티클 낙하 완료 후 자동 정리 — mounted 가드로 해제된 오버레이 크래시 방지.
-    Timer(const Duration(milliseconds: 1500), () {
+    // 300ms burst + 300ms 낙하 + 100ms 버퍼.
+    Timer(const Duration(milliseconds: 700), () {
       if (entry.mounted) {
         entry.remove();
         entry.dispose();

@@ -134,18 +134,37 @@ Future<List<Phrase>> filteredCompactPhrases(
 ///
 /// [favoritePhrasesNotifierProvider]가 AsyncNotifier이므로 `.future`로
 /// SharedPreferences 로드 완료를 자연스럽게 대기한다.
+///
+/// 템플릿 문구는 치환된 ko("BTS 사랑해요!")로 저장되지만, 원본 팩에는
+/// 원본 ko("{{group_name}} 사랑해요!")가 있으므로 직접 매칭이 불가하다.
+/// 아이돌 설정 시 템플릿 문구를 치환하여 치환된 ko도 lookup에 추가한다.
 Future<List<Phrase>> _buildFavoritesPhrases(
     FilteredCompactPhrasesRef ref) async {
   final favoriteKos = await ref.watch(favoritePhrasesNotifierProvider.future);
   if (favoriteKos.isEmpty) return [];
 
   final packs = await ref.watch(allPhrasesProvider.future);
+  final idolName = await ref.watch(myIdolDisplayNameProvider.future);
+  final memberName = await ref.watch(myIdolMemberNameProvider.future);
 
   // 전체 문구에서 ko→Phrase 룩업 맵 생성 (O(1) lookup)
   final lookup = <String, Phrase>{};
   for (final pack in packs) {
     for (final phrase in pack.phrases) {
       lookup[phrase.ko] = phrase;
+    }
+  }
+
+  // 템플릿 문구의 치환된 ko도 lookup에 추가 (roman 복원용)
+  if (idolName != null) {
+    for (final pack in packs) {
+      for (final phrase in pack.phrases) {
+        if (!phrase.isTemplate) continue;
+        if (needsMemberName(phrase) && memberName == null) continue;
+        final resolved =
+            resolveTemplatePhrase(phrase, idolName, memberName: memberName);
+        lookup[resolved.ko] = resolved;
+      }
     }
   }
 
@@ -169,21 +188,20 @@ Future<List<Phrase>> _buildPackPhrases(
 /// isTemplate == true인 문구를 수집하고 마이 아이돌 이름으로 치환한다.
 /// 멤버명이 설정되어 있으면 `{{member_name}}` 슬롯도 함께 치환하고,
 /// 미설정이면 멤버 전용 템플릿은 제외한다.
+/// 멤버 전용 문구를 그룹 전용보다 먼저 배치 (멤버 우선 정렬).
 Future<List<Phrase>> _buildMyIdolPhrases(FilteredCompactPhrasesRef ref) async {
   final idolName = await ref.watch(myIdolDisplayNameProvider.future);
   if (idolName == null) return [];
 
   final memberName = await ref.watch(myIdolMemberNameProvider.future);
   final packs = await ref.watch(allPhrasesProvider.future);
-  final templates = packs
-      .expand((p) => p.phrases)
-      .where((p) => p.isTemplate)
-      .where((p) => !needsMemberName(p) || memberName != null)
-      .toList();
 
-  return templates
-      .map((p) => resolveTemplatePhrase(p, idolName, memberName: memberName))
-      .toList();
+  return collectAndResolveTemplates(
+    packs,
+    idolName,
+    memberName: memberName,
+    memberFirst: true,
+  );
 }
 
 /// 오늘 이벤트 기반 추천 문구 (버블 "오늘" 칩).

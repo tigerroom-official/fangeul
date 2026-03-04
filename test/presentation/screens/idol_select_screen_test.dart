@@ -7,6 +7,7 @@ import 'package:fangeul/core/entities/idol_group.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/screens/idol_select_screen.dart';
+import 'package:fangeul/presentation/widgets/multi_mode_keyboard.dart';
 
 const _testGroups = [
   IdolGroup(id: 'bts', nameEn: 'BTS', nameKo: '방탄소년단'),
@@ -26,6 +27,12 @@ Widget _buildTestWidget({
       home: IdolSelectScreen(isOnboarding: isOnboarding),
     ),
   );
+}
+
+/// readOnly TextField에 controller로 직접 텍스트를 설정하는 헬퍼.
+void _setTextFieldValue(WidgetTester tester, Finder finder, String text) {
+  final textField = tester.widget<TextField>(finder);
+  textField.controller?.text = text;
 }
 
 void main() {
@@ -95,8 +102,9 @@ void main() {
       await tester.tap(find.text('BTS'));
       await tester.pumpAndSettle();
 
-      // Enter member name
-      await tester.enterText(
+      // Set member name via controller (readOnly TextField)
+      _setTextFieldValue(
+        tester,
         find.byWidgetPredicate(
           (w) =>
               w is TextField &&
@@ -133,8 +141,9 @@ void main() {
       await tester.tap(find.text('BTS'));
       await tester.pumpAndSettle();
 
-      // Clear the member text field (it was pre-populated)
-      await tester.enterText(
+      // Clear the member text field via controller
+      _setTextFieldValue(
+        tester,
         find.byWidgetPredicate(
           (w) =>
               w is TextField &&
@@ -184,8 +193,12 @@ void main() {
       await tester.pumpWidget(_buildTestWidget());
       await tester.pumpAndSettle();
 
-      // Tap custom input tile
+      // Tap custom input tile → 키보드 표시됨
       await tester.tap(find.text(UiStrings.idolSelectOther));
+      await tester.pumpAndSettle();
+
+      // 키보드 닫아서 ListView 전체 보이게
+      await tester.tap(find.text(UiStrings.keyboardDone));
       await tester.pumpAndSettle();
 
       // Member input should be visible
@@ -201,12 +214,17 @@ void main() {
       await tester.pumpWidget(_buildTestWidget());
       await tester.pumpAndSettle();
 
-      // Tap custom input tile
+      // Tap custom input tile → 키보드 표시됨
       await tester.tap(find.text(UiStrings.idolSelectOther));
       await tester.pumpAndSettle();
 
-      // Enter custom group name
-      await tester.enterText(
+      // 키보드 닫고 controller 직접 설정 (테스트 편의)
+      await tester.tap(find.text(UiStrings.keyboardDone));
+      await tester.pumpAndSettle();
+
+      // Set custom group name via controller
+      _setTextFieldValue(
+        tester,
         find.byWidgetPredicate(
           (w) =>
               w is TextField &&
@@ -214,10 +232,10 @@ void main() {
         ),
         'DaySix',
       );
-      await tester.pumpAndSettle();
 
-      // Enter member name
-      await tester.enterText(
+      // Set member name via controller
+      _setTextFieldValue(
+        tester,
         find.byWidgetPredicate(
           (w) =>
               w is TextField &&
@@ -244,8 +262,12 @@ void main() {
       await tester.pumpWidget(_buildTestWidget());
       await tester.pumpAndSettle();
 
-      // Tap custom input tile
+      // Tap custom input tile → 키보드 표시됨
       await tester.tap(find.text(UiStrings.idolSelectOther));
+      await tester.pumpAndSettle();
+
+      // 키보드 닫아서 확인 버튼 접근 가능하게
+      await tester.tap(find.text(UiStrings.keyboardDone));
       await tester.pumpAndSettle();
 
       // Don't enter group name — just tap confirm
@@ -291,6 +313,217 @@ void main() {
         find.widgetWithText(FilledButton, UiStrings.idolSelectConfirm),
         findsOneWidget,
       );
+    });
+  });
+
+  group('IdolSelectScreen state restoration', () {
+    testWidgets('should restore custom group name from prefs', (tester) async {
+      await tester.pumpWidget(_buildTestWidget(
+        initialPrefs: {
+          'my_idol_group_id': 'custom:DaySix',
+        },
+      ));
+      await tester.pumpAndSettle();
+
+      // 커스텀 입력 타일이 활성화되고 그룹명이 복원됨
+      final textField = tester.widget<TextField>(
+        find.byWidgetPredicate(
+          (w) =>
+              w is TextField &&
+              w.decoration?.hintText == UiStrings.idolSelectOtherHint,
+        ),
+      );
+      expect(textField.controller?.text, 'DaySix');
+    });
+
+    testWidgets('should restore preset group selection from prefs',
+        (tester) async {
+      await tester.pumpWidget(_buildTestWidget(
+        initialPrefs: {
+          'my_idol_group_id': 'bts',
+        },
+      ));
+      await tester.pumpAndSettle();
+
+      // BTS가 선택 상태 (체크 아이콘 표시)
+      expect(find.byIcon(Icons.check_circle), findsOneWidget);
+      // 멤버 입력/확인 버튼 표시
+      expect(find.text(UiStrings.idolMemberHint), findsOneWidget);
+    });
+
+    testWidgets('should restore both custom group and member from prefs',
+        (tester) async {
+      await tester.pumpWidget(_buildTestWidget(
+        initialPrefs: {
+          'my_idol_group_id': 'custom:DaySix',
+          'my_idol_member_name': '원필',
+        },
+      ));
+      await tester.pumpAndSettle();
+
+      // 커스텀 그룹명 복원
+      final customField = tester.widget<TextField>(
+        find.byWidgetPredicate(
+          (w) =>
+              w is TextField &&
+              w.decoration?.hintText == UiStrings.idolSelectOtherHint,
+        ),
+      );
+      expect(customField.controller?.text, 'DaySix');
+
+      // 멤버명 복원
+      final memberField = tester.widget<TextField>(
+        find.byWidgetPredicate(
+          (w) =>
+              w is TextField &&
+              w.decoration?.hintText == UiStrings.idolMemberHint,
+        ),
+      );
+      expect(memberField.controller?.text, '원필');
+    });
+  });
+
+  group('IdolSelectScreen keyboard integration', () {
+    testWidgets('should show keyboard when custom input tapped',
+        (tester) async {
+      await tester.pumpWidget(_buildTestWidget());
+      await tester.pumpAndSettle();
+
+      // 키보드 없음
+      expect(find.byType(MultiModeKeyboard), findsNothing);
+
+      // 커스텀 입력 탭
+      await tester.tap(find.text(UiStrings.idolSelectOther));
+      await tester.pumpAndSettle();
+
+      // 키보드 표시됨
+      expect(find.byType(MultiModeKeyboard), findsOneWidget);
+    });
+
+    testWidgets('should show keyboard when member field tapped',
+        (tester) async {
+      await tester.pumpWidget(_buildTestWidget());
+      await tester.pumpAndSettle();
+
+      // 그룹 선택
+      await tester.tap(find.text('BTS'));
+      await tester.pumpAndSettle();
+
+      // 멤버 필드 탭
+      await tester.tap(find.byWidgetPredicate(
+        (w) =>
+            w is TextField &&
+            w.decoration?.hintText == UiStrings.idolMemberHint,
+      ));
+      await tester.pumpAndSettle();
+
+      // 키보드 표시됨
+      expect(find.byType(MultiModeKeyboard), findsOneWidget);
+    });
+
+    testWidgets('should hide keyboard when preset group selected',
+        (tester) async {
+      await tester.pumpWidget(_buildTestWidget());
+      await tester.pumpAndSettle();
+
+      // 커스텀 입력 → 키보드 표시
+      await tester.tap(find.text(UiStrings.idolSelectOther));
+      await tester.pumpAndSettle();
+      expect(find.byType(MultiModeKeyboard), findsOneWidget);
+
+      // 프리셋 그룹 선택 → 키보드 해제
+      await tester.tap(find.text('BTS'));
+      await tester.pumpAndSettle();
+      expect(find.byType(MultiModeKeyboard), findsNothing);
+    });
+
+    testWidgets('should hide keyboard when done button tapped',
+        (tester) async {
+      await tester.pumpWidget(_buildTestWidget());
+      await tester.pumpAndSettle();
+
+      // 커스텀 입력 → 키보드 표시
+      await tester.tap(find.text(UiStrings.idolSelectOther));
+      await tester.pumpAndSettle();
+      expect(find.byType(MultiModeKeyboard), findsOneWidget);
+
+      // 완료 버튼 탭 → 키보드 해제
+      await tester.tap(find.text(UiStrings.keyboardDone));
+      await tester.pumpAndSettle();
+      expect(find.byType(MultiModeKeyboard), findsNothing);
+    });
+
+    testWidgets('should make TextFields readOnly', (tester) async {
+      await tester.pumpWidget(_buildTestWidget());
+      await tester.pumpAndSettle();
+
+      // 커스텀 입력 탭
+      await tester.tap(find.text(UiStrings.idolSelectOther));
+      await tester.pumpAndSettle();
+
+      // 커스텀 필드는 readOnly
+      final customField = tester.widget<TextField>(
+        find.byWidgetPredicate(
+          (w) =>
+              w is TextField &&
+              w.decoration?.hintText == UiStrings.idolSelectOtherHint,
+        ),
+      );
+      expect(customField.readOnly, true);
+
+      // 멤버 필드도 readOnly
+      final memberField = tester.widget<TextField>(
+        find.byWidgetPredicate(
+          (w) =>
+              w is TextField &&
+              w.decoration?.hintText == UiStrings.idolMemberHint,
+        ),
+      );
+      expect(memberField.readOnly, true);
+    });
+
+    testWidgets(
+        'should preserve existing text when field tapped then done without edit',
+        (tester) async {
+      await tester.pumpWidget(_buildTestWidget(
+        initialPrefs: {
+          'my_idol_group_id': 'custom:DaySix',
+          'my_idol_member_name': '원필',
+        },
+      ));
+      await tester.pumpAndSettle();
+
+      // 커스텀 필드 탭 → 키보드 표시
+      await tester.tap(find.byWidgetPredicate(
+        (w) =>
+            w is TextField &&
+            w.decoration?.hintText == UiStrings.idolSelectOtherHint,
+      ));
+      await tester.pumpAndSettle();
+
+      // 아무것도 입력하지 않고 완료
+      await tester.tap(find.text(UiStrings.keyboardDone));
+      await tester.pumpAndSettle();
+
+      // 텍스트 보존 확인
+      final customField = tester.widget<TextField>(
+        find.byWidgetPredicate(
+          (w) =>
+              w is TextField &&
+              w.decoration?.hintText == UiStrings.idolSelectOtherHint,
+        ),
+      );
+      expect(customField.controller?.text, 'DaySix');
+
+      // 멤버 필드도 보존
+      final memberField = tester.widget<TextField>(
+        find.byWidgetPredicate(
+          (w) =>
+              w is TextField &&
+              w.decoration?.hintText == UiStrings.idolMemberHint,
+        ),
+      );
+      expect(memberField.controller?.text, '원필');
     });
   });
 }

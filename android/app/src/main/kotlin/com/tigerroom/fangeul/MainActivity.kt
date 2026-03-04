@@ -3,6 +3,8 @@ package com.tigerroom.fangeul
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.PowerManager
 import android.provider.Settings
 import androidx.lifecycle.Lifecycle
@@ -29,6 +31,10 @@ class MainActivity : FlutterActivity() {
     /// 사용자가 hideBubble로 명시 종료하면 false로 리셋.
     private var bubbleHiddenByUs = false
 
+    /// 버블 복원 지연 핸들러 — 최근 앱 화면에서 버블 깜빡임 방지.
+    private val mainHandler = Handler(Looper.getMainLooper())
+    private var showBubbleRunnable: Runnable? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         prewarmMiniEngine()
@@ -36,9 +42,17 @@ class MainActivity : FlutterActivity() {
 
     override fun onResume() {
         super.onResume()
+        // 대기 중인 버블 복원을 취소 (최근 앱에서 빠르게 복귀 시).
+        cancelPendingBubbleShow()
+
         // 메인 앱이 포그라운드이면 버블을 일시적으로 숨긴다.
         // silent = true → Dart에 "off" 이벤트 안 보냄 (설정 토글 유지).
-        if (FloatingBubbleService.isBubbleShowing) {
+        //
+        // isBubbleShowing 대신 isServiceActive를 체크한다:
+        // onStop()의 startForegroundService(ACTION_SHOW)는 비동기이므로,
+        // 앱 전환이 빠르면 onResume 시점에 isBubbleShowing이 아직 false일 수 있다.
+        // isServiceActive는 silent hide 중에도 true이므로 레이스 컨디션을 방지한다.
+        if (FloatingBubbleService.isServiceActive) {
             bubbleHiddenByUs = true
             val intent = Intent(this, FloatingBubbleService::class.java).apply {
                 action = FloatingBubbleService.ACTION_HIDE
@@ -52,13 +66,34 @@ class MainActivity : FlutterActivity() {
         super.onStop()
         // 메인 앱이 백그라운드로 가면, 우리가 숨긴 버블만 복원한다.
         // 사용자가 명시적으로 끈 경우(hideBubble)는 복원하지 않음.
+        //
+        // 500ms 지연: 최근 앱 화면에서 버블이 깜빡이는 것을 방지.
+        // onResume()이 빠르게 호출되면(최근 앱→메인 앱 복귀) 복원을 취소한다.
         if (bubbleHiddenByUs) {
+            showBubbleRunnable = Runnable {
+                showBubbleRunnable = null
+                bubbleHiddenByUs = false
+                val intent = Intent(this, FloatingBubbleService::class.java).apply {
+                    action = FloatingBubbleService.ACTION_SHOW
+                }
+                startForegroundService(intent)
+            }
+            mainHandler.postDelayed(showBubbleRunnable!!, 500)
+        }
+    }
+
+    override fun onDestroy() {
+        // 대기 중인 복원 취소.
+        cancelPendingBubbleShow()
+        // Activity 종료 시 (뒤로가기 등) 버블 즉시 복원.
+        if (bubbleHiddenByUs && isFinishing && FloatingBubbleService.isServiceActive) {
             bubbleHiddenByUs = false
             val intent = Intent(this, FloatingBubbleService::class.java).apply {
                 action = FloatingBubbleService.ACTION_SHOW
             }
             startForegroundService(intent)
         }
+        super.onDestroy()
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -92,6 +127,7 @@ class MainActivity : FlutterActivity() {
 
                     "hideBubble" -> {
                         // 사용자가 명시적으로 버블을 끔 → 복원 방지.
+                        cancelPendingBubbleShow()
                         bubbleHiddenByUs = false
                         val intent = Intent(this, FloatingBubbleService::class.java).apply {
                             action = FloatingBubbleService.ACTION_STOP
@@ -157,6 +193,11 @@ class MainActivity : FlutterActivity() {
             pendingPermissionResult?.success(granted)
             pendingPermissionResult = null
         }
+    }
+
+    private fun cancelPendingBubbleShow() {
+        showBubbleRunnable?.let { mainHandler.removeCallbacks(it) }
+        showBubbleRunnable = null
     }
 
     /// MiniConverterActivity용 FlutterEngine 프리워밍.

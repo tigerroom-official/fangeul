@@ -69,6 +69,10 @@ abstract final class UiStrings {
 
   // 키보드
   static const keyboardSpace = 'Space';
+  static const keyboardModeKorean = '한글';
+  static const keyboardModeAbc = 'ABC';
+  static const keyboardModeNumbers = '123';
+  static const keyboardDone = '완료';
 
   // 기본 번역 언어
   static const defaultTranslationLang = 'en';

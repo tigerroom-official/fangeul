@@ -19,6 +19,7 @@ class PackFilterChips extends StatelessWidget {
     this.isMyIdolSelected = false,
     this.onMyIdolSelected,
     this.showMyIdolChip = false,
+    this.myIdolLabel,
     this.isTodaySelected = false,
     this.onTodaySelected,
     this.showTodayChip = false,
@@ -47,6 +48,9 @@ class PackFilterChips extends StatelessWidget {
 
   /// 마이 아이돌 칩 표시 여부 (아이돌 설정 유저만).
   final bool showMyIdolChip;
+
+  /// 마이 아이돌 칩에 표시할 커스텀 레이블. null이면 기본 레이블 사용.
+  final String? myIdolLabel;
 
   /// "오늘" 칩 선택 상태.
   final bool isTodaySelected;
@@ -117,7 +121,7 @@ class PackFilterChips extends StatelessWidget {
 
     return FilterChip(
       label: Text(
-        UiStrings.idolSettingLabel,
+        myIdolLabel ?? UiStrings.idolSettingLabel,
         style: TextStyle(
           color: isMyIdolSelected
               ? theme.colorScheme.onPrimary

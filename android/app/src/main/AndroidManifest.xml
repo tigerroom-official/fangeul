@@ -43,7 +43,9 @@
             android:exported="false"
             android:theme="@style/TranslucentTheme"
             android:launchMode="singleTask"
-            android:taskAffinity="com.tigerroom.fangeul.mini"/>
+            android:taskAffinity="com.tigerroom.fangeul.mini"
+            android:excludeFromRecents="true"
+            android:noHistory="true"/>
         <!-- AdMob App ID (TODO: replace with production ID) -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

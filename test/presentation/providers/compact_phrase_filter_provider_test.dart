@@ -532,12 +532,14 @@ void main() {
 
       final phrases =
           await container.read(filteredCompactPhrasesProvider.future);
-      // 4 templates: 2 group-only + 2 member (all resolved)
+      // 4 templates: member-first (2) + group-only (2)
       expect(phrases, hasLength(4));
-      expect(phrases[0].ko, 'BTS 사랑해요');
-      expect(phrases[1].ko, 'BTS 화이팅!');
-      expect(phrases[2].ko, '정국 생일 축하해요');
-      expect(phrases[3].ko, 'BTS 정국 최고!');
+      // 멤버 전용 문구가 앞에 배치 (member-first sorting)
+      expect(phrases[0].ko, '정국 생일 축하해요');
+      expect(phrases[1].ko, 'BTS 정국 최고!');
+      // 그룹 전용 문구가 뒤에 배치
+      expect(phrases[2].ko, 'BTS 사랑해요');
+      expect(phrases[3].ko, 'BTS 화이팅!');
     });
 
     test('should exclude member templates when memberName is null', () async {
@@ -567,6 +569,79 @@ void main() {
       for (final p in phrases) {
         expect(p.ko, isNot(contains('{{member_name}}')));
       }
+    });
+  });
+
+  group('filteredCompactPhrases — favorites template roman', () {
+    test('should restore roman for favorited template phrase', () async {
+      final container = ProviderContainer(
+        overrides: [
+          allPhrasesProvider.overrideWith((ref) async => _testPacks),
+          myIdolDisplayNameProvider.overrideWith((ref) async => 'BTS'),
+          myIdolMemberNameProvider.overrideWith((ref) async => null),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      // 즐겨찾기에 치환된 ko 추가 (실제 앱에서 저장하는 형태)
+      container.listen(favoritePhrasesNotifierProvider, (_, __) {});
+      await container.read(favoritePhrasesNotifierProvider.future);
+      await container
+          .read(favoritePhrasesNotifierProvider.notifier)
+          .toggle('BTS 사랑해요');
+
+      final phrases =
+          await container.read(filteredCompactPhrasesProvider.future);
+      expect(phrases, hasLength(1));
+      expect(phrases.first.ko, 'BTS 사랑해요');
+      expect(phrases.first.roman, 'BTS saranghaeyo');
+    });
+
+    test('should restore roman for member template favorite', () async {
+      final container = ProviderContainer(
+        overrides: [
+          allPhrasesProvider.overrideWith((ref) async => _testPacks),
+          myIdolDisplayNameProvider.overrideWith((ref) async => 'BTS'),
+          myIdolMemberNameProvider.overrideWith((ref) async => '정국'),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      container.listen(favoritePhrasesNotifierProvider, (_, __) {});
+      await container.read(favoritePhrasesNotifierProvider.future);
+      await container
+          .read(favoritePhrasesNotifierProvider.notifier)
+          .toggle('정국 생일 축하해요');
+
+      final phrases =
+          await container.read(filteredCompactPhrasesProvider.future);
+      expect(phrases, hasLength(1));
+      expect(phrases.first.ko, '정국 생일 축하해요');
+      expect(phrases.first.roman, '정국 saengil chukahaeyo');
+    });
+
+    test('should fallback to empty roman when idol not set', () async {
+      final container = ProviderContainer(
+        overrides: [
+          allPhrasesProvider.overrideWith((ref) async => _testPacks),
+          myIdolDisplayNameProvider.overrideWith((ref) async => null),
+          myIdolMemberNameProvider.overrideWith((ref) async => null),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      container.listen(favoritePhrasesNotifierProvider, (_, __) {});
+      await container.read(favoritePhrasesNotifierProvider.future);
+      // 치환된 ko로 저장됐지만 아이돌 미설정 → lookup 실패 → 폴백
+      await container
+          .read(favoritePhrasesNotifierProvider.notifier)
+          .toggle('BTS 사랑해요');
+
+      final phrases =
+          await container.read(filteredCompactPhrasesProvider.future);
+      expect(phrases, hasLength(1));
+      expect(phrases.first.ko, 'BTS 사랑해요');
+      expect(phrases.first.roman, '');
     });
   });
 

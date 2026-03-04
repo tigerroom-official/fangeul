@@ -28,7 +28,7 @@ lib/
 
 ```
 Phase 1: 셋업 ✅ | Phase 2: Core 엔진 ✅ | Phase 3: 데이터 레이어 ✅
-Phase 4: UI ✅   | Phase 5: 버블 ✅    | Phase 6: 수익화 | Phase 7: 릴리즈
+Phase 4: UI ✅   | Phase 5: 버블 ✅    | Phase 6: 수익화 ✅ | Phase 7: 릴리즈
 ```
 
 ## 검증 명령어
@@ -55,4 +55,4 @@ dart format --set-exit-if-changed .  # 포맷 검증
 ## 현재 작업 상태
 > 마지막 핸드오프: 2026-03-04
 > 상세: `docs/HANDOFF.md` 참조
-> 요약: Phase B 멤버 개인화 완료 + Phase 6 수익화 설계 완료(전문가 패널+교차 리뷰). 383 tests pass. 다음: Phase 6 구현 계획 → 구현.
+> 요약: Phase 6 수익화 구현 완료 (18 tasks + 2라운드 교차 리뷰). 573 tests pass. 다음: Phase 7 릴리즈 준비.
