@@ -199,13 +199,13 @@ abstract final class UiStrings {
 
   // TTS 제한
   /// TTS 일일 제한 도달 시 다이얼로그 타이틀.
-  static const ttsLimitTitle = 'TTS 사용량 소진';
+  static const ttsLimitTitle = '오늘의 발음 듣기는 여기까지!';
 
-  /// TTS 일일 제한 도달 시 메시지. 예: '오늘 5회 모두 사용했어요'.
-  static String ttsLimitMessage(int limit) => '오늘 $limit회 모두 사용했어요';
+  /// TTS 일일 제한 도달 시 메시지. 예: '내일 다시 5회 들을 수 있어요'.
+  static String ttsLimitMessage(int limit) => '내일 다시 $limit회 들을 수 있어요';
 
   /// TTS 제한 다이얼로그 — 보상형 광고 해금 버튼.
-  static const ttsLimitAdButton = '팬 패스로 해금';
+  static const ttsLimitAdButton = '팬 패스로 더 듣기';
 
   // 전환 트리거 팝업
   /// 전환 트리거 팝업 타이틀.
@@ -223,17 +223,17 @@ abstract final class UiStrings {
 
   // 즐겨찾기 제한
   /// 즐겨찾기 슬롯 포화 다이얼로그 타이틀.
-  static const favLimitTitle = '즐겨찾기가 가득 찼어요';
+  static const favLimitTitle = '좋아하는 문구가 정말 많네요!';
 
   /// 즐겨찾기 슬롯 포화 메시지.
   static const favLimitMessage =
-      '팬 패스로 임시 해금하거나\n감성 컬러 팩으로 무제한 즐기세요';
+      '팬 패스로 더 많은 문구를 저장해보세요\n감성 컬러 팩으로 무제한 보관도 가능해요';
 
   /// 즐겨찾기 제한 — 팬 패스 버튼.
-  static const favLimitAdButton = '팬 패스로 해금';
+  static const favLimitAdButton = '팬 패스 받기';
 
   /// 즐겨찾기 제한 — IAP 버튼.
-  static const favLimitIapButton = '감성 컬러 팩 보기';
+  static const favLimitIapButton = '컬러 팩 구경하기';
 
   // 구매 결과
   /// 구매 성공.
