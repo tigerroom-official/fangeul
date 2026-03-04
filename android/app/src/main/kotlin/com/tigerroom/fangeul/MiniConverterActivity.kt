@@ -12,6 +12,7 @@ import io.flutter.embedding.android.FlutterActivityLaunchConfigs.BackgroundMode
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.embedding.engine.dart.DartExecutor
+import io.flutter.plugin.common.MethodChannel
 
 /// 미니 변환기 Flutter Activity.
 ///
@@ -22,6 +23,7 @@ class MiniConverterActivity : FlutterActivity() {
 
     companion object {
         const val ENGINE_ID = "fangeul_mini_engine"
+        private const val MINI_CHANNEL = "com.tigerroom.fangeul/mini_converter"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +62,21 @@ class MiniConverterActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        // 엔진은 이미 프리워밍됨. super 호출로 플러그인 등록만 수행.
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, MINI_CHANNEL)
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "openMainApp" -> {
+                        val intent = Intent(this, MainActivity::class.java).apply {
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        }
+                        startActivity(intent)
+                        finish()
+                        result.success(true)
+                    }
+                    else -> result.notImplemented()
+                }
+            }
     }
 
     override fun shouldDestroyEngineWithHost(): Boolean = false
@@ -86,8 +102,14 @@ class MiniConverterActivity : FlutterActivity() {
     }
 
     /** 버블을 다시 표시. */
+    ///
+    /// 메인 앱이 포그라운드이면 버블 복원을 건너뛴다.
+    /// 이유: onDestroy()는 MainActivity.onResume() 이후에 실행될 수 있어
+    /// onResume이 숨긴 버블을 다시 표시하는 레이스 컨디션이 발생한다.
+    /// 메인 앱의 onStop()이 나중에 버블을 복원한다.
     private fun showBubble() {
         if (!FloatingBubbleService.isServiceActive) return
+        if (MainActivity.isResumed) return
         val intent = Intent(this, FloatingBubbleService::class.java).apply {
             action = FloatingBubbleService.ACTION_SHOW
         }

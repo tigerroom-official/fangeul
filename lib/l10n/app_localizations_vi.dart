@@ -226,6 +226,12 @@ class LVi extends L {
   String get miniBackToCompact => 'Chế độ thu gọn';
 
   @override
+  String get miniMenuOpenApp => 'Mở ứng dụng Fangeul';
+
+  @override
+  String get miniMenuCloseBubble => 'Ẩn popup';
+
+  @override
   String get miniFavoritesEmpty =>
       'Nhấn ⭐ ở màn hình câu nói\nđể thêm vào yêu thích';
 

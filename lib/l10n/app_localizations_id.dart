@@ -227,6 +227,12 @@ class LId extends L {
   String get miniBackToCompact => 'Mode Ringkas';
 
   @override
+  String get miniMenuOpenApp => 'Buka Aplikasi Fangeul';
+
+  @override
+  String get miniMenuCloseBubble => 'Sembunyikan popup';
+
+  @override
   String get miniFavoritesEmpty =>
       'Ketuk ⭐ pada frasa\nuntuk menambahkan ke favorit';
 

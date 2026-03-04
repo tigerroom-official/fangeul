@@ -227,6 +227,12 @@ class LPt extends L {
   String get miniBackToCompact => 'Modo compacto';
 
   @override
+  String get miniMenuOpenApp => 'Abrir App Fangeul';
+
+  @override
+  String get miniMenuCloseBubble => 'Ocultar popup';
+
+  @override
   String get miniFavoritesEmpty =>
       'Toque em ⭐ na tela de frases\npara adicionar favoritos';
 

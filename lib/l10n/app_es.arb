@@ -83,6 +83,8 @@
   "miniPackEmpty": "No hay frases",
   "miniOpenConverter": "Abrir conversor",
   "miniBackToCompact": "Modo compacto",
+  "miniMenuOpenApp": "Abrir App Fangeul",
+  "miniMenuCloseBubble": "Ocultar popup",
   "miniFavoritesEmpty": "Toca ⭐ en la pantalla de frases\npara agregar favoritos",
   "miniMyIdolEmpty": "Selecciona tu idol en ajustes\npara ver frases personalizadas",
   "miniTodayEmpty": "No hay eventos relacionados hoy",

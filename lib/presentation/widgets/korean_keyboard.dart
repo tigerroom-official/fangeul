@@ -167,9 +167,11 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
     final bgColor =
         isDark ? FangeulColors.darkBackground : FangeulColors.lightBackground;
 
+    final bottomInset = MediaQuery.of(context).viewPadding.bottom;
+
     return Container(
       color: bgColor,
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+      padding: EdgeInsets.only(left: 4, right: 4, top: 8, bottom: 8 + bottomInset),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

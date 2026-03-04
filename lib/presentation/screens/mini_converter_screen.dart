@@ -11,6 +11,7 @@ import 'package:fangeul/presentation/providers/copy_history_provider.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
+import 'package:fangeul/presentation/theme/fangeul_colors.dart';
 import 'package:fangeul/presentation/widgets/compact_phrase_list.dart';
 import 'package:fangeul/presentation/widgets/converter_input.dart';
 import 'package:fangeul/presentation/widgets/korean_keyboard.dart';
@@ -20,6 +21,11 @@ import 'package:fangeul/presentation/widgets/korean_keyboard.dart';
 /// `true` = 간편모드(기본), `false` = 확장모드(변환기).
 final miniConverterCompactProvider =
     AutoDisposeStateProvider<bool>((ref) => true);
+
+/// 미니 컨버터 전용 Platform Channel.
+///
+/// [MiniConverterActivity]에서 메인 앱을 여는 메서드를 제공한다.
+const _miniChannel = MethodChannel('com.tigerroom.fangeul/mini_converter');
 
 /// 미니 변환기 팝업 화면.
 ///
@@ -185,6 +191,14 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
 
   void _dismiss() => SystemNavigator.pop();
 
+  Future<void> _openMainApp() async {
+    try {
+      await _miniChannel.invokeMethod<bool>('openMainApp');
+    } on PlatformException {
+      // 실패 시 무시 — MiniConverterActivity가 아닌 환경에서 호출 시.
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isCompact = ref.watch(miniConverterCompactProvider);
@@ -227,7 +241,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
   Widget _buildCompactMode() {
     return Column(
       children: [
-        _buildDragHandle(),
+        _buildCompactHeader(),
         Expanded(
           child: CompactPhraseList(
             tabController: _compactTabController,
@@ -238,17 +252,16 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
     );
   }
 
-  /// 드래그 핸들 — 양방향 제스처.
+  /// 간편모드 상단: 드래그 핸들(틸) + `···` 오버플로 메뉴.
   ///
-  /// 아래로 밀기: 팝업 닫기 (dismiss).
-  /// 위로 밀기: 확장모드 (변환기) 전환.
-  Widget _buildDragHandle() {
+  /// GestureDetector가 전체 영역을 감싸서 드래그 스와이프를 처리한다.
+  /// 핸들 pill은 중앙, `···` 메뉴는 우측 끝에 배치.
+  Widget _buildCompactHeader() {
     return GestureDetector(
       onVerticalDragStart: (_) => _dragDelta = 0,
       onVerticalDragUpdate: (details) => _dragDelta += details.delta.dy,
       onVerticalDragEnd: (details) {
         final vy = details.velocity.pixelsPerSecond.dy;
-        // velocity 또는 누적 거리(50px) 중 하나만 충족하면 동작
         if (vy > 300 || _dragDelta > 50) {
           _dismiss();
         } else if (vy < -300 || _dragDelta < -50) {
@@ -258,22 +271,24 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
       },
       child: Container(
         key: const ValueKey('drag_handle'),
-        width: double.infinity,
-        padding: const EdgeInsets.only(top: 12, bottom: 8),
         color: Colors.transparent,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        padding: const EdgeInsets.only(top: 8, bottom: 4, left: 8, right: 4),
+        child: Row(
           children: [
-            // 핸들 바
+            const Spacer(),
+            // 핸들 바 — 틸 브랜드 컬러로 미니멀 브랜딩
             Container(
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Theme.of(context)
-                    .colorScheme
-                    .onSurfaceVariant
-                    .withValues(alpha: 0.4),
+                color: FangeulColors.primary,
                 borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: _buildOverflowMenu(),
               ),
             ),
           ],
@@ -327,29 +342,79 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
     );
   }
 
+  /// 상세모드 상단: 핸들바(틸) + `···`.
+  ///
+  /// 핸들 아래 드래그 → 간편모드 복귀. 간편모드 헤더와 동일 구조.
   Widget _buildExpandedHeader() {
-    final l = L.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Row(
-        children: [
-          TextButton.icon(
-            onPressed: _collapseToCompact,
-            icon: const Icon(Icons.arrow_back_rounded, size: 18),
-            label: Text(l.miniBackToCompact),
-          ),
-          const Spacer(),
-          Text(
-            l.miniConverterTitle,
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-          const SizedBox(width: 8),
-          IconButton(
-            icon: const Icon(Icons.close_rounded),
-            onPressed: _dismiss,
-          ),
-        ],
+    return GestureDetector(
+      onVerticalDragStart: (_) => _dragDelta = 0,
+      onVerticalDragUpdate: (details) => _dragDelta += details.delta.dy,
+      onVerticalDragEnd: (details) {
+        final vy = details.velocity.pixelsPerSecond.dy;
+        if (vy > 300 || _dragDelta > 50) {
+          _collapseToCompact();
+        }
+        _dragDelta = 0;
+      },
+      child: Container(
+        color: Colors.transparent,
+        padding: const EdgeInsets.only(top: 8, bottom: 4, left: 8, right: 4),
+        child: Row(
+          children: [
+            const Spacer(),
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: FangeulColors.primary,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: _buildOverflowMenu(),
+              ),
+            ),
+          ],
+        ),
       ),
+    );
+  }
+
+  /// `···` 오버플로 메뉴 — 메인 앱 열기 + 팝업 숨기기.
+  Widget _buildOverflowMenu() {
+    final l = L.of(context);
+    return PopupMenuButton<String>(
+      icon: Icon(
+        Icons.more_horiz_rounded,
+        size: 20,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
+      iconSize: 20,
+      padding: EdgeInsets.zero,
+      constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
+      style: const ButtonStyle(
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      ),
+      onSelected: (value) {
+        switch (value) {
+          case 'open_app':
+            _openMainApp();
+          case 'hide_popup':
+            _dismiss();
+        }
+      },
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          value: 'open_app',
+          child: Text(l.miniMenuOpenApp),
+        ),
+        PopupMenuItem(
+          value: 'hide_popup',
+          child: Text(l.miniMenuCloseBubble),
+        ),
+      ],
     );
   }
 }

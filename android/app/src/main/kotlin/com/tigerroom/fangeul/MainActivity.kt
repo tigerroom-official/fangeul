@@ -22,6 +22,11 @@ class MainActivity : FlutterActivity() {
         private const val BUBBLE_CHANNEL = "com.tigerroom.fangeul/floating_bubble"
         private const val BUBBLE_EVENT_CHANNEL = "com.tigerroom.fangeul/floating_bubble_events"
         private const val OVERLAY_PERMISSION_REQUEST = 1001
+
+        /// 메인 앱이 포그라운드인지 여부.
+        /// MiniConverterActivity.onDestroy()에서 버블 복원 시 참조하여 레이스 컨디션 방지.
+        var isResumed: Boolean = false
+            private set
     }
 
     private var pendingPermissionResult: MethodChannel.Result? = null
@@ -42,6 +47,7 @@ class MainActivity : FlutterActivity() {
 
     override fun onResume() {
         super.onResume()
+        isResumed = true
         // 대기 중인 버블 복원을 취소 (최근 앱에서 빠르게 복귀 시).
         cancelPendingBubbleShow()
 
@@ -60,6 +66,11 @@ class MainActivity : FlutterActivity() {
             }
             startService(intent)
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        isResumed = false
     }
 
     override fun onStop() {

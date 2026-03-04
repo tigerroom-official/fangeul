@@ -521,6 +521,18 @@ abstract class L {
   /// **'간편모드'**
   String get miniBackToCompact;
 
+  /// No description provided for @miniMenuOpenApp.
+  ///
+  /// In ko, this message translates to:
+  /// **'Fangeul 앱 열기'**
+  String get miniMenuOpenApp;
+
+  /// No description provided for @miniMenuCloseBubble.
+  ///
+  /// In ko, this message translates to:
+  /// **'팝업 숨기기'**
+  String get miniMenuCloseBubble;
+
   /// No description provided for @miniFavoritesEmpty.
   ///
   /// In ko, this message translates to:

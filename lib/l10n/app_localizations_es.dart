@@ -227,6 +227,12 @@ class LEs extends L {
   String get miniBackToCompact => 'Modo compacto';
 
   @override
+  String get miniMenuOpenApp => 'Abrir App Fangeul';
+
+  @override
+  String get miniMenuCloseBubble => 'Ocultar popup';
+
+  @override
   String get miniFavoritesEmpty =>
       'Toca ⭐ en la pantalla de frases\npara agregar favoritos';
 

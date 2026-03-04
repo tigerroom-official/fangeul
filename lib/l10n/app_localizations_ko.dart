@@ -223,6 +223,12 @@ class LKo extends L {
   String get miniBackToCompact => '간편모드';
 
   @override
+  String get miniMenuOpenApp => 'Fangeul 앱 열기';
+
+  @override
+  String get miniMenuCloseBubble => '팝업 숨기기';
+
+  @override
   String get miniFavoritesEmpty => '문구 화면에서 ⭐ 탭하여\n즐겨찾기를 추가하세요';
 
   @override

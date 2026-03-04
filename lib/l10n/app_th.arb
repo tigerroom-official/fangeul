@@ -83,6 +83,8 @@
   "miniPackEmpty": "ไม่มีวลี",
   "miniOpenConverter": "เปิดตัวแปลง",
   "miniBackToCompact": "โหมดย่อ",
+  "miniMenuOpenApp": "เปิดแอป Fangeul",
+  "miniMenuCloseBubble": "ซ่อนป๊อปอัป",
   "miniFavoritesEmpty": "แตะ ⭐ ที่วลี\nเพื่อเพิ่มในรายการโปรด",
   "miniMyIdolEmpty": "เลือกไอดอลในการตั้งค่า\nเพื่อดูวลีที่เหมาะกับคุณ",
   "miniTodayEmpty": "ไม่มีอีเวนต์ที่เกี่ยวข้องวันนี้",

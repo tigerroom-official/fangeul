@@ -225,6 +225,12 @@ class LTh extends L {
   String get miniBackToCompact => 'โหมดย่อ';
 
   @override
+  String get miniMenuOpenApp => 'เปิดแอป Fangeul';
+
+  @override
+  String get miniMenuCloseBubble => 'ซ่อนป๊อปอัป';
+
+  @override
   String get miniFavoritesEmpty => 'แตะ ⭐ ที่วลี\nเพื่อเพิ่มในรายการโปรด';
 
   @override
