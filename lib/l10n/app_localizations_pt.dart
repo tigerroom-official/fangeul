@@ -157,7 +157,7 @@ class LPt extends L {
   String get keyboardDone => 'OK';
 
   @override
-  String get defaultTranslationLang => 'en';
+  String get defaultTranslationLang => 'pt';
 
   @override
   String get bubbleLabel => 'Bolha flutuante';

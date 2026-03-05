@@ -157,7 +157,7 @@ class LTh extends L {
   String get keyboardDone => 'เสร็จ';
 
   @override
-  String get defaultTranslationLang => 'en';
+  String get defaultTranslationLang => 'th';
 
   @override
   String get bubbleLabel => 'บับเบิลลอย';

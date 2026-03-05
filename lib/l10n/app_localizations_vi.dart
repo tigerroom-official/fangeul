@@ -157,7 +157,7 @@ class LVi extends L {
   String get keyboardDone => 'Xong';
 
   @override
-  String get defaultTranslationLang => 'en';
+  String get defaultTranslationLang => 'vi';
 
   @override
   String get bubbleLabel => 'Bong bóng nổi';

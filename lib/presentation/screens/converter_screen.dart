@@ -216,13 +216,16 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
       body: Column(
         children: [
           Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: ConverterInput(
-                controller: _textController,
-                output: output,
-                hintText: _hints(l)[_tabController.index],
-                onClear: _clear,
+            child: ListenableBuilder(
+              listenable: _tabController,
+              builder: (context, _) => SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: ConverterInput(
+                  controller: _textController,
+                  output: output,
+                  hintText: _hints(l)[_tabController.index],
+                  onClear: _clear,
+                ),
               ),
             ),
           ),

@@ -158,7 +158,7 @@ class LId extends L {
   String get keyboardDone => 'Selesai';
 
   @override
-  String get defaultTranslationLang => 'en';
+  String get defaultTranslationLang => 'id';
 
   @override
   String get bubbleLabel => 'Bubble Melayang';

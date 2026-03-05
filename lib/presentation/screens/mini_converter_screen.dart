@@ -120,6 +120,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
     ref.invalidate(copyHistoryNotifierProvider);
     ref.invalidate(compactPhraseFilterNotifierProvider);
     ref.invalidate(themeModeNotifierProvider);
+    ref.invalidate(localeNotifierProvider);
     ref.invalidate(myIdolNotifierProvider);
     ref.invalidate(myIdolDisplayNameProvider);
   }
@@ -335,16 +336,19 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
           tabs: _modeLabels(l).map((label) => Tab(text: label)).toList(),
         ),
         Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(12),
-            child: ConverterInput(
-              controller: _textController,
-              output: output,
-              hintText: _modeHints(l)[_converterTabController.index],
-              onClear: _clearConverter,
-              onCopied: (text) {
-                ref.read(copyHistoryNotifierProvider.notifier).addEntry(text);
-              },
+          child: ListenableBuilder(
+            listenable: _converterTabController,
+            builder: (context, _) => SingleChildScrollView(
+              padding: const EdgeInsets.all(12),
+              child: ConverterInput(
+                controller: _textController,
+                output: output,
+                hintText: _modeHints(l)[_converterTabController.index],
+                onClear: _clearConverter,
+                onCopied: (text) {
+                  ref.read(copyHistoryNotifierProvider.notifier).addEntry(text);
+                },
+              ),
             ),
           ),
         ),

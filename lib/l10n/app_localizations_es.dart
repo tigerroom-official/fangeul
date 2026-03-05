@@ -157,7 +157,7 @@ class LEs extends L {
   String get keyboardDone => 'Listo';
 
   @override
-  String get defaultTranslationLang => 'en';
+  String get defaultTranslationLang => 'es';
 
   @override
   String get bubbleLabel => 'Burbuja flotante';
