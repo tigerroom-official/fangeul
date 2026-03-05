@@ -8,7 +8,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
 import android.graphics.PixelFormat
-import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.IBinder
@@ -19,7 +18,9 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import kotlin.math.abs
 
 /// 플로팅 버블 Foreground Service.
@@ -147,34 +148,11 @@ class FloatingBubbleService : Service() {
     private fun createBubbleView() {
         val sizePx = dpToPx(BUBBLE_SIZE_DP)
 
-        val container = FrameLayout(this)
-
-        // 틸 그라데이션 원형 배경
-        val bgDrawable = GradientDrawable(
-            GradientDrawable.Orientation.TL_BR,
-            intArrayOf(0xFF4ECDC4.toInt(), 0xFF3BA8A0.toInt())
-        ).apply {
-            shape = GradientDrawable.OVAL
-            setSize(sizePx, sizePx)
+        val container = ImageView(this).apply {
+            setImageDrawable(ContextCompat.getDrawable(this@FloatingBubbleService, R.drawable.ic_bubble))
+            scaleType = ImageView.ScaleType.FIT_CENTER
+            elevation = dpToPx(4).toFloat()
         }
-        container.background = bgDrawable
-        container.elevation = dpToPx(4).toFloat()
-
-        // "한" 글자
-        val textView = TextView(this).apply {
-            text = "한"
-            setTextColor(Color.WHITE)
-            textSize = 22f
-            typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
-            gravity = Gravity.CENTER
-        }
-        container.addView(
-            textView,
-            FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT,
-            ),
-        )
 
         val params = WindowManager.LayoutParams(
             sizePx,
