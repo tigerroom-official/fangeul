@@ -55,4 +55,4 @@ dart format --set-exit-if-changed .  # 포맷 검증
 ## 현재 작업 상태
 > 마지막 핸드오프: 2026-03-05
 > 상세: `docs/HANDOFF.md` 참조
-> 요약: Firebase Crashlytics/Analytics 통합 + 버블 헤더 UX 통일(패널 3차 4:0). 627 tests pass. 다음: Firebase 콘솔 RC 설정 + Analytics 학습 + Phase 7 릴리즈.
+> 요약: 로케일 자동감지(en fallback) + 문구 번역표시 + edge-to-edge 내비바 수정. 627 tests pass. 다음: UX 디테일 논의(언어설정/리뷰메뉴/버블디자인) + Phase 7 릴리즈.

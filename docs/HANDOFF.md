@@ -1,7 +1,7 @@
 # Fangeul — Session Handoff
 
-BASE_COMMIT: 8405004 (main, i18n+Firebase RC 완료)
-HANDOFF_COMMIT: 8fd4221
+BASE_COMMIT: 194795a (main, Crashlytics/Analytics + 버블 UX 통일)
+HANDOFF_COMMIT: aa6fd6d
 BRANCH: main
 
 ---
@@ -19,7 +19,8 @@ BRANCH: main
 - Phase 6 수익화 설계+구현: 18 tasks + 2라운드 Claude×Codex 교차 리뷰 (2026-03-04)
 - 멀티모드 키보드 + 패널 개선 + 버블 버그 수정 (2026-03-04)
 - i18n 인프라 (7개 언어) + Firebase Remote Config 통합 (2026-03-05)
-- **Firebase Crashlytics/Analytics 통합 + 버블 UX 대폭 개선 (2026-03-05)**
+- Firebase Crashlytics/Analytics 통합 + 버블 UX 대폭 개선 (2026-03-05)
+- **로케일 자동 감지 + 문구 번역 표시 + edge-to-edge 내비바 수정 (2026-03-05)**
 
 ### 활성 작업
 없음. 이번 세션 작업 모두 완료, main 커밋됨.
@@ -37,134 +38,70 @@ BRANCH: main
 
 ## 작업 요약
 
-Firebase Crashlytics/Analytics 실제 서비스 연동 + 미니 컨버터 버블 헤더 UX 대폭 개선. 전문가 패널 3차 토론(4:0 만장일치)으로 두 모드(간편/상세) 헤더를 `[핸들바(틸)] + [···]`로 완전 통일. `[← 간편모드]` 버튼, `[X]` 닫기 버튼, "버블 닫기" 메뉴 모두 제거. "팝업 숨기기"(SystemNavigator.pop, 버블 유지)로 대체. 33파일 변경, 627 tests pass.
+로케일 하드코딩(ko) 제거 → 폰 시스템 언어 자동 감지(en fallback). 간편모드 팩 문구 카드에 사용자 언어 번역 표시 추가. 페이지 인디케이터 SafeArea 적용. 미니 컨버터 edge-to-edge 내비바 색상 불일치 수정 (AnnotatedRegion 오버라이드 + resumed 시 재적용). 5파일 변경, 627 tests pass.
 
 ## 완료된 작업
 
-### Track A: Firebase Crashlytics + Analytics
-- [x] `firebase_crashlytics: ^4.3.1` 추가 + gradle 설정
-- [x] `lib/main.dart` — Crashlytics 에러 핸들러 설정 (FlutterError + PlatformDispatcher)
-- [x] 디버그 모드 Crashlytics 수집 비활성화
-- [x] `lib/services/firebase_analytics_service.dart` 신규 — AnalyticsService 인터페이스 실제 구현
-- [x] main.dart에 FirebaseAnalyticsService provider override 연결
-
-### Track B: 버블 UX 대폭 개선 (전문가 패널 3차 토론)
-- [x] 간편모드 헤더: Stack→Row 레이아웃, 핸들 pill 틸(#4ECDC4) 브랜딩
-- [x] `open_in_new` 아이콘 → `PopupMenuButton(···)` 교체 (간편+상세 모두)
-- [x] "Fangeul" TextButton 제거 (유틸리티 팝업에 앱 이름 불필요)
-- [x] `[← 간편모드]` 버튼 제거 — 핸들 아래 드래그로 대체 (바텀시트 표준)
-- [x] `[X]` 닫기 버튼 제거 — `···` "팝업 숨기기"가 대체
-- [x] "버블 닫기"(stopService) 메뉴 제거 → "팝업 숨기기"(SystemNavigator.pop, 버블 유지)로 교체
-- [x] 상세모드 핸들 드래그(아래→간편모드 복귀) 추가
-- [x] Kotlin `closeBubble` MethodChannel 핸들러 제거 (불필요)
-- [x] 7개 ARB 파일 `miniMenuCloseBubble` → "팝업 숨기기" 번역 갱신
-- [x] 테스트 갱신 — 제거된 UI 요소 반영, 627/627 통과
-
-### Track C: 버블/키보드 버그 수정
-- [x] `MiniConverterActivity.kt` — showBubble()에 `MainActivity.isResumed` 가드 (레이스 컨디션 수정)
-- [x] `MainActivity.kt` — `isResumed` static 플래그 추가
-- [x] `korean_keyboard.dart` — viewPadding.bottom으로 3행 잘림 수정
-
-### Track D: 문서
-- [x] `docs/discussions/2026-03-05-bubble-ux-panel.md` — 전문가 패널 토론 기록
-- [x] `docs/guides/firebase-guide.md` — Firebase 학습 가이드
-- [x] 이전 세션 토론/계획/원본 문서 정리
+- [x] `app.dart` — `locale: const Locale('ko')` 하드코딩 제거 → 시스템 언어 자동 따름
+- [x] `l10n.yaml` — `preferred-supported-locales: [en, ko]` → 미지원 언어 en fallback
+- [x] `compact_phrase_list.dart` `_PhraseCard` — `phrase.translations[locale]` 번역 표시 추가 (한국어면 미표시, en fallback)
+- [x] `compact_phrase_list.dart` 페이지 인디케이터 — `SafeArea` + `bottom: 8` (시스템 핸들 가림 수정)
+- [x] `mini_converter_screen.dart` — `_applyEdgeToEdge()` 메서드 추출, `initState` + `didChangeAppLifecycleState(resumed)` 양쪽 호출 (캐시 엔진 재진입 수정)
+- [x] `mini_converter_screen.dart` — `AnnotatedRegion<SystemUiOverlayStyle>` 추가, `FangeulApp`의 불투명 내비바 색상 오버라이드
+- [x] `mini_converter_screen.dart` — 시트 높이에 `viewPadding.bottom` 추가 (내비바 영역까지 배경 채움)
 
 ## 진행 중인 작업
 없음.
 
 ## 핵심 교훈
 
-- ★ 버블 "닫기" 동작 구분: `SystemNavigator.pop()` = 팝업만 닫힘(버블 유지) vs `stopService()` = 버블 서비스 완전 종료. 미니 컨버터에서 서비스 종료 경로는 불필요 — 재시작 비용(설정→토글) 높아 DAU 이탈 위험 (2026-03-05)
-- ★ PopupMenuButton 컴팩트 설정: `iconSize: 20, tapTargetSize: shrinkWrap, constraints: BoxConstraints(minWidth: 28, minHeight: 28)` — 좁은 헤더에 적합 (2026-03-05)
-- ★ 바텀시트 패턴: 핸들 위/아래 드래그만으로 모드 전환 (Google Maps, Instagram, 카카오톡 등과 일치) — 상세모드 진입자 = 100% 핸들 학습 완료 상태 (2026-03-05)
-- ★ Kotlin 네이티브 변경은 `flutter run` 풀 리빌드 필수 — 핫 리로드 시 MissingPluginException (2026-03-05)
+- ★ 캐시 FlutterEngine에서 `AnnotatedRegion`은 위젯 트리 가장 가까운 것이 우선 → 부모(`FangeulApp`)의 불투명 내비바 설정을 자식(`MiniConverterScreen`)에서 투명으로 오버라이드 가능 (2026-03-05)
+- ★ Flutter l10n: `preferred-supported-locales` 첫 번째 항목이 fallback 언어 — `[en, ko]`로 설정해야 미지원 언어에서 영어 UI (2026-03-05)
+- ★ `locale:` 파라미터를 MaterialApp에 지정하지 않으면 폰 시스템 언어 자동 감지 (2026-03-05)
 
 ## 다음 단계
 
-### 1순위: Firebase 콘솔 설정 + 학습
-- Firebase Remote Config 콘솔에서 7개 매개변수 추가 (honeymoonDays, defaultSlotLimit, dailyAdLimit, adCooldownMinutes, unlockDurationHours, dailyTtsLimit, conversionTriggerAdCount)
-- Firebase Analytics 이벤트 계측 학습 (사용자 요청 — 백엔드 개발자로서 앱 분석 스킬 부족)
-- 에뮬레이터에서 로케일별 동작 확인 (ko→en→id→th→pt→es→vi + 미지원 로케일 fallback)
+### 1순위: UX 디테일 논의 (사용자 요청)
+1. 설정에 언어 변경 기능 — 폰 시스템 언어와 별개로 앱 내 언어 선택
+2. 팝업 `···` 메뉴에 "리뷰하기"/"문의하기" 추가 여부
+3. 버블 버튼 디자인 변경 — 현재 '한' 텍스트 → 캐릭터/심볼 이미지로
 
-### 2순위: Phase 7 릴리즈 준비
+### 2순위: Firebase 콘솔 설정 + 학습
+- Firebase Remote Config 콘솔에서 7개 매개변수 추가
+- Firebase Analytics 이벤트 계측 학습
+- 에뮬레이터에서 로케일별 동작 확인
+
+### 3순위: Phase 7 릴리즈 준비
 - ProGuard/R8 설정 + 릴리즈 빌드 검증
 - Play Store 리스팅 + 스크린샷
-- signing config 설정
-
-### 3순위: 실기기 통합 테스트
-- AdMob 실제 광고 단위 ID 연결
-- IAP Play Console 설정 + 테스트 결제
-- 플로팅 버블 + 수익화 교차 동작 확인
 
 ### 4순위: 백로그 정리
 - P1: 핸들 좌측 멤버 이름 노출 (버블 UX)
-- share_card_painter.dart + Provider 파일 UiStrings → l10n 전환 (BuildContext 전달 방법 설계)
-- LOW 이슈 (L3, L4, L5)
-- IdolSelectScreen setState→Riverpod (I1)
-- 즐겨찾기 템플릿 메타데이터 (I6)
+- share_card_painter.dart + Provider 파일 UiStrings → l10n
+- LOW 이슈 (L3, L4, L5), I1, I6
 
 ## 핵심 결정사항
 
 | 결정 | 이유 |
 |------|------|
-| 간편/상세모드 헤더 완전 통일 (`[핸들(틸)] + [···]`) | 일관성 향상 + 바텀시트 표준 패턴 |
-| `[← 간편모드]` 버튼 제거 | 핸들 드래그로 대체 — 상세모드 진입자 = 100% 핸들 학습 완료 |
-| `[X]` 닫기 버튼 제거 | `···` "팝업 숨기기"가 대체 |
-| "버블 닫기"(stopService) 메뉴 제거 | 실수로 서비스 종료 → 재시작 비용 큼 → DAU 이탈 위험 |
-| 서비스 종료 경로 = 노티피케이션 액션 / 메인앱 설정만 유지 | 미니 컨버터는 "잠깐 쓰고 닫는" 도구 |
+| 미지원 언어 en fallback (ko 아님) | 타겟이 글로벌 K-pop 팬 — 한국어 UI는 대부분 외국인에게 부적절 |
+| AnnotatedRegion 오버라이드 (SystemChrome 대신) | FangeulApp의 AnnotatedRegion이 매 리빌드마다 SystemChrome 설정 덮어씀 |
 
 ## 커밋 히스토리 (이번 세션)
 
 ```
-77955bf feat: Firebase Analytics service + Crashlytics integration
-9a75655 feat: bubble UX overhaul — unified header, handle-driven navigation
-8d1b979 docs: add Firebase guide, bubble UX panel discussion, and prior session docs
+8c82d4a fix: locale auto-detect, phrase translation display, edge-to-edge nav bar
 ```
 
 ## 수정한 파일
 
 ```
-수정 (코드):
-  android/app/build.gradle                           — Crashlytics gradle 플러그인
-  android/settings.gradle                            — Crashlytics 플러그인 선언
-  android/.../MainActivity.kt                        — isResumed static 플래그 추가
-  android/.../MiniConverterActivity.kt               — closeBubble 핸들러 제거, showBubble 레이스 수정
-  lib/main.dart                                      — Crashlytics 에러 핸들러 + Analytics 서비스
-  lib/presentation/screens/mini_converter_screen.dart — 헤더 완전 통일 (핵심 변경)
-  lib/presentation/widgets/korean_keyboard.dart      — viewPadding.bottom 수정
-  lib/l10n/app_*.arb (7개)                           — miniMenuCloseBubble → "팝업 숨기기"
-  lib/l10n/app_localizations*.dart (8개)              — gen-l10n 재생성
-  pubspec.yaml / pubspec.lock                        — firebase_crashlytics 추가
-  test/.../mini_converter_screen_test.dart            — 제거된 UI 요소 반영
-
-신규:
-  lib/services/firebase_analytics_service.dart       — Analytics 실제 구현
-  docs/discussions/2026-03-05-bubble-ux-panel.md     — 전문가 패널 토론 기록
-  docs/guides/firebase-guide.md                      — Firebase 학습 가이드
+l10n.yaml                                          — preferred-supported-locales [en, ko]
+lib/app.dart                                       — locale 하드코딩 제거
+lib/l10n/app_localizations.dart                    — gen-l10n 재생성 (en 첫번째)
+lib/presentation/screens/mini_converter_screen.dart — AnnotatedRegion + _applyEdgeToEdge + viewPadding
+lib/presentation/widgets/compact_phrase_list.dart  — 번역 표시 + SafeArea 인디케이터
 ```
-
-## 참고 컨텍스트
-
-- **버블 UX 최종 설계**: `docs/discussions/2026-03-05-bubble-ux-panel.md` — 전문가 패널 3차 토론 기록 (4:0 만장일치)
-- **Firebase 학습**: `docs/guides/firebase-guide.md` — RC 매개변수 설정 + Analytics 계측 가이드
-- **사용자 학습 요청**: Firebase Analytics 이벤트 계측, Remote Config 콘솔 설정을 차근차근 가르쳐달라고 요청함
-- **미니 컨버터 최종 구조**:
-  ```
-  간편모드: [핸들바(틸)] ............ [···]
-  상세모드: [핸들바(틸)] ............ [···]
-  ··· 메뉴: Fangeul 앱 열기 / 팝업 숨기기 (버블 유지)
-  ```
-
-## 리뷰 연기 이슈 (post-MVP)
-
-| ID | 내용 | 심각도 | 이유 |
-|----|------|--------|------|
-| I1 | IdolSelectScreen에서 setState 사용 | LOW | 순수 ephemeral UI 상태 |
-| I6 | 즐겨찾기 템플릿 메타데이터 손실 | LOW | ko 텍스트는 정상 표시 |
-| I10 | todaySuggestedPhrases 멤버 미지원 | LOW | MVP known limitation |
-| I11 | share_card_painter.dart UiStrings 잔류 | LOW | BuildContext 없음, Phase 7 |
-| I12 | Provider 파일 UiStrings 잔류 | LOW | BuildContext 없음, Phase 7 |
 
 ## 세션 히스토리
 
@@ -185,4 +122,5 @@ Firebase Crashlytics/Analytics 실제 서비스 연동 + 미니 컨버터 버블
 | Phase 6 구현 | 18 tasks + 2라운드 교차 리뷰 19건 수정 → 573 tests |
 | 키보드+패널+버블 | 멀티모드 키보드 + 패널 UX 개선 + 버블 버그 4건 수정 → 616 tests |
 | i18n+Firebase RC | 7개 언어 i18n + Firebase Remote Config + 3인 번역 QA → 627 tests |
-| **Crashlytics+버블UX** | Firebase Crashlytics/Analytics + 버블 헤더 UX 통일 (패널 3차 4:0) → 627 tests |
+| Crashlytics+버블UX | Firebase Crashlytics/Analytics + 버블 헤더 UX 통일 (패널 3차 4:0) → 627 tests |
+| **로케일+번역+내비바** | 시스템 로케일 자동 감지 + 문구 번역 표시 + edge-to-edge 내비바 수정 → 627 tests |
