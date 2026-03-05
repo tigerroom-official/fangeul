@@ -250,5 +250,12 @@
     "placeholders": {
       "days": {"type": "int"}
     }
-  }
+  },
+
+  "languageLabel": "언어",
+  "languageSystem": "시스템 기본",
+  "reviewLabel": "리뷰 남기기",
+  "reviewSubtitle": "리뷰는 다른 팬들이 Fangeul을 찾는 데 도움이 돼요",
+  "contactLabel": "문의하기",
+  "contactSubtitle": "버그 신고 및 기능 제안"
 }

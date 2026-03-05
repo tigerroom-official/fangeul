@@ -169,5 +169,12 @@
   "shopPurchaseFailed": "A compra falhou. Tente novamente",
   "shopPurchasePending": "Processando pagamento...",
 
-  "honeymoonDaysLeft": "{days} dias de teste grátis restantes"
+  "honeymoonDaysLeft": "{days} dias de teste grátis restantes",
+
+  "languageLabel": "Idioma",
+  "languageSystem": "Padrão do sistema",
+  "reviewLabel": "Avaliar este app",
+  "reviewSubtitle": "Sua avaliação ajuda outros fãs a encontrar o Fangeul",
+  "contactLabel": "Fale conosco",
+  "contactSubtitle": "Reportar bugs ou sugerir recursos"
 }

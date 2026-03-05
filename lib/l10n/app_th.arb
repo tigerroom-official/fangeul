@@ -169,5 +169,12 @@
   "shopPurchaseFailed": "การซื้อล้มเหลว กรุณาลองใหม่",
   "shopPurchasePending": "กำลังดำเนินการชำระเงิน...",
 
-  "honeymoonDaysLeft": "ทดลองใช้ฟรีเหลืออีก {days} วัน"
+  "honeymoonDaysLeft": "ทดลองใช้ฟรีเหลืออีก {days} วัน",
+
+  "languageLabel": "ภาษา",
+  "languageSystem": "ค่าเริ่มต้นระบบ",
+  "reviewLabel": "ให้คะแนนแอป",
+  "reviewSubtitle": "รีวิวของคุณช่วยให้แฟนคนอื่นค้นพบ Fangeul",
+  "contactLabel": "ติดต่อเรา",
+  "contactSubtitle": "แจ้งบั๊กหรือแนะนำฟีเจอร์"
 }

@@ -874,6 +874,42 @@ abstract class L {
   /// In ko, this message translates to:
   /// **'무료 체험 {days}일 남음'**
   String honeymoonDaysLeft(int days);
+
+  /// No description provided for @languageLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'언어'**
+  String get languageLabel;
+
+  /// No description provided for @languageSystem.
+  ///
+  /// In ko, this message translates to:
+  /// **'시스템 기본'**
+  String get languageSystem;
+
+  /// No description provided for @reviewLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'리뷰 남기기'**
+  String get reviewLabel;
+
+  /// No description provided for @reviewSubtitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'리뷰는 다른 팬들이 Fangeul을 찾는 데 도움이 돼요'**
+  String get reviewSubtitle;
+
+  /// No description provided for @contactLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'문의하기'**
+  String get contactLabel;
+
+  /// No description provided for @contactSubtitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'버그 신고 및 기능 제안'**
+  String get contactSubtitle;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

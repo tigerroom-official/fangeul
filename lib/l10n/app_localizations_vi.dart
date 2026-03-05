@@ -432,4 +432,22 @@ class LVi extends L {
   String honeymoonDaysLeft(int days) {
     return 'Còn $days ngày dùng thử miễn phí';
   }
+
+  @override
+  String get languageLabel => 'Ngôn ngữ';
+
+  @override
+  String get languageSystem => 'Mặc định hệ thống';
+
+  @override
+  String get reviewLabel => 'Đánh giá ứng dụng';
+
+  @override
+  String get reviewSubtitle => 'Đánh giá giúp fan khác tìm thấy Fangeul';
+
+  @override
+  String get contactLabel => 'Liên hệ';
+
+  @override
+  String get contactSubtitle => 'Báo lỗi hoặc đề xuất tính năng';
 }

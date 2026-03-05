@@ -432,4 +432,22 @@ class LEn extends L {
   String honeymoonDaysLeft(int days) {
     return '$days days of free trial left';
   }
+
+  @override
+  String get languageLabel => 'Language';
+
+  @override
+  String get languageSystem => 'System default';
+
+  @override
+  String get reviewLabel => 'Rate this app';
+
+  @override
+  String get reviewSubtitle => 'Your review helps other fans find Fangeul';
+
+  @override
+  String get contactLabel => 'Contact us';
+
+  @override
+  String get contactSubtitle => 'Report bugs or suggest features';
 }

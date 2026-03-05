@@ -433,4 +433,23 @@ class LPt extends L {
   String honeymoonDaysLeft(int days) {
     return '$days dias de teste grátis restantes';
   }
+
+  @override
+  String get languageLabel => 'Idioma';
+
+  @override
+  String get languageSystem => 'Padrão do sistema';
+
+  @override
+  String get reviewLabel => 'Avaliar este app';
+
+  @override
+  String get reviewSubtitle =>
+      'Sua avaliação ajuda outros fãs a encontrar o Fangeul';
+
+  @override
+  String get contactLabel => 'Fale conosco';
+
+  @override
+  String get contactSubtitle => 'Reportar bugs ou sugerir recursos';
 }

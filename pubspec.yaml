@@ -54,6 +54,10 @@ dependencies:
   firebase_analytics: ^11.6.0
   firebase_crashlytics: ^4.3.1
 
+  # 리뷰 & URL
+  in_app_review: ^2.0.10
+  url_launcher: ^6.3.1
+
   # 유틸리티
   path_provider: ^2.1.4
   http: ^1.2.2

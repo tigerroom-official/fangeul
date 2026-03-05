@@ -39,6 +39,7 @@ class FangeulApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
     final themeMode = ref.watch(themeModeNotifierProvider);
+    final userLocale = ref.watch(localeNotifierProvider);
 
     final isDark = themeMode == ThemeMode.dark ||
         (themeMode == ThemeMode.system &&
@@ -60,7 +61,7 @@ class FangeulApp extends ConsumerWidget {
         debugShowCheckedModeBanner: false,
         localizationsDelegates: L.localizationsDelegates,
         supportedLocales: L.supportedLocales,
-        // locale 미지정 → 폰 시스템 언어를 자동 따름
+        locale: userLocale, // null → 시스템 언어 자동감지
         theme: FangeulTheme.light(),
         darkTheme: FangeulTheme.dark(),
         themeMode: themeMode,

@@ -434,4 +434,23 @@ class LEs extends L {
   String honeymoonDaysLeft(int days) {
     return '$days días de prueba gratis restantes';
   }
+
+  @override
+  String get languageLabel => 'Idioma';
+
+  @override
+  String get languageSystem => 'Predeterminado del sistema';
+
+  @override
+  String get reviewLabel => 'Calificar esta app';
+
+  @override
+  String get reviewSubtitle =>
+      'Tu reseña ayuda a otros fans a encontrar Fangeul';
+
+  @override
+  String get contactLabel => 'Contáctanos';
+
+  @override
+  String get contactSubtitle => 'Reportar errores o sugerir funciones';
 }

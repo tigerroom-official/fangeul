@@ -169,5 +169,12 @@
   "shopPurchaseFailed": "Mua thất bại. Vui lòng thử lại",
   "shopPurchasePending": "Đang xử lý thanh toán...",
 
-  "honeymoonDaysLeft": "Còn {days} ngày dùng thử miễn phí"
+  "honeymoonDaysLeft": "Còn {days} ngày dùng thử miễn phí",
+
+  "languageLabel": "Ngôn ngữ",
+  "languageSystem": "Mặc định hệ thống",
+  "reviewLabel": "Đánh giá ứng dụng",
+  "reviewSubtitle": "Đánh giá giúp fan khác tìm thấy Fangeul",
+  "contactLabel": "Liên hệ",
+  "contactSubtitle": "Báo lỗi hoặc đề xuất tính năng"
 }

@@ -429,4 +429,22 @@ class LTh extends L {
   String honeymoonDaysLeft(int days) {
     return 'ทดลองใช้ฟรีเหลืออีก $days วัน';
   }
+
+  @override
+  String get languageLabel => 'ภาษา';
+
+  @override
+  String get languageSystem => 'ค่าเริ่มต้นระบบ';
+
+  @override
+  String get reviewLabel => 'ให้คะแนนแอป';
+
+  @override
+  String get reviewSubtitle => 'รีวิวของคุณช่วยให้แฟนคนอื่นค้นพบ Fangeul';
+
+  @override
+  String get contactLabel => 'ติดต่อเรา';
+
+  @override
+  String get contactSubtitle => 'แจ้งบั๊กหรือแนะนำฟีเจอร์';
 }

@@ -433,4 +433,23 @@ class LId extends L {
   String honeymoonDaysLeft(int days) {
     return '$days hari uji coba gratis tersisa';
   }
+
+  @override
+  String get languageLabel => 'Bahasa';
+
+  @override
+  String get languageSystem => 'Default sistem';
+
+  @override
+  String get reviewLabel => 'Beri rating';
+
+  @override
+  String get reviewSubtitle =>
+      'Ulasan kamu membantu fans lain menemukan Fangeul';
+
+  @override
+  String get contactLabel => 'Hubungi kami';
+
+  @override
+  String get contactSubtitle => 'Laporkan bug atau sarankan fitur';
 }

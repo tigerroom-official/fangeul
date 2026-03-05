@@ -46,5 +46,26 @@ final themeModeNotifierProvider =
 );
 
 typedef _$ThemeModeNotifier = Notifier<ThemeMode>;
+String _$localeNotifierHash() => r'93c4083d3d359e7f883a7097d4e598d89899cd08';
+
+/// 앱 Locale 상태 관리.
+///
+/// `null` = 시스템 언어 자동감지, `Locale('ko')` 등 = 명시적 오버라이드.
+/// SharedPreferences에 'user_locale' 키로 persist.
+///
+/// Copied from [LocaleNotifier].
+@ProviderFor(LocaleNotifier)
+final localeNotifierProvider =
+    NotifierProvider<LocaleNotifier, Locale?>.internal(
+  LocaleNotifier.new,
+  name: r'localeNotifierProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$localeNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$LocaleNotifier = Notifier<Locale?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -424,4 +424,22 @@ class LKo extends L {
   String honeymoonDaysLeft(int days) {
     return '무료 체험 $days일 남음';
   }
+
+  @override
+  String get languageLabel => '언어';
+
+  @override
+  String get languageSystem => '시스템 기본';
+
+  @override
+  String get reviewLabel => '리뷰 남기기';
+
+  @override
+  String get reviewSubtitle => '리뷰는 다른 팬들이 Fangeul을 찾는 데 도움이 돼요';
+
+  @override
+  String get contactLabel => '문의하기';
+
+  @override
+  String get contactSubtitle => '버그 신고 및 기능 제안';
 }

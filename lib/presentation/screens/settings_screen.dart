@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:in_app_review/in_app_review.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/platform/bubble_state.dart';
@@ -8,7 +10,30 @@ import 'package:fangeul/presentation/providers/bubble_providers.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
 
-/// 설정 화면 — 테마 모드 전환, 앱 정보.
+/// 지원 언어 목록 — null은 시스템 기본.
+const _supportedLocaleOptions = <Locale?>[
+  null,
+  Locale('ko'),
+  Locale('en'),
+  Locale('es'),
+  Locale('id'),
+  Locale('pt'),
+  Locale('th'),
+  Locale('vi'),
+];
+
+/// 네이티브 언어명 매핑 (하드코딩 — 번역 불필요).
+const _localeNativeNames = <String, String>{
+  'ko': '한국어',
+  'en': 'English',
+  'es': 'Español',
+  'id': 'Bahasa Indonesia',
+  'pt': 'Português',
+  'th': 'ภาษาไทย',
+  'vi': 'Tiếng Việt',
+};
+
+/// 설정 화면 — 테마, 언어, 리뷰/문의, 앱 정보.
 class SettingsScreen extends ConsumerWidget {
   /// Creates the [SettingsScreen] widget.
   const SettingsScreen({super.key});
@@ -17,13 +42,14 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = L.of(context);
     final themeMode = ref.watch(themeModeNotifierProvider);
+    final userLocale = ref.watch(localeNotifierProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(title: Text(l.settingsTitle)),
       body: ListView(
         children: [
-          // 테마 모드
+          // 1. 테마 모드
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -60,23 +86,78 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
           const Divider(),
-          // 마이 아이돌
+          // 2. 언어 설정
+          ListTile(
+            leading: const Icon(Icons.language),
+            title: Text(l.languageLabel),
+            trailing: DropdownButton<Locale?>(
+              value: userLocale,
+              underline: const SizedBox.shrink(),
+              onChanged: (locale) {
+                ref.read(localeNotifierProvider.notifier).setLocale(locale);
+              },
+              items: _supportedLocaleOptions.map((locale) {
+                final label = locale == null
+                    ? l.languageSystem
+                    : _localeNativeNames[locale.languageCode] ??
+                        locale.languageCode;
+                return DropdownMenuItem(value: locale, child: Text(label));
+              }).toList(),
+            ),
+          ),
+          const Divider(),
+          // 3. 마이 아이돌
           const _MyIdolTile(),
           const Divider(),
-          // 플로팅 버블
+          // 4. 플로팅 버블
           const _BubbleToggleTile(),
           const Divider(),
-          // 앱 정보
+          // 5. 리뷰하기
+          ListTile(
+            leading: const Icon(Icons.rate_review_outlined),
+            title: Text(l.reviewLabel),
+            subtitle: Text(l.reviewSubtitle),
+            onTap: () async {
+              final inAppReview = InAppReview.instance;
+              if (await inAppReview.isAvailable()) {
+                await inAppReview.requestReview();
+              }
+            },
+          ),
+          const Divider(),
+          // 6. 문의하기
+          ListTile(
+            leading: const Icon(Icons.mail_outline),
+            title: Text(l.contactLabel),
+            subtitle: Text(l.contactSubtitle),
+            onTap: () {
+              launchUrl(
+                Uri.parse('mailto:tigerroom.official@gmail.com'),
+                mode: LaunchMode.externalApplication,
+              );
+            },
+          ),
+          const Divider(),
+          // 7. 앱 정보
           ListTile(
             leading: const Icon(Icons.info_outline),
             title: Text(l.appInfoTitle),
             subtitle: Text(l.appInfoSubtitle(l.appVersion)),
             onTap: () {
-              showAboutDialog(
+              showDialog<void>(
                 context: context,
-                applicationName: l.appName,
-                applicationVersion: l.appVersion,
-                applicationLegalese: l.appLegalese,
+                builder: (ctx) => AlertDialog(
+                  title: Text(l.appName),
+                  content: Text(
+                    'v${l.appVersion}\n${l.appLegalese}',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      child: Text(l.complete),
+                    ),
+                  ],
+                ),
               );
             },
           ),

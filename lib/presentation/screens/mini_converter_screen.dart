@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -216,6 +218,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
       ),
       child: Scaffold(
       backgroundColor: Colors.transparent,
+      resizeToAvoidBottomInset: false,
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: _dismiss,
@@ -227,10 +230,13 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
-              height: (isCompact
-                      ? MediaQuery.of(context).size.height * 0.43
-                      : MediaQuery.of(context).size.height * 0.70) +
-                  MediaQuery.of(context).viewPadding.bottom,
+              height: math.max(
+                120,
+                (isCompact
+                        ? MediaQuery.of(context).size.height * 0.43
+                        : MediaQuery.of(context).size.height * 0.70) +
+                    MediaQuery.of(context).viewPadding.bottom,
+              ),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: const BorderRadius.vertical(
