@@ -12,7 +12,7 @@ import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/widgets/copy_feedback_overlay.dart';
 import 'package:fangeul/services/analytics_events.dart';
 
-/// 간편모드 문구 타일 — ko + roman + ★토글 + 복사.
+/// 간편모드 문구 타일 — ko + roman + 번역 + ★토글 + 복사.
 ///
 /// 팩 탐색 탭에서 각 문구를 표시한다.
 /// ★ 토글로 즐겨찾기 추가/제거, 📋 버튼으로 클립보드 복사.
@@ -43,6 +43,9 @@ class CompactPhraseTile extends ConsumerWidget {
     final idolName = ref.watch(myIdolDisplayNameProvider).valueOrNull;
     final memberName = ref.watch(myIdolMemberNameProvider).valueOrNull;
 
+    final translationLang = L.of(context).defaultTranslationLang;
+    final translation = phrase.translations[translationLang] ?? '';
+
     return ListTile(
       dense: true,
       visualDensity: VisualDensity.compact,
@@ -52,9 +55,7 @@ class CompactPhraseTile extends ConsumerWidget {
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
-      subtitle: phrase.roman.isNotEmpty
-          ? _buildRomanSubtitle(theme, idolName, memberName)
-          : null,
+      subtitle: _buildSubtitle(theme, idolName, memberName, translation),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -83,6 +84,35 @@ class CompactPhraseTile extends ConsumerWidget {
         ],
       ),
       onTap: () => _copy(context, ref),
+    );
+  }
+
+  /// subtitle: roman + 번역을 조합한 위젯.
+  Widget? _buildSubtitle(
+    ThemeData theme,
+    String? idolName,
+    String? memberName,
+    String translation,
+  ) {
+    final hasRoman = phrase.roman.isNotEmpty;
+    final hasTranslation = translation.isNotEmpty;
+    if (!hasRoman && !hasTranslation) return null;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (hasRoman) _buildRomanSubtitle(theme, idolName, memberName),
+        if (hasTranslation)
+          Text(
+            translation,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+      ],
     );
   }
 

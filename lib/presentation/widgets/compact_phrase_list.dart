@@ -318,15 +318,14 @@ class _PhraseCard extends ConsumerWidget {
   final Phrase phrase;
   final VoidCallback? onCopied;
 
-  /// 현재 로케일에 맞는 번역을 반환한다.
+  /// l10n `defaultTranslationLang` 기반 번역을 반환한다.
   ///
-  /// 한국어 로케일이면 번역 불필요 (원문이 한국어).
-  /// 해당 로케일 번역이 없으면 영어 fallback, 그것도 없으면 null.
+  /// 메인앱과 동일하게: ko→en, en→en, es→es, …
+  /// 번역이 없으면 null.
   String? _getTranslation(BuildContext context) {
-    final locale = Localizations.localeOf(context).languageCode;
-    if (locale == 'ko') return null;
     if (phrase.translations.isEmpty) return null;
-    return phrase.translations[locale] ?? phrase.translations['en'];
+    final lang = L.of(context).defaultTranslationLang;
+    return phrase.translations[lang];
   }
 
   @override

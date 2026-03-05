@@ -43,6 +43,8 @@ class MyIdolNotifier extends _$MyIdolNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_key, groupId);
+      // 아이돌 변경 시 간편모드 필터 초기화 → 스마트 기본값 재평가
+      await prefs.remove('compact_phrase_filter');
     } catch (e) {
       debugPrint('MyIdolNotifier: save failed — $e');
     }

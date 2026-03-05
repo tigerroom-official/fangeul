@@ -37,6 +37,9 @@ class _IdolSelectScreenState extends ConsumerState<IdolSelectScreen> {
   final _memberController = TextEditingController();
 
   final _keyboardKey = GlobalKey<MultiModeKeyboardState>();
+  final _scrollController = ScrollController();
+  final _customFieldKey = GlobalKey();
+  final _memberFieldKey = GlobalKey();
   _ActiveField? _activeField;
   bool _showKeyboard = false;
 
@@ -50,6 +53,7 @@ class _IdolSelectScreenState extends ConsumerState<IdolSelectScreen> {
   void dispose() {
     _customController.dispose();
     _memberController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -95,10 +99,25 @@ class _IdolSelectScreenState extends ConsumerState<IdolSelectScreen> {
     // 키보드가 이미 마운트된 경우 즉시 설정
     _keyboardKey.currentState?.setText(text);
     setState(() => _showKeyboard = true);
-    // 키보드가 아직 마운트 전이면 다음 프레임에서 설정
+    // 키보드가 아직 마운트 전이면 다음 프레임에서 설정 + 스크롤
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _keyboardKey.currentState?.setText(text);
+      _scrollToActiveField(field);
     });
+  }
+
+  /// 활성 필드가 보이도록 ListView를 자동 스크롤한다.
+  void _scrollToActiveField(_ActiveField field) {
+    final key = field == _ActiveField.custom ? _customFieldKey : _memberFieldKey;
+    final ctx = key.currentContext;
+    if (ctx != null) {
+      Scrollable.ensureVisible(
+        ctx,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+      );
+    }
   }
 
   /// 키보드 텍스트를 활성 필드에 라우팅.
@@ -178,6 +197,7 @@ class _IdolSelectScreenState extends ConsumerState<IdolSelectScreen> {
   /// 키보드가 올라와도 모든 콘텐츠가 스크롤 가능하다.
   Widget _buildScrollableContent(List<IdolGroup> groups, ThemeData theme) {
     return ListView(
+      controller: _scrollController,
       children: [
         ...groups.map((g) => _buildGroupTile(g, theme)),
         const Divider(height: 24),
@@ -195,8 +215,8 @@ class _IdolSelectScreenState extends ConsumerState<IdolSelectScreen> {
             child: Text(L.of(context).idolSelectSkip),
           ),
         ],
-        // 키보드 올라왔을 때 하단 여백
-        if (_showKeyboard) const SizedBox(height: 8),
+        // 키보드 올라왔을 때 하단 여백 — 카드 하단까지 보이도록 충분한 공간
+        if (_showKeyboard) const SizedBox(height: 60),
       ],
     );
   }
@@ -240,6 +260,7 @@ class _IdolSelectScreenState extends ConsumerState<IdolSelectScreen> {
   Widget _buildCustomInputTile(ThemeData theme) {
     final l = L.of(context);
     return Padding(
+      key: _customFieldKey,
       padding: const EdgeInsets.only(bottom: 8),
       child: Material(
         borderRadius: BorderRadius.circular(12),
@@ -288,6 +309,7 @@ class _IdolSelectScreenState extends ConsumerState<IdolSelectScreen> {
   /// 멤버명 입력 필드. 그룹 선택 후 하단에 표시된다.
   Widget _buildMemberInput(ThemeData theme) {
     return TextField(
+      key: _memberFieldKey,
       controller: _memberController,
       readOnly: true,
       showCursor: true,

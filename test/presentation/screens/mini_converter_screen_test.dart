@@ -68,15 +68,18 @@ void main() {
       expect(find.text(UiStrings.miniTabRecent), findsOneWidget);
     });
 
-    testWidgets('should show favorites chip and empty message', (tester) async {
+    testWidgets('should default to first pack when no favorites and no idol',
+        (tester) async {
       await setPhoneSize(tester);
       addTearDown(() => resetSize(tester));
 
       await tester.pumpWidget(buildTestWidget());
       await tester.pumpAndSettle();
 
+      // 즐겨찾기 칩은 항상 표시
       expect(find.text(UiStrings.miniChipFavorites), findsOneWidget);
-      expect(find.text(UiStrings.miniFavoritesEmpty), findsOneWidget);
+      // 스마트 기본값: 즐찾 비어있고 아이돌 미설정 → 첫 번째 팩 선택
+      expect(find.text('사랑해요'), findsOneWidget);
     });
 
     testWidgets('should show pack filter chips', (tester) async {

@@ -40,13 +40,38 @@ class CompactPhraseFilterNotifier extends _$CompactPhraseFilterNotifier {
     final prefs = await SharedPreferences.getInstance();
     await prefs.reload();
     final saved = prefs.getString(_key);
-    if (saved == null) return const CompactPhraseFilter.favorites();
-    if (saved == 'favorites') return const CompactPhraseFilter.favorites();
-    if (saved == 'my_idol') return const CompactPhraseFilter.myIdol();
-    if (saved == 'today') return const CompactPhraseFilter.today();
-    if (saved.startsWith('pack:')) {
-      return CompactPhraseFilter.pack(saved.substring(5));
+
+    // 저장된 필터가 있으면 복원
+    if (saved != null) {
+      if (saved == 'favorites') return const CompactPhraseFilter.favorites();
+      if (saved == 'my_idol') return const CompactPhraseFilter.myIdol();
+      if (saved == 'today') return const CompactPhraseFilter.today();
+      if (saved.startsWith('pack:')) {
+        return CompactPhraseFilter.pack(saved.substring(5));
+      }
     }
+
+    // 최초 진입 — 스마트 기본값: 즐찾 → 마이아이돌 → 첫 번째 팩
+    final favorites =
+        await ref.read(favoritePhrasesNotifierProvider.future);
+    if (favorites.isNotEmpty) {
+      return const CompactPhraseFilter.favorites();
+    }
+
+    final idolName = await ref.read(myIdolDisplayNameProvider.future);
+    if (idolName != null) {
+      return const CompactPhraseFilter.myIdol();
+    }
+
+    // 첫 번째 일반 팩 (템플릿 전용 팩 제외)
+    final packs = await ref.read(allPhrasesProvider.future);
+    final firstPack = packs
+        .where((p) => p.phrases.any((phrase) => !phrase.isTemplate))
+        .firstOrNull;
+    if (firstPack != null) {
+      return CompactPhraseFilter.pack(firstPack.id);
+    }
+
     return const CompactPhraseFilter.favorites();
   }
 
