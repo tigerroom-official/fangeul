@@ -53,6 +53,6 @@ dart format --set-exit-if-changed .  # 포맷 검증
 | `docs/HANDOFF.md` | 세션 핸드오프 (최신 작업 상태) |
 
 ## 현재 작업 상태
-> 마지막 핸드오프: 2026-03-06
+> 마지막 핸드오프: 2026-03-06 18:00
 > 상세: `docs/HANDOFF.md` 참조
-> 요약: 설정 화면(언어변경/리뷰/문의) + MiniConverter overflow 수정 + 스플래시 깜빡임 수정 + AGP 업그레이드. 627 tests pass. 다음: 문구 의미 번역 6개국어(Claude→Codex 검수) + Phase 7 릴리즈.
+> 요약: v1.0.0 MVP 기능 완료 + Galaxy 실기기 테스트 통과. 다음: Phase 7 릴리즈 BLOCK (서명/ProGuard/AdMob ID/Play Store 등록).

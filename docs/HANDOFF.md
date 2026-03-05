@@ -1,7 +1,7 @@
 # Fangeul — Session Handoff
 
-BASE_COMMIT: ae5eeb7 (main, bubble icon/app icon/splash 교체)
-HANDOFF_COMMIT: 5a027cc
+BASE_COMMIT: 5a027cc (이전 핸드오프)
+HANDOFF_COMMIT: 922c7e6
 BRANCH: main
 
 ---
@@ -21,112 +21,130 @@ BRANCH: main
 - i18n 인프라 (7개 언어) + Firebase Remote Config 통합 (2026-03-05)
 - Firebase Crashlytics/Analytics 통합 + 버블 UX 대폭 개선 (2026-03-05)
 - 로케일 자동 감지 + 문구 번역 표시 + edge-to-edge 내비바 수정 (2026-03-05)
-- **설정 화면: 언어 변경 + 리뷰/문의 메뉴 + 미니 컨버터 overflow 수정 + 스플래시→앱 전환 깜빡임 수정 + AGP/Gradle 업그레이드 (2026-03-06)**
+- 설정 화면: 언어 변경 + 리뷰/문의 메뉴 + overflow 수정 + 스플래시 깜빡임 수정 + AGP 업그레이드 (2026-03-06)
+- **로케일별 번역 표시 수정 + 컨버터 힌트 탭별 전환 + 스마트 기본 필터 + 간편모드 번역 표시 + 아이돌 선택 스크롤 + v1.0.0 (2026-03-06)**
 
 ### 활성 작업
 없음. 이번 세션 작업 모두 완료, main 커밋됨.
 
-### 보류/백로그
+### 보류/백로그 — MVP 출시 후
+- **v1.1 기능**: 한글 퍼즐(Wordle 스타일), 한글 카드 컬렉션(가챠)
+- **v1.1+ 기능**: 푸시 알림(firebase_messaging), 구독 모델
 - LOW 이슈 잔여: L3(자동닫기 설정), L4(펄스 애니메이션), L5(복사 기록 암호화)
 - 리뷰 연기 이슈: I1(IdolSelectScreen setState→Riverpod), I6(즐겨찾기 템플릿 메타데이터)
-- todaySuggestedPhrases에 memberName 미전달 (멤버 템플릿 "오늘" 추천 미포함 — known limitation)
-- 관리 대시보드 + R2 동기화 (출시 후 1~2주)
-- share_card_painter.dart UiStrings 잔류 (BuildContext 없음, Phase 7에서 처리)
-- Provider 내 UiStrings 잔류 (BuildContext 없음, Phase 7에서 처리)
-- P1: 핸들 좌측 멤버 이름 노출 (버블 UX 패널 후속)
+- todaySuggestedPhrases에 memberName 미전달 (멤버 템플릿 "오늘" 추천 미포함)
+- share_card_painter.dart + Provider 내 UiStrings 잔류 (BuildContext 없음)
+- P1: 핸들 좌측 멤버 이름 노출 (버블 UX)
+- Play Integrity API (서버사이드 검증)
+- AdMob SSV (Server-Side Verification)
 
 ---
 
 ## 작업 요약
 
-설정 화면에 앱 내 언어 변경(LocaleNotifier + 7개 언어 Dropdown), 리뷰하기(InAppReview), 문의하기(url_launcher) 메뉴 추가. 미니 컨버터 RenderFlex overflow 근본 수정(adjustNothing + resizeToAvoidBottomInset:false + 최소높이 가드). 스플래시→앱 전환 시 하얀 깜빡임 수정(NormalTheme windowBackground → splash_background 색상). About 다이얼로그에서 라이선스 버튼 제거. 앱 라벨 "Fangeul" 대문자 교정. AGP 8.9.1 + Gradle 8.11.1 업그레이드. 27 files, 627 tests pass.
+로케일별 문구 번역 수정(arb `defaultTranslationLang` 하드코딩→각 언어코드), 버블 팝업 언어 전파(`localeNotifierProvider` invalidate), 컨버터 힌트 탭별 전환(ListenableBuilder), 스마트 기본 필터(즐찾→마이아이돌→첫 팩), 간편모드 번역 3번째줄 추가, 아이돌 선택 화면 키보드 스크롤 개선, Java 17 강제, v1.0.0 버전 업. Galaxy 실기기 테스트 완료. 624 tests pass (3 pre-existing tts_provider 실패).
 
 ## 완료된 작업
 
-- [x] `pubspec.yaml` — `in_app_review: ^2.0.10`, `url_launcher: ^6.3.1` 추가
-- [x] `theme_providers.dart` — `LocaleNotifier` 추가 (null=시스템, Locale=명시적, SharedPrefs `user_locale`)
-- [x] `app.dart` — `locale: ref.watch(localeNotifierProvider)` 연결
-- [x] 7개 arb 파일 — `languageLabel`, `languageSystem`, `reviewLabel`, `reviewSubtitle`, `contactLabel`, `contactSubtitle` l10n 키 추가
-- [x] `settings_screen.dart` — 언어 Dropdown, 리뷰하기, 문의하기 ListTile, 커스텀 앱정보 다이얼로그(라이선스 제거)
-- [x] `mini_converter_screen.dart` — RenderFlex overflow 3중 방어: `resizeToAvoidBottomInset: false` + `math.max(120, ...)` 최소높이
-- [x] `AndroidManifest.xml` — MiniConverterActivity `adjustNothing` 추가, 앱 라벨 "Fangeul" 대문자
-- [x] `values/styles.xml` + `values-night/styles.xml` — NormalTheme windowBackground → `@color/splash_background` (하얀 깜빡임 수정)
-- [x] `settings.gradle` — AGP 8.7.0 → 8.9.1
-- [x] `gradle-wrapper.properties` — Gradle 8.9 → 8.11.1
-- [x] 문의 메일 → `tigerroom.official@gmail.com`
+- [x] `app_es/id/pt/th/vi.arb` — `defaultTranslationLang` 각 언어코드로 수정 (bfef6d4)
+- [x] `mini_converter_screen.dart` — `_syncFromMainEngine()`에 `localeNotifierProvider` invalidate 추가 (bfef6d4)
+- [x] `converter_screen.dart` + `mini_converter_screen.dart` — ConverterInput을 `ListenableBuilder`로 감싸서 탭별 힌트 전환 (bfef6d4)
+- [x] `compact_phrase_filter_provider.dart` — 스마트 기본값: 즐찾→마이아이돌→첫 팩 (c93a0d9)
+- [x] `my_idol_provider.dart` — 아이돌 변경 시 `compact_phrase_filter` 초기화 (c93a0d9)
+- [x] `compact_phrase_list.dart` — `_PhraseCard` 번역을 `defaultTranslationLang` 기반으로 변경 (c93a0d9)
+- [x] `compact_phrase_tile.dart` — 세로 리스트에 번역줄 추가 (c93a0d9)
+- [x] `idol_select_screen.dart` — 키보드 올라올 때 `Scrollable.ensureVisible()` 자동 스크롤 (c93a0d9)
+- [x] `android/build.gradle` — `afterEvaluate` Java 17 강제 (c93a0d9)
+- [x] `pubspec.yaml` — 버전 0.1.0+1 → 1.0.0+1 (c93a0d9)
+- [x] `mini_converter_screen_test.dart` — 스마트 기본값 반영 테스트 수정 (c93a0d9)
 
 ## 진행 중인 작업
 없음.
 
 ## 핵심 교훈
 
-- ★ MiniConverter RenderFlex overflow 근본 원인: `windowSoftInputMode` 미지정 + `resizeToAvoidBottomInset: true`(기본값) → 시스템 IME가 열린 상태에서 Activity 창 축소. 커스텀 키보드만 쓰는 Activity는 `adjustNothing` + `resizeToAvoidBottomInset: false` 필수 (2026-03-06)
-- ★ 스플래시→앱 하얀 깜빡임: NormalTheme의 `?android:colorBackground`가 시스템 라이트 모드에서 흰색 반환. 앱 기본이 다크면 `windowBackground`를 스플래시 색상으로 고정 (2026-03-06)
-- ★ `url_launcher`가 `androidx.browser:1.9.0` 끌어옴 → AGP 8.9.1+ 요구. AGP 업그레이드 시 Gradle도 함께 올려야 함 (AGP 8.9.1 → Gradle 8.11.1) (2026-03-06)
-- ★ Flutter 3.41.2의 `Column`은 `clipBehavior` 파라미터를 super로 전달하지 않음 — Flex에는 있지만 Column 생성자에 미포함 (2026-03-06)
-- ★ Codex 교차 리뷰: MiniConverter overflow에서 `resizeToAvoidBottomInset: false` 근본 수정 합의 + `viewPadding.bottom` 이중 적용 지적 (실제는 "공간 확보 + 콘텐츠 패딩" 구조로 의도적) — 외부 리뷰의 지적을 맹목 수용하지 말고 의도 검증 필요 (2026-03-06)
+- ★ `defaultTranslationLang` arb 키: 각 arb 파일이 자기 언어코드를 반환해야 함 — 모두 `"en"`으로 하드코딩하면 비영어권에서도 영어 번역만 표시 (2026-03-06)
+- ★ 듀얼 FlutterEngine 로케일 전파: `_syncFromMainEngine()`에서 `localeNotifierProvider`도 invalidate 필수 — 버블 팝업이 메인앱 언어 설정을 상속하지 못함 (2026-03-06)
+- ★ `ListenableBuilder(listenable: tabController)`로 감싸야 탭 전환 시 위젯 리빌드 — `tabController.index`를 직접 읽는 것만으로는 리빌드 트리거 안됨 (2026-03-06)
+- ★ 아이돌 설정 변경 시 `compact_phrase_filter` SharedPreferences 키 제거 필수 — 이전 세션의 stale 필터가 스마트 기본값을 가로챔 (2026-03-06)
+- ★ `adb install -r`은 앱 데이터 유지 → 테스트 시 SharedPreferences stale 데이터 주의. `pm clear`로 초기화 필요할 수 있음 (2026-03-06)
+- ★ `Scrollable.ensureVisible()` + `ScrollPositionAlignmentPolicy.keepVisibleAtEnd` — 커스텀 키보드가 가리는 필드 자동 스크롤에 효과적. GlobalKey는 TextField가 아니라 감싸는 카드(Padding)에 부여해야 전체 카드 노출 (2026-03-06)
 
 ## 다음 단계
 
-### 1순위: 문구 의미 번역 6개국어 (사용자 요청)
-- 현재 문구 카드: [한글] + [로마자 발음] + [영어 의미 고정]
-- 문제: 비영어권 사용자(es/id/pt/th/vi)가 한글 문구 뜻을 모름
-- 작업: phrases JSON의 translations 필드에 6개국어 의미 번역 추가
-- **방법: Claude가 6개국어 병렬 번역 → Codex 교차 검수** (사용자 지정)
-- 번역 표시: 사용자 설정 언어(LocaleNotifier) 기준으로 해당 언어 번역 노출
+### 1순위: Phase 7 릴리즈 BLOCK 항목 (출시 필수)
+1. **릴리즈 서명 설정** — keystore 생성 + `android/app/build.gradle` signingConfigs.release 구성
+2. **프로덕션 AdMob ID** — `lib/services/ad_ids.dart`의 placeholder(`ca-app-pub-XXXX`) 교체
+3. **ProGuard/R8 활성화** — `minifyEnabled true` + `shrinkResources true` + `proguard-rules.pro`
+4. **Google Play Console** — 앱 등록 + IAP 상품(5개 컬러팩) 가격 설정 + 스크린샷/리스팅
 
-### 2순위: Firebase 콘솔 설정 + 학습
-- Firebase Remote Config 콘솔에서 7개 매개변수 추가
-- Firebase Analytics 이벤트 계측 학습
+### 2순위: 출시 후 빠른 개선
+- P1: 핸들 좌측 멤버 이름 노출
+- share_card_painter.dart UiStrings → l10n
+- tts_provider_test 3건 수정
+- Firebase Analytics 이벤트 대시보드 구성
 
-### 3순위: Phase 7 릴리즈 준비
-- ProGuard/R8 설정 + 릴리즈 빌드 검증
-- Play Store 리스팅 + 스크린샷
-
-### 4순위: 백로그 정리
-- P1: 핸들 좌측 멤버 이름 노출 (버블 UX)
-- share_card_painter.dart + Provider 파일 UiStrings → l10n
-- LOW 이슈 (L3, L4, L5), I1, I6
+### 3순위: v1.1 로드맵
+- 한글 퍼즐 (Wordle 스타일)
+- 한글 카드 컬렉션 (가챠)
+- 푸시 알림 (firebase_messaging)
+- 구독 모델 (Phase 7+)
 
 ## 핵심 결정사항
 
 | 결정 | 이유 |
 |------|------|
-| NormalTheme windowBackground = splash_background 색상 고정 | 다크 기본 테마에서 시스템 라이트 모드일 때 흰색 깜빡임 방지 |
-| MiniConverter adjustNothing | 커스텀 키보드만 사용 — 시스템 IME 리사이즈 불필요 |
-| AGP 8.9.1 + Gradle 8.11.1 | url_launcher의 transitive dependency 요구 |
-| showAboutDialog → 커스텀 AlertDialog | 사용자에게 플러그인 라이선스 목록 불필요 |
-| 문의 메일: tigerroom.official@gmail.com | 앱 공식 이메일 |
+| 스마트 기본 필터: 즐찾→마이아이돌→첫팩 | 사용자 설정 존중 — 아이돌 설정한 유저에게 빈 즐겨찾기 대신 관련 콘텐츠 표시 |
+| 아이돌 변경 시 필터 초기화 | stale 필터 방지 — 새 아이돌 설정 후 스마트 기본값 재평가 |
+| 번역 표시: `defaultTranslationLang` 통일 | 메인앱과 동일 로직 — ko→en, en→en, es→es 등. 로케일 기반보다 명시적 |
+| v1.0.0 출시 결정 | MVP 기능 완료 — 수익화/i18n/UX 모두 구현, Galaxy 실기기 테스트 통과 |
 
 ## 참고 컨텍스트
 
-- 문구 JSON 구조: `assets/phrases/*.json` — 각 문구의 `translations` 필드에 언어 코드별 번역
-- 현재 번역 표시 로직: `compact_phrase_list.dart`의 `_PhraseCard` — `phrase.translations[locale]`
+- 릴리즈 점검 결과: Codex + Explore 에이전트 리뷰 (이번 세션) — BLOCK 3건(서명/ProGuard/AdMob ID)
+- 실기기 테스트: Galaxy R3CY207GNMD에서 release APK 설치 검증 완료
 - UX 패널 토의: `docs/discussions/2026-03-05-ux-detail-panel.md`
-- 문구 스키마: `docs/fangeul-future-reference.md` §1.4
+- 수익화 합의: `docs/discussions/2026-03-04-phase6-monetization-consensus.md`
+
+## 미구현 기능 현황
+
+| 기능 | 상태 | MVP 필수 | 비고 |
+|------|------|----------|------|
+| 릴리즈 서명 | ❌ 미구현 | YES | keystore 생성 필요 |
+| ProGuard/R8 | ❌ 미구현 | YES | 난독화 + 코드 축소 |
+| 프로덕션 AdMob ID | ❌ placeholder | YES | AdMob 콘솔에서 생성 |
+| Play Store 등록 | ❌ 미구현 | YES | 리스팅 + 스크린샷 |
+| IAP 상품 등록 | ❌ 미구현 | YES | 5개 컬러팩 가격 설정 |
+| 푸시 알림 | ❌ 미구현 | NO | v1.1 |
+| 한글 퍼즐 | ❌ 미구현 | NO | v1.1 |
+| 카드 컬렉션 | ❌ 미구현 | NO | v1.1 |
+| 구독 모델 | ❌ 미구현 | NO | v1.1+ |
+| Play Integrity API | ❌ 미구현 | NO | 서버사이드 검증 |
+| AdMob SSV | ❌ 미구현 | NO | 서버사이드 검증 |
 
 ## 커밋 히스토리 (이번 세션)
 
 ```
-5d96bde feat: settings screen — language switch, review/contact menu, UX fixes
+c93a0d9 fix: smart default filter + compact mode translation + idol select scroll + v1.0.0
+bfef6d4 fix: locale-aware phrase translations + converter hint per tab
 ```
 
 ## 수정한 파일
 
 ```
-android/app/src/main/AndroidManifest.xml           — adjustNothing + 앱 라벨 대문자
-android/app/src/main/res/values-night/styles.xml   — NormalTheme → splash_background
-android/app/src/main/res/values/styles.xml         — NormalTheme → splash_background
-android/gradle/wrapper/gradle-wrapper.properties   — Gradle 8.11.1
-android/settings.gradle                            — AGP 8.9.1
-lib/app.dart                                       — locale provider 연결
-lib/l10n/app_*.arb (7개)                           — 6개 l10n 키 추가
-lib/l10n/app_localizations*.dart (8개)             — gen-l10n 재생성
-lib/presentation/providers/theme_providers.dart     — LocaleNotifier
-lib/presentation/providers/theme_providers.g.dart   — codegen
-lib/presentation/screens/mini_converter_screen.dart — overflow 3중 방어
-lib/presentation/screens/settings_screen.dart       — 언어/리뷰/문의 UI
-pubspec.yaml + pubspec.lock                        — in_app_review, url_launcher
+android/build.gradle                               — afterEvaluate Java 17 강제
+lib/l10n/app_es.arb, app_id.arb, app_pt.arb,
+        app_th.arb, app_vi.arb                     — defaultTranslationLang 수정
+lib/l10n/app_localizations_es/id/pt/th/vi.dart     — gen-l10n 재생성
+lib/presentation/providers/compact_phrase_filter_provider.dart — 스마트 기본 필터
+lib/presentation/providers/my_idol_provider.dart    — 아이돌 변경 시 필터 초기화
+lib/presentation/screens/converter_screen.dart      — ListenableBuilder 힌트
+lib/presentation/screens/idol_select_screen.dart    — 키보드 자동 스크롤
+lib/presentation/screens/mini_converter_screen.dart — locale invalidate + 힌트
+lib/presentation/widgets/compact_phrase_list.dart   — defaultTranslationLang 통일
+lib/presentation/widgets/compact_phrase_tile.dart   — 번역줄 추가
+pubspec.yaml                                        — v1.0.0+1
+test/presentation/screens/mini_converter_screen_test.dart — 테스트 수정
 ```
 
 ## 세션 히스토리
@@ -150,4 +168,5 @@ pubspec.yaml + pubspec.lock                        — in_app_review, url_launch
 | i18n+Firebase RC | 7개 언어 i18n + Firebase Remote Config + 3인 번역 QA → 627 tests |
 | Crashlytics+버블UX | Firebase Crashlytics/Analytics + 버블 헤더 UX 통일 → 627 tests |
 | 로케일+번역+내비바 | 시스템 로케일 자동 감지 + 문구 번역 표시 + edge-to-edge 내비바 수정 → 627 tests |
-| **설정+UX수정** | 언어 변경/리뷰/문의 메뉴 + overflow 수정 + 스플래시 깜빡임 수정 + AGP 업그레이드 → 627 tests |
+| 설정+UX수정 | 언어 변경/리뷰/문의 메뉴 + overflow 수정 + 스플래시 깜빡임 수정 + AGP 업그레이드 → 627 tests |
+| **번역+필터+실기기** | 로케일별 번역 수정 + 스마트 필터 + 간편모드 번역 + 실기기 테스트 → 624 tests |
