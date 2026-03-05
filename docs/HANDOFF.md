@@ -1,7 +1,7 @@
 # Fangeul — Session Handoff
 
-BASE_COMMIT: 194795a (main, Crashlytics/Analytics + 버블 UX 통일)
-HANDOFF_COMMIT: aa6fd6d
+BASE_COMMIT: ae5eeb7 (main, bubble icon/app icon/splash 교체)
+HANDOFF_COMMIT: 5a027cc
 BRANCH: main
 
 ---
@@ -20,7 +20,8 @@ BRANCH: main
 - 멀티모드 키보드 + 패널 개선 + 버블 버그 수정 (2026-03-04)
 - i18n 인프라 (7개 언어) + Firebase Remote Config 통합 (2026-03-05)
 - Firebase Crashlytics/Analytics 통합 + 버블 UX 대폭 개선 (2026-03-05)
-- **로케일 자동 감지 + 문구 번역 표시 + edge-to-edge 내비바 수정 (2026-03-05)**
+- 로케일 자동 감지 + 문구 번역 표시 + edge-to-edge 내비바 수정 (2026-03-05)
+- **설정 화면: 언어 변경 + 리뷰/문의 메뉴 + 미니 컨버터 overflow 수정 + 스플래시→앱 전환 깜빡임 수정 + AGP/Gradle 업그레이드 (2026-03-06)**
 
 ### 활성 작업
 없음. 이번 세션 작업 모두 완료, main 커밋됨.
@@ -38,38 +39,45 @@ BRANCH: main
 
 ## 작업 요약
 
-로케일 하드코딩(ko) 제거 → 폰 시스템 언어 자동 감지(en fallback). 간편모드 팩 문구 카드에 사용자 언어 번역 표시 추가. 페이지 인디케이터 SafeArea 적용. 미니 컨버터 edge-to-edge 내비바 색상 불일치 수정 (AnnotatedRegion 오버라이드 + resumed 시 재적용). 5파일 변경, 627 tests pass.
+설정 화면에 앱 내 언어 변경(LocaleNotifier + 7개 언어 Dropdown), 리뷰하기(InAppReview), 문의하기(url_launcher) 메뉴 추가. 미니 컨버터 RenderFlex overflow 근본 수정(adjustNothing + resizeToAvoidBottomInset:false + 최소높이 가드). 스플래시→앱 전환 시 하얀 깜빡임 수정(NormalTheme windowBackground → splash_background 색상). About 다이얼로그에서 라이선스 버튼 제거. 앱 라벨 "Fangeul" 대문자 교정. AGP 8.9.1 + Gradle 8.11.1 업그레이드. 27 files, 627 tests pass.
 
 ## 완료된 작업
 
-- [x] `app.dart` — `locale: const Locale('ko')` 하드코딩 제거 → 시스템 언어 자동 따름
-- [x] `l10n.yaml` — `preferred-supported-locales: [en, ko]` → 미지원 언어 en fallback
-- [x] `compact_phrase_list.dart` `_PhraseCard` — `phrase.translations[locale]` 번역 표시 추가 (한국어면 미표시, en fallback)
-- [x] `compact_phrase_list.dart` 페이지 인디케이터 — `SafeArea` + `bottom: 8` (시스템 핸들 가림 수정)
-- [x] `mini_converter_screen.dart` — `_applyEdgeToEdge()` 메서드 추출, `initState` + `didChangeAppLifecycleState(resumed)` 양쪽 호출 (캐시 엔진 재진입 수정)
-- [x] `mini_converter_screen.dart` — `AnnotatedRegion<SystemUiOverlayStyle>` 추가, `FangeulApp`의 불투명 내비바 색상 오버라이드
-- [x] `mini_converter_screen.dart` — 시트 높이에 `viewPadding.bottom` 추가 (내비바 영역까지 배경 채움)
+- [x] `pubspec.yaml` — `in_app_review: ^2.0.10`, `url_launcher: ^6.3.1` 추가
+- [x] `theme_providers.dart` — `LocaleNotifier` 추가 (null=시스템, Locale=명시적, SharedPrefs `user_locale`)
+- [x] `app.dart` — `locale: ref.watch(localeNotifierProvider)` 연결
+- [x] 7개 arb 파일 — `languageLabel`, `languageSystem`, `reviewLabel`, `reviewSubtitle`, `contactLabel`, `contactSubtitle` l10n 키 추가
+- [x] `settings_screen.dart` — 언어 Dropdown, 리뷰하기, 문의하기 ListTile, 커스텀 앱정보 다이얼로그(라이선스 제거)
+- [x] `mini_converter_screen.dart` — RenderFlex overflow 3중 방어: `resizeToAvoidBottomInset: false` + `math.max(120, ...)` 최소높이
+- [x] `AndroidManifest.xml` — MiniConverterActivity `adjustNothing` 추가, 앱 라벨 "Fangeul" 대문자
+- [x] `values/styles.xml` + `values-night/styles.xml` — NormalTheme windowBackground → `@color/splash_background` (하얀 깜빡임 수정)
+- [x] `settings.gradle` — AGP 8.7.0 → 8.9.1
+- [x] `gradle-wrapper.properties` — Gradle 8.9 → 8.11.1
+- [x] 문의 메일 → `tigerroom.official@gmail.com`
 
 ## 진행 중인 작업
 없음.
 
 ## 핵심 교훈
 
-- ★ 캐시 FlutterEngine에서 `AnnotatedRegion`은 위젯 트리 가장 가까운 것이 우선 → 부모(`FangeulApp`)의 불투명 내비바 설정을 자식(`MiniConverterScreen`)에서 투명으로 오버라이드 가능 (2026-03-05)
-- ★ Flutter l10n: `preferred-supported-locales` 첫 번째 항목이 fallback 언어 — `[en, ko]`로 설정해야 미지원 언어에서 영어 UI (2026-03-05)
-- ★ `locale:` 파라미터를 MaterialApp에 지정하지 않으면 폰 시스템 언어 자동 감지 (2026-03-05)
+- ★ MiniConverter RenderFlex overflow 근본 원인: `windowSoftInputMode` 미지정 + `resizeToAvoidBottomInset: true`(기본값) → 시스템 IME가 열린 상태에서 Activity 창 축소. 커스텀 키보드만 쓰는 Activity는 `adjustNothing` + `resizeToAvoidBottomInset: false` 필수 (2026-03-06)
+- ★ 스플래시→앱 하얀 깜빡임: NormalTheme의 `?android:colorBackground`가 시스템 라이트 모드에서 흰색 반환. 앱 기본이 다크면 `windowBackground`를 스플래시 색상으로 고정 (2026-03-06)
+- ★ `url_launcher`가 `androidx.browser:1.9.0` 끌어옴 → AGP 8.9.1+ 요구. AGP 업그레이드 시 Gradle도 함께 올려야 함 (AGP 8.9.1 → Gradle 8.11.1) (2026-03-06)
+- ★ Flutter 3.41.2의 `Column`은 `clipBehavior` 파라미터를 super로 전달하지 않음 — Flex에는 있지만 Column 생성자에 미포함 (2026-03-06)
+- ★ Codex 교차 리뷰: MiniConverter overflow에서 `resizeToAvoidBottomInset: false` 근본 수정 합의 + `viewPadding.bottom` 이중 적용 지적 (실제는 "공간 확보 + 콘텐츠 패딩" 구조로 의도적) — 외부 리뷰의 지적을 맹목 수용하지 말고 의도 검증 필요 (2026-03-06)
 
 ## 다음 단계
 
-### 1순위: UX 디테일 논의 (사용자 요청)
-1. 설정에 언어 변경 기능 — 폰 시스템 언어와 별개로 앱 내 언어 선택
-2. 팝업 `···` 메뉴에 "리뷰하기"/"문의하기" 추가 여부
-3. 버블 버튼 디자인 변경 — 현재 '한' 텍스트 → 캐릭터/심볼 이미지로
+### 1순위: 문구 의미 번역 6개국어 (사용자 요청)
+- 현재 문구 카드: [한글] + [로마자 발음] + [영어 의미 고정]
+- 문제: 비영어권 사용자(es/id/pt/th/vi)가 한글 문구 뜻을 모름
+- 작업: phrases JSON의 translations 필드에 6개국어 의미 번역 추가
+- **방법: Claude가 6개국어 병렬 번역 → Codex 교차 검수** (사용자 지정)
+- 번역 표시: 사용자 설정 언어(LocaleNotifier) 기준으로 해당 언어 번역 노출
 
 ### 2순위: Firebase 콘솔 설정 + 학습
 - Firebase Remote Config 콘솔에서 7개 매개변수 추가
 - Firebase Analytics 이벤트 계측 학습
-- 에뮬레이터에서 로케일별 동작 확인
 
 ### 3순위: Phase 7 릴리즈 준비
 - ProGuard/R8 설정 + 릴리즈 빌드 검증
@@ -84,23 +92,41 @@ BRANCH: main
 
 | 결정 | 이유 |
 |------|------|
-| 미지원 언어 en fallback (ko 아님) | 타겟이 글로벌 K-pop 팬 — 한국어 UI는 대부분 외국인에게 부적절 |
-| AnnotatedRegion 오버라이드 (SystemChrome 대신) | FangeulApp의 AnnotatedRegion이 매 리빌드마다 SystemChrome 설정 덮어씀 |
+| NormalTheme windowBackground = splash_background 색상 고정 | 다크 기본 테마에서 시스템 라이트 모드일 때 흰색 깜빡임 방지 |
+| MiniConverter adjustNothing | 커스텀 키보드만 사용 — 시스템 IME 리사이즈 불필요 |
+| AGP 8.9.1 + Gradle 8.11.1 | url_launcher의 transitive dependency 요구 |
+| showAboutDialog → 커스텀 AlertDialog | 사용자에게 플러그인 라이선스 목록 불필요 |
+| 문의 메일: tigerroom.official@gmail.com | 앱 공식 이메일 |
+
+## 참고 컨텍스트
+
+- 문구 JSON 구조: `assets/phrases/*.json` — 각 문구의 `translations` 필드에 언어 코드별 번역
+- 현재 번역 표시 로직: `compact_phrase_list.dart`의 `_PhraseCard` — `phrase.translations[locale]`
+- UX 패널 토의: `docs/discussions/2026-03-05-ux-detail-panel.md`
+- 문구 스키마: `docs/fangeul-future-reference.md` §1.4
 
 ## 커밋 히스토리 (이번 세션)
 
 ```
-8c82d4a fix: locale auto-detect, phrase translation display, edge-to-edge nav bar
+5d96bde feat: settings screen — language switch, review/contact menu, UX fixes
 ```
 
 ## 수정한 파일
 
 ```
-l10n.yaml                                          — preferred-supported-locales [en, ko]
-lib/app.dart                                       — locale 하드코딩 제거
-lib/l10n/app_localizations.dart                    — gen-l10n 재생성 (en 첫번째)
-lib/presentation/screens/mini_converter_screen.dart — AnnotatedRegion + _applyEdgeToEdge + viewPadding
-lib/presentation/widgets/compact_phrase_list.dart  — 번역 표시 + SafeArea 인디케이터
+android/app/src/main/AndroidManifest.xml           — adjustNothing + 앱 라벨 대문자
+android/app/src/main/res/values-night/styles.xml   — NormalTheme → splash_background
+android/app/src/main/res/values/styles.xml         — NormalTheme → splash_background
+android/gradle/wrapper/gradle-wrapper.properties   — Gradle 8.11.1
+android/settings.gradle                            — AGP 8.9.1
+lib/app.dart                                       — locale provider 연결
+lib/l10n/app_*.arb (7개)                           — 6개 l10n 키 추가
+lib/l10n/app_localizations*.dart (8개)             — gen-l10n 재생성
+lib/presentation/providers/theme_providers.dart     — LocaleNotifier
+lib/presentation/providers/theme_providers.g.dart   — codegen
+lib/presentation/screens/mini_converter_screen.dart — overflow 3중 방어
+lib/presentation/screens/settings_screen.dart       — 언어/리뷰/문의 UI
+pubspec.yaml + pubspec.lock                        — in_app_review, url_launcher
 ```
 
 ## 세션 히스토리
@@ -122,5 +148,6 @@ lib/presentation/widgets/compact_phrase_list.dart  — 번역 표시 + SafeArea 
 | Phase 6 구현 | 18 tasks + 2라운드 교차 리뷰 19건 수정 → 573 tests |
 | 키보드+패널+버블 | 멀티모드 키보드 + 패널 UX 개선 + 버블 버그 4건 수정 → 616 tests |
 | i18n+Firebase RC | 7개 언어 i18n + Firebase Remote Config + 3인 번역 QA → 627 tests |
-| Crashlytics+버블UX | Firebase Crashlytics/Analytics + 버블 헤더 UX 통일 (패널 3차 4:0) → 627 tests |
-| **로케일+번역+내비바** | 시스템 로케일 자동 감지 + 문구 번역 표시 + edge-to-edge 내비바 수정 → 627 tests |
+| Crashlytics+버블UX | Firebase Crashlytics/Analytics + 버블 헤더 UX 통일 → 627 tests |
+| 로케일+번역+내비바 | 시스템 로케일 자동 감지 + 문구 번역 표시 + edge-to-edge 내비바 수정 → 627 tests |
+| **설정+UX수정** | 언어 변경/리뷰/문의 메뉴 + overflow 수정 + 스플래시 깜빡임 수정 + AGP 업그레이드 → 627 tests |
