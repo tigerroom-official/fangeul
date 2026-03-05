@@ -283,19 +283,22 @@ class _PhrasesTabState extends ConsumerState<_PhrasesTab>
             },
           ),
         ),
-        // 페이지 인디케이터
-        Padding(
-          padding: const EdgeInsets.only(bottom: 4),
-          child: ValueListenableBuilder<int>(
-            valueListenable: _currentPage,
-            builder: (context, page, _) {
-              return Text(
-                '${page + 1} / ${phrases.length}',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-              );
-            },
+        // 페이지 인디케이터 — 시스템 내비바에 가리지 않도록 SafeArea 적용
+        SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: ValueListenableBuilder<int>(
+              valueListenable: _currentPage,
+              builder: (context, page, _) {
+                return Text(
+                  '${page + 1} / ${phrases.length}',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                );
+              },
+            ),
           ),
         ),
       ],
@@ -305,7 +308,7 @@ class _PhrasesTabState extends ConsumerState<_PhrasesTab>
 
 /// 팩 문구 카드 — 좌우 스와이프 PageView 내 개별 카드.
 ///
-/// 중앙 정렬된 ko + roman + 하단 ★/복사 버튼.
+/// 중앙 정렬된 ko + roman + 번역 + 하단 ★/복사 버튼.
 class _PhraseCard extends ConsumerWidget {
   const _PhraseCard({
     required this.phrase,
@@ -315,12 +318,24 @@ class _PhraseCard extends ConsumerWidget {
   final Phrase phrase;
   final VoidCallback? onCopied;
 
+  /// 현재 로케일에 맞는 번역을 반환한다.
+  ///
+  /// 한국어 로케일이면 번역 불필요 (원문이 한국어).
+  /// 해당 로케일 번역이 없으면 영어 fallback, 그것도 없으면 null.
+  String? _getTranslation(BuildContext context) {
+    final locale = Localizations.localeOf(context).languageCode;
+    if (locale == 'ko') return null;
+    if (phrase.translations.isEmpty) return null;
+    return phrase.translations[locale] ?? phrase.translations['en'];
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final favorites =
         ref.watch(favoritePhrasesNotifierProvider).valueOrNull ?? {};
     final isFavorite = favorites.contains(phrase.ko);
+    final translation = _getTranslation(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
@@ -341,6 +356,19 @@ class _PhraseCard extends ConsumerWidget {
                 color: theme.colorScheme.primary,
               ),
               textAlign: TextAlign.center,
+            ),
+          ],
+          // 번역 (한국어 로케일이 아닐 때)
+          if (translation != null) ...[
+            const SizedBox(height: 8),
+            Text(
+              translation,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
           const SizedBox(height: 16),

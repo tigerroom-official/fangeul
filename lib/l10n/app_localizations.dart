@@ -98,8 +98,8 @@ abstract class L {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
-    Locale('ko'),
     Locale('en'),
+    Locale('ko'),
     Locale('es'),
     Locale('id'),
     Locale('pt'),

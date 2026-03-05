@@ -76,14 +76,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
     _compactTabController = TabController(length: 2, vsync: this);
     _converterTabController = TabController(length: 3, vsync: this);
     _converterTabController.addListener(_onConverterTabChanged);
-    // 상태바(시계/배터리) 영역 완전 투명 처리
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      systemNavigationBarColor: Colors.transparent,
-      systemNavigationBarDividerColor: Colors.transparent,
-    ));
-    // edge-to-edge 렌더링 — 시스템 바 뒤까지 컨텐츠 확장
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    _applyEdgeToEdge();
   }
 
   @override
@@ -99,11 +92,21 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      // 미니 엔진은 프리워밍 시 provider가 빌드됨.
-      // 메인 앱에서 이후 변경된 SharedPreferences 데이터를 반영하려면
-      // 매 resumed마다 reload() → invalidate로 최신 데이터를 다시 읽어야 한다.
+      // 캐시된 엔진에서는 initState가 재실행되지 않으므로
+      // Activity 재생성 시마다 edge-to-edge를 다시 적용한다.
+      _applyEdgeToEdge();
       _syncFromMainEngine();
     }
+  }
+
+  /// 시스템 바를 투명하게 하고 edge-to-edge 렌더링을 활성화한다.
+  void _applyEdgeToEdge() {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarDividerColor: Colors.transparent,
+    ));
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
 
   /// 메인 엔진에서 변경된 SharedPreferences 데이터를 미니 엔진으로 동기화한다.
@@ -203,7 +206,15 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
   Widget build(BuildContext context) {
     final isCompact = ref.watch(miniConverterCompactProvider);
 
-    return Scaffold(
+    // FangeulApp의 AnnotatedRegion(불투명 내비바)을 오버라이드.
+    // 미니 컨버터는 투명 배경 + edge-to-edge가 필수.
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarDividerColor: Colors.transparent,
+      ),
+      child: Scaffold(
       backgroundColor: Colors.transparent,
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -216,9 +227,10 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
-              height: isCompact
-                  ? MediaQuery.of(context).size.height * 0.43
-                  : MediaQuery.of(context).size.height * 0.70,
+              height: (isCompact
+                      ? MediaQuery.of(context).size.height * 0.43
+                      : MediaQuery.of(context).size.height * 0.70) +
+                  MediaQuery.of(context).viewPadding.bottom,
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: const BorderRadius.vertical(
@@ -235,6 +247,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
           ),
         ),
       ),
+    ),
     );
   }
 

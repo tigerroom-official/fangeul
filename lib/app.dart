@@ -60,7 +60,7 @@ class FangeulApp extends ConsumerWidget {
         debugShowCheckedModeBanner: false,
         localizationsDelegates: L.localizationsDelegates,
         supportedLocales: L.supportedLocales,
-        locale: const Locale('ko'),
+        // locale 미지정 → 폰 시스템 언어를 자동 따름
         theme: FangeulTheme.light(),
         darkTheme: FangeulTheme.dark(),
         themeMode: themeMode,
