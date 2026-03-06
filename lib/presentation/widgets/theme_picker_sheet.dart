@@ -35,6 +35,9 @@ class ThemePickerSheet extends ConsumerStatefulWidget {
 class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
   bool _customPickerExpanded = false;
 
+  final _sheetController = DraggableScrollableController();
+  final _customPickerKey = GlobalKey();
+
   // HSL slider ephemeral state
   double _hue = 180;
   double _saturation = 0.7;
@@ -46,6 +49,12 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
   Color? _savedSeedBeforePreview;
   Color? _savedTextBeforePreview;
   bool _isPreviewMode = false;
+
+  @override
+  void dispose() {
+    _sheetController.dispose();
+    super.dispose();
+  }
 
   /// 현재 슬라이더 HSL 값으로 Color 생성.
   Color get _hslColor =>
@@ -104,6 +113,7 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
         }
       },
       child: DraggableScrollableSheet(
+        controller: _sheetController,
         initialChildSize: 0.6,
         minChildSize: 0.4,
         maxChildSize: 0.85,
@@ -167,10 +177,32 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                   setState(() {
                     _customPickerExpanded = !_customPickerExpanded;
                   });
+                  if (_customPickerExpanded) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      _sheetController.animateTo(
+                        0.85,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeOut,
+                      );
+                      Future.delayed(
+                          const Duration(milliseconds: 200), () {
+                        if (!mounted) return;
+                        final ctx = _customPickerKey.currentContext;
+                        if (ctx != null) {
+                          Scrollable.ensureVisible(
+                            // ignore: use_build_context_synchronously
+                            ctx,
+                            duration: const Duration(milliseconds: 200),
+                            curve: Curves.easeOut,
+                          );
+                        }
+                      });
+                    });
+                  }
                 },
               ),
               if (_customPickerExpanded) ...[
-                const SizedBox(height: 16),
+                SizedBox(key: _customPickerKey, height: 16),
                 _HueSlider(
                   value: _hue,
                   onChanged: (v) {
