@@ -211,5 +211,18 @@
   "themePickerUndo": "เลิกทำ",
   "themePickerLowContrast": "คอนทราสต์ต่ำ",
 
-  "favoriteLimitReached": "ถึงขีดจำกัดรายการโปรดแล้ว (สูงสุด 5 รายการ)"
+  "favoriteLimitReached": "ถึงขีดจำกัดรายการโปรดแล้ว (สูงสุด 5 รายการ)",
+
+  "choeaeColorTitle": "สีของฉัน",
+  "choeaeColorSubtitle": "ตกแต่งแอปด้วยสีของคุณ",
+
+  "paletteMidnight": "มิดไนท์",
+  "palettePurpleDream": "เพอร์เพิลดรีม",
+  "paletteOceanBlue": "โอเชี่ยนบลู",
+  "paletteRoseGold": "โรสโกลด์",
+  "paletteConcertEncore": "คอนเสิร์ตอังกอร์",
+  "paletteGoldenHour": "โกลเด้นอาวร์",
+  "paletteNeonNight": "นีออนไนท์",
+  "paletteMintBreeze": "มินต์บรีซ",
+  "paletteSunsetCafe": "ซันเซ็ตคาเฟ่"
 }

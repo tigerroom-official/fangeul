@@ -211,5 +211,18 @@
   "themePickerUndo": "Hoàn tác",
   "themePickerLowContrast": "Độ tương phản thấp",
 
-  "favoriteLimitReached": "Đã đạt giới hạn yêu thích (tối đa 5)"
+  "favoriteLimitReached": "Đã đạt giới hạn yêu thích (tối đa 5)",
+
+  "choeaeColorTitle": "Màu Của Tôi",
+  "choeaeColorSubtitle": "Tùy chỉnh ứng dụng với màu sắc của bạn",
+
+  "paletteMidnight": "Nửa Đêm",
+  "palettePurpleDream": "Giấc Mơ Tím",
+  "paletteOceanBlue": "Xanh Đại Dương",
+  "paletteRoseGold": "Vàng Hồng",
+  "paletteConcertEncore": "Encore Concert",
+  "paletteGoldenHour": "Giờ Vàng",
+  "paletteNeonNight": "Đêm Neon",
+  "paletteMintBreeze": "Gió Bạc Hà",
+  "paletteSunsetCafe": "Quán Hoàng Hôn"
 }

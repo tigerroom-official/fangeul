@@ -211,5 +211,18 @@
   "themePickerUndo": "Deshacer",
   "themePickerLowContrast": "Bajo contraste",
 
-  "favoriteLimitReached": "Límite de favoritos alcanzado (máx. 5)"
+  "favoriteLimitReached": "Límite de favoritos alcanzado (máx. 5)",
+
+  "choeaeColorTitle": "Mi Color",
+  "choeaeColorSubtitle": "Personaliza la app con tu color",
+
+  "paletteMidnight": "Medianoche",
+  "palettePurpleDream": "Sueño Púrpura",
+  "paletteOceanBlue": "Azul Océano",
+  "paletteRoseGold": "Oro Rosa",
+  "paletteConcertEncore": "Encore del Concierto",
+  "paletteGoldenHour": "Hora Dorada",
+  "paletteNeonNight": "Noche Neón",
+  "paletteMintBreeze": "Brisa Menta",
+  "paletteSunsetCafe": "Café del Atardecer"
 }

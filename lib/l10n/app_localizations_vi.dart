@@ -546,4 +546,37 @@ class LVi extends L {
 
   @override
   String get favoriteLimitReached => 'Đã đạt giới hạn yêu thích (tối đa 5)';
+
+  @override
+  String get choeaeColorTitle => 'Màu Của Tôi';
+
+  @override
+  String get choeaeColorSubtitle => 'Tùy chỉnh ứng dụng với màu sắc của bạn';
+
+  @override
+  String get paletteMidnight => 'Nửa Đêm';
+
+  @override
+  String get palettePurpleDream => 'Giấc Mơ Tím';
+
+  @override
+  String get paletteOceanBlue => 'Xanh Đại Dương';
+
+  @override
+  String get paletteRoseGold => 'Vàng Hồng';
+
+  @override
+  String get paletteConcertEncore => 'Encore Concert';
+
+  @override
+  String get paletteGoldenHour => 'Giờ Vàng';
+
+  @override
+  String get paletteNeonNight => 'Đêm Neon';
+
+  @override
+  String get paletteMintBreeze => 'Gió Bạc Hà';
+
+  @override
+  String get paletteSunsetCafe => 'Quán Hoàng Hôn';
 }

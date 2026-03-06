@@ -211,5 +211,18 @@
   "themePickerUndo": "Undo",
   "themePickerLowContrast": "Low contrast",
 
-  "favoriteLimitReached": "Favorite limit reached (max 5)"
+  "favoriteLimitReached": "Favorite limit reached (max 5)",
+
+  "choeaeColorTitle": "My Color",
+  "choeaeColorSubtitle": "Make the app yours with your color",
+
+  "paletteMidnight": "Midnight",
+  "palettePurpleDream": "Purple Dream",
+  "paletteOceanBlue": "Ocean Blue",
+  "paletteRoseGold": "Rose Gold",
+  "paletteConcertEncore": "Concert Encore",
+  "paletteGoldenHour": "Golden Hour",
+  "paletteNeonNight": "Neon Night",
+  "paletteMintBreeze": "Mint Breeze",
+  "paletteSunsetCafe": "Sunset Café"
 }

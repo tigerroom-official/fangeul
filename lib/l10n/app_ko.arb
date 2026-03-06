@@ -292,5 +292,18 @@
   "themePickerUndo": "되돌리기",
   "themePickerLowContrast": "낮은 대비",
 
-  "favoriteLimitReached": "즐겨찾기 한도에 도달했어요 (최대 5개)"
+  "favoriteLimitReached": "즐겨찾기 한도에 도달했어요 (최대 5개)",
+
+  "choeaeColorTitle": "최애색",
+  "choeaeColorSubtitle": "나만의 색으로 앱을 꾸며보세요",
+
+  "paletteMidnight": "미드나잇",
+  "palettePurpleDream": "퍼플 드림",
+  "paletteOceanBlue": "오션 블루",
+  "paletteRoseGold": "로즈 골드",
+  "paletteConcertEncore": "콘서트 앙코르",
+  "paletteGoldenHour": "골든 아워",
+  "paletteNeonNight": "네온 나잇",
+  "paletteMintBreeze": "민트 브리즈",
+  "paletteSunsetCafe": "선셋 카페"
 }

@@ -549,4 +549,37 @@ class LEs extends L {
 
   @override
   String get favoriteLimitReached => 'Límite de favoritos alcanzado (máx. 5)';
+
+  @override
+  String get choeaeColorTitle => 'Mi Color';
+
+  @override
+  String get choeaeColorSubtitle => 'Personaliza la app con tu color';
+
+  @override
+  String get paletteMidnight => 'Medianoche';
+
+  @override
+  String get palettePurpleDream => 'Sueño Púrpura';
+
+  @override
+  String get paletteOceanBlue => 'Azul Océano';
+
+  @override
+  String get paletteRoseGold => 'Oro Rosa';
+
+  @override
+  String get paletteConcertEncore => 'Encore del Concierto';
+
+  @override
+  String get paletteGoldenHour => 'Hora Dorada';
+
+  @override
+  String get paletteNeonNight => 'Noche Neón';
+
+  @override
+  String get paletteMintBreeze => 'Brisa Menta';
+
+  @override
+  String get paletteSunsetCafe => 'Café del Atardecer';
 }

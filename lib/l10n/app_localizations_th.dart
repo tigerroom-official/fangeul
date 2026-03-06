@@ -542,4 +542,37 @@ class LTh extends L {
   @override
   String get favoriteLimitReached =>
       'ถึงขีดจำกัดรายการโปรดแล้ว (สูงสุด 5 รายการ)';
+
+  @override
+  String get choeaeColorTitle => 'สีของฉัน';
+
+  @override
+  String get choeaeColorSubtitle => 'ตกแต่งแอปด้วยสีของคุณ';
+
+  @override
+  String get paletteMidnight => 'มิดไนท์';
+
+  @override
+  String get palettePurpleDream => 'เพอร์เพิลดรีม';
+
+  @override
+  String get paletteOceanBlue => 'โอเชี่ยนบลู';
+
+  @override
+  String get paletteRoseGold => 'โรสโกลด์';
+
+  @override
+  String get paletteConcertEncore => 'คอนเสิร์ตอังกอร์';
+
+  @override
+  String get paletteGoldenHour => 'โกลเด้นอาวร์';
+
+  @override
+  String get paletteNeonNight => 'นีออนไนท์';
+
+  @override
+  String get paletteMintBreeze => 'มินต์บรีซ';
+
+  @override
+  String get paletteSunsetCafe => 'ซันเซ็ตคาเฟ่';
 }

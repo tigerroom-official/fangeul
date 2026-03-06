@@ -211,5 +211,18 @@
   "themePickerUndo": "Urungkan",
   "themePickerLowContrast": "Kontras rendah",
 
-  "favoriteLimitReached": "Batas favorit tercapai (maks. 5)"
+  "favoriteLimitReached": "Batas favorit tercapai (maks. 5)",
+
+  "choeaeColorTitle": "Warna Saya",
+  "choeaeColorSubtitle": "Sesuaikan aplikasi dengan warnamu",
+
+  "paletteMidnight": "Tengah Malam",
+  "palettePurpleDream": "Mimpi Ungu",
+  "paletteOceanBlue": "Biru Laut",
+  "paletteRoseGold": "Rose Gold",
+  "paletteConcertEncore": "Encore Konser",
+  "paletteGoldenHour": "Jam Emas",
+  "paletteNeonNight": "Malam Neon",
+  "paletteMintBreeze": "Semilir Mint",
+  "paletteSunsetCafe": "Kafe Senja"
 }

@@ -1274,13 +1274,9 @@ class _ThemeUnlockButton extends ConsumerWidget {
 // ─────────────────────────────────────────────────────────────
 
 /// 팔레트 nameKey → l10n 문자열 변환.
-///
-/// 새 PaletteRegistry nameKey들은 Task 13 (l10n 키 추가)에서 arb 등록 예정.
-/// 등록 전까지는 fallback 표시명을 반환한다.
 String _paletteName(L l, String nameKey) {
   return switch (nameKey) {
-    // ── 기존 l10n 키 (레거시 호환) ──
-    'paletteCherryBlossom' => l.paletteCherryBlossom,
+    // ── 레거시 팔레트 (기존 l10n 키) ──
     'paletteOcean' => l.paletteOcean,
     'paletteForest' => l.paletteForest,
     'paletteSunset' => l.paletteSunset,
@@ -1288,16 +1284,17 @@ String _paletteName(L l, String nameKey) {
     'paletteDawn' => l.paletteDawn,
     'paletteDusk' => l.paletteDusk,
     'paletteJewel' => l.paletteJewel,
-    // ── 새 PaletteRegistry nameKey → fallback 표시명 ──
-    'paletteMidnight' => 'Midnight',
-    'palettePurpleDream' => 'Purple Dream',
-    'paletteOceanBlue' => 'Ocean Blue',
-    'paletteRoseGold' => 'Rose Gold',
-    'paletteConcertEncore' => 'Concert Encore',
-    'paletteGoldenHour' => 'Golden Hour',
-    'paletteNeonNight' => 'Neon Night',
-    'paletteMintBreeze' => 'Mint Breeze',
-    'paletteSunsetCafe' => 'Sunset Cafe',
+    // ── 최애색 팔레트 ──
+    'paletteMidnight' => l.paletteMidnight,
+    'palettePurpleDream' => l.palettePurpleDream,
+    'paletteOceanBlue' => l.paletteOceanBlue,
+    'paletteRoseGold' => l.paletteRoseGold,
+    'paletteConcertEncore' => l.paletteConcertEncore,
+    'paletteGoldenHour' => l.paletteGoldenHour,
+    'paletteCherryBlossom' => l.paletteCherryBlossom,
+    'paletteNeonNight' => l.paletteNeonNight,
+    'paletteMintBreeze' => l.paletteMintBreeze,
+    'paletteSunsetCafe' => l.paletteSunsetCafe,
     _ => nameKey,
   };
 }

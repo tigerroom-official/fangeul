@@ -1096,6 +1096,72 @@ abstract class L {
   /// In ko, this message translates to:
   /// **'즐겨찾기 한도에 도달했어요 (최대 5개)'**
   String get favoriteLimitReached;
+
+  /// No description provided for @choeaeColorTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'최애색'**
+  String get choeaeColorTitle;
+
+  /// No description provided for @choeaeColorSubtitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'나만의 색으로 앱을 꾸며보세요'**
+  String get choeaeColorSubtitle;
+
+  /// No description provided for @paletteMidnight.
+  ///
+  /// In ko, this message translates to:
+  /// **'미드나잇'**
+  String get paletteMidnight;
+
+  /// No description provided for @palettePurpleDream.
+  ///
+  /// In ko, this message translates to:
+  /// **'퍼플 드림'**
+  String get palettePurpleDream;
+
+  /// No description provided for @paletteOceanBlue.
+  ///
+  /// In ko, this message translates to:
+  /// **'오션 블루'**
+  String get paletteOceanBlue;
+
+  /// No description provided for @paletteRoseGold.
+  ///
+  /// In ko, this message translates to:
+  /// **'로즈 골드'**
+  String get paletteRoseGold;
+
+  /// No description provided for @paletteConcertEncore.
+  ///
+  /// In ko, this message translates to:
+  /// **'콘서트 앙코르'**
+  String get paletteConcertEncore;
+
+  /// No description provided for @paletteGoldenHour.
+  ///
+  /// In ko, this message translates to:
+  /// **'골든 아워'**
+  String get paletteGoldenHour;
+
+  /// No description provided for @paletteNeonNight.
+  ///
+  /// In ko, this message translates to:
+  /// **'네온 나잇'**
+  String get paletteNeonNight;
+
+  /// No description provided for @paletteMintBreeze.
+  ///
+  /// In ko, this message translates to:
+  /// **'민트 브리즈'**
+  String get paletteMintBreeze;
+
+  /// No description provided for @paletteSunsetCafe.
+  ///
+  /// In ko, this message translates to:
+  /// **'선셋 카페'**
+  String get paletteSunsetCafe;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

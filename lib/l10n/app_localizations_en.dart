@@ -545,4 +545,37 @@ class LEn extends L {
 
   @override
   String get favoriteLimitReached => 'Favorite limit reached (max 5)';
+
+  @override
+  String get choeaeColorTitle => 'My Color';
+
+  @override
+  String get choeaeColorSubtitle => 'Make the app yours with your color';
+
+  @override
+  String get paletteMidnight => 'Midnight';
+
+  @override
+  String get palettePurpleDream => 'Purple Dream';
+
+  @override
+  String get paletteOceanBlue => 'Ocean Blue';
+
+  @override
+  String get paletteRoseGold => 'Rose Gold';
+
+  @override
+  String get paletteConcertEncore => 'Concert Encore';
+
+  @override
+  String get paletteGoldenHour => 'Golden Hour';
+
+  @override
+  String get paletteNeonNight => 'Neon Night';
+
+  @override
+  String get paletteMintBreeze => 'Mint Breeze';
+
+  @override
+  String get paletteSunsetCafe => 'Sunset Café';
 }

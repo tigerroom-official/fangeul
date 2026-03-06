@@ -548,4 +548,37 @@ class LId extends L {
 
   @override
   String get favoriteLimitReached => 'Batas favorit tercapai (maks. 5)';
+
+  @override
+  String get choeaeColorTitle => 'Warna Saya';
+
+  @override
+  String get choeaeColorSubtitle => 'Sesuaikan aplikasi dengan warnamu';
+
+  @override
+  String get paletteMidnight => 'Tengah Malam';
+
+  @override
+  String get palettePurpleDream => 'Mimpi Ungu';
+
+  @override
+  String get paletteOceanBlue => 'Biru Laut';
+
+  @override
+  String get paletteRoseGold => 'Rose Gold';
+
+  @override
+  String get paletteConcertEncore => 'Encore Konser';
+
+  @override
+  String get paletteGoldenHour => 'Jam Emas';
+
+  @override
+  String get paletteNeonNight => 'Malam Neon';
+
+  @override
+  String get paletteMintBreeze => 'Semilir Mint';
+
+  @override
+  String get paletteSunsetCafe => 'Kafe Senja';
 }

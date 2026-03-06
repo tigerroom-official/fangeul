@@ -535,4 +535,37 @@ class LKo extends L {
 
   @override
   String get favoriteLimitReached => '즐겨찾기 한도에 도달했어요 (최대 5개)';
+
+  @override
+  String get choeaeColorTitle => '최애색';
+
+  @override
+  String get choeaeColorSubtitle => '나만의 색으로 앱을 꾸며보세요';
+
+  @override
+  String get paletteMidnight => '미드나잇';
+
+  @override
+  String get palettePurpleDream => '퍼플 드림';
+
+  @override
+  String get paletteOceanBlue => '오션 블루';
+
+  @override
+  String get paletteRoseGold => '로즈 골드';
+
+  @override
+  String get paletteConcertEncore => '콘서트 앙코르';
+
+  @override
+  String get paletteGoldenHour => '골든 아워';
+
+  @override
+  String get paletteNeonNight => '네온 나잇';
+
+  @override
+  String get paletteMintBreeze => '민트 브리즈';
+
+  @override
+  String get paletteSunsetCafe => '선셋 카페';
 }

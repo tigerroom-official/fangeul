@@ -548,4 +548,37 @@ class LPt extends L {
 
   @override
   String get favoriteLimitReached => 'Limite de favoritos atingido (máx. 5)';
+
+  @override
+  String get choeaeColorTitle => 'Minha Cor';
+
+  @override
+  String get choeaeColorSubtitle => 'Personalize o app com a sua cor';
+
+  @override
+  String get paletteMidnight => 'Meia-noite';
+
+  @override
+  String get palettePurpleDream => 'Sonho Roxo';
+
+  @override
+  String get paletteOceanBlue => 'Azul Oceano';
+
+  @override
+  String get paletteRoseGold => 'Ouro Rosé';
+
+  @override
+  String get paletteConcertEncore => 'Encore do Show';
+
+  @override
+  String get paletteGoldenHour => 'Hora Dourada';
+
+  @override
+  String get paletteNeonNight => 'Noite Neon';
+
+  @override
+  String get paletteMintBreeze => 'Brisa de Menta';
+
+  @override
+  String get paletteSunsetCafe => 'Café do Pôr do Sol';
 }
