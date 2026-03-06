@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' hide KeyboardKey;
 
 import 'package:fangeul/l10n/app_localizations.dart';
-import 'package:fangeul/presentation/theme/fangeul_colors.dart';
 
 /// 키 하나의 메타데이터.
 ///
@@ -117,12 +116,10 @@ class KeyboardKey extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = L.of(context);
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    final accentColor = theme.colorScheme.primary;
-    final bgColor = isDark ? const Color(0xFF2A2A3E) : const Color(0xFFF3F4F6);
-    final subColor = isDark
-        ? FangeulColors.darkOnSurfaceVariant
-        : FangeulColors.lightOnSurfaceVariant;
+    final colorScheme = theme.colorScheme;
+    final accentColor = colorScheme.primary;
+    final bgColor = colorScheme.surfaceContainer;
+    final subColor = colorScheme.onSurfaceVariant;
 
     return SizedBox(
       height: 48,
