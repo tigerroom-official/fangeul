@@ -7,37 +7,33 @@ import 'package:share_plus/share_plus.dart';
 
 import 'package:fangeul/core/entities/daily_card.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
-import 'package:fangeul/presentation/theme/fangeul_colors.dart';
 
 /// 공유 카드 CustomPainter — 1080x1920 PNG 이미지 생성.
 ///
 /// "절제된 임팩트" — 한글이 주인공, 나머지는 조연.
+/// [colorScheme]을 통해 테마 색상을 주입받는다 (CustomPainter는 Theme.of 불가).
 class ShareCardPainter extends CustomPainter {
   /// Creates a [ShareCardPainter].
   ShareCardPainter({
     required this.card,
-    required this.isDark,
+    required this.colorScheme,
     required this.translationLang,
   });
 
   /// 공유할 카드.
   final DailyCard card;
 
-  /// 다크 모드 여부.
-  final bool isDark;
+  /// 현재 테마의 ColorScheme.
+  final ColorScheme colorScheme;
 
   /// 번역 언어 코드.
   final String translationLang;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final bgColor =
-        isDark ? FangeulColors.darkSurface : FangeulColors.lightSurface;
-    final textColor =
-        isDark ? FangeulColors.darkOnSurface : FangeulColors.lightOnSurface;
-    final subColor = isDark
-        ? FangeulColors.darkOnSurfaceVariant
-        : FangeulColors.lightOnSurfaceVariant;
+    final bgColor = colorScheme.surface;
+    final textColor = colorScheme.onSurface;
+    final subColor = colorScheme.onSurfaceVariant;
 
     // 배경
     canvas.drawRect(
@@ -58,8 +54,7 @@ class ShareCardPainter extends CustomPainter {
     );
 
     // 로마자 발음
-    final romanColor =
-        isDark ? FangeulColors.primary : FangeulColors.primaryLight;
+    final romanColor = colorScheme.primary;
     _drawText(
       canvas,
       card.phrase.roman,
@@ -134,7 +129,7 @@ class ShareCardPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant ShareCardPainter oldDelegate) =>
       card != oldDelegate.card ||
-      isDark != oldDelegate.isDark ||
+      colorScheme != oldDelegate.colorScheme ||
       translationLang != oldDelegate.translationLang;
 }
 
@@ -144,7 +139,7 @@ class ShareCardPainter extends CustomPainter {
 /// [debugPrint]로 에러를 출력한다. 네이티브 리소스는 항상 해제된다.
 Future<void> shareCard({
   required DailyCard card,
-  required bool isDark,
+  required ColorScheme colorScheme,
   required String translationLang,
 }) async {
   const width = 1080;
@@ -158,7 +153,7 @@ Future<void> shareCard({
     final canvas = Canvas(recorder);
     final painter = ShareCardPainter(
       card: card,
-      isDark: isDark,
+      colorScheme: colorScheme,
       translationLang: translationLang,
     );
     painter.paint(canvas, const Size(1080, 1920));

@@ -113,7 +113,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             },
                       onShare: () => shareCard(
                         card: card,
-                        isDark: theme.brightness == Brightness.dark,
+                        colorScheme: theme.colorScheme,
                         translationLang: l.defaultTranslationLang,
                       ),
                     );

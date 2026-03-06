@@ -15,7 +15,7 @@ abstract final class PaletteRegistry {
   // FREE 팔레트 (4개)
   // ──────────────────────────────────────────────
 
-  /// 미드나잇 — 기본 틸+네이비 테마 (FangeulColors 토큰 기반).
+  /// 미드나잇 — 기본 틸+네이비 테마 (수동 튜닝 토큰 기반).
   static const _midnight = PalettePack(
     id: 'midnight',
     nameKey: 'paletteMidnight',

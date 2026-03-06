@@ -8,7 +8,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fangeul/core/engines/keyboard_converter.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/keyboard_providers.dart';
-import 'package:fangeul/presentation/theme/fangeul_colors.dart';
 import 'package:fangeul/presentation/widgets/keyboard_key.dart';
 
 /// 키보드 입력 모드.
@@ -263,10 +262,8 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
   @override
   Widget build(BuildContext context) {
     final kbState = ref.watch(keyboardNotifierProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor =
-        isDark ? FangeulColors.darkBackground : FangeulColors.lightBackground;
     final theme = Theme.of(context);
+    final bgColor = theme.colorScheme.surfaceContainerLowest;
 
     return Container(
       color: bgColor,
@@ -523,11 +520,10 @@ class _SimpleKey extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? const Color(0xFF2A2A3E) : const Color(0xFFF3F4F6);
-    final textColor =
-        isDark ? FangeulColors.darkOnSurface : FangeulColors.lightOnSurface;
-    final accentColor = Theme.of(context).colorScheme.primary;
+    final colorScheme = Theme.of(context).colorScheme;
+    final bgColor = colorScheme.surfaceContainerHigh;
+    final textColor = colorScheme.onSurface;
+    final accentColor = colorScheme.primary;
 
     return SizedBox(
       height: 48,
@@ -570,11 +566,9 @@ class _ModeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? const Color(0xFF2A2A3E) : const Color(0xFFF3F4F6);
-    final textColor = isDark
-        ? FangeulColors.darkOnSurfaceVariant
-        : FangeulColors.lightOnSurfaceVariant;
+    final colorScheme = Theme.of(context).colorScheme;
+    final bgColor = colorScheme.surfaceContainerHigh;
+    final textColor = colorScheme.onSurfaceVariant;
 
     return SizedBox(
       height: 48,

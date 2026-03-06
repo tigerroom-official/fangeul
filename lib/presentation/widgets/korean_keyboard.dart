@@ -6,7 +6,6 @@ import 'package:flutter/services.dart' hide KeyboardKey;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:fangeul/presentation/providers/keyboard_providers.dart';
-import 'package:fangeul/presentation/theme/fangeul_colors.dart';
 import 'package:fangeul/presentation/widgets/keyboard_key.dart';
 
 /// QWERTY 두벌식 한글 키보드 위젯.
@@ -163,9 +162,7 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
   @override
   Widget build(BuildContext context) {
     final kbState = ref.watch(keyboardNotifierProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor =
-        isDark ? FangeulColors.darkBackground : FangeulColors.lightBackground;
+    final bgColor = Theme.of(context).colorScheme.surfaceContainerLowest;
 
     final bottomInset = MediaQuery.of(context).viewPadding.bottom;
 

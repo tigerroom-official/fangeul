@@ -12,8 +12,8 @@ import 'package:fangeul/presentation/providers/converter_providers.dart';
 import 'package:fangeul/presentation/providers/copy_history_provider.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
+import 'package:fangeul/presentation/providers/choeae_color_provider.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
-import 'package:fangeul/presentation/theme/fangeul_colors.dart';
 import 'package:fangeul/presentation/widgets/compact_phrase_list.dart';
 import 'package:fangeul/presentation/widgets/converter_input.dart';
 import 'package:fangeul/presentation/widgets/korean_keyboard.dart';
@@ -121,7 +121,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
     ref.invalidate(compactPhraseFilterNotifierProvider);
     ref.invalidate(themeModeNotifierProvider);
     ref.invalidate(localeNotifierProvider);
-    ref.invalidate(themeColorNotifierProvider);
+    ref.invalidate(choeaeColorNotifierProvider);
     ref.invalidate(myIdolNotifierProvider);
     ref.invalidate(myIdolDisplayNameProvider);
   }
@@ -302,7 +302,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: FangeulColors.primary,
+                color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -390,7 +390,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: FangeulColors.primary,
+                color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
