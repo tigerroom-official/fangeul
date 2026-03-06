@@ -124,31 +124,13 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
             children: [
               const _HandleBar(),
               const SizedBox(height: 12),
-              _TitleSection(),
-              if (ref
-                  .read(themeColorNotifierProvider.notifier)
-                  .canUndo) ...[
-                const SizedBox(height: 8),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: ActionChip(
-                    avatar: Icon(
-                      Icons.undo,
-                      size: 16,
-                      color: theme.colorScheme.primary,
-                    ),
-                    label: Text(L.of(context).themePickerUndo),
-                    onPressed: () {
-                      ref
-                          .read(themeColorNotifierProvider.notifier)
-                          .undo();
-                      setState(() {
-                        _slidersInitialized = false;
-                      });
-                    },
-                  ),
-                ),
-              ],
+              _TitleSection(
+                canUndo: ref.read(themeColorNotifierProvider.notifier).canUndo,
+                onUndo: () {
+                  ref.read(themeColorNotifierProvider.notifier).undo();
+                  setState(() => _slidersInitialized = false);
+                },
+              ),
               const SizedBox(height: 16),
               _DefaultThemeChip(
                 isSelected: seedColor == null,
@@ -346,23 +328,49 @@ class _HandleBar extends StatelessWidget {
 }
 
 class _TitleSection extends StatelessWidget {
+  const _TitleSection({
+    required this.canUndo,
+    this.onUndo,
+  });
+
+  final bool canUndo;
+  final VoidCallback? onUndo;
+
   @override
   Widget build(BuildContext context) {
     final l = L.of(context);
     final theme = Theme.of(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
-        Text(
-          l.themePickerTitle,
-          style: theme.textTheme.titleLarge,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l.themePickerTitle, style: theme.textTheme.titleLarge),
+              const SizedBox(height: 4),
+              Text(
+                l.themePickerSubtitle,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 4),
-        Text(
-          l.themePickerSubtitle,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
+        AnimatedOpacity(
+          opacity: canUndo ? 1.0 : 0.25,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+          child: IconButton(
+            icon: const Icon(Icons.undo_rounded, size: 20),
+            color: canUndo
+                ? theme.colorScheme.primary
+                : theme.colorScheme.onSurfaceVariant,
+            onPressed: canUndo ? onUndo : null,
+            tooltip: l.themePickerUndo,
+            visualDensity: VisualDensity.compact,
+            constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
           ),
         ),
       ],
