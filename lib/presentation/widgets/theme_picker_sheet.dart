@@ -4,11 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fangeul/core/entities/monetization_state.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/ad_service_provider.dart';
+import 'package:fangeul/presentation/providers/choeae_color_provider.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
-import 'package:fangeul/presentation/providers/theme_providers.dart';
-import 'package:fangeul/presentation/theme/fangeul_colors.dart';
-import 'package:fangeul/presentation/theme/theme_palettes.dart';
+import 'package:fangeul/presentation/providers/theme_providers.dart'
+    show contrastRatio;
+import 'package:fangeul/presentation/theme/choeae_color_config.dart';
+import 'package:fangeul/presentation/theme/palette_pack.dart';
+import 'package:fangeul/presentation/theme/palette_registry.dart';
 
 /// 테마 색상 선택 바텀시트.
 ///
@@ -46,8 +49,7 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
   bool _slidersInitialized = false;
 
   // 프리뷰 모드 (미구매자): 시트 닫힘 시 복원용 백업.
-  Color? _savedSeedBeforePreview;
-  Color? _savedTextBeforePreview;
+  ChoeaeColorConfig? _savedConfigBeforePreview;
   bool _isPreviewMode = false;
 
   @override
@@ -60,11 +62,15 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
   Color get _hslColor =>
       HSLColor.fromAHSL(1.0, _hue, _saturation, _lightness).toColor();
 
-  void _initSlidersFromSeedColor(Color? seedColor) {
+  void _initSlidersFromConfig(ChoeaeColorConfig config) {
     if (_slidersInitialized) return;
     _slidersInitialized = true;
 
-    final color = seedColor ?? FangeulColors.primary;
+    final color = switch (config) {
+      ChoeaeColorCustom(:final seedColor) => seedColor,
+      ChoeaeColorPalette(:final packId) =>
+        PaletteRegistry.get(packId).previewColor,
+    };
     final hsl = HSLColor.fromColor(color);
     _hue = hsl.hue;
     _saturation = hsl.saturation;
@@ -76,34 +82,35 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
     return monState?.hasThemePicker ?? false;
   }
 
-  /// 프리뷰 모드 진입 — 현재 색상을 백업한다.
+  /// 프리뷰 모드 진입 — 현재 설정을 백업한다.
   void _enterPreviewMode() {
     if (_isPreviewMode) return;
     _isPreviewMode = true;
-    _savedSeedBeforePreview = ref.read(themeColorNotifierProvider);
-    _savedTextBeforePreview =
-        ref.read(themeColorNotifierProvider.notifier).customTextColor;
+    _savedConfigBeforePreview = ref.read(choeaeColorNotifierProvider);
   }
 
-  /// 프리뷰 모드 종료 — 백업 색상으로 복원한다.
+  /// 프리뷰 모드 종료 — 백업 설정으로 복원한다.
   void _restoreFromPreview() {
     if (!_isPreviewMode) return;
     _isPreviewMode = false;
-    ref
-        .read(themeColorNotifierProvider.notifier)
-        .setSeedColor(_savedSeedBeforePreview);
-    ref
-        .read(themeColorNotifierProvider.notifier)
-        .setCustomTextColor(_savedTextBeforePreview);
+    final saved = _savedConfigBeforePreview;
+    if (saved == null) return;
+    final notifier = ref.read(choeaeColorNotifierProvider.notifier);
+    switch (saved) {
+      case ChoeaeColorPalette(:final packId):
+        notifier.selectPalette(packId);
+      case ChoeaeColorCustom(:final seedColor, :final textColorOverride):
+        notifier.setCustomColor(seedColor, textColor: textColorOverride);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final seedColor = ref.watch(themeColorNotifierProvider);
+    final choeaeColor = ref.watch(choeaeColorNotifierProvider);
     final monState =
         ref.watch(monetizationNotifierProvider).valueOrNull;
     final hasPickerIap = _hasPickerAccess(monState);
-    _initSlidersFromSeedColor(seedColor);
+    _initSlidersFromConfig(choeaeColor);
 
     return PopScope(
       canPop: true,
@@ -135,19 +142,20 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
               const _HandleBar(),
               const SizedBox(height: 12),
               _TitleSection(
-                canUndo: ref.read(themeColorNotifierProvider.notifier).canUndo,
+                canUndo: ref.read(choeaeColorNotifierProvider.notifier).canUndo,
                 onUndo: () {
-                  ref.read(themeColorNotifierProvider.notifier).undo();
+                  ref.read(choeaeColorNotifierProvider.notifier).undo();
                   setState(() => _slidersInitialized = false);
                 },
               ),
               const SizedBox(height: 16),
               _DefaultThemeChip(
-                isSelected: seedColor == null,
+                isSelected: choeaeColor is ChoeaeColorPalette &&
+                    choeaeColor.packId == PaletteRegistry.defaultId,
                 onTap: () {
                   ref
-                      .read(themeColorNotifierProvider.notifier)
-                      .resetToDefault();
+                      .read(choeaeColorNotifierProvider.notifier)
+                      .selectPalette(PaletteRegistry.defaultId);
                   setState(() {
                     _slidersInitialized = false;
                   });
@@ -155,11 +163,11 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
               ),
               const SizedBox(height: 16),
               _PaletteGrid(
-                currentSeedColor: seedColor,
-                onPaletteTap: (palette) {
+                currentConfig: choeaeColor,
+                onPaletteTap: (pack) {
                   ref
-                      .read(themeColorNotifierProvider.notifier)
-                      .applyPalette(palette);
+                      .read(choeaeColorNotifierProvider.notifier)
+                      .selectPalette(pack.id);
                   setState(() {
                     _slidersInitialized = false;
                   });
@@ -208,9 +216,12 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                   value: _hue,
                   onChanged: (v) {
                     setState(() => _hue = v);
+                    final existing = choeaeColor is ChoeaeColorCustom
+                        ? choeaeColor.textColorOverride
+                        : null;
                     ref
-                        .read(themeColorNotifierProvider.notifier)
-                        .setSeedColor(_hslColor);
+                        .read(choeaeColorNotifierProvider.notifier)
+                        .setCustomColor(_hslColor, textColor: existing);
                   },
                 ),
                 const SizedBox(height: 12),
@@ -219,9 +230,12 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                   value: _saturation,
                   onChanged: (v) {
                     setState(() => _saturation = v);
+                    final existing = choeaeColor is ChoeaeColorCustom
+                        ? choeaeColor.textColorOverride
+                        : null;
                     ref
-                        .read(themeColorNotifierProvider.notifier)
-                        .setSeedColor(_hslColor);
+                        .read(choeaeColorNotifierProvider.notifier)
+                        .setCustomColor(_hslColor, textColor: existing);
                   },
                 ),
                 const SizedBox(height: 12),
@@ -231,32 +245,33 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                   value: _lightness,
                   onChanged: (v) {
                     setState(() => _lightness = v);
+                    final existing = choeaeColor is ChoeaeColorCustom
+                        ? choeaeColor.textColorOverride
+                        : null;
                     ref
-                        .read(themeColorNotifierProvider.notifier)
-                        .setSeedColor(_hslColor);
+                        .read(choeaeColorNotifierProvider.notifier)
+                        .setCustomColor(_hslColor, textColor: existing);
                   },
                 ),
                 const SizedBox(height: 16),
                 _TextColorSelector(
-                  currentTextColor: ref
-                      .read(themeColorNotifierProvider.notifier)
-                      .customTextColor,
+                  currentTextColor: choeaeColor is ChoeaeColorCustom
+                      ? choeaeColor.textColorOverride
+                      : null,
                   onColorSelected: (color) {
                     ref
-                        .read(themeColorNotifierProvider.notifier)
-                        .setCustomTextColor(color);
+                        .read(choeaeColorNotifierProvider.notifier)
+                        .setTextColorOverride(color);
                   },
                 ),
                 // 가독성 가드레일: 대비율 < 4.5:1 시 경고
                 Builder(builder: (context) {
-                  final textColor = ref
-                      .read(themeColorNotifierProvider.notifier)
-                      .customTextColor;
+                  final textColor = choeaeColor is ChoeaeColorCustom
+                      ? choeaeColor.textColorOverride
+                      : null;
                   if (textColor == null) return const SizedBox.shrink();
-                  final bgColor = ColorScheme.fromSeed(
-                    seedColor: _hslColor,
-                    brightness: theme.brightness,
-                  ).surface;
+                  final bgColor =
+                      choeaeColor.buildColorScheme(theme.brightness).surface;
                   final ratio = contrastRatio(textColor, bgColor);
                   if (ratio >= 4.5) return const SizedBox.shrink();
                   return Padding(
@@ -282,10 +297,7 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                 }),
                 const SizedBox(height: 16),
                 _PreviewCard(
-                  seedColor: _hslColor,
-                  customTextColor: ref
-                      .read(themeColorNotifierProvider.notifier)
-                      .customTextColor,
+                  choeaeColor: choeaeColor,
                   brightness: theme.brightness,
                 ),
                 if (!hasPickerIap) ...[
@@ -447,7 +459,8 @@ class _DefaultThemeChip extends StatelessWidget {
               width: 24,
               height: 24,
               decoration: BoxDecoration(
-                color: FangeulColors.primary,
+                color: PaletteRegistry.get(PaletteRegistry.defaultId)
+                    .previewColor,
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: theme.colorScheme.outline,
@@ -481,16 +494,17 @@ class _DefaultThemeChip extends StatelessWidget {
 
 class _PaletteGrid extends ConsumerWidget {
   const _PaletteGrid({
-    required this.currentSeedColor,
+    required this.currentConfig,
     required this.onPaletteTap,
   });
 
-  final Color? currentSeedColor;
-  final void Function(ThemePalette) onPaletteTap;
+  final ChoeaeColorConfig currentConfig;
+  final void Function(PalettePack) onPaletteTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isUnlocked = ref.watch(isThemeUnlockedProvider);
+    final packs = PaletteRegistry.all;
 
     return GridView.builder(
       shrinkWrap: true,
@@ -501,19 +515,20 @@ class _PaletteGrid extends ConsumerWidget {
         crossAxisSpacing: 12,
         childAspectRatio: 0.85,
       ),
-      itemCount: ThemePalettes.all.length,
+      itemCount: packs.length,
       itemBuilder: (context, index) {
-        final palette = ThemePalettes.all[index];
-        final isSelected = currentSeedColor == palette.seedColor;
-        final isAccessible = palette.isFree || isUnlocked;
+        final pack = packs[index];
+        final isSelected = currentConfig is ChoeaeColorPalette &&
+            (currentConfig as ChoeaeColorPalette).packId == pack.id;
+        final isAccessible = !pack.isPremium || isUnlocked;
 
         return _PaletteItem(
-          palette: palette,
+          pack: pack,
           isSelected: isSelected,
           isLocked: !isAccessible,
           onTap: () {
             if (isAccessible) {
-              onPaletteTap(palette);
+              onPaletteTap(pack);
             } else {
               ScaffoldMessenger.of(context)
                 ..clearSnackBars()
@@ -533,13 +548,13 @@ class _PaletteGrid extends ConsumerWidget {
 
 class _PaletteItem extends StatelessWidget {
   const _PaletteItem({
-    required this.palette,
+    required this.pack,
     required this.isSelected,
     required this.isLocked,
     required this.onTap,
   });
 
-  final ThemePalette palette;
+  final PalettePack pack;
   final bool isSelected;
   final bool isLocked;
   final VoidCallback onTap;
@@ -548,7 +563,7 @@ class _PaletteItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = L.of(context);
     final theme = Theme.of(context);
-    final name = _paletteName(l, palette.nameKey);
+    final name = _paletteName(l, pack.nameKey);
 
     return GestureDetector(
       onTap: onTap,
@@ -562,7 +577,7 @@ class _PaletteItem extends StatelessWidget {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: palette.seedColor,
+                  color: pack.previewColor,
                   shape: BoxShape.circle,
                   border: isSelected
                       ? Border.all(
@@ -573,7 +588,7 @@ class _PaletteItem extends StatelessWidget {
                   boxShadow: isSelected
                       ? [
                           BoxShadow(
-                            color: palette.seedColor.withValues(alpha: 0.4),
+                            color: pack.previewColor.withValues(alpha: 0.4),
                             blurRadius: 8,
                           ),
                         ]
@@ -598,7 +613,7 @@ class _PaletteItem extends StatelessWidget {
                 Icon(
                   Icons.check,
                   size: 20,
-                  color: _contrastColor(palette.seedColor),
+                  color: _contrastColor(pack.previewColor),
                 ),
             ],
           ),
@@ -1033,13 +1048,11 @@ class _ColorCircle extends StatelessWidget {
 
 class _PreviewCard extends StatelessWidget {
   const _PreviewCard({
-    required this.seedColor,
-    required this.customTextColor,
+    required this.choeaeColor,
     required this.brightness,
   });
 
-  final Color seedColor;
-  final Color? customTextColor;
+  final ChoeaeColorConfig choeaeColor;
   final Brightness brightness;
 
   @override
@@ -1047,18 +1060,11 @@ class _PreviewCard extends StatelessWidget {
     final l = L.of(context);
     final parentTheme = Theme.of(context);
 
-    // 프리뷰용 ColorScheme 생성.
-    var previewScheme = ColorScheme.fromSeed(
-      seedColor: seedColor,
-      brightness: brightness,
-    );
-    if (customTextColor != null) {
-      previewScheme = previewScheme.copyWith(
-        onSurface: customTextColor,
-        onSurfaceVariant: customTextColor!.withValues(alpha: 0.7),
-        onPrimary: customTextColor,
-      );
-    }
+    // 프리뷰용 ColorScheme 생성 — ChoeaeColorConfig.buildColorScheme 사용.
+    final previewScheme = choeaeColor.buildColorScheme(brightness);
+    final customTextColor = choeaeColor is ChoeaeColorCustom
+        ? (choeaeColor as ChoeaeColorCustom).textColorOverride
+        : null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1268,27 +1274,32 @@ class _ThemeUnlockButton extends ConsumerWidget {
 // ─────────────────────────────────────────────────────────────
 
 /// 팔레트 nameKey → l10n 문자열 변환.
+///
+/// 새 PaletteRegistry nameKey들은 Task 13 (l10n 키 추가)에서 arb 등록 예정.
+/// 등록 전까지는 fallback 표시명을 반환한다.
 String _paletteName(L l, String nameKey) {
-  switch (nameKey) {
-    case 'paletteCherryBlossom':
-      return l.paletteCherryBlossom;
-    case 'paletteOcean':
-      return l.paletteOcean;
-    case 'paletteForest':
-      return l.paletteForest;
-    case 'paletteSunset':
-      return l.paletteSunset;
-    case 'paletteStarryNight':
-      return l.paletteStarryNight;
-    case 'paletteDawn':
-      return l.paletteDawn;
-    case 'paletteDusk':
-      return l.paletteDusk;
-    case 'paletteJewel':
-      return l.paletteJewel;
-    default:
-      return nameKey;
-  }
+  return switch (nameKey) {
+    // ── 기존 l10n 키 (레거시 호환) ──
+    'paletteCherryBlossom' => l.paletteCherryBlossom,
+    'paletteOcean' => l.paletteOcean,
+    'paletteForest' => l.paletteForest,
+    'paletteSunset' => l.paletteSunset,
+    'paletteStarryNight' => l.paletteStarryNight,
+    'paletteDawn' => l.paletteDawn,
+    'paletteDusk' => l.paletteDusk,
+    'paletteJewel' => l.paletteJewel,
+    // ── 새 PaletteRegistry nameKey → fallback 표시명 ──
+    'paletteMidnight' => 'Midnight',
+    'palettePurpleDream' => 'Purple Dream',
+    'paletteOceanBlue' => 'Ocean Blue',
+    'paletteRoseGold' => 'Rose Gold',
+    'paletteConcertEncore' => 'Concert Encore',
+    'paletteGoldenHour' => 'Golden Hour',
+    'paletteNeonNight' => 'Neon Night',
+    'paletteMintBreeze' => 'Mint Breeze',
+    'paletteSunsetCafe' => 'Sunset Cafe',
+    _ => nameKey,
+  };
 }
 
 /// 슬라이더 테마 — 투명 트랙 + 컬러 Thumb.
