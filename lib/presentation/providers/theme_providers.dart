@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:fangeul/presentation/theme/theme_palettes.dart';
+
 part 'theme_providers.g.dart';
 
 /// SharedPreferences 인스턴스 -- main.dart에서 override 필수.
@@ -63,5 +65,70 @@ class LocaleNotifier extends _$LocaleNotifier {
     } else {
       await prefs.setString('user_locale', locale.languageCode);
     }
+  }
+}
+
+/// 테마 seed color + 커스텀 글자색 선택 상태.
+///
+/// null이면 기본 틸 테마(수동 튜닝), non-null이면 fromSeed() 동적 생성.
+/// 자유 피커 IAP 구매자는 customTextColor도 설정 가능 (프리미엄 차별화).
+@Riverpod(keepAlive: true)
+class ThemeColorNotifier extends _$ThemeColorNotifier {
+  static const _seedKey = 'theme_seed_color';
+  static const _textKey = 'theme_custom_text_color';
+
+  @override
+  Color? build() {
+    final prefs = ref.read(sharedPreferencesProvider);
+    final hex = prefs.getString(_seedKey);
+    if (hex == null) return null;
+    return Color(int.parse(hex, radix: 16));
+  }
+
+  /// 커스텀 글자색 (자유 피커 IAP 전용). null이면 자동 대비.
+  Color? get customTextColor {
+    final prefs = ref.read(sharedPreferencesProvider);
+    final hex = prefs.getString(_textKey);
+    if (hex == null) return null;
+    return Color(int.parse(hex, radix: 16));
+  }
+
+  /// seed color 설정. null이면 기본 틸 테마로 복원.
+  Future<void> setSeedColor(Color? color) async {
+    state = color;
+    final prefs = ref.read(sharedPreferencesProvider);
+    if (color == null) {
+      await prefs.remove(_seedKey);
+      await prefs.remove(_textKey);
+    } else {
+      await prefs.setString(
+        _seedKey,
+        color.value.toRadixString(16).padLeft(8, '0'),
+      );
+    }
+  }
+
+  /// 커스텀 글자색 설정 (자유 피커 IAP 전용). null이면 자동 대비로 복원.
+  Future<void> setCustomTextColor(Color? color) async {
+    final prefs = ref.read(sharedPreferencesProvider);
+    if (color == null) {
+      await prefs.remove(_textKey);
+    } else {
+      await prefs.setString(
+        _textKey,
+        color.value.toRadixString(16).padLeft(8, '0'),
+      );
+    }
+    ref.invalidateSelf();
+  }
+
+  /// 추천 팔레트 적용 (글자색 자동 대비).
+  Future<void> applyPalette(ThemePalette palette) async {
+    await setSeedColor(palette.seedColor);
+  }
+
+  /// 기본 테마로 복원.
+  Future<void> resetToDefault() async {
+    await setSeedColor(null);
   }
 }

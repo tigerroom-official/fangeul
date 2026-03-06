@@ -67,5 +67,27 @@ final localeNotifierProvider =
 );
 
 typedef _$LocaleNotifier = Notifier<Locale?>;
+String _$themeColorNotifierHash() =>
+    r'2f7fd08f633ce2d02bf6a3d91cda0ca7421308cb';
+
+/// 테마 seed color + 커스텀 글자색 선택 상태.
+///
+/// null이면 기본 틸 테마(수동 튜닝), non-null이면 fromSeed() 동적 생성.
+/// 자유 피커 IAP 구매자는 customTextColor도 설정 가능 (프리미엄 차별화).
+///
+/// Copied from [ThemeColorNotifier].
+@ProviderFor(ThemeColorNotifier)
+final themeColorNotifierProvider =
+    NotifierProvider<ThemeColorNotifier, Color?>.internal(
+  ThemeColorNotifier.new,
+  name: r'themeColorNotifierProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$themeColorNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ThemeColorNotifier = Notifier<Color?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

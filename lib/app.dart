@@ -40,6 +40,10 @@ class FangeulApp extends ConsumerWidget {
     final router = ref.watch(appRouterProvider);
     final themeMode = ref.watch(themeModeNotifierProvider);
     final userLocale = ref.watch(localeNotifierProvider);
+    final seedColor = ref.watch(themeColorNotifierProvider);
+    final textColor = seedColor != null
+        ? ref.read(themeColorNotifierProvider.notifier).customTextColor
+        : null;
 
     final isDark = themeMode == ThemeMode.dark ||
         (themeMode == ThemeMode.system &&
@@ -49,9 +53,17 @@ class FangeulApp extends ConsumerWidget {
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
-        systemNavigationBarColor: isDark
-            ? FangeulColors.darkBackground
-            : FangeulColors.lightBackground,
+        systemNavigationBarColor: seedColor != null
+            ? (isDark
+                ? ColorScheme.fromSeed(
+                        seedColor: seedColor, brightness: Brightness.dark)
+                    .surface
+                : ColorScheme.fromSeed(
+                        seedColor: seedColor, brightness: Brightness.light)
+                    .surface)
+            : (isDark
+                ? FangeulColors.darkBackground
+                : FangeulColors.lightBackground),
         systemNavigationBarDividerColor: Colors.transparent,
         systemNavigationBarIconBrightness:
             isDark ? Brightness.light : Brightness.dark,
@@ -62,8 +74,12 @@ class FangeulApp extends ConsumerWidget {
         localizationsDelegates: L.localizationsDelegates,
         supportedLocales: L.supportedLocales,
         locale: userLocale, // null → 시스템 언어 자동감지
-        theme: FangeulTheme.light(),
-        darkTheme: FangeulTheme.dark(),
+        theme: seedColor != null
+            ? FangeulTheme.dynamicLight(seedColor, customTextColor: textColor)
+            : FangeulTheme.light(),
+        darkTheme: seedColor != null
+            ? FangeulTheme.dynamicDark(seedColor, customTextColor: textColor)
+            : FangeulTheme.dark(),
         themeMode: themeMode,
         routerConfig: router,
         scrollBehavior: const _NoStretchScrollBehavior(),

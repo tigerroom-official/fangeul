@@ -133,4 +133,52 @@ abstract final class FangeulTheme {
       ),
     );
   }
+
+  /// seed color 기반 동적 다크 테마.
+  ///
+  /// ColorScheme.fromSeed()가 배경/surface/on* 색상 전부 자동 생성.
+  /// [customTextColor] 지정 시 onSurface/onPrimary를 해당 색으로 override.
+  /// 자유 피커 IAP 구매자 전용 프리미엄 차별화.
+  static ThemeData dynamicDark(Color seedColor, {Color? customTextColor}) {
+    var colorScheme = ColorScheme.fromSeed(
+      seedColor: seedColor,
+      brightness: Brightness.dark,
+    );
+    if (customTextColor != null) {
+      colorScheme = colorScheme.copyWith(
+        onSurface: customTextColor,
+        onSurfaceVariant: customTextColor.withValues(alpha: 0.7),
+        onPrimary: customTextColor,
+      );
+    }
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      colorScheme: colorScheme,
+      scaffoldBackgroundColor: colorScheme.surface,
+      textTheme: FangeulTextStyles.textTheme,
+    );
+  }
+
+  /// seed color 기반 동적 라이트 테마.
+  static ThemeData dynamicLight(Color seedColor, {Color? customTextColor}) {
+    var colorScheme = ColorScheme.fromSeed(
+      seedColor: seedColor,
+      brightness: Brightness.light,
+    );
+    if (customTextColor != null) {
+      colorScheme = colorScheme.copyWith(
+        onSurface: customTextColor,
+        onSurfaceVariant: customTextColor.withValues(alpha: 0.7),
+        onPrimary: customTextColor,
+      );
+    }
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.light,
+      colorScheme: colorScheme,
+      scaffoldBackgroundColor: colorScheme.surface,
+      textTheme: FangeulTextStyles.textTheme,
+    );
+  }
 }
