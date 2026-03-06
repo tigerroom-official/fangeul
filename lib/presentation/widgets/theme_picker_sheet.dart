@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:fangeul/core/entities/monetization_state.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
+import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
 import 'package:fangeul/presentation/theme/fangeul_colors.dart';
 import 'package:fangeul/presentation/theme/theme_palettes.dart';
@@ -53,9 +55,17 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
     _lightness = hsl.lightness;
   }
 
+  /// 커스텀 피커 IAP 해금 여부.
+  bool _hasPickerAccess(MonetizationState? monState) {
+    return monState?.hasThemePicker ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final seedColor = ref.watch(themeColorNotifierProvider);
+    final monState =
+        ref.watch(monetizationNotifierProvider).valueOrNull;
+    final hasPickerIap = _hasPickerAccess(monState);
     _initSlidersFromSeedColor(seedColor);
 
     return DraggableScrollableSheet(
@@ -107,13 +117,26 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
               const SizedBox(height: 16),
               _CustomPickerToggle(
                 isExpanded: _customPickerExpanded,
+                isLocked: !hasPickerIap,
                 onToggle: () {
+                  if (!hasPickerIap) {
+                    ScaffoldMessenger.of(context)
+                      ..clearSnackBars()
+                      ..showSnackBar(
+                        SnackBar(
+                          content:
+                              Text(L.of(context).themePickerPickerLocked),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    return;
+                  }
                   setState(() {
                     _customPickerExpanded = !_customPickerExpanded;
                   });
                 },
               ),
-              if (_customPickerExpanded) ...[
+              if (_customPickerExpanded && hasPickerIap) ...[
                 const SizedBox(height: 16),
                 _HueSlider(
                   value: _hue,
@@ -294,7 +317,7 @@ class _DefaultThemeChip extends StatelessWidget {
   }
 }
 
-class _PaletteGrid extends StatelessWidget {
+class _PaletteGrid extends ConsumerWidget {
   const _PaletteGrid({
     required this.currentSeedColor,
     required this.onPaletteTap,
@@ -304,7 +327,9 @@ class _PaletteGrid extends StatelessWidget {
   final void Function(ThemePalette) onPaletteTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isUnlocked = ref.watch(isRewardedUnlockActiveProvider);
+
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -318,15 +343,25 @@ class _PaletteGrid extends StatelessWidget {
       itemBuilder: (context, index) {
         final palette = ThemePalettes.all[index];
         final isSelected = currentSeedColor == palette.seedColor;
+        final isAccessible = palette.isFree || isUnlocked;
 
         return _PaletteItem(
           palette: palette,
           isSelected: isSelected,
+          isLocked: !isAccessible,
           onTap: () {
-            if (palette.isFree) {
+            if (isAccessible) {
               onPaletteTap(palette);
+            } else {
+              ScaffoldMessenger.of(context)
+                ..clearSnackBars()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(L.of(context).themePickerLocked),
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
             }
-            // Locked palettes: no-op for now (Task 12 will wire monetization)
           },
         );
       },
@@ -338,11 +373,13 @@ class _PaletteItem extends StatelessWidget {
   const _PaletteItem({
     required this.palette,
     required this.isSelected,
+    required this.isLocked,
     required this.onTap,
   });
 
   final ThemePalette palette;
   final bool isSelected;
+  final bool isLocked;
   final VoidCallback onTap;
 
   @override
@@ -381,7 +418,7 @@ class _PaletteItem extends StatelessWidget {
                       : null,
                 ),
               ),
-              if (!palette.isFree)
+              if (isLocked)
                 Container(
                   width: 44,
                   height: 44,
@@ -395,7 +432,7 @@ class _PaletteItem extends StatelessWidget {
                     color: Colors.white70,
                   ),
                 ),
-              if (isSelected && palette.isFree)
+              if (isSelected && !isLocked)
                 Icon(
                   Icons.check,
                   size: 20,
@@ -407,7 +444,7 @@ class _PaletteItem extends StatelessWidget {
           Text(
             name,
             style: theme.textTheme.labelSmall?.copyWith(
-              color: !palette.isFree
+              color: isLocked
                   ? theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6)
                   : theme.colorScheme.onSurface,
             ),
@@ -429,10 +466,12 @@ class _PaletteItem extends StatelessWidget {
 class _CustomPickerToggle extends StatelessWidget {
   const _CustomPickerToggle({
     required this.isExpanded,
+    required this.isLocked,
     required this.onToggle,
   });
 
   final bool isExpanded;
+  final bool isLocked;
   final VoidCallback onToggle;
 
   @override
@@ -461,15 +500,22 @@ class _CustomPickerToggle extends StatelessWidget {
               style: theme.textTheme.labelLarge,
             ),
             const Spacer(),
-            AnimatedRotation(
-              turns: isExpanded ? 0.5 : 0.0,
-              duration: const Duration(milliseconds: 200),
-              child: Icon(
-                Icons.expand_more,
-                size: 22,
+            if (isLocked)
+              Icon(
+                Icons.lock_rounded,
+                size: 16,
                 color: theme.colorScheme.onSurfaceVariant,
+              )
+            else
+              AnimatedRotation(
+                turns: isExpanded ? 0.5 : 0.0,
+                duration: const Duration(milliseconds: 200),
+                child: Icon(
+                  Icons.expand_more,
+                  size: 22,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
-            ),
           ],
         ),
       ),

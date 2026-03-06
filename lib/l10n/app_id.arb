@@ -176,5 +176,31 @@
   "reviewLabel": "Beri rating",
   "reviewSubtitle": "Ulasan kamu membantu fans lain menemukan Fangeul",
   "contactLabel": "Hubungi kami",
-  "contactSubtitle": "Laporkan bug atau sarankan fitur"
+  "contactSubtitle": "Laporkan bug atau sarankan fitur",
+
+  "settingsThemeColor": "Warna Tema",
+  "settingsThemeColorDesc": "Ubah warna aplikasi sesuai keinginanmu",
+
+  "themePickerTitle": "Warna Tema",
+  "themePickerSubtitle": "Buat aplikasi jadi milikmu dengan warna pilihanmu",
+  "paletteDefault": "Default (Teal)",
+  "paletteCherryBlossom": "Bunga Sakura",
+  "paletteOcean": "Lautan",
+  "paletteForest": "Hutan",
+  "paletteSunset": "Senja",
+  "paletteStarryNight": "Malam Berbintang",
+  "paletteDawn": "Fajar",
+  "paletteDusk": "Senjamuri",
+  "paletteJewel": "Permata",
+  "themePickerCustom": "Pilih warnamu sendiri",
+  "themePickerThemeColor": "Warna tema",
+  "themePickerHue": "Corak",
+  "themePickerSaturation": "Saturasi",
+  "themePickerLightness": "Kecerahan",
+  "themePickerTextColor": "Warna teks",
+  "themePickerTextColorDesc": "Pilih warna teks (khusus pemilih bebas)",
+  "themePickerTextColorAuto": "Kontras otomatis",
+  "themePickerPreview": "Pratinjau",
+  "themePickerLocked": "Buka dengan Fan Pass",
+  "themePickerPickerLocked": "Buka selamanya seharga ₩990"
 }

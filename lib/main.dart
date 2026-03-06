@@ -10,18 +10,15 @@ import 'package:fangeul/presentation/providers/analytics_providers.dart';
 import 'package:fangeul/presentation/providers/remote_config_providers.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
 import 'package:fangeul/presentation/router/app_router.dart';
+import 'package:fangeul/presentation/providers/ad_service_provider.dart';
 import 'package:fangeul/services/analytics_events.dart';
 import 'package:fangeul/services/firebase_analytics_service.dart';
-import 'package:fangeul/services/ad_service.dart';
 import 'package:fangeul/services/firebase_remote_config_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
-
-  // AdMob SDK 초기화 (fire-and-forget, 크리티컬 패스 미포함)
-  AdService().initialize();
 
   // Crashlytics: Flutter 프레임워크 에러 캡처
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
@@ -60,6 +57,9 @@ void main() async {
   );
 
   container.read(analyticsServiceProvider).logEvent(AnalyticsEvents.appOpen);
+
+  // AdMob SDK 초기화 (fire-and-forget, provider 인스턴스 사용)
+  container.read(adServiceProvider).initialize();
 
   runApp(
     UncontrolledProviderScope(

@@ -82,7 +82,7 @@ class ThemeColorNotifier extends _$ThemeColorNotifier {
     final prefs = ref.read(sharedPreferencesProvider);
     final hex = prefs.getString(_seedKey);
     if (hex == null) return null;
-    return Color(int.parse(hex, radix: 16));
+    return _parseHexColor(hex);
   }
 
   /// 커스텀 글자색 (자유 피커 IAP 전용). null이면 자동 대비.
@@ -90,7 +90,14 @@ class ThemeColorNotifier extends _$ThemeColorNotifier {
     final prefs = ref.read(sharedPreferencesProvider);
     final hex = prefs.getString(_textKey);
     if (hex == null) return null;
-    return Color(int.parse(hex, radix: 16));
+    return _parseHexColor(hex);
+  }
+
+  /// hex 문자열을 Color로 파싱. 형식 오류 시 null 반환 (방어적 코딩).
+  static Color? _parseHexColor(String hex) {
+    final value = int.tryParse(hex, radix: 16);
+    if (value == null) return null;
+    return Color(value);
   }
 
   /// seed color 설정. null이면 기본 틸 테마로 복원.

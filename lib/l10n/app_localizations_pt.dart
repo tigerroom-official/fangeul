@@ -454,74 +454,76 @@ class LPt extends L {
   String get contactSubtitle => 'Reportar bugs ou sugerir recursos';
 
   @override
-  String get settingsThemeColor => '테마 색상';
+  String get settingsThemeColor => 'Cor do tema';
 
   @override
-  String get settingsThemeColorDesc => '앱 전체 색상을 변경하세요';
+  String get settingsThemeColorDesc => 'Personalize a cor do app';
 
   @override
-  String get themePickerTitle => '테마 색상';
+  String get themePickerTitle => 'Cor do tema';
 
   @override
-  String get themePickerSubtitle => '나만의 색상으로 앱을 꾸며보세요';
+  String get themePickerSubtitle =>
+      'Deixe o app com a sua cara escolhendo uma cor';
 
   @override
-  String get paletteDefault => '기본 (틸)';
+  String get paletteDefault => 'Padrão (Teal)';
 
   @override
-  String get paletteCherryBlossom => '벚꽃';
+  String get paletteCherryBlossom => 'Flor de cerejeira';
 
   @override
-  String get paletteOcean => '바다';
+  String get paletteOcean => 'Oceano';
 
   @override
-  String get paletteForest => '숲';
+  String get paletteForest => 'Floresta';
 
   @override
-  String get paletteSunset => '노을';
+  String get paletteSunset => 'Pôr do sol';
 
   @override
-  String get paletteStarryNight => '별밤';
+  String get paletteStarryNight => 'Noite estrelada';
 
   @override
-  String get paletteDawn => '새벽';
+  String get paletteDawn => 'Amanhecer';
 
   @override
-  String get paletteDusk => '석양';
+  String get paletteDusk => 'Crepúsculo';
 
   @override
-  String get paletteJewel => '보석';
+  String get paletteJewel => 'Joia';
 
   @override
-  String get themePickerCustom => '직접 고르기';
+  String get themePickerCustom => 'Escolha sua própria cor';
 
   @override
-  String get themePickerThemeColor => '테마 색상';
+  String get themePickerThemeColor => 'Cor do tema';
 
   @override
-  String get themePickerHue => '색조';
+  String get themePickerHue => 'Matiz';
 
   @override
-  String get themePickerSaturation => '채도';
+  String get themePickerSaturation => 'Saturação';
 
   @override
-  String get themePickerLightness => '밝기';
+  String get themePickerLightness => 'Luminosidade';
 
   @override
-  String get themePickerTextColor => '글자색';
+  String get themePickerTextColor => 'Cor do texto';
 
   @override
-  String get themePickerTextColorDesc => '글자색을 직접 선택하세요 (자유 피커 전용)';
+  String get themePickerTextColorDesc =>
+      'Escolha a cor do texto (apenas com seletor livre)';
 
   @override
-  String get themePickerTextColorAuto => '자동 대비';
+  String get themePickerTextColorAuto => 'Contraste auto';
 
   @override
-  String get themePickerPreview => '미리보기';
+  String get themePickerPreview => 'Pré-visualização';
 
   @override
-  String get themePickerLocked => '팬 패스로 해금';
+  String get themePickerLocked => 'Desbloquear com Fan Pass';
 
   @override
-  String get themePickerPickerLocked => '₩990으로 영구 해금';
+  String get themePickerPickerLocked => 'Desbloquear para sempre por ₩990';
 }

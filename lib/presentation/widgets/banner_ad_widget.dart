@@ -2,9 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import 'package:fangeul/core/entities/monetization_state.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/presentation/providers/session_state_provider.dart';
 import 'package:fangeul/services/ad_ids.dart';
+
+/// installDate 기반 설치 후 경과 일수. 파싱 실패 시 0 (방어적 코딩).
+int _daysSinceInstall(MonetizationState? state) {
+  final dateStr = state?.installDate;
+  if (dateStr == null) return 0;
+  try {
+    return DateTime.now().difference(DateTime.parse(dateStr)).inDays;
+  } on FormatException {
+    return 0;
+  }
+}
 
 /// 조건부 배너 광고 위젯.
 ///
@@ -31,9 +43,31 @@ class BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
   @visibleForTesting
   bool isLoaded = false;
 
+  bool _adLoadAttempted = false;
+
   @override
   void initState() {
     super.initState();
+    // 광고 로딩은 첫 build 후 조건 확인 후 실행 (불필요한 네트워크 요청 방지).
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _tryLoadAdIfNeeded();
+    });
+  }
+
+  /// 조건 충족 시 배너 광고를 로드한다. Day 7 미만/해금/구매 시 로드 생략.
+  void _tryLoadAdIfNeeded() {
+    if (_adLoadAttempted) return;
+    _adLoadAttempted = true;
+
+    final monState = ref.read(monetizationNotifierProvider).valueOrNull;
+    final daysSince = _daysSinceInstall(monState);
+    final isUnlocked = ref.read(isRewardedUnlockActiveProvider);
+    final sessionHidden = ref.read(sessionBannerHiddenProvider);
+    final hasPurchase = monState?.purchasedPackIds.isNotEmpty ?? false;
+
+    if (daysSince < 7 || isUnlocked || sessionHidden || hasPurchase) return;
+
     _loadAd();
   }
 
@@ -69,11 +103,7 @@ class BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
     final hasPurchase = monState?.purchasedPackIds.isNotEmpty ?? false;
 
     // Day 7 미만이면 배너 숨김 (허니문 중 배너 미노출)
-    final daysSince = monState?.installDate != null
-        ? DateTime.now()
-            .difference(DateTime.parse(monState!.installDate!))
-            .inDays
-        : 0;
+    final daysSince = _daysSinceInstall(monState);
     if (daysSince < 7) {
       return const SizedBox.shrink();
     }

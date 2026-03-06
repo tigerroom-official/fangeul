@@ -176,5 +176,31 @@
   "reviewLabel": "Đánh giá ứng dụng",
   "reviewSubtitle": "Đánh giá giúp fan khác tìm thấy Fangeul",
   "contactLabel": "Liên hệ",
-  "contactSubtitle": "Báo lỗi hoặc đề xuất tính năng"
+  "contactSubtitle": "Báo lỗi hoặc đề xuất tính năng",
+
+  "settingsThemeColor": "Màu giao diện",
+  "settingsThemeColorDesc": "Tùy chỉnh màu sắc ứng dụng",
+
+  "themePickerTitle": "Màu giao diện",
+  "themePickerSubtitle": "Biến ứng dụng thành của riêng bạn với màu yêu thích",
+  "paletteDefault": "Mặc định (Teal)",
+  "paletteCherryBlossom": "Hoa anh đào",
+  "paletteOcean": "Đại dương",
+  "paletteForest": "Rừng xanh",
+  "paletteSunset": "Hoàng hôn",
+  "paletteStarryNight": "Đêm sao",
+  "paletteDawn": "Bình minh",
+  "paletteDusk": "Chạng vạng",
+  "paletteJewel": "Ngọc quý",
+  "themePickerCustom": "Tự chọn màu",
+  "themePickerThemeColor": "Màu giao diện",
+  "themePickerHue": "Sắc độ",
+  "themePickerSaturation": "Độ bão hòa",
+  "themePickerLightness": "Độ sáng",
+  "themePickerTextColor": "Màu chữ",
+  "themePickerTextColorDesc": "Chọn màu chữ (chỉ dành cho bộ chọn tự do)",
+  "themePickerTextColorAuto": "Tương phản tự động",
+  "themePickerPreview": "Xem trước",
+  "themePickerLocked": "Mở khóa bằng Fan Pass",
+  "themePickerPickerLocked": "Mở khóa vĩnh viễn ₩990"
 }

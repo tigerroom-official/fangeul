@@ -176,5 +176,31 @@
   "reviewLabel": "ให้คะแนนแอป",
   "reviewSubtitle": "รีวิวของคุณช่วยให้แฟนคนอื่นค้นพบ Fangeul",
   "contactLabel": "ติดต่อเรา",
-  "contactSubtitle": "แจ้งบั๊กหรือแนะนำฟีเจอร์"
+  "contactSubtitle": "แจ้งบั๊กหรือแนะนำฟีเจอร์",
+
+  "settingsThemeColor": "สีธีม",
+  "settingsThemeColorDesc": "เปลี่ยนสีแอปตามใจชอบ",
+
+  "themePickerTitle": "สีธีม",
+  "themePickerSubtitle": "ตกแต่งแอปด้วยสีที่คุณชอบ",
+  "paletteDefault": "ค่าเริ่มต้น (Teal)",
+  "paletteCherryBlossom": "ซากุระ",
+  "paletteOcean": "มหาสมุทร",
+  "paletteForest": "ป่า",
+  "paletteSunset": "พระอาทิตย์ตก",
+  "paletteStarryNight": "คืนดาว",
+  "paletteDawn": "รุ่งอรุณ",
+  "paletteDusk": "สนธยา",
+  "paletteJewel": "อัญมณี",
+  "themePickerCustom": "เลือกสีเอง",
+  "themePickerThemeColor": "สีธีม",
+  "themePickerHue": "เฉดสี",
+  "themePickerSaturation": "ความอิ่มตัว",
+  "themePickerLightness": "ความสว่าง",
+  "themePickerTextColor": "สีตัวอักษร",
+  "themePickerTextColorDesc": "เลือกสีตัวอักษร (เฉพาะตัวเลือกอิสระ)",
+  "themePickerTextColorAuto": "คอนทราสต์อัตโนมัติ",
+  "themePickerPreview": "ตัวอย่าง",
+  "themePickerLocked": "ปลดล็อกด้วย Fan Pass",
+  "themePickerPickerLocked": "ปลดล็อกตลอดกาล ₩990"
 }

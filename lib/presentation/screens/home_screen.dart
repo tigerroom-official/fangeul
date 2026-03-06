@@ -27,15 +27,24 @@ String _todayString() {
 }
 
 /// 홈 화면 — 데일리 카드 + 스트릭.
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   /// Creates the [HomeScreen] widget.
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // 보상형 광고 프리로드 (1회, 결과 무시)
-    ref.read(adServiceProvider).preloadRewarded();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
 
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // 보상형 광고 프리로드 (1회, initState에서 실행)
+    ref.read(adServiceProvider).preloadRewarded();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final today = _todayString();
     final dailyCard = ref.watch(dailyCardProvider(today));
     final progress = ref.watch(userProgressProvider);

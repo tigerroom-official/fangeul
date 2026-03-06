@@ -452,74 +452,76 @@ class LVi extends L {
   String get contactSubtitle => 'Báo lỗi hoặc đề xuất tính năng';
 
   @override
-  String get settingsThemeColor => '테마 색상';
+  String get settingsThemeColor => 'Màu giao diện';
 
   @override
-  String get settingsThemeColorDesc => '앱 전체 색상을 변경하세요';
+  String get settingsThemeColorDesc => 'Tùy chỉnh màu sắc ứng dụng';
 
   @override
-  String get themePickerTitle => '테마 색상';
+  String get themePickerTitle => 'Màu giao diện';
 
   @override
-  String get themePickerSubtitle => '나만의 색상으로 앱을 꾸며보세요';
+  String get themePickerSubtitle =>
+      'Biến ứng dụng thành của riêng bạn với màu yêu thích';
 
   @override
-  String get paletteDefault => '기본 (틸)';
+  String get paletteDefault => 'Mặc định (Teal)';
 
   @override
-  String get paletteCherryBlossom => '벚꽃';
+  String get paletteCherryBlossom => 'Hoa anh đào';
 
   @override
-  String get paletteOcean => '바다';
+  String get paletteOcean => 'Đại dương';
 
   @override
-  String get paletteForest => '숲';
+  String get paletteForest => 'Rừng xanh';
 
   @override
-  String get paletteSunset => '노을';
+  String get paletteSunset => 'Hoàng hôn';
 
   @override
-  String get paletteStarryNight => '별밤';
+  String get paletteStarryNight => 'Đêm sao';
 
   @override
-  String get paletteDawn => '새벽';
+  String get paletteDawn => 'Bình minh';
 
   @override
-  String get paletteDusk => '석양';
+  String get paletteDusk => 'Chạng vạng';
 
   @override
-  String get paletteJewel => '보석';
+  String get paletteJewel => 'Ngọc quý';
 
   @override
-  String get themePickerCustom => '직접 고르기';
+  String get themePickerCustom => 'Tự chọn màu';
 
   @override
-  String get themePickerThemeColor => '테마 색상';
+  String get themePickerThemeColor => 'Màu giao diện';
 
   @override
-  String get themePickerHue => '색조';
+  String get themePickerHue => 'Sắc độ';
 
   @override
-  String get themePickerSaturation => '채도';
+  String get themePickerSaturation => 'Độ bão hòa';
 
   @override
-  String get themePickerLightness => '밝기';
+  String get themePickerLightness => 'Độ sáng';
 
   @override
-  String get themePickerTextColor => '글자색';
+  String get themePickerTextColor => 'Màu chữ';
 
   @override
-  String get themePickerTextColorDesc => '글자색을 직접 선택하세요 (자유 피커 전용)';
+  String get themePickerTextColorDesc =>
+      'Chọn màu chữ (chỉ dành cho bộ chọn tự do)';
 
   @override
-  String get themePickerTextColorAuto => '자동 대비';
+  String get themePickerTextColorAuto => 'Tương phản tự động';
 
   @override
-  String get themePickerPreview => '미리보기';
+  String get themePickerPreview => 'Xem trước';
 
   @override
-  String get themePickerLocked => '팬 패스로 해금';
+  String get themePickerLocked => 'Mở khóa bằng Fan Pass';
 
   @override
-  String get themePickerPickerLocked => '₩990으로 영구 해금';
+  String get themePickerPickerLocked => 'Mở khóa vĩnh viễn ₩990';
 }
