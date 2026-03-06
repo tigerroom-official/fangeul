@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
+import 'package:fangeul/presentation/providers/choeae_color_provider.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
 import 'package:fangeul/presentation/router/app_router.dart';
-import 'package:fangeul/presentation/theme/fangeul_colors.dart';
 import 'package:fangeul/presentation/theme/fangeul_theme.dart';
 
 /// Android 12+의 stretch 오버스크롤을 글로우 효과로 대체한다.
@@ -40,10 +40,7 @@ class FangeulApp extends ConsumerWidget {
     final router = ref.watch(appRouterProvider);
     final themeMode = ref.watch(themeModeNotifierProvider);
     final userLocale = ref.watch(localeNotifierProvider);
-    final seedColor = ref.watch(themeColorNotifierProvider);
-    final textColor = seedColor != null
-        ? ref.read(themeColorNotifierProvider.notifier).customTextColor
-        : null;
+    final choeaeColor = ref.watch(choeaeColorNotifierProvider);
 
     final isDark = themeMode == ThemeMode.dark ||
         (themeMode == ThemeMode.system &&
@@ -53,17 +50,9 @@ class FangeulApp extends ConsumerWidget {
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
-        systemNavigationBarColor: seedColor != null
-            ? (isDark
-                ? ColorScheme.fromSeed(
-                        seedColor: seedColor, brightness: Brightness.dark)
-                    .surface
-                : ColorScheme.fromSeed(
-                        seedColor: seedColor, brightness: Brightness.light)
-                    .surface)
-            : (isDark
-                ? FangeulColors.darkBackground
-                : FangeulColors.lightBackground),
+        systemNavigationBarColor: choeaeColor
+            .buildColorScheme(isDark ? Brightness.dark : Brightness.light)
+            .surface,
         systemNavigationBarDividerColor: Colors.transparent,
         systemNavigationBarIconBrightness:
             isDark ? Brightness.light : Brightness.dark,
@@ -74,12 +63,14 @@ class FangeulApp extends ConsumerWidget {
         localizationsDelegates: L.localizationsDelegates,
         supportedLocales: L.supportedLocales,
         locale: userLocale, // null → 시스템 언어 자동감지
-        theme: seedColor != null
-            ? FangeulTheme.dynamicLight(seedColor, customTextColor: textColor)
-            : FangeulTheme.light(),
-        darkTheme: seedColor != null
-            ? FangeulTheme.dynamicDark(seedColor, customTextColor: textColor)
-            : FangeulTheme.dark(),
+        theme: FangeulTheme.build(
+          brightness: Brightness.light,
+          choeaeColor: choeaeColor,
+        ),
+        darkTheme: FangeulTheme.build(
+          brightness: Brightness.dark,
+          choeaeColor: choeaeColor,
+        ),
         themeMode: themeMode,
         routerConfig: router,
         scrollBehavior: const _NoStretchScrollBehavior(),
