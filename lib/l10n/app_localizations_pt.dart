@@ -545,4 +545,7 @@ class LPt extends L {
 
   @override
   String get themePickerLowContrast => 'Baixo contraste';
+
+  @override
+  String get favoriteLimitReached => 'Limite de favoritos atingido (máx. 5)';
 }

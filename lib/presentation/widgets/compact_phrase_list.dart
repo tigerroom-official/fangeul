@@ -381,10 +381,20 @@ class _PhraseCard extends ConsumerWidget {
                   color: isFavorite ? theme.colorScheme.primary : null,
                 ),
                 tooltip: L.of(context).favoriteTooltip,
-                onPressed: () {
-                  ref
+                onPressed: () async {
+                  final added = await ref
                       .read(favoritePhrasesNotifierProvider.notifier)
                       .toggle(phrase.ko);
+                  if (!added && context.mounted) {
+                    ScaffoldMessenger.of(context)
+                      ..clearSnackBars()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Text(L.of(context).favoriteLimitReached),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                  }
                 },
               ),
               const SizedBox(width: 16),

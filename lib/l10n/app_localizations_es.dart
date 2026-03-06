@@ -546,4 +546,7 @@ class LEs extends L {
 
   @override
   String get themePickerLowContrast => 'Bajo contraste';
+
+  @override
+  String get favoriteLimitReached => 'Límite de favoritos alcanzado (máx. 5)';
 }

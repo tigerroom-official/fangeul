@@ -1090,6 +1090,12 @@ abstract class L {
   /// In ko, this message translates to:
   /// **'낮은 대비'**
   String get themePickerLowContrast;
+
+  /// No description provided for @favoriteLimitReached.
+  ///
+  /// In ko, this message translates to:
+  /// **'즐겨찾기 한도에 도달했어요 (최대 5개)'**
+  String get favoriteLimitReached;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

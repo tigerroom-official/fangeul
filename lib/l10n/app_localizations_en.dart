@@ -542,4 +542,7 @@ class LEn extends L {
 
   @override
   String get themePickerLowContrast => 'Low contrast';
+
+  @override
+  String get favoriteLimitReached => 'Favorite limit reached (max 5)';
 }

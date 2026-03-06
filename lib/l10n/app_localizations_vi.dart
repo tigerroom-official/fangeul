@@ -543,4 +543,7 @@ class LVi extends L {
 
   @override
   String get themePickerLowContrast => 'Độ tương phản thấp';
+
+  @override
+  String get favoriteLimitReached => 'Đã đạt giới hạn yêu thích (tối đa 5)';
 }

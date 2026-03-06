@@ -68,10 +68,20 @@ class CompactPhraseTile extends ConsumerWidget {
             tooltip: L.of(context).favoriteTooltip,
             constraints: const BoxConstraints(maxWidth: 32, maxHeight: 32),
             padding: EdgeInsets.zero,
-            onPressed: () {
-              ref
+            onPressed: () async {
+              final added = await ref
                   .read(favoritePhrasesNotifierProvider.notifier)
                   .toggle(phrase.ko);
+              if (!added && context.mounted) {
+                ScaffoldMessenger.of(context)
+                  ..clearSnackBars()
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Text(L.of(context).favoriteLimitReached),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+              }
             },
           ),
           IconButton(

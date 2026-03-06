@@ -209,5 +209,7 @@
   "themePickerPreviewHint": "Pratinjau saja — beli untuk menerapkan",
   "themePickerApplyLocked": "Beli untuk menerapkan tema ini",
   "themePickerUndo": "Urungkan",
-  "themePickerLowContrast": "Kontras rendah"
+  "themePickerLowContrast": "Kontras rendah",
+
+  "favoriteLimitReached": "Batas favorit tercapai (maks. 5)"
 }

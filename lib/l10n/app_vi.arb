@@ -209,5 +209,7 @@
   "themePickerPreviewHint": "Chỉ xem trước — mua để áp dụng",
   "themePickerApplyLocked": "Mua để áp dụng chủ đề này",
   "themePickerUndo": "Hoàn tác",
-  "themePickerLowContrast": "Độ tương phản thấp"
+  "themePickerLowContrast": "Độ tương phản thấp",
+
+  "favoriteLimitReached": "Đã đạt giới hạn yêu thích (tối đa 5)"
 }

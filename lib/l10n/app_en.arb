@@ -209,5 +209,7 @@
   "themePickerPreviewHint": "Preview only — purchase to apply",
   "themePickerApplyLocked": "Purchase to apply this theme",
   "themePickerUndo": "Undo",
-  "themePickerLowContrast": "Low contrast"
+  "themePickerLowContrast": "Low contrast",
+
+  "favoriteLimitReached": "Favorite limit reached (max 5)"
 }

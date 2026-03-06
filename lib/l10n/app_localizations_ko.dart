@@ -532,4 +532,7 @@ class LKo extends L {
 
   @override
   String get themePickerLowContrast => '낮은 대비';
+
+  @override
+  String get favoriteLimitReached => '즐겨찾기 한도에 도달했어요 (최대 5개)';
 }

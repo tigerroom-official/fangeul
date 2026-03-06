@@ -545,4 +545,7 @@ class LId extends L {
 
   @override
   String get themePickerLowContrast => 'Kontras rendah';
+
+  @override
+  String get favoriteLimitReached => 'Batas favorit tercapai (maks. 5)';
 }

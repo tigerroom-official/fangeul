@@ -538,4 +538,8 @@ class LTh extends L {
 
   @override
   String get themePickerLowContrast => 'คอนทราสต์ต่ำ';
+
+  @override
+  String get favoriteLimitReached =>
+      'ถึงขีดจำกัดรายการโปรดแล้ว (สูงสุด 5 รายการ)';
 }

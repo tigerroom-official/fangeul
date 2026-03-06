@@ -209,5 +209,7 @@
   "themePickerPreviewHint": "ตัวอย่างเท่านั้น — ซื้อเพื่อใช้งาน",
   "themePickerApplyLocked": "ซื้อเพื่อใช้ธีมนี้",
   "themePickerUndo": "เลิกทำ",
-  "themePickerLowContrast": "คอนทราสต์ต่ำ"
+  "themePickerLowContrast": "คอนทราสต์ต่ำ",
+
+  "favoriteLimitReached": "ถึงขีดจำกัดรายการโปรดแล้ว (สูงสุด 5 รายการ)"
 }

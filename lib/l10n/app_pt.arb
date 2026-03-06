@@ -209,5 +209,7 @@
   "themePickerPreviewHint": "Apenas prévia — compre para aplicar",
   "themePickerApplyLocked": "Compre para aplicar este tema",
   "themePickerUndo": "Desfazer",
-  "themePickerLowContrast": "Baixo contraste"
+  "themePickerLowContrast": "Baixo contraste",
+
+  "favoriteLimitReached": "Limite de favoritos atingido (máx. 5)"
 }
