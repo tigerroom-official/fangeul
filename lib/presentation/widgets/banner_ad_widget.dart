@@ -8,7 +8,7 @@ import 'package:fangeul/services/ad_ids.dart';
 
 /// 조건부 배너 광고 위젯.
 ///
-/// 허니문, 보상형 해금, 세션 숨김, Pro 구매 시 자동 숨김.
+/// Day 7 미만, 보상형 해금, 세션 숨김, IAP 구매 시 자동 숨김.
 /// 높이 50dp 고정 (AdMob 배너 표준).
 class BannerAdWidget extends ConsumerStatefulWidget {
   /// 조건부 배너 광고 위젯을 생성한다.
@@ -63,18 +63,23 @@ class BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isHoneymoon = ref.watch(isHoneymoonProvider);
+    final monState = ref.watch(monetizationNotifierProvider).valueOrNull;
     final isUnlocked = ref.watch(isRewardedUnlockActiveProvider);
     final sessionHidden = ref.watch(sessionBannerHiddenProvider);
-    final hasPurchase = ref
-            .watch(monetizationNotifierProvider)
-            .value
-            ?.purchasedPackIds
-            .isNotEmpty ??
-        false;
+    final hasPurchase = monState?.purchasedPackIds.isNotEmpty ?? false;
 
-    // 조건 하나라도 충족 시 배너 숨김
-    if (isHoneymoon || isUnlocked || sessionHidden || hasPurchase) {
+    // Day 7 미만이면 배너 숨김 (허니문 중 배너 미노출)
+    final daysSince = monState?.installDate != null
+        ? DateTime.now()
+            .difference(DateTime.parse(monState!.installDate!))
+            .inDays
+        : 0;
+    if (daysSince < 7) {
+      return const SizedBox.shrink();
+    }
+
+    // 보상형 해금 / 세션 숨김 / IAP 구매 시 배너 숨김
+    if (isUnlocked || sessionHidden || hasPurchase) {
       return const SizedBox.shrink();
     }
 

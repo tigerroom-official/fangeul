@@ -7,23 +7,34 @@ import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/presentation/providers/session_state_provider.dart';
 import 'package:fangeul/presentation/widgets/banner_ad_widget.dart';
 
+/// 설치 N일 전 날짜 문자열 생성.
+String _installDateDaysAgo(int days) {
+  final date = DateTime.now().subtract(Duration(days: days));
+  final y = date.year.toString();
+  final m = date.month.toString().padLeft(2, '0');
+  final d = date.day.toString().padLeft(2, '0');
+  return '$y-$m-$d';
+}
+
 void main() {
   /// 테스트용 위젯 빌더.
   ///
   /// BannerAd는 네이티브 SDK가 필요하므로 테스트 환경에서 로드 불가.
   /// Provider override로 조건부 표시 로직만 검증한다.
   Widget buildTestWidget({
-    bool isHoneymoon = false,
     bool isRewardedUnlockActive = false,
     bool sessionBannerHidden = false,
     MonetizationState? monetizationState,
   }) {
-    final monState =
-        monetizationState ?? const MonetizationState(honeymoonActive: false);
+    // 기본: 설치 7일 이상 + 허니문 비활성 (배너 표시 상태)
+    final monState = monetizationState ??
+        MonetizationState(
+          honeymoonActive: false,
+          installDate: _installDateDaysAgo(10),
+        );
 
     return ProviderScope(
       overrides: [
-        isHoneymoonProvider.overrideWithValue(isHoneymoon),
         isRewardedUnlockActiveProvider
             .overrideWithValue(isRewardedUnlockActive),
         sessionBannerHiddenProvider.overrideWith(() {
@@ -44,12 +55,34 @@ void main() {
 
   group('BannerAdWidget — hide conditions', () {
     testWidgets(
-      'should render SizedBox.shrink when honeymoon is active',
+      'should render SizedBox.shrink when install date is less than 7 days ago',
       (tester) async {
-        await tester.pumpWidget(buildTestWidget(isHoneymoon: true));
+        await tester.pumpWidget(buildTestWidget(
+          monetizationState: MonetizationState(
+            honeymoonActive: true,
+            installDate: _installDateDaysAgo(3),
+          ),
+        ));
         await tester.pump();
 
-        // SizedBox.shrink has 0x0 dimensions
+        final sizedBoxes = tester.widgetList<SizedBox>(find.byType(SizedBox));
+        final shrink = sizedBoxes.where(
+          (sb) => sb.width == 0.0 && sb.height == 0.0,
+        );
+        expect(shrink, isNotEmpty);
+      },
+    );
+
+    testWidgets(
+      'should render SizedBox.shrink when installDate is null (Day 0)',
+      (tester) async {
+        await tester.pumpWidget(buildTestWidget(
+          monetizationState: const MonetizationState(
+            honeymoonActive: true,
+          ),
+        ));
+        await tester.pump();
+
         final sizedBoxes = tester.widgetList<SizedBox>(find.byType(SizedBox));
         final shrink = sizedBoxes.where(
           (sb) => sb.width == 0.0 && sb.height == 0.0,
@@ -94,9 +127,10 @@ void main() {
       'should render SizedBox.shrink when user has purchased a pack',
       (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          monetizationState: const MonetizationState(
+          monetizationState: MonetizationState(
             honeymoonActive: false,
-            purchasedPackIds: ['color_pack_01'],
+            installDate: _installDateDaysAgo(10),
+            purchasedPackIds: const ['color_pack_01'],
           ),
         ));
         await tester.pump();
@@ -113,11 +147,11 @@ void main() {
       'should render SizedBox.shrink when multiple hide conditions are true',
       (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          isHoneymoon: true,
           sessionBannerHidden: true,
-          monetizationState: const MonetizationState(
+          monetizationState: MonetizationState(
             honeymoonActive: true,
-            purchasedPackIds: ['pack_01'],
+            installDate: _installDateDaysAgo(2),
+            purchasedPackIds: const ['pack_01'],
           ),
         ));
         await tester.pump();
@@ -133,10 +167,8 @@ void main() {
 
   group('BannerAdWidget — show conditions', () {
     testWidgets(
-      'should render 50dp placeholder when no hide condition and ad not loaded',
+      'should render 50dp placeholder when Day 7+ and no hide conditions',
       (tester) async {
-        // No hide conditions active, but BannerAd cannot load in test env
-        // so we expect the placeholder SizedBox(height: 50)
         await tester.pumpWidget(buildTestWidget());
         await tester.pump();
 
@@ -149,12 +181,13 @@ void main() {
     );
 
     testWidgets(
-      'should render 50dp placeholder when no purchases and no honeymoon',
+      'should render 50dp placeholder when exactly Day 7',
       (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          monetizationState: const MonetizationState(
+          monetizationState: MonetizationState(
             honeymoonActive: false,
-            purchasedPackIds: [],
+            installDate: _installDateDaysAgo(7),
+            purchasedPackIds: const [],
           ),
         ));
         await tester.pump();

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:fangeul/l10n/app_localizations.dart';
+import 'package:fangeul/presentation/providers/ad_service_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/phrase_providers.dart';
 import 'package:fangeul/presentation/providers/progress_providers.dart';
@@ -32,6 +33,9 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // 보상형 광고 프리로드 (1회, 결과 무시)
+    ref.read(adServiceProvider).preloadRewarded();
+
     final today = _todayString();
     final dailyCard = ref.watch(dailyCardProvider(today));
     final progress = ref.watch(userProgressProvider);

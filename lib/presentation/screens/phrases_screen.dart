@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:fangeul/core/entities/phrase.dart';
+import 'package:fangeul/presentation/widgets/banner_ad_widget.dart';
 import 'package:fangeul/core/entities/phrase_pack.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
@@ -112,6 +113,8 @@ class PhrasesScreen extends ConsumerWidget {
                         ? _buildAllPhrases(ref, l)
                         : _buildFilteredPhrases(ref, selectedTag!, l),
           ),
+          // 하단 배너 광고 (Day 7+, 조건부 숨김)
+          const BannerAdWidget(),
         ],
       ),
     );

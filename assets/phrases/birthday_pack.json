@@ -2,8 +2,8 @@
   "id": "birthday_pack",
   "name": "Birthday Messages",
   "name_ko": "생일 축하",
-  "is_free": false,
-  "unlock_type": "rewarded_ad",
+  "is_free": true,
+  "unlock_type": null,
   "phrases": [
     {
       "ko": "생일 축하해요!",

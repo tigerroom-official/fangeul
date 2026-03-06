@@ -77,11 +77,14 @@ void main() {
       expect(find.text('일상'), findsOneWidget);
     });
 
-    testWidgets('should show lock icon for non-free packs', (tester) async {
+    testWidgets('should show pack name without lock for non-free packs',
+        (tester) async {
       await tester.pumpWidget(buildTestWidget());
       await tester.pumpAndSettle();
 
-      expect(find.text('생일🔒'), findsOneWidget);
+      // 잠금 표시 제거됨 — 모든 팩이 이름만 표시
+      expect(find.text('생일'), findsOneWidget);
+      expect(find.text('생일🔒'), findsNothing);
     });
 
     testWidgets('should call onFavoritesSelected on favorites chip tap',

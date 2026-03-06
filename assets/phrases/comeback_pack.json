@@ -2,8 +2,8 @@
   "id": "comeback_pack",
   "name": "Comeback Messages",
   "name_ko": "컴백 축하",
-  "is_free": false,
-  "unlock_type": "rewarded_ad",
+  "is_free": true,
+  "unlock_type": null,
   "phrases": [
     {
       "ko": "컴백 축하해요!",

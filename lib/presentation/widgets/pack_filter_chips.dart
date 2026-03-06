@@ -174,7 +174,7 @@ class PackFilterChips extends StatelessWidget {
         !isMyIdolSelected &&
         !isTodaySelected &&
         selectedPackId == pack.id;
-    final label = pack.isFree ? pack.nameKo : '${pack.nameKo}🔒';
+    final label = pack.nameKo;
 
     return FilterChip(
       label: Text(
