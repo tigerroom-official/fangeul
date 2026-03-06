@@ -1,12 +1,15 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:fangeul/core/entities/monetization_state.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/platform/bubble_state.dart';
 import 'package:fangeul/presentation/providers/bubble_providers.dart';
+import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
 import 'package:fangeul/presentation/widgets/theme_picker_sheet.dart';
@@ -180,6 +183,11 @@ class SettingsScreen extends ConsumerWidget {
               );
             },
           ),
+          // 디버그 전용 수익화 테스트 패널
+          if (kDebugMode) ...[
+            const Divider(thickness: 3),
+            const _DebugMonetizationPanel(),
+          ],
         ],
       ),
     );
@@ -316,5 +324,224 @@ class _BubbleToggleTile extends ConsumerWidget {
     if (shouldOpen == true) {
       await notifier.requestIgnoreBatteryOptimization();
     }
+  }
+}
+
+/// 디버그 전용 — 수익화 상태 조작 패널.
+///
+/// kDebugMode에서만 표시되며, 릴리즈 빌드에서는 tree-shake 제거됨.
+class _DebugMonetizationPanel extends ConsumerWidget {
+  const _DebugMonetizationPanel();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncState = ref.watch(monetizationNotifierProvider);
+    final monState = asyncState.valueOrNull;
+    final isHoneymoon = ref.watch(isHoneymoonProvider);
+    final isUnlocked = ref.watch(isRewardedUnlockActiveProvider);
+    final theme = Theme.of(context);
+
+    final installDate = monState?.installDate ?? 'not set';
+    final daysSince = monState?.installDate != null
+        ? DateTime.now()
+            .difference(DateTime.parse(monState!.installDate!))
+            .inDays
+        : 0;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+          child: Text(
+            'DEBUG: Monetization',
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: Colors.redAccent,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            'installDate: $installDate (Day $daysSince)\n'
+            'honeymoon: $isHoneymoon | unlock: $isUnlocked\n'
+            'hasThemePicker: ${monState?.hasThemePicker ?? false}\n'
+            'favSlotLimit: ${monState?.favoriteSlotLimit ?? 0} (0=unlimited)\n'
+            'adWatchCount: ${monState?.adWatchCount ?? 0}/3',
+            style: theme.textTheme.bodySmall?.copyWith(
+              fontFamily: 'monospace',
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        // 설치일 시뮬레이션
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              _DebugChip(
+                label: 'Day 0',
+                onTap: () => _setInstallDaysAgo(ref, 0),
+              ),
+              _DebugChip(
+                label: 'Day 7 (ads)',
+                onTap: () => _setInstallDaysAgo(ref, 7),
+              ),
+              _DebugChip(
+                label: 'Day 14 (limit)',
+                onTap: () => _setInstallDaysAgo(ref, 14),
+              ),
+              _DebugChip(
+                label: 'Day 21',
+                onTap: () => _setInstallDaysAgo(ref, 21),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 4),
+        // 기능 토글
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              _DebugChip(
+                label: isUnlocked ? 'Unlock: ON' : 'Unlock: OFF',
+                color: isUnlocked ? Colors.green : null,
+                onTap: () => _toggleRewardedUnlock(ref, !isUnlocked),
+              ),
+              _DebugChip(
+                label: monState?.hasThemePicker == true
+                    ? 'Picker IAP: ON'
+                    : 'Picker IAP: OFF',
+                color: monState?.hasThemePicker == true ? Colors.green : null,
+                onTap: () => _toggleThemePicker(ref),
+              ),
+              _DebugChip(
+                label: isHoneymoon ? 'Honeymoon: ON' : 'Honeymoon: OFF',
+                color: isHoneymoon ? Colors.orange : null,
+                onTap: () => _toggleHoneymoon(ref, isHoneymoon),
+              ),
+              _DebugChip(
+                label: 'Reset All',
+                color: Colors.red,
+                onTap: () => _resetAll(ref),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+      ],
+    );
+  }
+
+  Future<void> _setInstallDaysAgo(WidgetRef ref, int days) async {
+    try {
+      await ref.read(monetizationNotifierProvider.future);
+    } catch (_) {}
+    final current = ref.read(monetizationNotifierProvider).valueOrNull;
+    if (current == null) return;
+
+    final date = DateTime.now().subtract(Duration(days: days));
+    final y = date.year.toString().padLeft(4, '0');
+    final m = date.month.toString().padLeft(2, '0');
+    final d = date.day.toString().padLeft(2, '0');
+    final dateStr = '$y-$m-$d';
+
+    // honeymoonActive는 Day 14 기준으로 자동 조정
+    final honeymoonActive = days < 14;
+    final slotLimit = honeymoonActive ? 0 : MonetizationNotifier.defaultSlotLimit;
+
+    final repo = ref.read(monetizationRepositoryProvider);
+    final updated = current.copyWith(
+      installDate: dateStr,
+      honeymoonActive: honeymoonActive,
+      favoriteSlotLimit: slotLimit,
+    );
+    await repo.save(updated);
+    ref.invalidate(monetizationNotifierProvider);
+  }
+
+  Future<void> _toggleRewardedUnlock(WidgetRef ref, bool activate) async {
+    if (activate) {
+      await ref.read(monetizationNotifierProvider.notifier).activateRewardedUnlock();
+    } else {
+      try {
+        await ref.read(monetizationNotifierProvider.future);
+      } catch (_) {}
+      final current = ref.read(monetizationNotifierProvider).valueOrNull;
+      if (current == null) return;
+      final repo = ref.read(monetizationRepositoryProvider);
+      await repo.save(current.copyWith(unlockExpiresAt: 0));
+      ref.invalidate(monetizationNotifierProvider);
+    }
+  }
+
+  Future<void> _toggleThemePicker(WidgetRef ref) async {
+    try {
+      await ref.read(monetizationNotifierProvider.future);
+    } catch (_) {}
+    final current = ref.read(monetizationNotifierProvider).valueOrNull;
+    if (current == null) return;
+    final repo = ref.read(monetizationRepositoryProvider);
+    await repo.save(current.copyWith(hasThemePicker: !current.hasThemePicker));
+    ref.invalidate(monetizationNotifierProvider);
+  }
+
+  Future<void> _toggleHoneymoon(WidgetRef ref, bool currentlyActive) async {
+    if (currentlyActive) {
+      await ref.read(monetizationNotifierProvider.notifier).endHoneymoon();
+    } else {
+      try {
+        await ref.read(monetizationNotifierProvider.future);
+      } catch (_) {}
+      final current = ref.read(monetizationNotifierProvider).valueOrNull;
+      if (current == null) return;
+      final repo = ref.read(monetizationRepositoryProvider);
+      await repo.save(current.copyWith(
+        honeymoonActive: true,
+        favoriteSlotLimit: 0,
+      ));
+      ref.invalidate(monetizationNotifierProvider);
+    }
+  }
+
+  Future<void> _resetAll(WidgetRef ref) async {
+    final repo = ref.read(monetizationRepositoryProvider);
+    await repo.save(const MonetizationState());
+    ref.invalidate(monetizationNotifierProvider);
+  }
+}
+
+/// 디버그 조작용 칩 버튼.
+class _DebugChip extends StatelessWidget {
+  const _DebugChip({
+    required this.label,
+    required this.onTap,
+    this.color,
+  });
+
+  final String label;
+  final VoidCallback onTap;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    return ActionChip(
+      label: Text(
+        label,
+        style: TextStyle(
+          fontSize: 11,
+          color: color ?? Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
+      ),
+      onPressed: onTap,
+      visualDensity: VisualDensity.compact,
+      side: color != null ? BorderSide(color: color!) : null,
+    );
   }
 }
