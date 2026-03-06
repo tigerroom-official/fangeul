@@ -102,6 +102,16 @@ abstract final class CustomSchemeBuilder {
   static ColorScheme _buildLight(HSLColor hsl, Color? textOverride) {
     final primary =
         hsl.withLightness(hsl.lightness.clamp(0.30, 0.45)).toColor();
+    final secondary = hsl
+        .withHue((hsl.hue + 30) % 360)
+        .withLightness(0.40)
+        .withSaturation((hsl.saturation * 0.50).clamp(0.0, 1.0))
+        .toColor();
+    final tertiary = hsl
+        .withHue((hsl.hue + 60) % 360)
+        .withLightness(0.40)
+        .withSaturation((hsl.saturation * 0.40).clamp(0.0, 1.0))
+        .toColor();
     final surface = hsl
         .withLightness(0.96)
         .withSaturation((hsl.saturation * 0.12).clamp(0.0, 1.0))
@@ -110,30 +120,22 @@ abstract final class CustomSchemeBuilder {
     return ColorScheme(
       brightness: Brightness.light,
       primary: primary,
-      onPrimary: textOverride ?? Colors.white,
+      onPrimary: textOverride ?? _autoContrast(primary),
       primaryContainer: hsl
           .withLightness(0.85)
           .withSaturation((hsl.saturation * 0.50).clamp(0.0, 1.0))
           .toColor(),
       onPrimaryContainer: textOverride ?? hsl.withLightness(0.15).toColor(),
-      secondary: hsl
-          .withHue((hsl.hue + 30) % 360)
-          .withLightness(0.40)
-          .withSaturation((hsl.saturation * 0.50).clamp(0.0, 1.0))
-          .toColor(),
-      onSecondary: textOverride ?? Colors.white,
+      secondary: secondary,
+      onSecondary: textOverride ?? _autoContrast(secondary),
       secondaryContainer: hsl
           .withHue((hsl.hue + 30) % 360)
           .withLightness(0.90)
           .withSaturation((hsl.saturation * 0.40).clamp(0.0, 1.0))
           .toColor(),
       onSecondaryContainer: textOverride ?? hsl.withLightness(0.15).toColor(),
-      tertiary: hsl
-          .withHue((hsl.hue + 60) % 360)
-          .withLightness(0.40)
-          .withSaturation((hsl.saturation * 0.40).clamp(0.0, 1.0))
-          .toColor(),
-      onTertiary: textOverride ?? Colors.white,
+      tertiary: tertiary,
+      onTertiary: textOverride ?? _autoContrast(tertiary),
       error: const Color(0xFFB00020),
       onError: Colors.white,
       surface: surface,
@@ -179,7 +181,7 @@ abstract final class CustomSchemeBuilder {
 
   /// 배경색 luminance 기반 흑/백 자동 선택.
   static Color _autoContrast(Color background) {
-    return background.computeLuminance() > 0.179
+    return background.computeLuminance() > 0.20
         ? Colors.black87
         : Colors.white;
   }

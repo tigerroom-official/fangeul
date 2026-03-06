@@ -179,13 +179,14 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                   });
                   if (_customPickerExpanded) {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      _sheetController.animateTo(
+                      if (!mounted) return;
+                      _sheetController
+                          .animateTo(
                         0.85,
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeOut,
-                      );
-                      Future.delayed(
-                          const Duration(milliseconds: 200), () {
+                      )
+                          .then((_) {
                         if (!mounted) return;
                         final ctx = _customPickerKey.currentContext;
                         if (ctx != null) {
