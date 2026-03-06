@@ -9,9 +9,12 @@ import 'package:fangeul/core/entities/monetization_state.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/platform/bubble_state.dart';
 import 'package:fangeul/presentation/providers/bubble_providers.dart';
+import 'package:fangeul/presentation/providers/choeae_color_provider.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
+import 'package:fangeul/presentation/theme/choeae_color_config.dart';
+import 'package:fangeul/presentation/theme/palette_registry.dart';
 import 'package:fangeul/presentation/widgets/theme_picker_sheet.dart';
 
 /// 지원 언어 목록 — null은 시스템 기본.
@@ -47,7 +50,7 @@ class SettingsScreen extends ConsumerWidget {
     final l = L.of(context);
     final themeMode = ref.watch(themeModeNotifierProvider);
     final userLocale = ref.watch(localeNotifierProvider);
-    final seedColor = ref.watch(themeColorNotifierProvider);
+    final choeaeColor = ref.watch(choeaeColorNotifierProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -101,7 +104,11 @@ class SettingsScreen extends ConsumerWidget {
               width: 24,
               height: 24,
               decoration: BoxDecoration(
-                color: seedColor ?? theme.colorScheme.primary,
+                color: switch (choeaeColor) {
+                  ChoeaeColorCustom(:final seedColor) => seedColor,
+                  ChoeaeColorPalette(:final packId) =>
+                    PaletteRegistry.get(packId).previewColor,
+                },
                 shape: BoxShape.circle,
               ),
             ),
