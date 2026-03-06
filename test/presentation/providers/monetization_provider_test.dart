@@ -294,6 +294,32 @@ void main() {
       });
     });
 
+    group('unlockThemePalettes', () {
+      test('should set themeUnlocked to true', () async {
+        setUpDefault();
+
+        final notifier = container.read(monetizationNotifierProvider.notifier);
+        await container.read(monetizationNotifierProvider.future);
+
+        await notifier.unlockThemePalettes();
+
+        final state = await container.read(monetizationNotifierProvider.future);
+        expect(state.themeUnlocked, true);
+      });
+
+      test('should persist themeUnlocked across rebuild', () async {
+        setUpDefault();
+
+        final notifier = container.read(monetizationNotifierProvider.notifier);
+        await container.read(monetizationNotifierProvider.future);
+
+        await notifier.unlockThemePalettes();
+
+        final state = await container.read(monetizationNotifierProvider.future);
+        expect(state.themeUnlocked, true);
+      });
+    });
+
     group('endHoneymoon', () {
       test('should set honeymoonActive=false and favoriteSlotLimit=5',
           () async {
@@ -647,6 +673,35 @@ void main() {
       await notifier.activateRewardedUnlock();
 
       expect(container.read(isRewardedUnlockActiveProvider), true);
+    });
+
+    test('isThemeUnlocked should reflect unlockThemePalettes', () async {
+      mockStorage = MockFlutterSecureStorage();
+      when(() => mockStorage.read(key: any(named: 'key')))
+          .thenAnswer((_) async => null);
+      when(() => mockStorage.write(
+          key: any(named: 'key'),
+          value: any(named: 'value'))).thenAnswer((_) async {});
+
+      container = ProviderContainer(
+        overrides: [
+          monetizationStorageProvider.overrideWithValue(mockStorage),
+          remoteConfigValuesProvider
+              .overrideWithValue(const RemoteConfigValues()),
+        ],
+      );
+
+      final notifier = container.read(monetizationNotifierProvider.notifier);
+      await container.read(monetizationNotifierProvider.future);
+
+      final sub = container.listen(isThemeUnlockedProvider, (_, __) {});
+      addTearDown(sub.close);
+
+      expect(container.read(isThemeUnlockedProvider), false);
+
+      await notifier.unlockThemePalettes();
+
+      expect(container.read(isThemeUnlockedProvider), true);
     });
 
     test('favoriteSlotLimit should reflect state', () async {

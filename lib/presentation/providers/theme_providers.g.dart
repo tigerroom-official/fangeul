@@ -68,7 +68,7 @@ final localeNotifierProvider =
 
 typedef _$LocaleNotifier = Notifier<Locale?>;
 String _$themeColorNotifierHash() =>
-    r'2f7fd08f633ce2d02bf6a3d91cda0ca7421308cb';
+    r'af88c7da9e3153089d408c5c5849486e11bb97c3';
 
 /// 테마 seed color + 커스텀 글자색 선택 상태.
 ///

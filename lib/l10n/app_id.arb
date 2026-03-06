@@ -202,5 +202,12 @@
   "themePickerTextColorAuto": "Kontras otomatis",
   "themePickerPreview": "Pratinjau",
   "themePickerLocked": "Buka dengan Fan Pass",
-  "themePickerPickerLocked": "Buka selamanya seharga ₩990"
+  "themePickerPickerLocked": "Buka selamanya seharga ₩990",
+
+  "themePickerUnlockAll": "Buka semua tema",
+  "themePickerUnlockAllDesc": "Tonton iklan untuk membuka semua palet tema selamanya",
+  "themePickerPreviewHint": "Pratinjau saja — beli untuk menerapkan",
+  "themePickerApplyLocked": "Beli untuk menerapkan tema ini",
+  "themePickerUndo": "Urungkan",
+  "themePickerLowContrast": "Kontras rendah"
 }

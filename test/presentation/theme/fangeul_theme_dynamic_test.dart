@@ -61,4 +61,94 @@ void main() {
       expect(theme.colorScheme.onPrimary, textColor);
     });
   });
+
+  group('FangeulTheme component themes', () {
+    test('dynamicDark should include all 5 component themes', () {
+      final theme = FangeulTheme.dynamicDark(const Color(0xFF4527A0));
+      final cs = theme.colorScheme;
+
+      // AppBar
+      expect(theme.appBarTheme.backgroundColor, isNotNull);
+      expect(theme.appBarTheme.foregroundColor, cs.onSurface);
+      expect(theme.appBarTheme.elevation, 0);
+
+      // Card
+      expect(theme.cardTheme.color, cs.surface);
+      expect(theme.cardTheme.elevation, 0);
+
+      // Chip
+      expect(theme.chipTheme.backgroundColor, cs.surfaceContainer);
+      expect(theme.chipTheme.selectedColor, cs.primary);
+      expect(theme.chipTheme.showCheckmark, false);
+
+      // NavigationBar
+      expect(theme.navigationBarTheme.backgroundColor, cs.surface);
+      expect(theme.navigationBarTheme.indicatorColor, isNotNull);
+
+      // InputDecoration
+      expect(theme.inputDecorationTheme.filled, true);
+      expect(theme.inputDecorationTheme.fillColor, cs.surfaceContainer);
+    });
+
+    test('dynamicLight should include all 5 component themes', () {
+      final theme = FangeulTheme.dynamicLight(const Color(0xFF4527A0));
+      final cs = theme.colorScheme;
+
+      expect(theme.appBarTheme.foregroundColor, cs.onSurface);
+      expect(theme.cardTheme.color, cs.surface);
+      expect(theme.chipTheme.backgroundColor, cs.surfaceContainer);
+      expect(theme.navigationBarTheme.backgroundColor, cs.surface);
+      expect(theme.inputDecorationTheme.fillColor, cs.surfaceContainer);
+    });
+
+    test('customTextColor should propagate through component themes', () {
+      const textColor = Color(0xFFE0E0E0);
+      final theme = FangeulTheme.dynamicDark(
+        const Color(0xFF4527A0),
+        customTextColor: textColor,
+      );
+
+      // AppBar foreground uses cs.onSurface which is overridden
+      expect(theme.appBarTheme.foregroundColor, textColor);
+    });
+
+    test('static dark() should have same component theme types', () {
+      final theme = FangeulTheme.dark();
+      final cs = theme.colorScheme;
+
+      expect(theme.appBarTheme.elevation, 0);
+      expect(theme.cardTheme.color, cs.surface);
+      expect(theme.chipTheme.backgroundColor, cs.surfaceContainer);
+      expect(theme.navigationBarTheme.backgroundColor, cs.surface);
+      expect(theme.inputDecorationTheme.filled, true);
+    });
+
+    test('static light() should have same component theme types', () {
+      final theme = FangeulTheme.light();
+      final cs = theme.colorScheme;
+
+      expect(theme.appBarTheme.elevation, 0);
+      expect(theme.cardTheme.color, cs.surface);
+      expect(theme.chipTheme.backgroundColor, cs.surfaceContainer);
+      expect(theme.navigationBarTheme.backgroundColor, cs.surface);
+      expect(theme.inputDecorationTheme.filled, true);
+    });
+
+    test('dark indicator alpha should differ from light', () {
+      final dark = FangeulTheme.dynamicDark(const Color(0xFF4527A0));
+      final light = FangeulTheme.dynamicLight(const Color(0xFF4527A0));
+
+      // Dark uses 0.15, light uses 0.35
+      final darkAlpha = dark.navigationBarTheme.indicatorColor!.a;
+      final lightAlpha = light.navigationBarTheme.indicatorColor!.a;
+      expect(darkAlpha, lessThan(lightAlpha));
+    });
+
+    test('chip side should use outlineVariant from colorScheme', () {
+      final theme = FangeulTheme.dynamicDark(const Color(0xFFF8BBD0));
+      final cs = theme.colorScheme;
+
+      expect(theme.chipTheme.side, BorderSide(color: cs.outlineVariant));
+    });
+  });
 }

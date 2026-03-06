@@ -526,4 +526,23 @@ class LPt extends L {
 
   @override
   String get themePickerPickerLocked => 'Desbloquear para sempre por ₩990';
+
+  @override
+  String get themePickerUnlockAll => 'Desbloquear todos os temas';
+
+  @override
+  String get themePickerUnlockAllDesc =>
+      'Assista a um anúncio para desbloquear todas as paletas para sempre';
+
+  @override
+  String get themePickerPreviewHint => 'Apenas prévia — compre para aplicar';
+
+  @override
+  String get themePickerApplyLocked => 'Compre para aplicar este tema';
+
+  @override
+  String get themePickerUndo => 'Desfazer';
+
+  @override
+  String get themePickerLowContrast => 'Baixo contraste';
 }

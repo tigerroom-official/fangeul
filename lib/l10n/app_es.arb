@@ -202,5 +202,12 @@
   "themePickerTextColorAuto": "Contraste auto",
   "themePickerPreview": "Vista previa",
   "themePickerLocked": "Desbloquear con Fan Pass",
-  "themePickerPickerLocked": "Desbloquear para siempre por ₩990"
+  "themePickerPickerLocked": "Desbloquear para siempre por ₩990",
+
+  "themePickerUnlockAll": "Desbloquear todos los temas",
+  "themePickerUnlockAllDesc": "Mira un anuncio para desbloquear todas las paletas para siempre",
+  "themePickerPreviewHint": "Solo vista previa — compra para aplicar",
+  "themePickerApplyLocked": "Compra para aplicar este tema",
+  "themePickerUndo": "Deshacer",
+  "themePickerLowContrast": "Bajo contraste"
 }

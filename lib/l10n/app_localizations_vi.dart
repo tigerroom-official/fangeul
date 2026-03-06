@@ -524,4 +524,23 @@ class LVi extends L {
 
   @override
   String get themePickerPickerLocked => 'Mở khóa vĩnh viễn ₩990';
+
+  @override
+  String get themePickerUnlockAll => 'Mở khóa tất cả chủ đề';
+
+  @override
+  String get themePickerUnlockAllDesc =>
+      'Xem quảng cáo để mở khóa tất cả bảng màu chủ đề vĩnh viễn';
+
+  @override
+  String get themePickerPreviewHint => 'Chỉ xem trước — mua để áp dụng';
+
+  @override
+  String get themePickerApplyLocked => 'Mua để áp dụng chủ đề này';
+
+  @override
+  String get themePickerUndo => 'Hoàn tác';
+
+  @override
+  String get themePickerLowContrast => 'Độ tương phản thấp';
 }

@@ -526,4 +526,24 @@ class LEs extends L {
 
   @override
   String get themePickerPickerLocked => 'Desbloquear para siempre por ₩990';
+
+  @override
+  String get themePickerUnlockAll => 'Desbloquear todos los temas';
+
+  @override
+  String get themePickerUnlockAllDesc =>
+      'Mira un anuncio para desbloquear todas las paletas para siempre';
+
+  @override
+  String get themePickerPreviewHint =>
+      'Solo vista previa — compra para aplicar';
+
+  @override
+  String get themePickerApplyLocked => 'Compra para aplicar este tema';
+
+  @override
+  String get themePickerUndo => 'Deshacer';
+
+  @override
+  String get themePickerLowContrast => 'Bajo contraste';
 }

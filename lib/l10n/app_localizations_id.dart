@@ -526,4 +526,23 @@ class LId extends L {
 
   @override
   String get themePickerPickerLocked => 'Buka selamanya seharga ₩990';
+
+  @override
+  String get themePickerUnlockAll => 'Buka semua tema';
+
+  @override
+  String get themePickerUnlockAllDesc =>
+      'Tonton iklan untuk membuka semua palet tema selamanya';
+
+  @override
+  String get themePickerPreviewHint => 'Pratinjau saja — beli untuk menerapkan';
+
+  @override
+  String get themePickerApplyLocked => 'Beli untuk menerapkan tema ini';
+
+  @override
+  String get themePickerUndo => 'Urungkan';
+
+  @override
+  String get themePickerLowContrast => 'Kontras rendah';
 }

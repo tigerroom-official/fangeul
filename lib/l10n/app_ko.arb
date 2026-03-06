@@ -283,5 +283,12 @@
   "themePickerTextColorAuto": "자동 대비",
   "themePickerPreview": "미리보기",
   "themePickerLocked": "팬 패스로 해금",
-  "themePickerPickerLocked": "₩990으로 영구 해금"
+  "themePickerPickerLocked": "₩990으로 영구 해금",
+
+  "themePickerUnlockAll": "전체 테마 해금",
+  "themePickerUnlockAllDesc": "광고 시청으로 모든 테마 팔레트를 영구 해금하세요",
+  "themePickerPreviewHint": "미리보기 전용 — 구매 후 적용 가능",
+  "themePickerApplyLocked": "구매 후 적용 가능",
+  "themePickerUndo": "되돌리기",
+  "themePickerLowContrast": "낮은 대비"
 }

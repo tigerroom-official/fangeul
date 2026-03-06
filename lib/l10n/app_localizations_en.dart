@@ -523,4 +523,23 @@ class LEn extends L {
 
   @override
   String get themePickerPickerLocked => 'Unlock forever for ₩990';
+
+  @override
+  String get themePickerUnlockAll => 'Unlock all themes';
+
+  @override
+  String get themePickerUnlockAllDesc =>
+      'Watch an ad to unlock all theme palettes forever';
+
+  @override
+  String get themePickerPreviewHint => 'Preview only — purchase to apply';
+
+  @override
+  String get themePickerApplyLocked => 'Purchase to apply this theme';
+
+  @override
+  String get themePickerUndo => 'Undo';
+
+  @override
+  String get themePickerLowContrast => 'Low contrast';
 }

@@ -422,6 +422,13 @@ class _DebugMonetizationPanel extends ConsumerWidget {
                 onTap: () => _toggleThemePicker(ref),
               ),
               _DebugChip(
+                label: monState?.themeUnlocked == true
+                    ? 'Theme Unlock: ON'
+                    : 'Theme Unlock: OFF',
+                color: monState?.themeUnlocked == true ? Colors.green : null,
+                onTap: () => _toggleThemeUnlocked(ref),
+              ),
+              _DebugChip(
                 label: isHoneymoon ? 'Honeymoon: ON' : 'Honeymoon: OFF',
                 color: isHoneymoon ? Colors.orange : null,
                 onTap: () => _toggleHoneymoon(ref, isHoneymoon),
@@ -489,6 +496,17 @@ class _DebugMonetizationPanel extends ConsumerWidget {
     if (current == null) return;
     final repo = ref.read(monetizationRepositoryProvider);
     await repo.save(current.copyWith(hasThemePicker: !current.hasThemePicker));
+    ref.invalidate(monetizationNotifierProvider);
+  }
+
+  Future<void> _toggleThemeUnlocked(WidgetRef ref) async {
+    try {
+      await ref.read(monetizationNotifierProvider.future);
+    } catch (_) {}
+    final current = ref.read(monetizationNotifierProvider).valueOrNull;
+    if (current == null) return;
+    final repo = ref.read(monetizationRepositoryProvider);
+    await repo.save(current.copyWith(themeUnlocked: !current.themeUnlocked));
     ref.invalidate(monetizationNotifierProvider);
   }
 

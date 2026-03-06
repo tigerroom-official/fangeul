@@ -519,4 +519,23 @@ class LTh extends L {
 
   @override
   String get themePickerPickerLocked => 'ปลดล็อกตลอดกาล ₩990';
+
+  @override
+  String get themePickerUnlockAll => 'ปลดล็อกธีมทั้งหมด';
+
+  @override
+  String get themePickerUnlockAllDesc =>
+      'ดูโฆษณาเพื่อปลดล็อกพาเลทธีมทั้งหมดตลอดกาล';
+
+  @override
+  String get themePickerPreviewHint => 'ตัวอย่างเท่านั้น — ซื้อเพื่อใช้งาน';
+
+  @override
+  String get themePickerApplyLocked => 'ซื้อเพื่อใช้ธีมนี้';
+
+  @override
+  String get themePickerUndo => 'เลิกทำ';
+
+  @override
+  String get themePickerLowContrast => 'คอนทราสต์ต่ำ';
 }

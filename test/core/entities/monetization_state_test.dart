@@ -125,6 +125,18 @@ void main() {
       expect(a, isNot(b));
     });
 
+    test('should default themeUnlocked to false', () {
+      const state = MonetizationState();
+      expect(state.themeUnlocked, isFalse);
+    });
+
+    test('should round-trip themeUnlocked through JSON', () {
+      const state = MonetizationState(themeUnlocked: true);
+      final json = state.toJson();
+      final restored = MonetizationState.fromJson(json);
+      expect(restored.themeUnlocked, isTrue);
+    });
+
     test('should handle empty lists in JSON round-trip', () {
       const state = MonetizationState();
       final json = state.toJson();

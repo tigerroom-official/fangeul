@@ -47,6 +47,9 @@ class MonetizationState with _$MonetizationState {
     /// 자유 컬러 피커 IAP 구매 여부.
     @Default(false) bool hasThemePicker,
 
+    /// 보상형 광고로 테마 팔레트 영구 해금 여부.
+    @Default(false) bool themeUnlocked,
+
     /// 단조증가 타임스탬프 (밀리초). 시간 조작 방어용.
     @Default(0) int lastTimestamp,
   }) = _MonetizationState;

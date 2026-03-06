@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:fangeul/core/entities/monetization_state.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
+import 'package:fangeul/presentation/providers/ad_service_provider.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
+import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
 import 'package:fangeul/presentation/theme/fangeul_colors.dart';
 import 'package:fangeul/presentation/theme/theme_palettes.dart';
@@ -40,6 +42,11 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
 
   bool _slidersInitialized = false;
 
+  // 프리뷰 모드 (미구매자): 시트 닫힘 시 복원용 백업.
+  Color? _savedSeedBeforePreview;
+  Color? _savedTextBeforePreview;
+  bool _isPreviewMode = false;
+
   /// 현재 슬라이더 HSL 값으로 Color 생성.
   Color get _hslColor =>
       HSLColor.fromAHSL(1.0, _hue, _saturation, _lightness).toColor();
@@ -60,6 +67,27 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
     return monState?.hasThemePicker ?? false;
   }
 
+  /// 프리뷰 모드 진입 — 현재 색상을 백업한다.
+  void _enterPreviewMode() {
+    if (_isPreviewMode) return;
+    _isPreviewMode = true;
+    _savedSeedBeforePreview = ref.read(themeColorNotifierProvider);
+    _savedTextBeforePreview =
+        ref.read(themeColorNotifierProvider.notifier).customTextColor;
+  }
+
+  /// 프리뷰 모드 종료 — 백업 색상으로 복원한다.
+  void _restoreFromPreview() {
+    if (!_isPreviewMode) return;
+    _isPreviewMode = false;
+    ref
+        .read(themeColorNotifierProvider.notifier)
+        .setSeedColor(_savedSeedBeforePreview);
+    ref
+        .read(themeColorNotifierProvider.notifier)
+        .setCustomTextColor(_savedTextBeforePreview);
+  }
+
   @override
   Widget build(BuildContext context) {
     final seedColor = ref.watch(themeColorNotifierProvider);
@@ -68,11 +96,18 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
     final hasPickerIap = _hasPickerAccess(monState);
     _initSlidersFromSeedColor(seedColor);
 
-    return DraggableScrollableSheet(
-      initialChildSize: 0.6,
-      minChildSize: 0.4,
-      maxChildSize: 0.85,
-      builder: (context, scrollController) {
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, _) {
+        if (_isPreviewMode) {
+          _restoreFromPreview();
+        }
+      },
+      child: DraggableScrollableSheet(
+        initialChildSize: 0.6,
+        minChildSize: 0.4,
+        maxChildSize: 0.85,
+        builder: (context, scrollController) {
         final theme = Theme.of(context);
         final colorScheme = theme.colorScheme;
 
@@ -90,6 +125,30 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
               const _HandleBar(),
               const SizedBox(height: 12),
               _TitleSection(),
+              if (ref
+                  .read(themeColorNotifierProvider.notifier)
+                  .canUndo) ...[
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: ActionChip(
+                    avatar: Icon(
+                      Icons.undo,
+                      size: 16,
+                      color: theme.colorScheme.primary,
+                    ),
+                    label: Text(L.of(context).themePickerUndo),
+                    onPressed: () {
+                      ref
+                          .read(themeColorNotifierProvider.notifier)
+                          .undo();
+                      setState(() {
+                        _slidersInitialized = false;
+                      });
+                    },
+                  ),
+                ),
+              ],
               const SizedBox(height: 16),
               _DefaultThemeChip(
                 isSelected: seedColor == null,
@@ -114,29 +173,21 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                   });
                 },
               ),
+              const _ThemeUnlockButton(),
               const SizedBox(height: 16),
               _CustomPickerToggle(
                 isExpanded: _customPickerExpanded,
                 isLocked: !hasPickerIap,
                 onToggle: () {
-                  if (!hasPickerIap) {
-                    ScaffoldMessenger.of(context)
-                      ..clearSnackBars()
-                      ..showSnackBar(
-                        SnackBar(
-                          content:
-                              Text(L.of(context).themePickerPickerLocked),
-                          duration: const Duration(seconds: 2),
-                        ),
-                      );
-                    return;
+                  if (!hasPickerIap && !_customPickerExpanded) {
+                    _enterPreviewMode();
                   }
                   setState(() {
                     _customPickerExpanded = !_customPickerExpanded;
                   });
                 },
               ),
-              if (_customPickerExpanded && hasPickerIap) ...[
+              if (_customPickerExpanded) ...[
                 const SizedBox(height: 16),
                 _HueSlider(
                   value: _hue,
@@ -181,6 +232,39 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                         .setCustomTextColor(color);
                   },
                 ),
+                // 가독성 가드레일: 대비율 < 4.5:1 시 경고
+                Builder(builder: (context) {
+                  final textColor = ref
+                      .read(themeColorNotifierProvider.notifier)
+                      .customTextColor;
+                  if (textColor == null) return const SizedBox.shrink();
+                  final bgColor = ColorScheme.fromSeed(
+                    seedColor: _hslColor,
+                    brightness: theme.brightness,
+                  ).surface;
+                  final ratio = contrastRatio(textColor, bgColor);
+                  if (ratio >= 4.5) return const SizedBox.shrink();
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Chip(
+                      avatar: Icon(
+                        Icons.warning_amber_rounded,
+                        size: 16,
+                        color: theme.colorScheme.error,
+                      ),
+                      label: Text(
+                        L.of(context).themePickerLowContrast,
+                        style: TextStyle(
+                          color: theme.colorScheme.error,
+                          fontSize: 12,
+                        ),
+                      ),
+                      backgroundColor:
+                          theme.colorScheme.errorContainer,
+                      side: BorderSide.none,
+                    ),
+                  );
+                }),
                 const SizedBox(height: 16),
                 _PreviewCard(
                   seedColor: _hslColor,
@@ -189,12 +273,49 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                       .customTextColor,
                   brightness: theme.brightness,
                 ),
+                if (!hasPickerIap) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    L.of(context).themePickerPreviewHint,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  FilledButton.tonal(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context)
+                        ..clearSnackBars()
+                        ..showSnackBar(
+                          SnackBar(
+                            content:
+                                Text(L.of(context).themePickerApplyLocked),
+                            duration: const Duration(seconds: 2),
+                          ),
+                        );
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.lock_rounded,
+                          size: 16,
+                          color: theme.colorScheme.onSecondaryContainer,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(L.of(context).themePickerApplyLocked),
+                      ],
+                    ),
+                  ),
+                ],
               ],
               const SizedBox(height: 24),
             ],
           ),
         );
       },
+      ),
     );
   }
 }
@@ -328,7 +449,7 @@ class _PaletteGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isUnlocked = ref.watch(isRewardedUnlockActiveProvider);
+    final isUnlocked = ref.watch(isThemeUnlockedProvider);
 
     return GridView.builder(
       shrinkWrap: true,
@@ -505,17 +626,17 @@ class _CustomPickerToggle extends StatelessWidget {
                 Icons.lock_rounded,
                 size: 16,
                 color: theme.colorScheme.onSurfaceVariant,
-              )
-            else
-              AnimatedRotation(
-                turns: isExpanded ? 0.5 : 0.0,
-                duration: const Duration(milliseconds: 200),
-                child: Icon(
-                  Icons.expand_more,
-                  size: 22,
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
               ),
+            if (isLocked) const SizedBox(width: 4),
+            AnimatedRotation(
+              turns: isExpanded ? 0.5 : 0.0,
+              duration: const Duration(milliseconds: 200),
+              child: Icon(
+                Icons.expand_more,
+                size: 22,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
           ],
         ),
       ),
@@ -908,65 +1029,195 @@ class _PreviewCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Card(
-          color: previewScheme.surface,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-            side: BorderSide(
-              color: previewScheme.outlineVariant,
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    FilledButton(
-                      onPressed: () {},
-                      style: FilledButton.styleFrom(
-                        backgroundColor: previewScheme.primary,
-                        foregroundColor: previewScheme.onPrimary,
-                        minimumSize: const Size(0, 36),
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                      ),
-                      child: Text(l.themePickerThemeColor),
-                    ),
-                    const SizedBox(width: 8),
-                    FilterChip(
-                      label: Text(
-                        'K-pop',
-                        style: TextStyle(
-                          color: previewScheme.onSurface,
-                        ),
-                      ),
-                      selected: true,
-                      selectedColor: previewScheme.primaryContainer,
-                      checkmarkColor: previewScheme.onPrimaryContainer,
-                      onSelected: (_) {},
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  '안녕하세요! Hello!',
-                  style: parentTheme.textTheme.bodyLarge?.copyWith(
-                    color: previewScheme.onSurface,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Secondary text preview',
-                  style: parentTheme.textTheme.bodySmall?.copyWith(
-                    color: previewScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-          ),
+        _KeyboardPreview(previewScheme: previewScheme),
+        const SizedBox(height: 8),
+        _PhrasePreview(
+          previewScheme: previewScheme,
+          customTextColor: customTextColor,
         ),
       ],
+    );
+  }
+}
+
+/// 미니 키보드 프리뷰 — 2행 × 5열 한글 자판.
+class _KeyboardPreview extends StatelessWidget {
+  const _KeyboardPreview({required this.previewScheme});
+
+  final ColorScheme previewScheme;
+
+  static const _row1 = ['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ'];
+  static const _row2 = ['ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+      decoration: BoxDecoration(
+        color: previewScheme.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: previewScheme.outlineVariant),
+      ),
+      child: Column(
+        children: [
+          _buildRow(_row1),
+          const SizedBox(height: 6),
+          _buildRow(_row2),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRow(List<String> keys) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: keys
+          .map((k) => Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 3),
+                child: Container(
+                  width: 28,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: previewScheme.surfaceContainer,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    k,
+                    style: TextStyle(
+                      fontFamily: 'NotoSansKR',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: previewScheme.onSurface,
+                    ),
+                  ),
+                ),
+              ))
+          .toList(),
+    );
+  }
+}
+
+/// 미니 문구 프리뷰 — 한글 + 로마자 + 번역.
+class _PhrasePreview extends ConsumerWidget {
+  const _PhrasePreview({
+    required this.previewScheme,
+    required this.customTextColor,
+  });
+
+  final ColorScheme previewScheme;
+  final Color? customTextColor;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final idolName = ref.watch(myIdolDisplayNameProvider).valueOrNull;
+    final displayName = idolName ?? 'My Idol';
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: previewScheme.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: previewScheme.outlineVariant),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$displayName, 화이팅!',
+            style: TextStyle(
+              fontFamily: 'NotoSansKR',
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: customTextColor ?? previewScheme.onSurface,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            'hwaiting!',
+            style: TextStyle(
+              fontFamily: 'NotoSansKR',
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: previewScheme.primary,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            'Fighting!',
+            style: TextStyle(
+              fontFamily: 'NotoSansKR',
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: previewScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ThemeUnlockButton extends ConsumerWidget {
+  const _ThemeUnlockButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isUnlocked = ref.watch(isThemeUnlockedProvider);
+    if (isUnlocked) return const SizedBox.shrink();
+
+    final l = L.of(context);
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
+      child: FilledButton.tonal(
+        onPressed: () async {
+          final adService = ref.read(adServiceProvider);
+          if (!adService.isRewardedReady) {
+            ScaffoldMessenger.of(context)
+              ..clearSnackBars()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(l.fanPassAdLoading),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+            return;
+          }
+
+          final notifier =
+              ref.read(monetizationNotifierProvider.notifier);
+          final recorded = await notifier.recordAdWatch();
+          if (!recorded) return;
+
+          await adService.showRewarded(
+            onRewarded: () {
+              notifier.unlockThemePalettes().ignore();
+            },
+          );
+        },
+        style: FilledButton.styleFrom(
+          minimumSize: const Size(double.infinity, 44),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.lock_open_rounded,
+              size: 18,
+              color: theme.colorScheme.onSecondaryContainer,
+            ),
+            const SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                l.themePickerUnlockAll,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

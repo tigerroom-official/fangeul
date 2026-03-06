@@ -1054,6 +1054,42 @@ abstract class L {
   /// In ko, this message translates to:
   /// **'₩990으로 영구 해금'**
   String get themePickerPickerLocked;
+
+  /// No description provided for @themePickerUnlockAll.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 테마 해금'**
+  String get themePickerUnlockAll;
+
+  /// No description provided for @themePickerUnlockAllDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'광고 시청으로 모든 테마 팔레트를 영구 해금하세요'**
+  String get themePickerUnlockAllDesc;
+
+  /// No description provided for @themePickerPreviewHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'미리보기 전용 — 구매 후 적용 가능'**
+  String get themePickerPreviewHint;
+
+  /// No description provided for @themePickerApplyLocked.
+  ///
+  /// In ko, this message translates to:
+  /// **'구매 후 적용 가능'**
+  String get themePickerApplyLocked;
+
+  /// No description provided for @themePickerUndo.
+  ///
+  /// In ko, this message translates to:
+  /// **'되돌리기'**
+  String get themePickerUndo;
+
+  /// No description provided for @themePickerLowContrast.
+  ///
+  /// In ko, this message translates to:
+  /// **'낮은 대비'**
+  String get themePickerLowContrast;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

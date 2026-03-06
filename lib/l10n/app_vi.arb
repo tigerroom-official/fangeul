@@ -202,5 +202,12 @@
   "themePickerTextColorAuto": "Tương phản tự động",
   "themePickerPreview": "Xem trước",
   "themePickerLocked": "Mở khóa bằng Fan Pass",
-  "themePickerPickerLocked": "Mở khóa vĩnh viễn ₩990"
+  "themePickerPickerLocked": "Mở khóa vĩnh viễn ₩990",
+
+  "themePickerUnlockAll": "Mở khóa tất cả chủ đề",
+  "themePickerUnlockAllDesc": "Xem quảng cáo để mở khóa tất cả bảng màu chủ đề vĩnh viễn",
+  "themePickerPreviewHint": "Chỉ xem trước — mua để áp dụng",
+  "themePickerApplyLocked": "Mua để áp dụng chủ đề này",
+  "themePickerUndo": "Hoàn tác",
+  "themePickerLowContrast": "Độ tương phản thấp"
 }

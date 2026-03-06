@@ -92,6 +92,25 @@ final isRewardedUnlockActiveProvider = AutoDisposeProvider<bool>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef IsRewardedUnlockActiveRef = AutoDisposeProviderRef<bool>;
+String _$isThemeUnlockedHash() => r'facc28554d8f0e800f48fff8c8680a8fa0476f35';
+
+/// 보상형 광고로 테마 팔레트가 영구 해금되었는지 여부.
+///
+/// Copied from [isThemeUnlocked].
+@ProviderFor(isThemeUnlocked)
+final isThemeUnlockedProvider = AutoDisposeProvider<bool>.internal(
+  isThemeUnlocked,
+  name: r'isThemeUnlockedProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$isThemeUnlockedHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef IsThemeUnlockedRef = AutoDisposeProviderRef<bool>;
 String _$favoriteSlotLimitHash() => r'bb13de5baada37945b2a84f21a6ba1420284c437';
 
 /// 즐겨찾기 슬롯 제한 편의 Provider.
@@ -112,7 +131,7 @@ final favoriteSlotLimitProvider = AutoDisposeProvider<int>.internal(
 // ignore: unused_element
 typedef FavoriteSlotLimitRef = AutoDisposeProviderRef<int>;
 String _$monetizationNotifierHash() =>
-    r'24df125a10c17ab46e9b54ae74c4854df0a8a358';
+    r'0b58c0d30d57e9014a8b6acf31b407168d8ff56b';
 
 /// 수익화 상태를 관리하는 중앙 Notifier.
 ///

@@ -202,5 +202,12 @@
   "themePickerTextColorAuto": "คอนทราสต์อัตโนมัติ",
   "themePickerPreview": "ตัวอย่าง",
   "themePickerLocked": "ปลดล็อกด้วย Fan Pass",
-  "themePickerPickerLocked": "ปลดล็อกตลอดกาล ₩990"
+  "themePickerPickerLocked": "ปลดล็อกตลอดกาล ₩990",
+
+  "themePickerUnlockAll": "ปลดล็อกธีมทั้งหมด",
+  "themePickerUnlockAllDesc": "ดูโฆษณาเพื่อปลดล็อกพาเลทธีมทั้งหมดตลอดกาล",
+  "themePickerPreviewHint": "ตัวอย่างเท่านั้น — ซื้อเพื่อใช้งาน",
+  "themePickerApplyLocked": "ซื้อเพื่อใช้ธีมนี้",
+  "themePickerUndo": "เลิกทำ",
+  "themePickerLowContrast": "คอนทราสต์ต่ำ"
 }

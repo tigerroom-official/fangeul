@@ -10,7 +10,7 @@ import 'package:fangeul/presentation/theme/fangeul_text_styles.dart';
 abstract final class FangeulTheme {
   /// 다크 테마 (기본값).
   static ThemeData dark() {
-    return ThemeData(
+    return _withComponentThemes(ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
       colorScheme: const ColorScheme.dark(
@@ -35,47 +35,12 @@ abstract final class FangeulTheme {
       ),
       scaffoldBackgroundColor: FangeulColors.darkBackground,
       textTheme: FangeulTextStyles.textTheme,
-      navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: FangeulColors.darkSurface,
-        indicatorColor: FangeulColors.primary.withValues(alpha: 0.15),
-        labelTextStyle: WidgetStatePropertyAll(
-          FangeulTextStyles.textTheme.labelMedium,
-        ),
-      ),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: FangeulColors.darkBackground,
-        foregroundColor: FangeulColors.darkOnSurface,
-        elevation: 0,
-      ),
-      cardTheme: const CardThemeData(
-        color: FangeulColors.darkSurface,
-        elevation: 0,
-      ),
-      chipTheme: ChipThemeData(
-        backgroundColor: FangeulColors.darkSurfaceContainer,
-        selectedColor: FangeulColors.primary,
-        labelStyle: FangeulTextStyles.textTheme.labelLarge,
-        showCheckmark: false,
-        side: BorderSide(color: FangeulColors.darkOutlineVariant),
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: FangeulColors.darkSurfaceContainer,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: FangeulColors.primary),
-        ),
-      ),
-    );
+    ));
   }
 
   /// 라이트 테마.
   static ThemeData light() {
-    return ThemeData(
+    return _withComponentThemes(ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
       colorScheme: const ColorScheme.light(
@@ -91,47 +56,13 @@ abstract final class FangeulTheme {
         onSurfaceVariant: FangeulColors.lightOnSurfaceVariant,
         outline: FangeulColors.lightOutline,
         outlineVariant: FangeulColors.lightOutlineVariant,
+        surfaceContainerLowest: FangeulColors.lightBackground,
         surfaceContainer: FangeulColors.lightSurfaceContainer,
         surfaceContainerHigh: FangeulColors.lightSurfaceContainerHigh,
       ),
       scaffoldBackgroundColor: FangeulColors.lightBackground,
       textTheme: FangeulTextStyles.textTheme,
-      navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: FangeulColors.lightSurface,
-        indicatorColor: FangeulColors.primaryLight.withValues(alpha: 0.35),
-        labelTextStyle: WidgetStatePropertyAll(
-          FangeulTextStyles.textTheme.labelMedium,
-        ),
-      ),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: FangeulColors.lightBackground,
-        foregroundColor: FangeulColors.lightOnSurface,
-        elevation: 0,
-      ),
-      cardTheme: const CardThemeData(
-        color: FangeulColors.lightSurface,
-        elevation: 0,
-      ),
-      chipTheme: ChipThemeData(
-        backgroundColor: FangeulColors.lightSurfaceContainer,
-        selectedColor: FangeulColors.primaryLight,
-        labelStyle: FangeulTextStyles.textTheme.labelLarge,
-        showCheckmark: false,
-        side: BorderSide(color: FangeulColors.lightOutlineVariant),
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: FangeulColors.lightSurfaceContainer,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: FangeulColors.primaryLight),
-        ),
-      ),
-    );
+    ));
   }
 
   /// seed color 기반 동적 다크 테마.
@@ -151,13 +82,13 @@ abstract final class FangeulTheme {
         onPrimary: customTextColor,
       );
     }
-    return ThemeData(
+    return _withComponentThemes(ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: colorScheme.surface,
       textTheme: FangeulTextStyles.textTheme,
-    );
+    ));
   }
 
   /// seed color 기반 동적 라이트 테마.
@@ -173,12 +104,58 @@ abstract final class FangeulTheme {
         onPrimary: customTextColor,
       );
     }
-    return ThemeData(
+    return _withComponentThemes(ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: colorScheme.surface,
       textTheme: FangeulTextStyles.textTheme,
+    ));
+  }
+
+  /// Component theme 헬퍼 — ColorScheme 토큰 기반.
+  ///
+  /// appBar/card/chip/navigationBar/inputDecoration 5개 component theme을
+  /// [ColorScheme] 토큰으로 구성한다. 정적/동적 테마 모두 공유.
+  static ThemeData _withComponentThemes(ThemeData base) {
+    final cs = base.colorScheme;
+    final isDark = cs.brightness == Brightness.dark;
+    return base.copyWith(
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: cs.surface,
+        indicatorColor: cs.primary.withValues(alpha: isDark ? 0.15 : 0.35),
+        labelTextStyle: WidgetStatePropertyAll(
+          FangeulTextStyles.textTheme.labelMedium,
+        ),
+      ),
+      appBarTheme: AppBarTheme(
+        backgroundColor: base.scaffoldBackgroundColor,
+        foregroundColor: cs.onSurface,
+        elevation: 0,
+      ),
+      cardTheme: CardThemeData(
+        color: cs.surface,
+        elevation: 0,
+      ),
+      chipTheme: ChipThemeData(
+        backgroundColor: cs.surfaceContainer,
+        selectedColor: cs.primary,
+        labelStyle: FangeulTextStyles.textTheme.labelLarge,
+        showCheckmark: false,
+        side: BorderSide(color: cs.outlineVariant),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: cs.surfaceContainer,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: cs.primary),
+        ),
+      ),
     );
   }
 }

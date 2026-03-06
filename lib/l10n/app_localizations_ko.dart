@@ -514,4 +514,22 @@ class LKo extends L {
 
   @override
   String get themePickerPickerLocked => '₩990으로 영구 해금';
+
+  @override
+  String get themePickerUnlockAll => '전체 테마 해금';
+
+  @override
+  String get themePickerUnlockAllDesc => '광고 시청으로 모든 테마 팔레트를 영구 해금하세요';
+
+  @override
+  String get themePickerPreviewHint => '미리보기 전용 — 구매 후 적용 가능';
+
+  @override
+  String get themePickerApplyLocked => '구매 후 적용 가능';
+
+  @override
+  String get themePickerUndo => '되돌리기';
+
+  @override
+  String get themePickerLowContrast => '낮은 대비';
 }

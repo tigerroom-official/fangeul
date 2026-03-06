@@ -244,6 +244,17 @@ class MonetizationNotifier extends _$MonetizationNotifier {
     await _updateState(current.copyWith(hasThemePicker: true));
   }
 
+  /// 보상형 광고로 테마 팔레트를 영구 해금한다.
+  Future<void> unlockThemePalettes() async {
+    try {
+      await future;
+    } catch (_) {}
+    final current = state.valueOrNull;
+    if (current == null) return;
+
+    await _updateState(current.copyWith(themeUnlocked: true));
+  }
+
   /// 허니문 기간을 종료한다.
   ///
   /// honeymoonActive를 false로, favoriteSlotLimit를 기본 제한(5)으로 설정.
@@ -453,6 +464,13 @@ bool isRewardedUnlockActive(IsRewardedUnlockActiveRef ref) {
   ref.onDispose(timer.cancel);
 
   return true;
+}
+
+/// 보상형 광고로 테마 팔레트가 영구 해금되었는지 여부.
+@riverpod
+bool isThemeUnlocked(IsThemeUnlockedRef ref) {
+  final asyncState = ref.watch(monetizationNotifierProvider);
+  return asyncState.valueOrNull?.themeUnlocked ?? false;
 }
 
 /// 즐겨찾기 슬롯 제한 편의 Provider.

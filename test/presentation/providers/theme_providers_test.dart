@@ -3,7 +3,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:fangeul/presentation/providers/theme_providers.dart';
+import 'package:fangeul/presentation/providers/theme_providers.dart'
+    show
+        sharedPreferencesProvider,
+        themeModeNotifierProvider,
+        themeColorNotifierProvider,
+        contrastRatio;
 import 'package:fangeul/presentation/theme/theme_palettes.dart';
 
 void main() {
@@ -143,6 +148,70 @@ void main() {
       await notifier.resetToDefault();
 
       expect(notifier.customTextColor, isNull);
+    });
+
+    test('should support undo after setSeedColor', () async {
+      container.listen(themeColorNotifierProvider, (_, __) {});
+      final notifier = container.read(themeColorNotifierProvider.notifier);
+
+      // A → B → undo → A
+      await notifier.setSeedColor(const Color(0xFF4527A0));
+      expect(container.read(themeColorNotifierProvider),
+          const Color(0xFF4527A0));
+
+      await notifier.setSeedColor(const Color(0xFFF8BBD0));
+      expect(container.read(themeColorNotifierProvider),
+          const Color(0xFFF8BBD0));
+      expect(notifier.canUndo, true);
+
+      await notifier.undo();
+      expect(container.read(themeColorNotifierProvider),
+          const Color(0xFF4527A0));
+      expect(notifier.canUndo, false);
+    });
+
+    test('should not undo when canUndo is false', () async {
+      container.listen(themeColorNotifierProvider, (_, __) {});
+      final notifier = container.read(themeColorNotifierProvider.notifier);
+
+      expect(notifier.canUndo, false);
+      await notifier.undo(); // no-op
+      expect(container.read(themeColorNotifierProvider), isNull);
+    });
+
+    test('should report canUndo after color change', () async {
+      container.listen(themeColorNotifierProvider, (_, __) {});
+      final notifier = container.read(themeColorNotifierProvider.notifier);
+
+      expect(notifier.canUndo, false);
+      await notifier.setSeedColor(const Color(0xFF4527A0));
+      expect(notifier.canUndo, true);
+    });
+  });
+
+  group('contrastRatio', () {
+    test('should return ~21.0 for white on black', () {
+      final ratio = contrastRatio(Colors.white, Colors.black);
+      expect(ratio, closeTo(21.0, 0.1));
+    });
+
+    test('should return 1.0 for same color', () {
+      final ratio = contrastRatio(Colors.red, Colors.red);
+      expect(ratio, closeTo(1.0, 0.01));
+    });
+
+    test('should detect low contrast', () {
+      // Light gray on white
+      const lightGray = Color(0xFFCCCCCC);
+      final ratio = contrastRatio(lightGray, Colors.white);
+      expect(ratio, lessThan(4.5));
+    });
+
+    test('should detect adequate contrast', () {
+      // Dark text on light bg
+      const darkText = Color(0xFF333333);
+      final ratio = contrastRatio(darkText, Colors.white);
+      expect(ratio, greaterThanOrEqualTo(4.5));
     });
   });
 }

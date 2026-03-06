@@ -202,5 +202,12 @@
   "themePickerTextColorAuto": "Auto contrast",
   "themePickerPreview": "Preview",
   "themePickerLocked": "Unlock with Fan Pass",
-  "themePickerPickerLocked": "Unlock forever for ₩990"
+  "themePickerPickerLocked": "Unlock forever for ₩990",
+
+  "themePickerUnlockAll": "Unlock all themes",
+  "themePickerUnlockAllDesc": "Watch an ad to unlock all theme palettes forever",
+  "themePickerPreviewHint": "Preview only — purchase to apply",
+  "themePickerApplyLocked": "Purchase to apply this theme",
+  "themePickerUndo": "Undo",
+  "themePickerLowContrast": "Low contrast"
 }
