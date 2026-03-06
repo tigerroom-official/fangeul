@@ -450,4 +450,77 @@ class LEn extends L {
 
   @override
   String get contactSubtitle => 'Report bugs or suggest features';
+
+  @override
+  String get settingsThemeColor => 'Theme Color';
+
+  @override
+  String get settingsThemeColorDesc => 'Customize the app color';
+
+  @override
+  String get themePickerTitle => 'Theme Color';
+
+  @override
+  String get themePickerSubtitle => 'Make the app yours with your own color';
+
+  @override
+  String get paletteDefault => 'Default (Teal)';
+
+  @override
+  String get paletteCherryBlossom => 'Cherry Blossom';
+
+  @override
+  String get paletteOcean => 'Ocean';
+
+  @override
+  String get paletteForest => 'Forest';
+
+  @override
+  String get paletteSunset => 'Sunset';
+
+  @override
+  String get paletteStarryNight => 'Starry Night';
+
+  @override
+  String get paletteDawn => 'Dawn';
+
+  @override
+  String get paletteDusk => 'Dusk';
+
+  @override
+  String get paletteJewel => 'Jewel';
+
+  @override
+  String get themePickerCustom => 'Pick your own';
+
+  @override
+  String get themePickerThemeColor => 'Theme color';
+
+  @override
+  String get themePickerHue => 'Hue';
+
+  @override
+  String get themePickerSaturation => 'Saturation';
+
+  @override
+  String get themePickerLightness => 'Lightness';
+
+  @override
+  String get themePickerTextColor => 'Text color';
+
+  @override
+  String get themePickerTextColorDesc =>
+      'Choose your text color (free picker only)';
+
+  @override
+  String get themePickerTextColorAuto => 'Auto contrast';
+
+  @override
+  String get themePickerPreview => 'Preview';
+
+  @override
+  String get themePickerLocked => 'Unlock with Fan Pass';
+
+  @override
+  String get themePickerPickerLocked => 'Unlock forever for ₩990';
 }

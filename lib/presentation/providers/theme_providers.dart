@@ -103,7 +103,7 @@ class ThemeColorNotifier extends _$ThemeColorNotifier {
     } else {
       await prefs.setString(
         _seedKey,
-        color.value.toRadixString(16).padLeft(8, '0'),
+        color.toARGB32().toRadixString(16).padLeft(8, '0'),
       );
     }
   }
@@ -116,7 +116,7 @@ class ThemeColorNotifier extends _$ThemeColorNotifier {
     } else {
       await prefs.setString(
         _textKey,
-        color.value.toRadixString(16).padLeft(8, '0'),
+        color.toARGB32().toRadixString(16).padLeft(8, '0'),
       );
     }
     ref.invalidateSelf();

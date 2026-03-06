@@ -452,4 +452,76 @@ class LId extends L {
 
   @override
   String get contactSubtitle => 'Laporkan bug atau sarankan fitur';
+
+  @override
+  String get settingsThemeColor => '테마 색상';
+
+  @override
+  String get settingsThemeColorDesc => '앱 전체 색상을 변경하세요';
+
+  @override
+  String get themePickerTitle => '테마 색상';
+
+  @override
+  String get themePickerSubtitle => '나만의 색상으로 앱을 꾸며보세요';
+
+  @override
+  String get paletteDefault => '기본 (틸)';
+
+  @override
+  String get paletteCherryBlossom => '벚꽃';
+
+  @override
+  String get paletteOcean => '바다';
+
+  @override
+  String get paletteForest => '숲';
+
+  @override
+  String get paletteSunset => '노을';
+
+  @override
+  String get paletteStarryNight => '별밤';
+
+  @override
+  String get paletteDawn => '새벽';
+
+  @override
+  String get paletteDusk => '석양';
+
+  @override
+  String get paletteJewel => '보석';
+
+  @override
+  String get themePickerCustom => '직접 고르기';
+
+  @override
+  String get themePickerThemeColor => '테마 색상';
+
+  @override
+  String get themePickerHue => '색조';
+
+  @override
+  String get themePickerSaturation => '채도';
+
+  @override
+  String get themePickerLightness => '밝기';
+
+  @override
+  String get themePickerTextColor => '글자색';
+
+  @override
+  String get themePickerTextColorDesc => '글자색을 직접 선택하세요 (자유 피커 전용)';
+
+  @override
+  String get themePickerTextColorAuto => '자동 대비';
+
+  @override
+  String get themePickerPreview => '미리보기';
+
+  @override
+  String get themePickerLocked => '팬 패스로 해금';
+
+  @override
+  String get themePickerPickerLocked => '₩990으로 영구 해금';
 }

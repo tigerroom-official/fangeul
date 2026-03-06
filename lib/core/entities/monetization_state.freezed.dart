@@ -53,6 +53,9 @@ mixin _$MonetizationState {
   /// D-day 해금 날짜 목록 ('{date}_{artist}_{type}' 형식).
   List<String> get ddayUnlockedDates => throw _privateConstructorUsedError;
 
+  /// 자유 컬러 피커 IAP 구매 여부.
+  bool get hasThemePicker => throw _privateConstructorUsedError;
+
   /// 단조증가 타임스탬프 (밀리초). 시간 조작 방어용.
   int get lastTimestamp => throw _privateConstructorUsedError;
 
@@ -84,6 +87,7 @@ abstract class $MonetizationStateCopyWith<$Res> {
       int unlockExpiresAt,
       List<String> purchasedPackIds,
       List<String> ddayUnlockedDates,
+      bool hasThemePicker,
       int lastTimestamp});
 }
 
@@ -113,6 +117,7 @@ class _$MonetizationStateCopyWithImpl<$Res, $Val extends MonetizationState>
     Object? unlockExpiresAt = null,
     Object? purchasedPackIds = null,
     Object? ddayUnlockedDates = null,
+    Object? hasThemePicker = null,
     Object? lastTimestamp = null,
   }) {
     return _then(_value.copyWith(
@@ -160,6 +165,10 @@ class _$MonetizationStateCopyWithImpl<$Res, $Val extends MonetizationState>
           ? _value.ddayUnlockedDates
           : ddayUnlockedDates // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      hasThemePicker: null == hasThemePicker
+          ? _value.hasThemePicker
+          : hasThemePicker // ignore: cast_nullable_to_non_nullable
+              as bool,
       lastTimestamp: null == lastTimestamp
           ? _value.lastTimestamp
           : lastTimestamp // ignore: cast_nullable_to_non_nullable
@@ -188,6 +197,7 @@ abstract class _$$MonetizationStateImplCopyWith<$Res>
       int unlockExpiresAt,
       List<String> purchasedPackIds,
       List<String> ddayUnlockedDates,
+      bool hasThemePicker,
       int lastTimestamp});
 }
 
@@ -215,6 +225,7 @@ class __$$MonetizationStateImplCopyWithImpl<$Res>
     Object? unlockExpiresAt = null,
     Object? purchasedPackIds = null,
     Object? ddayUnlockedDates = null,
+    Object? hasThemePicker = null,
     Object? lastTimestamp = null,
   }) {
     return _then(_$MonetizationStateImpl(
@@ -262,6 +273,10 @@ class __$$MonetizationStateImplCopyWithImpl<$Res>
           ? _value._ddayUnlockedDates
           : ddayUnlockedDates // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      hasThemePicker: null == hasThemePicker
+          ? _value.hasThemePicker
+          : hasThemePicker // ignore: cast_nullable_to_non_nullable
+              as bool,
       lastTimestamp: null == lastTimestamp
           ? _value.lastTimestamp
           : lastTimestamp // ignore: cast_nullable_to_non_nullable
@@ -285,6 +300,7 @@ class _$MonetizationStateImpl implements _MonetizationState {
       this.unlockExpiresAt = 0,
       final List<String> purchasedPackIds = const [],
       final List<String> ddayUnlockedDates = const [],
+      this.hasThemePicker = false,
       this.lastTimestamp = 0})
       : _purchasedPackIds = purchasedPackIds,
         _ddayUnlockedDates = ddayUnlockedDates;
@@ -360,6 +376,11 @@ class _$MonetizationStateImpl implements _MonetizationState {
     return EqualUnmodifiableListView(_ddayUnlockedDates);
   }
 
+  /// 자유 컬러 피커 IAP 구매 여부.
+  @override
+  @JsonKey()
+  final bool hasThemePicker;
+
   /// 단조증가 타임스탬프 (밀리초). 시간 조작 방어용.
   @override
   @JsonKey()
@@ -367,7 +388,7 @@ class _$MonetizationStateImpl implements _MonetizationState {
 
   @override
   String toString() {
-    return 'MonetizationState(installDate: $installDate, honeymoonActive: $honeymoonActive, favoriteSlotLimit: $favoriteSlotLimit, ttsPlayCount: $ttsPlayCount, ttsLastResetDate: $ttsLastResetDate, adWatchCount: $adWatchCount, adLastResetDate: $adLastResetDate, lastAdWatchTimestamp: $lastAdWatchTimestamp, unlockExpiresAt: $unlockExpiresAt, purchasedPackIds: $purchasedPackIds, ddayUnlockedDates: $ddayUnlockedDates, lastTimestamp: $lastTimestamp)';
+    return 'MonetizationState(installDate: $installDate, honeymoonActive: $honeymoonActive, favoriteSlotLimit: $favoriteSlotLimit, ttsPlayCount: $ttsPlayCount, ttsLastResetDate: $ttsLastResetDate, adWatchCount: $adWatchCount, adLastResetDate: $adLastResetDate, lastAdWatchTimestamp: $lastAdWatchTimestamp, unlockExpiresAt: $unlockExpiresAt, purchasedPackIds: $purchasedPackIds, ddayUnlockedDates: $ddayUnlockedDates, hasThemePicker: $hasThemePicker, lastTimestamp: $lastTimestamp)';
   }
 
   @override
@@ -397,6 +418,8 @@ class _$MonetizationStateImpl implements _MonetizationState {
                 .equals(other._purchasedPackIds, _purchasedPackIds) &&
             const DeepCollectionEquality()
                 .equals(other._ddayUnlockedDates, _ddayUnlockedDates) &&
+            (identical(other.hasThemePicker, hasThemePicker) ||
+                other.hasThemePicker == hasThemePicker) &&
             (identical(other.lastTimestamp, lastTimestamp) ||
                 other.lastTimestamp == lastTimestamp));
   }
@@ -416,6 +439,7 @@ class _$MonetizationStateImpl implements _MonetizationState {
       unlockExpiresAt,
       const DeepCollectionEquality().hash(_purchasedPackIds),
       const DeepCollectionEquality().hash(_ddayUnlockedDates),
+      hasThemePicker,
       lastTimestamp);
 
   /// Create a copy of MonetizationState
@@ -448,6 +472,7 @@ abstract class _MonetizationState implements MonetizationState {
       final int unlockExpiresAt,
       final List<String> purchasedPackIds,
       final List<String> ddayUnlockedDates,
+      final bool hasThemePicker,
       final int lastTimestamp}) = _$MonetizationStateImpl;
 
   factory _MonetizationState.fromJson(Map<String, dynamic> json) =
@@ -496,6 +521,10 @@ abstract class _MonetizationState implements MonetizationState {
   /// D-day 해금 날짜 목록 ('{date}_{artist}_{type}' 형식).
   @override
   List<String> get ddayUnlockedDates;
+
+  /// 자유 컬러 피커 IAP 구매 여부.
+  @override
+  bool get hasThemePicker;
 
   /// 단조증가 타임스탬프 (밀리초). 시간 조작 방어용.
   @override

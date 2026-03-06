@@ -27,6 +27,7 @@ _$MonetizationStateImpl _$$MonetizationStateImplFromJson(
               ?.map((e) => e as String)
               .toList() ??
           const [],
+      hasThemePicker: json['has_theme_picker'] as bool? ?? false,
       lastTimestamp: (json['last_timestamp'] as num?)?.toInt() ?? 0,
     );
 
@@ -44,5 +45,6 @@ Map<String, dynamic> _$$MonetizationStateImplToJson(
       'unlock_expires_at': instance.unlockExpiresAt,
       'purchased_pack_ids': instance.purchasedPackIds,
       'dday_unlocked_dates': instance.ddayUnlockedDates,
+      'has_theme_picker': instance.hasThemePicker,
       'last_timestamp': instance.lastTimestamp,
     };

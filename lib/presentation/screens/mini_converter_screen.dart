@@ -121,6 +121,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
     ref.invalidate(compactPhraseFilterNotifierProvider);
     ref.invalidate(themeModeNotifierProvider);
     ref.invalidate(localeNotifierProvider);
+    ref.invalidate(themeColorNotifierProvider);
     ref.invalidate(myIdolNotifierProvider);
     ref.invalidate(myIdolDisplayNameProvider);
   }

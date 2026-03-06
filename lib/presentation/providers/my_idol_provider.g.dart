@@ -73,7 +73,7 @@ final myIdolMemberNameProvider = AutoDisposeFutureProvider<String?>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef MyIdolMemberNameRef = AutoDisposeFutureProviderRef<String?>;
-String _$myIdolNotifierHash() => r'77d67f583bb2eae5c8427e1977aef391043f92ea';
+String _$myIdolNotifierHash() => r'fec6da58a9a1517b5bd6c4cdfef3e52c7e142db4';
 
 /// 마이 아이돌 선택 Notifier.
 ///

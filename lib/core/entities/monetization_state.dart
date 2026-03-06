@@ -44,6 +44,9 @@ class MonetizationState with _$MonetizationState {
     /// D-day 해금 날짜 목록 ('{date}_{artist}_{type}' 형식).
     @Default([]) List<String> ddayUnlockedDates,
 
+    /// 자유 컬러 피커 IAP 구매 여부.
+    @Default(false) bool hasThemePicker,
+
     /// 단조증가 타임스탬프 (밀리초). 시간 조작 방어용.
     @Default(0) int lastTimestamp,
   }) = _MonetizationState;

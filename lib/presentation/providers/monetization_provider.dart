@@ -233,6 +233,17 @@ class MonetizationNotifier extends _$MonetizationNotifier {
     await _repository.save(updated);
   }
 
+  /// 자유 컬러 피커를 해금한다 (IAP 구매 후).
+  Future<void> unlockThemePicker() async {
+    try {
+      await future;
+    } catch (_) {}
+    final current = state.valueOrNull;
+    if (current == null) return;
+
+    await _updateState(current.copyWith(hasThemePicker: true));
+  }
+
   /// 허니문 기간을 종료한다.
   ///
   /// honeymoonActive를 false로, favoriteSlotLimit를 기본 제한(5)으로 설정.

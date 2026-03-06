@@ -95,14 +95,16 @@ void main() {
   }
 
   group('CompactPhraseFilterNotifier', () {
-    test('should default to favorites when no saved data', () async {
+    test('should default to first pack when no saved data and no idol',
+        () async {
       final container = createContainer();
       addTearDown(container.dispose);
 
       container.listen(compactPhraseFilterNotifierProvider, (_, __) {});
       final filter =
           await container.read(compactPhraseFilterNotifierProvider.future);
-      expect(filter, const CompactPhraseFilter.favorites());
+      // 스마트 기본값: 즐찾(없음) → 아이돌(없음) → 첫 팩
+      expect(filter, const CompactPhraseFilter.pack('basic_love'));
     });
 
     test('should load saved pack filter on build', () async {
@@ -138,7 +140,8 @@ void main() {
       container.listen(compactPhraseFilterNotifierProvider, (_, __) {});
       final filter =
           await container.read(compactPhraseFilterNotifierProvider.future);
-      expect(filter, const CompactPhraseFilter.favorites());
+      // 잘못된 데이터 → 스마트 기본값: 첫 팩
+      expect(filter, const CompactPhraseFilter.pack('basic_love'));
     });
 
     test('should save pack selection to SharedPreferences', () async {
@@ -217,9 +220,17 @@ void main() {
   });
 
   group('filteredCompactPhrasesProvider', () {
-    test('should return empty list when no favorites', () async {
+    test('should return empty list when favorites selected but none saved',
+        () async {
       final container = createContainer();
       addTearDown(container.dispose);
+
+      // 스마트 기본값은 첫 팩이므로, 명시적으로 즐겨찾기 선택
+      container.listen(compactPhraseFilterNotifierProvider, (_, __) {});
+      await container.read(compactPhraseFilterNotifierProvider.future);
+      await container
+          .read(compactPhraseFilterNotifierProvider.notifier)
+          .selectFavorites();
 
       final phrases =
           await container.read(filteredCompactPhrasesProvider.future);

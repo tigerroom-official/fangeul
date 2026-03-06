@@ -176,5 +176,31 @@
   "reviewLabel": "Rate this app",
   "reviewSubtitle": "Your review helps other fans find Fangeul",
   "contactLabel": "Contact us",
-  "contactSubtitle": "Report bugs or suggest features"
+  "contactSubtitle": "Report bugs or suggest features",
+
+  "settingsThemeColor": "Theme Color",
+  "settingsThemeColorDesc": "Customize the app color",
+
+  "themePickerTitle": "Theme Color",
+  "themePickerSubtitle": "Make the app yours with your own color",
+  "paletteDefault": "Default (Teal)",
+  "paletteCherryBlossom": "Cherry Blossom",
+  "paletteOcean": "Ocean",
+  "paletteForest": "Forest",
+  "paletteSunset": "Sunset",
+  "paletteStarryNight": "Starry Night",
+  "paletteDawn": "Dawn",
+  "paletteDusk": "Dusk",
+  "paletteJewel": "Jewel",
+  "themePickerCustom": "Pick your own",
+  "themePickerThemeColor": "Theme color",
+  "themePickerHue": "Hue",
+  "themePickerSaturation": "Saturation",
+  "themePickerLightness": "Lightness",
+  "themePickerTextColor": "Text color",
+  "themePickerTextColorDesc": "Choose your text color (free picker only)",
+  "themePickerTextColorAuto": "Auto contrast",
+  "themePickerPreview": "Preview",
+  "themePickerLocked": "Unlock with Fan Pass",
+  "themePickerPickerLocked": "Unlock forever for ₩990"
 }

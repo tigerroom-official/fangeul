@@ -9,6 +9,7 @@ import 'package:fangeul/platform/bubble_state.dart';
 import 'package:fangeul/presentation/providers/bubble_providers.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
+import 'package:fangeul/presentation/widgets/theme_picker_sheet.dart';
 
 /// 지원 언어 목록 — null은 시스템 기본.
 const _supportedLocaleOptions = <Locale?>[
@@ -43,6 +44,7 @@ class SettingsScreen extends ConsumerWidget {
     final l = L.of(context);
     final themeMode = ref.watch(themeModeNotifierProvider);
     final userLocale = ref.watch(localeNotifierProvider);
+    final seedColor = ref.watch(themeColorNotifierProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -86,7 +88,24 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
           const Divider(),
-          // 2. 언어 설정
+          // 2. 테마 색상
+          ListTile(
+            leading:
+                Icon(Icons.palette_outlined, color: theme.colorScheme.primary),
+            title: Text(l.settingsThemeColor),
+            subtitle: Text(l.settingsThemeColorDesc),
+            trailing: Container(
+              width: 24,
+              height: 24,
+              decoration: BoxDecoration(
+                color: seedColor ?? theme.colorScheme.primary,
+                shape: BoxShape.circle,
+              ),
+            ),
+            onTap: () => ThemePickerSheet.show(context),
+          ),
+          const Divider(),
+          // 3. 언어 설정
           ListTile(
             leading: const Icon(Icons.language),
             title: Text(l.languageLabel),
@@ -106,13 +125,13 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
           const Divider(),
-          // 3. 마이 아이돌
+          // 4. 마이 아이돌
           const _MyIdolTile(),
           const Divider(),
-          // 4. 플로팅 버블
+          // 5. 플로팅 버블
           const _BubbleToggleTile(),
           const Divider(),
-          // 5. 리뷰하기
+          // 6. 리뷰하기
           ListTile(
             leading: const Icon(Icons.rate_review_outlined),
             title: Text(l.reviewLabel),
@@ -125,7 +144,7 @@ class SettingsScreen extends ConsumerWidget {
             },
           ),
           const Divider(),
-          // 6. 문의하기
+          // 7. 문의하기
           ListTile(
             leading: const Icon(Icons.mail_outline),
             title: Text(l.contactLabel),
@@ -138,7 +157,7 @@ class SettingsScreen extends ConsumerWidget {
             },
           ),
           const Divider(),
-          // 7. 앱 정보
+          // 8. 앱 정보
           ListTile(
             leading: const Icon(Icons.info_outline),
             title: Text(l.appInfoTitle),

@@ -257,5 +257,31 @@
   "reviewLabel": "리뷰 남기기",
   "reviewSubtitle": "리뷰는 다른 팬들이 Fangeul을 찾는 데 도움이 돼요",
   "contactLabel": "문의하기",
-  "contactSubtitle": "버그 신고 및 기능 제안"
+  "contactSubtitle": "버그 신고 및 기능 제안",
+
+  "settingsThemeColor": "테마 색상",
+  "settingsThemeColorDesc": "앱 전체 색상을 변경하세요",
+
+  "themePickerTitle": "테마 색상",
+  "themePickerSubtitle": "나만의 색상으로 앱을 꾸며보세요",
+  "paletteDefault": "기본 (틸)",
+  "paletteCherryBlossom": "벚꽃",
+  "paletteOcean": "바다",
+  "paletteForest": "숲",
+  "paletteSunset": "노을",
+  "paletteStarryNight": "별밤",
+  "paletteDawn": "새벽",
+  "paletteDusk": "석양",
+  "paletteJewel": "보석",
+  "themePickerCustom": "직접 고르기",
+  "themePickerThemeColor": "테마 색상",
+  "themePickerHue": "색조",
+  "themePickerSaturation": "채도",
+  "themePickerLightness": "밝기",
+  "themePickerTextColor": "글자색",
+  "themePickerTextColorDesc": "글자색을 직접 선택하세요 (자유 피커 전용)",
+  "themePickerTextColorAuto": "자동 대비",
+  "themePickerPreview": "미리보기",
+  "themePickerLocked": "팬 패스로 해금",
+  "themePickerPickerLocked": "₩990으로 영구 해금"
 }

@@ -910,6 +910,150 @@ abstract class L {
   /// In ko, this message translates to:
   /// **'버그 신고 및 기능 제안'**
   String get contactSubtitle;
+
+  /// No description provided for @settingsThemeColor.
+  ///
+  /// In ko, this message translates to:
+  /// **'테마 색상'**
+  String get settingsThemeColor;
+
+  /// No description provided for @settingsThemeColorDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'앱 전체 색상을 변경하세요'**
+  String get settingsThemeColorDesc;
+
+  /// No description provided for @themePickerTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'테마 색상'**
+  String get themePickerTitle;
+
+  /// No description provided for @themePickerSubtitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'나만의 색상으로 앱을 꾸며보세요'**
+  String get themePickerSubtitle;
+
+  /// No description provided for @paletteDefault.
+  ///
+  /// In ko, this message translates to:
+  /// **'기본 (틸)'**
+  String get paletteDefault;
+
+  /// No description provided for @paletteCherryBlossom.
+  ///
+  /// In ko, this message translates to:
+  /// **'벚꽃'**
+  String get paletteCherryBlossom;
+
+  /// No description provided for @paletteOcean.
+  ///
+  /// In ko, this message translates to:
+  /// **'바다'**
+  String get paletteOcean;
+
+  /// No description provided for @paletteForest.
+  ///
+  /// In ko, this message translates to:
+  /// **'숲'**
+  String get paletteForest;
+
+  /// No description provided for @paletteSunset.
+  ///
+  /// In ko, this message translates to:
+  /// **'노을'**
+  String get paletteSunset;
+
+  /// No description provided for @paletteStarryNight.
+  ///
+  /// In ko, this message translates to:
+  /// **'별밤'**
+  String get paletteStarryNight;
+
+  /// No description provided for @paletteDawn.
+  ///
+  /// In ko, this message translates to:
+  /// **'새벽'**
+  String get paletteDawn;
+
+  /// No description provided for @paletteDusk.
+  ///
+  /// In ko, this message translates to:
+  /// **'석양'**
+  String get paletteDusk;
+
+  /// No description provided for @paletteJewel.
+  ///
+  /// In ko, this message translates to:
+  /// **'보석'**
+  String get paletteJewel;
+
+  /// No description provided for @themePickerCustom.
+  ///
+  /// In ko, this message translates to:
+  /// **'직접 고르기'**
+  String get themePickerCustom;
+
+  /// No description provided for @themePickerThemeColor.
+  ///
+  /// In ko, this message translates to:
+  /// **'테마 색상'**
+  String get themePickerThemeColor;
+
+  /// No description provided for @themePickerHue.
+  ///
+  /// In ko, this message translates to:
+  /// **'색조'**
+  String get themePickerHue;
+
+  /// No description provided for @themePickerSaturation.
+  ///
+  /// In ko, this message translates to:
+  /// **'채도'**
+  String get themePickerSaturation;
+
+  /// No description provided for @themePickerLightness.
+  ///
+  /// In ko, this message translates to:
+  /// **'밝기'**
+  String get themePickerLightness;
+
+  /// No description provided for @themePickerTextColor.
+  ///
+  /// In ko, this message translates to:
+  /// **'글자색'**
+  String get themePickerTextColor;
+
+  /// No description provided for @themePickerTextColorDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'글자색을 직접 선택하세요 (자유 피커 전용)'**
+  String get themePickerTextColorDesc;
+
+  /// No description provided for @themePickerTextColorAuto.
+  ///
+  /// In ko, this message translates to:
+  /// **'자동 대비'**
+  String get themePickerTextColorAuto;
+
+  /// No description provided for @themePickerPreview.
+  ///
+  /// In ko, this message translates to:
+  /// **'미리보기'**
+  String get themePickerPreview;
+
+  /// No description provided for @themePickerLocked.
+  ///
+  /// In ko, this message translates to:
+  /// **'팬 패스로 해금'**
+  String get themePickerLocked;
+
+  /// No description provided for @themePickerPickerLocked.
+  ///
+  /// In ko, this message translates to:
+  /// **'₩990으로 영구 해금'**
+  String get themePickerPickerLocked;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {
