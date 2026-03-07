@@ -62,10 +62,13 @@ void main() {
     });
 
     test(
-      'should build light ColorScheme when custom with light brightness',
+      'should build light ColorScheme when custom with light brightnessOverride',
       () {
-        const config = ChoeaeColorConfig.custom(seedColor: Color(0xFF4527A0));
-        final scheme = config.buildColorScheme(Brightness.light);
+        const config = ChoeaeColorConfig.custom(
+          seedColor: Color(0xFF4527A0),
+          brightnessOverride: Brightness.light,
+        );
+        final scheme = config.buildColorScheme(Brightness.dark);
         expect(scheme.brightness, Brightness.light);
       },
     );
@@ -131,6 +134,34 @@ void main() {
       const a = ChoeaeColorConfig.palette('midnight');
       const b = ChoeaeColorConfig.palette('midnight');
       expect(a.hashCode, equals(b.hashCode));
+    });
+
+    test('custom brightnessOverride should override passed brightness', () {
+      const config = ChoeaeColorConfig.custom(
+        seedColor: Color(0xFF4527A0),
+        brightnessOverride: Brightness.dark,
+      );
+      final scheme = config.buildColorScheme(Brightness.light);
+      expect(scheme.brightness, Brightness.dark);
+    });
+
+    test('custom with light override should produce light scheme', () {
+      const config = ChoeaeColorConfig.custom(
+        seedColor: Color(0xFF4527A0),
+        brightnessOverride: Brightness.light,
+      );
+      final scheme = config.buildColorScheme(Brightness.dark);
+      expect(scheme.brightness, Brightness.light);
+    });
+
+    test('custom default brightnessOverride should be dark', () {
+      const config = ChoeaeColorConfig.custom(
+        seedColor: Color(0xFF4527A0),
+      );
+      expect(
+        (config as ChoeaeColorCustom).brightnessOverride,
+        Brightness.dark,
+      );
     });
   });
 }

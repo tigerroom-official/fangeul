@@ -16,9 +16,13 @@ sealed class ChoeaeColorConfig with _$ChoeaeColorConfig {
   const factory ChoeaeColorConfig.palette(String packId) = ChoeaeColorPalette;
 
   /// 유저 커스텀 (IAP). [textColorOverride]가 null이면 auto contrast.
+  ///
+  /// [brightnessOverride]는 시스템 brightness를 무시하고 고정 brightness를 사용한다.
+  /// 기본값 [Brightness.dark].
   const factory ChoeaeColorConfig.custom({
     required Color seedColor,
     Color? textColorOverride,
+    @Default(Brightness.dark) Brightness brightnessOverride,
   }) = ChoeaeColorCustom;
 
   const ChoeaeColorConfig._();
@@ -31,10 +35,14 @@ sealed class ChoeaeColorConfig with _$ChoeaeColorConfig {
     return switch (this) {
       ChoeaeColorPalette(:final packId) =>
         PaletteRegistry.get(packId).schemeFor(brightness),
-      ChoeaeColorCustom(:final seedColor, :final textColorOverride) =>
+      ChoeaeColorCustom(
+        :final seedColor,
+        :final textColorOverride,
+        :final brightnessOverride,
+      ) =>
         CustomSchemeBuilder.build(
           seedColor: seedColor,
-          brightness: brightness,
+          brightness: brightnessOverride,
           textColorOverride: textColorOverride,
         ),
     };

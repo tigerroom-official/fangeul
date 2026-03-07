@@ -12,6 +12,7 @@ class ThemeSlot {
     required this.type,
     required this.value,
     this.textOverride,
+    this.brightnessOverride,
   });
 
   /// 사용자 지정 이름.
@@ -26,12 +27,17 @@ class ThemeSlot {
   /// custom 전용: 글자색 hex 또는 null.
   final String? textOverride;
 
+  /// custom 전용: 'dark' | 'light' | null.
+  final String? brightnessOverride;
+
   /// JSON 직렬화.
   Map<String, dynamic> toJson() => {
         'name': name,
         'type': type,
         'value': value,
         if (textOverride != null) 'textOverride': textOverride,
+        if (brightnessOverride != null)
+          'brightnessOverride': brightnessOverride,
       };
 
   /// JSON 역직렬화.
@@ -40,6 +46,7 @@ class ThemeSlot {
         type: json['type'] as String? ?? 'palette',
         value: json['value'] as String? ?? PaletteRegistry.defaultId,
         textOverride: json['textOverride'] as String?,
+        brightnessOverride: json['brightnessOverride'] as String?,
       );
 
   /// [ChoeaeColorConfig]로 변환한다.
@@ -55,6 +62,8 @@ class ThemeSlot {
       return ChoeaeColorConfig.custom(
         seedColor: seedColor,
         textColorOverride: textColor,
+        brightnessOverride:
+            brightnessOverride == 'light' ? Brightness.light : Brightness.dark,
       );
     }
     // palette
@@ -74,7 +83,11 @@ class ThemeSlot {
           type: 'palette',
           value: packId,
         ),
-      ChoeaeColorCustom(:final seedColor, :final textColorOverride) =>
+      ChoeaeColorCustom(
+        :final seedColor,
+        :final textColorOverride,
+        :final brightnessOverride,
+      ) =>
         ThemeSlot(
           name: name,
           type: 'custom',
@@ -83,6 +96,7 @@ class ThemeSlot {
               ?.toARGB32()
               .toRadixString(16)
               .padLeft(8, '0'),
+          brightnessOverride: brightnessOverride.name,
         ),
     };
   }

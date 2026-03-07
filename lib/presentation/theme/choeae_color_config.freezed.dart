@@ -19,19 +19,25 @@ mixin _$ChoeaeColorConfig {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String packId) palette,
-    required TResult Function(Color seedColor, Color? textColorOverride) custom,
+    required TResult Function(Color seedColor, Color? textColorOverride,
+            Brightness brightnessOverride)
+        custom,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String packId)? palette,
-    TResult? Function(Color seedColor, Color? textColorOverride)? custom,
+    TResult? Function(Color seedColor, Color? textColorOverride,
+            Brightness brightnessOverride)?
+        custom,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String packId)? palette,
-    TResult Function(Color seedColor, Color? textColorOverride)? custom,
+    TResult Function(Color seedColor, Color? textColorOverride,
+            Brightness brightnessOverride)?
+        custom,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -147,7 +153,9 @@ class _$ChoeaeColorPaletteImpl extends ChoeaeColorPalette {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String packId) palette,
-    required TResult Function(Color seedColor, Color? textColorOverride) custom,
+    required TResult Function(Color seedColor, Color? textColorOverride,
+            Brightness brightnessOverride)
+        custom,
   }) {
     return palette(packId);
   }
@@ -156,7 +164,9 @@ class _$ChoeaeColorPaletteImpl extends ChoeaeColorPalette {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String packId)? palette,
-    TResult? Function(Color seedColor, Color? textColorOverride)? custom,
+    TResult? Function(Color seedColor, Color? textColorOverride,
+            Brightness brightnessOverride)?
+        custom,
   }) {
     return palette?.call(packId);
   }
@@ -165,7 +175,9 @@ class _$ChoeaeColorPaletteImpl extends ChoeaeColorPalette {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String packId)? palette,
-    TResult Function(Color seedColor, Color? textColorOverride)? custom,
+    TResult Function(Color seedColor, Color? textColorOverride,
+            Brightness brightnessOverride)?
+        custom,
     required TResult orElse(),
   }) {
     if (palette != null) {
@@ -226,7 +238,10 @@ abstract class _$$ChoeaeColorCustomImplCopyWith<$Res> {
           $Res Function(_$ChoeaeColorCustomImpl) then) =
       __$$ChoeaeColorCustomImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({Color seedColor, Color? textColorOverride});
+  $Res call(
+      {Color seedColor,
+      Color? textColorOverride,
+      Brightness brightnessOverride});
 }
 
 /// @nodoc
@@ -244,6 +259,7 @@ class __$$ChoeaeColorCustomImplCopyWithImpl<$Res>
   $Res call({
     Object? seedColor = null,
     Object? textColorOverride = freezed,
+    Object? brightnessOverride = null,
   }) {
     return _then(_$ChoeaeColorCustomImpl(
       seedColor: null == seedColor
@@ -254,6 +270,10 @@ class __$$ChoeaeColorCustomImplCopyWithImpl<$Res>
           ? _value.textColorOverride
           : textColorOverride // ignore: cast_nullable_to_non_nullable
               as Color?,
+      brightnessOverride: null == brightnessOverride
+          ? _value.brightnessOverride
+          : brightnessOverride // ignore: cast_nullable_to_non_nullable
+              as Brightness,
     ));
   }
 }
@@ -262,17 +282,22 @@ class __$$ChoeaeColorCustomImplCopyWithImpl<$Res>
 
 class _$ChoeaeColorCustomImpl extends ChoeaeColorCustom {
   const _$ChoeaeColorCustomImpl(
-      {required this.seedColor, this.textColorOverride})
+      {required this.seedColor,
+      this.textColorOverride,
+      this.brightnessOverride = Brightness.dark})
       : super._();
 
   @override
   final Color seedColor;
   @override
   final Color? textColorOverride;
+  @override
+  @JsonKey()
+  final Brightness brightnessOverride;
 
   @override
   String toString() {
-    return 'ChoeaeColorConfig.custom(seedColor: $seedColor, textColorOverride: $textColorOverride)';
+    return 'ChoeaeColorConfig.custom(seedColor: $seedColor, textColorOverride: $textColorOverride, brightnessOverride: $brightnessOverride)';
   }
 
   @override
@@ -283,11 +308,14 @@ class _$ChoeaeColorCustomImpl extends ChoeaeColorCustom {
             (identical(other.seedColor, seedColor) ||
                 other.seedColor == seedColor) &&
             (identical(other.textColorOverride, textColorOverride) ||
-                other.textColorOverride == textColorOverride));
+                other.textColorOverride == textColorOverride) &&
+            (identical(other.brightnessOverride, brightnessOverride) ||
+                other.brightnessOverride == brightnessOverride));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, seedColor, textColorOverride);
+  int get hashCode => Object.hash(
+      runtimeType, seedColor, textColorOverride, brightnessOverride);
 
   /// Create a copy of ChoeaeColorConfig
   /// with the given fields replaced by the non-null parameter values.
@@ -302,29 +330,35 @@ class _$ChoeaeColorCustomImpl extends ChoeaeColorCustom {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String packId) palette,
-    required TResult Function(Color seedColor, Color? textColorOverride) custom,
+    required TResult Function(Color seedColor, Color? textColorOverride,
+            Brightness brightnessOverride)
+        custom,
   }) {
-    return custom(seedColor, textColorOverride);
+    return custom(seedColor, textColorOverride, brightnessOverride);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String packId)? palette,
-    TResult? Function(Color seedColor, Color? textColorOverride)? custom,
+    TResult? Function(Color seedColor, Color? textColorOverride,
+            Brightness brightnessOverride)?
+        custom,
   }) {
-    return custom?.call(seedColor, textColorOverride);
+    return custom?.call(seedColor, textColorOverride, brightnessOverride);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String packId)? palette,
-    TResult Function(Color seedColor, Color? textColorOverride)? custom,
+    TResult Function(Color seedColor, Color? textColorOverride,
+            Brightness brightnessOverride)?
+        custom,
     required TResult orElse(),
   }) {
     if (custom != null) {
-      return custom(seedColor, textColorOverride);
+      return custom(seedColor, textColorOverride, brightnessOverride);
     }
     return orElse();
   }
@@ -364,11 +398,13 @@ class _$ChoeaeColorCustomImpl extends ChoeaeColorCustom {
 abstract class ChoeaeColorCustom extends ChoeaeColorConfig {
   const factory ChoeaeColorCustom(
       {required final Color seedColor,
-      final Color? textColorOverride}) = _$ChoeaeColorCustomImpl;
+      final Color? textColorOverride,
+      final Brightness brightnessOverride}) = _$ChoeaeColorCustomImpl;
   const ChoeaeColorCustom._() : super._();
 
   Color get seedColor;
   Color? get textColorOverride;
+  Brightness get brightnessOverride;
 
   /// Create a copy of ChoeaeColorConfig
   /// with the given fields replaced by the non-null parameter values.

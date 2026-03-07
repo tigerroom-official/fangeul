@@ -50,17 +50,23 @@ void main() {
     });
 
     test('should build theme from custom color with text override', () {
-      const config = ChoeaeColorConfig.custom(
+      const darkConfig = ChoeaeColorConfig.custom(
         seedColor: Color(0xFF4527A0),
         textColorOverride: Color(0xFFFFF8E1),
+        brightnessOverride: Brightness.dark,
+      );
+      const lightConfig = ChoeaeColorConfig.custom(
+        seedColor: Color(0xFF4527A0),
+        textColorOverride: Color(0xFFFFF8E1),
+        brightnessOverride: Brightness.light,
       );
       final light = FangeulTheme.build(
         brightness: Brightness.light,
-        choeaeColor: config,
+        choeaeColor: lightConfig,
       );
       final dark = FangeulTheme.build(
         brightness: Brightness.dark,
-        choeaeColor: config,
+        choeaeColor: darkConfig,
       );
       expect(light.brightness, Brightness.light);
       expect(dark.brightness, Brightness.dark);
@@ -135,18 +141,25 @@ void main() {
           .setCustomColor(const Color(0xFFE91E63));
       final config = container.read(choeaeColorNotifierProvider);
 
-      final light = FangeulTheme.build(
-        brightness: Brightness.light,
-        choeaeColor: config,
-      );
-      final dark = FangeulTheme.build(
+      // Custom config defaults to brightnessOverride: dark, so both
+      // FangeulTheme.build calls produce dark themes.
+      final theme = FangeulTheme.build(
         brightness: Brightness.dark,
         choeaeColor: config,
       );
-      expect(light.brightness, Brightness.light);
-      expect(dark.brightness, Brightness.dark);
-      expect(light.colorScheme.brightness, Brightness.light);
-      expect(dark.colorScheme.brightness, Brightness.dark);
+      expect(theme.brightness, Brightness.dark);
+      expect(theme.colorScheme.brightness, Brightness.dark);
+
+      // Verify light override works too.
+      final notifier = container.read(choeaeColorNotifierProvider.notifier);
+      await notifier.setBrightnessOverride(Brightness.light);
+      final lightConfig = container.read(choeaeColorNotifierProvider);
+      final lightTheme = FangeulTheme.build(
+        brightness: Brightness.light,
+        choeaeColor: lightConfig,
+      );
+      expect(lightTheme.brightness, Brightness.light);
+      expect(lightTheme.colorScheme.brightness, Brightness.light);
     });
   });
 }

@@ -71,6 +71,7 @@ class ThemeSlotNotifier extends _$ThemeSlotNotifier {
       type: old.type,
       value: old.value,
       textOverride: old.textOverride,
+      brightnessOverride: old.brightnessOverride,
     );
     state = slots;
     await _persist(slots);
@@ -82,7 +83,7 @@ class ThemeSlotNotifier extends _$ThemeSlotNotifier {
     final slot = state[index];
     final config = slot.toConfig();
 
-    ref.read(choeaeColorNotifierProvider.notifier).restoreConfig(config);
+    await ref.read(choeaeColorNotifierProvider.notifier).restoreConfig(config);
 
     final prefs = ref.read(sharedPreferencesProvider);
     await prefs.setInt(_activeKey, index);

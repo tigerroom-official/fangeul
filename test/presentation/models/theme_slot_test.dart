@@ -145,6 +145,75 @@ void main() {
       });
     });
 
+    group('brightnessOverride', () {
+      test('should serialize and deserialize brightnessOverride', () {
+        const slot = ThemeSlot(
+          name: 'Dark',
+          type: 'custom',
+          value: 'ff4527a0',
+          brightnessOverride: 'dark',
+        );
+        final json = slot.toJson();
+        expect(json['brightnessOverride'], 'dark');
+        final restored = ThemeSlot.fromJson(json);
+        expect(restored.brightnessOverride, 'dark');
+      });
+
+      test('should convert brightnessOverride to ChoeaeColorConfig', () {
+        const slot = ThemeSlot(
+          name: 'Light',
+          type: 'custom',
+          value: 'ff4527a0',
+          brightnessOverride: 'light',
+        );
+        final config = slot.toConfig();
+        expect(config, isA<ChoeaeColorCustom>());
+        expect(
+          (config as ChoeaeColorCustom).brightnessOverride,
+          Brightness.light,
+        );
+      });
+
+      test('should default brightnessOverride to dark when null', () {
+        const slot = ThemeSlot(
+          name: 'Default',
+          type: 'custom',
+          value: 'ff4527a0',
+        );
+        final config = slot.toConfig();
+        expect(
+          (config as ChoeaeColorCustom).brightnessOverride,
+          Brightness.dark,
+        );
+      });
+
+      test('should not include brightnessOverride in JSON when null', () {
+        const slot = ThemeSlot(
+          name: 'No Override',
+          type: 'custom',
+          value: 'ff4527a0',
+        );
+        final json = slot.toJson();
+        expect(json.containsKey('brightnessOverride'), false);
+      });
+
+      test('should round-trip custom slot with brightnessOverride', () {
+        const original = ThemeSlot(
+          name: 'Custom Light',
+          type: 'custom',
+          value: 'ff4527a0',
+          textOverride: 'ffffffff',
+          brightnessOverride: 'light',
+        );
+        final restored = ThemeSlot.fromJson(original.toJson());
+        expect(restored.name, original.name);
+        expect(restored.type, original.type);
+        expect(restored.value, original.value);
+        expect(restored.textOverride, original.textOverride);
+        expect(restored.brightnessOverride, original.brightnessOverride);
+      });
+    });
+
     group('fromConfig', () {
       test('should create slot from palette config', () {
         const config = ChoeaeColorConfig.palette('purple_dream');
@@ -179,6 +248,27 @@ void main() {
 
       test('should round-trip config through slot', () {
         const config = ChoeaeColorConfig.palette('ocean_blue');
+        final slot = ThemeSlot.fromConfig('Test', config);
+        final restored = slot.toConfig();
+        expect(restored, config);
+      });
+
+      test('should create slot from custom config with brightnessOverride', () {
+        const config = ChoeaeColorConfig.custom(
+          seedColor: Color(0xFF4527A0),
+          brightnessOverride: Brightness.light,
+        );
+        final slot = ThemeSlot.fromConfig('Light Custom', config);
+        expect(slot.type, 'custom');
+        expect(slot.brightnessOverride, 'light');
+      });
+
+      test('should round-trip custom config with brightnessOverride', () {
+        const config = ChoeaeColorConfig.custom(
+          seedColor: Color(0xFF4527A0),
+          textColorOverride: Color(0xFFFFFFFF),
+          brightnessOverride: Brightness.light,
+        );
         final slot = ThemeSlot.fromConfig('Test', config);
         final restored = slot.toConfig();
         expect(restored, config);

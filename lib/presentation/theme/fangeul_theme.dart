@@ -20,7 +20,7 @@ abstract final class FangeulTheme {
 
     return _withComponentThemes(ThemeData(
       useMaterial3: true,
-      brightness: brightness,
+      brightness: colorScheme.brightness,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: colorScheme.surfaceContainerLowest,
       textTheme: FangeulTextStyles.textTheme,

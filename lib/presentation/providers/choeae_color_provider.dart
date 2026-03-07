@@ -17,6 +17,7 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
   static const _typeKey = 'choeae_type';
   static const _valueKey = 'choeae_value';
   static const _textKey = 'choeae_text_override';
+  static const _brightnessKey = 'choeae_brightness_override';
 
   ChoeaeColorConfig? _previousConfig;
   bool _canUndo = false;
@@ -33,9 +34,12 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
     if (type == 'custom' && value != null) {
       final seedInt = int.tryParse(value, radix: 16);
       if (seedInt != null) {
+        final brStr = prefs.getString(_brightnessKey);
+        final br = brStr == 'light' ? Brightness.light : Brightness.dark;
         return ChoeaeColorConfig.custom(
           seedColor: Color(seedInt),
           textColorOverride: _loadTextOverride(prefs),
+          brightnessOverride: br,
         );
       }
     }
@@ -67,15 +71,22 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
     state = ChoeaeColorConfig.palette(packId);
     await _save('palette', packId);
     await _removeTextOverride();
+    await _removeBrightnessOverride();
   }
 
   /// 커스텀 색상 설정.
+  ///
+  /// 기존 [brightnessOverride]를 보존한다 (custom 상태일 때).
   Future<void> setCustomColor(Color seed, {Color? textColor}) async {
+    final existingBr = state is ChoeaeColorCustom
+        ? (state as ChoeaeColorCustom).brightnessOverride
+        : Brightness.dark;
     _previousConfig = state;
     _canUndo = true;
     state = ChoeaeColorConfig.custom(
       seedColor: seed,
       textColorOverride: textColor,
+      brightnessOverride: existingBr,
     );
     final hex = seed.toARGB32().toRadixString(16).padLeft(8, '0');
     await _save('custom', hex);
@@ -84,9 +95,10 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
     } else {
       await _removeTextOverride();
     }
+    await _saveBrightnessOverride(existingBr);
   }
 
-  /// 커스텀 글자색만 변경 (seed color 유지).
+  /// 커스텀 글자색만 변경 (seed color + brightnessOverride 유지).
   Future<void> setTextColorOverride(Color? color) async {
     final current = state;
     if (current is! ChoeaeColorCustom) return;
@@ -95,6 +107,7 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
     state = ChoeaeColorConfig.custom(
       seedColor: current.seedColor,
       textColorOverride: color,
+      brightnessOverride: current.brightnessOverride,
     );
     if (color != null) {
       await _saveTextOverride(color);
@@ -110,7 +123,12 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
       case ChoeaeColorPalette(:final packId):
         await _save('palette', packId);
         await _removeTextOverride();
-      case ChoeaeColorCustom(:final seedColor, :final textColorOverride):
+        await _removeBrightnessOverride();
+      case ChoeaeColorCustom(
+          :final seedColor,
+          :final textColorOverride,
+          :final brightnessOverride,
+        ):
         final hex = seedColor.toARGB32().toRadixString(16).padLeft(8, '0');
         await _save('custom', hex);
         if (textColorOverride != null) {
@@ -118,6 +136,7 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
         } else {
           await _removeTextOverride();
         }
+        await _saveBrightnessOverride(brightnessOverride);
     }
   }
 
@@ -131,7 +150,12 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
       case ChoeaeColorPalette(:final packId):
         await _save('palette', packId);
         await _removeTextOverride();
-      case ChoeaeColorCustom(:final seedColor, :final textColorOverride):
+        await _removeBrightnessOverride();
+      case ChoeaeColorCustom(
+          :final seedColor,
+          :final textColorOverride,
+          :final brightnessOverride,
+        ):
         final hex = seedColor.toARGB32().toRadixString(16).padLeft(8, '0');
         await _save('custom', hex);
         if (textColorOverride != null) {
@@ -139,6 +163,7 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
         } else {
           await _removeTextOverride();
         }
+        await _saveBrightnessOverride(brightnessOverride);
     }
   }
 
@@ -166,5 +191,29 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
   Future<void> _removeTextOverride() async {
     final prefs = ref.read(sharedPreferencesProvider);
     await prefs.remove(_textKey);
+  }
+
+  /// Brightness 오버라이드 변경 (custom 상태에서만 동작).
+  Future<void> setBrightnessOverride(Brightness br) async {
+    final current = state;
+    if (current is! ChoeaeColorCustom) return;
+    _previousConfig = state;
+    _canUndo = true;
+    state = ChoeaeColorConfig.custom(
+      seedColor: current.seedColor,
+      textColorOverride: current.textColorOverride,
+      brightnessOverride: br,
+    );
+    await _saveBrightnessOverride(br);
+  }
+
+  Future<void> _saveBrightnessOverride(Brightness br) async {
+    final prefs = ref.read(sharedPreferencesProvider);
+    await prefs.setString(_brightnessKey, br.name);
+  }
+
+  Future<void> _removeBrightnessOverride() async {
+    final prefs = ref.read(sharedPreferencesProvider);
+    await prefs.remove(_brightnessKey);
   }
 }
