@@ -8,6 +8,7 @@ import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/choeae_color_provider.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
 import 'package:fangeul/presentation/router/app_router.dart';
+import 'package:fangeul/presentation/theme/choeae_color_config.dart';
 import 'package:fangeul/presentation/theme/fangeul_theme.dart';
 
 /// Android 12+의 stretch 오버스크롤을 글로우 효과로 대체한다.
@@ -42,20 +43,60 @@ class FangeulApp extends ConsumerWidget {
     final userLocale = ref.watch(localeNotifierProvider);
     final choeaeColor = ref.watch(choeaeColorNotifierProvider);
 
-    final isDark = themeMode == ThemeMode.dark ||
-        (themeMode == ThemeMode.system &&
-            MediaQuery.platformBrightnessOf(context) == Brightness.dark);
+    // Determine effective brightness — custom theme can override system setting
+    final Brightness? brightOverride = choeaeColor is ChoeaeColorCustom
+        ? choeaeColor.brightnessOverride
+        : null;
+
+    final bool effectiveDark;
+    if (brightOverride != null) {
+      effectiveDark = brightOverride == Brightness.dark;
+    } else {
+      effectiveDark = themeMode == ThemeMode.dark ||
+          (themeMode == ThemeMode.system &&
+              MediaQuery.platformBrightnessOf(context) == Brightness.dark);
+    }
+
+    // Build themes — brightness override forces identical light/dark themes
+    final ThemeMode effectiveThemeMode;
+    final ThemeData lightTheme;
+    final ThemeData darkTheme;
+
+    if (brightOverride != null) {
+      // Custom theme with brightness override: same theme for both slots
+      final overriddenTheme = FangeulTheme.build(
+        brightness: brightOverride,
+        choeaeColor: choeaeColor,
+      );
+      lightTheme = overriddenTheme;
+      darkTheme = overriddenTheme;
+      effectiveThemeMode = brightOverride == Brightness.dark
+          ? ThemeMode.dark
+          : ThemeMode.light;
+    } else {
+      lightTheme = FangeulTheme.build(
+        brightness: Brightness.light,
+        choeaeColor: choeaeColor,
+      );
+      darkTheme = FangeulTheme.build(
+        brightness: Brightness.dark,
+        choeaeColor: choeaeColor,
+      );
+      effectiveThemeMode = themeMode;
+    }
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarIconBrightness:
+            effectiveDark ? Brightness.light : Brightness.dark,
         systemNavigationBarColor: choeaeColor
-            .buildColorScheme(isDark ? Brightness.dark : Brightness.light)
+            .buildColorScheme(
+                effectiveDark ? Brightness.dark : Brightness.light)
             .surfaceContainerLowest,
         systemNavigationBarDividerColor: Colors.transparent,
         systemNavigationBarIconBrightness:
-            isDark ? Brightness.light : Brightness.dark,
+            effectiveDark ? Brightness.light : Brightness.dark,
       ),
       child: MaterialApp.router(
         title: UiStrings.appName,
@@ -63,15 +104,9 @@ class FangeulApp extends ConsumerWidget {
         localizationsDelegates: L.localizationsDelegates,
         supportedLocales: L.supportedLocales,
         locale: userLocale, // null → 시스템 언어 자동감지
-        theme: FangeulTheme.build(
-          brightness: Brightness.light,
-          choeaeColor: choeaeColor,
-        ),
-        darkTheme: FangeulTheme.build(
-          brightness: Brightness.dark,
-          choeaeColor: choeaeColor,
-        ),
-        themeMode: themeMode,
+        theme: lightTheme,
+        darkTheme: darkTheme,
+        themeMode: effectiveThemeMode,
         routerConfig: router,
         scrollBehavior: const _NoStretchScrollBehavior(),
       ),
