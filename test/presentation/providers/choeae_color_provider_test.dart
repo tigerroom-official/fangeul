@@ -220,6 +220,51 @@ void main() {
       expect(prefs.getString('choeae_text_override'), isNull);
     });
 
+    test('restoreConfig should not pollute undo history', () async {
+      container.listen(choeaeColorNotifierProvider, (_, __) {});
+      final notifier = container.read(choeaeColorNotifierProvider.notifier);
+      await notifier.selectPalette('purple_dream');
+      // restoreConfig should NOT set canUndo
+      await notifier.restoreConfig(
+        const ChoeaeColorConfig.palette('ocean_blue'),
+      );
+      expect(
+        container.read(choeaeColorNotifierProvider),
+        const ChoeaeColorConfig.palette('ocean_blue'),
+      );
+      // canUndo should still reflect the selectPalette, not the restore
+      // But since restore doesn't track, undo goes back to selectPalette's previous
+      expect(notifier.canUndo, true);
+      await notifier.undo();
+      // Undo should go to midnight (before selectPalette), NOT ocean_blue
+      expect(
+        container.read(choeaeColorNotifierProvider),
+        const ChoeaeColorConfig.palette('midnight'),
+      );
+    });
+
+    test('restoreConfig with custom should persist correctly', () async {
+      container.listen(choeaeColorNotifierProvider, (_, __) {});
+      final notifier = container.read(choeaeColorNotifierProvider.notifier);
+      await notifier.restoreConfig(
+        const ChoeaeColorConfig.custom(
+          seedColor: Color(0xFF4527A0),
+          textColorOverride: Color(0xFFFFFFFF),
+        ),
+      );
+      // Verify persistence
+      final prefs = await SharedPreferences.getInstance();
+      final container2 = ProviderContainer(overrides: [
+        sharedPreferencesProvider.overrideWithValue(prefs),
+      ]);
+      container2.listen(choeaeColorNotifierProvider, (_, __) {});
+      final restored =
+          container2.read(choeaeColorNotifierProvider) as ChoeaeColorCustom;
+      expect(restored.seedColor, const Color(0xFF4527A0));
+      expect(restored.textColorOverride, const Color(0xFFFFFFFF));
+      container2.dispose();
+    });
+
     test('should ignore invalid palette id in selectPalette', () async {
       container.listen(choeaeColorNotifierProvider, (_, __) {});
       final notifier = container.read(choeaeColorNotifierProvider.notifier);

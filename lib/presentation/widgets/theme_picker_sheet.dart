@@ -89,19 +89,13 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
     _savedConfigBeforePreview = ref.read(choeaeColorNotifierProvider);
   }
 
-  /// 프리뷰 모드 종료 — 백업 설정으로 복원한다.
+  /// 프리뷰 모드 종료 — 백업 설정으로 복원한다 (undo 기록 없이).
   void _restoreFromPreview() {
     if (!_isPreviewMode) return;
     _isPreviewMode = false;
     final saved = _savedConfigBeforePreview;
     if (saved == null) return;
-    final notifier = ref.read(choeaeColorNotifierProvider.notifier);
-    switch (saved) {
-      case ChoeaeColorPalette(:final packId):
-        notifier.selectPalette(packId);
-      case ChoeaeColorCustom(:final seedColor, :final textColorOverride):
-        notifier.setCustomColor(seedColor, textColor: textColorOverride);
-    }
+    ref.read(choeaeColorNotifierProvider.notifier).restoreConfig(saved);
   }
 
   @override

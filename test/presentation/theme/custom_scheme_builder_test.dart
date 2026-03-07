@@ -94,5 +94,45 @@ void main() {
       );
       expect(scheme.brightness, Brightness.dark);
     });
+
+    test('textOverride onSurfaceVariant should preserve RGB channels', () {
+      const textColor = Color(0xFFFF8800); // orange
+      final scheme = CustomSchemeBuilder.build(
+        seedColor: const Color(0xFF4527A0),
+        brightness: Brightness.dark,
+        textColorOverride: textColor,
+      );
+      final variant = scheme.onSurfaceVariant;
+      // RGB channels must match the override, only alpha reduced
+      expect(variant.r, closeTo(textColor.r, 0.01));
+      expect(variant.g, closeTo(textColor.g, 0.01));
+      expect(variant.b, closeTo(textColor.b, 0.01));
+      expect(variant.a, closeTo(textColor.a * 0.78, 0.02));
+    });
+
+    test('textOverride onSurfaceVariant white should be near-white', () {
+      final scheme = CustomSchemeBuilder.build(
+        seedColor: const Color(0xFF4527A0),
+        brightness: Brightness.dark,
+        textColorOverride: Colors.white,
+      );
+      final variant = scheme.onSurfaceVariant;
+      // Must NOT be near-black (regression from Color.r float misuse)
+      expect(variant.computeLuminance(), greaterThan(0.4));
+    });
+
+    test('light mode textOverride should work correctly', () {
+      const textColor = Color(0xFF1A237E); // dark blue
+      final scheme = CustomSchemeBuilder.build(
+        seedColor: const Color(0xFFF8BBD0),
+        brightness: Brightness.light,
+        textColorOverride: textColor,
+      );
+      expect(scheme.onSurface, textColor);
+      final variant = scheme.onSurfaceVariant;
+      expect(variant.r, closeTo(textColor.r, 0.01));
+      expect(variant.g, closeTo(textColor.g, 0.01));
+      expect(variant.b, closeTo(textColor.b, 0.01));
+    });
   });
 }

@@ -103,6 +103,24 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
     }
   }
 
+  /// Undo 기록 없이 설정을 복원한다 (프리뷰 복원용).
+  Future<void> restoreConfig(ChoeaeColorConfig config) async {
+    state = config;
+    switch (config) {
+      case ChoeaeColorPalette(:final packId):
+        await _save('palette', packId);
+        await _removeTextOverride();
+      case ChoeaeColorCustom(:final seedColor, :final textColorOverride):
+        final hex = seedColor.toARGB32().toRadixString(16).padLeft(8, '0');
+        await _save('custom', hex);
+        if (textColorOverride != null) {
+          await _saveTextOverride(textColorOverride);
+        } else {
+          await _removeTextOverride();
+        }
+    }
+  }
+
   /// 마지막 변경 되돌리기 (1단계).
   Future<void> undo() async {
     if (!_canUndo || _previousConfig == null) return;

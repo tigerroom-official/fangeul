@@ -61,12 +61,7 @@ abstract final class CustomSchemeBuilder {
       surface: surface,
       onSurface: textOverride ?? Colors.white,
       onSurfaceVariant: textOverride != null
-          ? Color.fromARGB(
-              (textOverride.a * 0.78).round(),
-              textOverride.r.round(),
-              textOverride.g.round(),
-              textOverride.b.round(),
-            )
+          ? textOverride.withValues(alpha: textOverride.a * 0.78)
           : const Color(0xC8FFFFFF),
       surfaceContainerLowest: hsl
           .withLightness(0.06)
@@ -141,12 +136,7 @@ abstract final class CustomSchemeBuilder {
       surface: surface,
       onSurface: textOverride ?? Colors.black87,
       onSurfaceVariant: textOverride != null
-          ? Color.fromARGB(
-              (textOverride.a * 0.78).round(),
-              textOverride.r.round(),
-              textOverride.g.round(),
-              textOverride.b.round(),
-            )
+          ? textOverride.withValues(alpha: textOverride.a * 0.78)
           : const Color(0xFF424242),
       surfaceContainerLowest: hsl
           .withLightness(0.99)
