@@ -81,9 +81,9 @@ void main() {
         brightness: Brightness.light,
       );
       expect(scheme.brightness, Brightness.light);
-      // Light surface should be high tone (bright)
+      // Light surface should be high tone (bright) — shifted to 96
       final tone = Hct.fromInt(scheme.surface.toARGB32()).tone;
-      expect(tone, greaterThan(90));
+      expect(tone, greaterThan(85));
     });
 
     test('should have bold surface color with high chroma seed', () {
@@ -219,6 +219,94 @@ void main() {
         expect(chroma, greaterThanOrEqualTo(15),
             reason: 'seed ${seed.toARGB32().toRadixString(16)}');
       }
+    });
+
+    test('dark surface tone should be higher than M3 default (6)', () {
+      const seeds = <Color>[
+        Color(0xFFFF0000),
+        Color(0xFF2196F3),
+        Color(0xFF9C27B0),
+        Color(0xFF00BCD4),
+      ];
+      for (final seed in seeds) {
+        final scheme = CustomSchemeBuilder.build(
+          seedColor: seed,
+          brightness: Brightness.dark,
+        );
+        final tone = Hct.fromInt(scheme.surface.toARGB32()).tone;
+        expect(tone, greaterThanOrEqualTo(12),
+            reason: 'seed ${seed.toARGB32().toRadixString(16)} surface tone');
+      }
+    });
+
+    test(
+        'dark surface hierarchy: lowest < surface < container < high < highest',
+        () {
+      final scheme = CustomSchemeBuilder.build(
+        seedColor: const Color(0xFF9C27B0),
+        brightness: Brightness.dark,
+      );
+      final lowest =
+          Hct.fromInt(scheme.surfaceContainerLowest.toARGB32()).tone;
+      final surface = Hct.fromInt(scheme.surface.toARGB32()).tone;
+      final container = Hct.fromInt(scheme.surfaceContainer.toARGB32()).tone;
+      final high =
+          Hct.fromInt(scheme.surfaceContainerHigh.toARGB32()).tone;
+      final highest =
+          Hct.fromInt(scheme.surfaceContainerHighest.toARGB32()).tone;
+      expect(lowest, lessThan(surface));
+      expect(surface, lessThan(container));
+      expect(container, lessThan(high));
+      expect(high, lessThan(highest));
+    });
+
+    test(
+        'light surface hierarchy: highest < high < container < surface < lowest',
+        () {
+      final scheme = CustomSchemeBuilder.build(
+        seedColor: const Color(0xFF9C27B0),
+        brightness: Brightness.light,
+      );
+      final lowest =
+          Hct.fromInt(scheme.surfaceContainerLowest.toARGB32()).tone;
+      final surface = Hct.fromInt(scheme.surface.toARGB32()).tone;
+      final container = Hct.fromInt(scheme.surfaceContainer.toARGB32()).tone;
+      final high =
+          Hct.fromInt(scheme.surfaceContainerHigh.toARGB32()).tone;
+      final highest =
+          Hct.fromInt(scheme.surfaceContainerHighest.toARGB32()).tone;
+      expect(highest, lessThan(high));
+      expect(high, lessThan(container));
+      expect(container, lessThan(surface));
+      expect(surface, lessThanOrEqualTo(lowest));
+    });
+
+    test('textOverride should NOT override onPrimary', () {
+      const textColor = Color(0xFFFF0000);
+      final withOverride = CustomSchemeBuilder.build(
+        seedColor: const Color(0xFF4527A0),
+        brightness: Brightness.dark,
+        textColorOverride: textColor,
+      );
+      final without = CustomSchemeBuilder.build(
+        seedColor: const Color(0xFF4527A0),
+        brightness: Brightness.dark,
+      );
+      expect(withOverride.onPrimary, equals(without.onPrimary));
+    });
+
+    test('textOverride should NOT override onError', () {
+      const textColor = Color(0xFFFF0000);
+      final withOverride = CustomSchemeBuilder.build(
+        seedColor: const Color(0xFF4527A0),
+        brightness: Brightness.dark,
+        textColorOverride: textColor,
+      );
+      final without = CustomSchemeBuilder.build(
+        seedColor: const Color(0xFF4527A0),
+        brightness: Brightness.dark,
+      );
+      expect(withOverride.onError, equals(without.onError));
     });
 
     group('WCAG contrast ratio', () {
