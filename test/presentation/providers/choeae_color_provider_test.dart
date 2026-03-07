@@ -219,5 +219,20 @@ void main() {
       final prefs = await SharedPreferences.getInstance();
       expect(prefs.getString('choeae_text_override'), isNull);
     });
+
+    test('should ignore invalid palette id in selectPalette', () async {
+      container.listen(choeaeColorNotifierProvider, (_, __) {});
+      final notifier = container.read(choeaeColorNotifierProvider.notifier);
+
+      await notifier.selectPalette('purple_dream');
+      expect(container.read(choeaeColorNotifierProvider),
+          const ChoeaeColorConfig.palette('purple_dream'));
+
+      // Invalid ID should be silently ignored — state unchanged
+      await notifier.selectPalette('nonexistent_palette');
+      expect(container.read(choeaeColorNotifierProvider),
+          const ChoeaeColorConfig.palette('purple_dream'));
+      expect(notifier.canUndo, true); // undo still from previous valid change
+    });
   });
 }

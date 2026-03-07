@@ -54,7 +54,14 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
   }
 
   /// 팔레트 선택.
+  ///
+  /// [packId]가 [PaletteRegistry]에 존재하지 않으면 무시한다.
   Future<void> selectPalette(String packId) async {
+    try {
+      PaletteRegistry.get(packId);
+    } catch (_) {
+      return; // 존재하지 않는 팔레트 ID — 무시
+    }
     _previousConfig = state;
     _canUndo = true;
     state = ChoeaeColorConfig.palette(packId);
