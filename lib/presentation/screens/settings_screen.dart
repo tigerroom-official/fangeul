@@ -373,6 +373,7 @@ class _DebugMonetizationPanel extends ConsumerWidget {
             'installDate: $installDate (Day $daysSince)\n'
             'honeymoon: $isHoneymoon | unlock: $isUnlocked\n'
             'hasThemePicker: ${monState?.hasThemePicker ?? false}\n'
+            'hasThemeSlots: ${monState?.hasThemeSlots ?? false}\n'
             'favSlotLimit: ${monState?.favoriteSlotLimit ?? 0} (0=unlimited)\n'
             'adWatchCount: ${monState?.adWatchCount ?? 0}/3',
             style: theme.textTheme.bodySmall?.copyWith(
@@ -427,6 +428,13 @@ class _DebugMonetizationPanel extends ConsumerWidget {
                     : 'Picker IAP: OFF',
                 color: monState?.hasThemePicker == true ? Colors.green : null,
                 onTap: () => _toggleThemePicker(ref),
+              ),
+              _DebugChip(
+                label: monState?.hasThemeSlots == true
+                    ? 'Slots IAP: ON'
+                    : 'Slots IAP: OFF',
+                color: monState?.hasThemeSlots == true ? Colors.green : null,
+                onTap: () => _toggleThemeSlots(ref),
               ),
               _DebugChip(
                 label: monState?.themeUnlocked == true
@@ -503,6 +511,17 @@ class _DebugMonetizationPanel extends ConsumerWidget {
     if (current == null) return;
     final repo = ref.read(monetizationRepositoryProvider);
     await repo.save(current.copyWith(hasThemePicker: !current.hasThemePicker));
+    ref.invalidate(monetizationNotifierProvider);
+  }
+
+  Future<void> _toggleThemeSlots(WidgetRef ref) async {
+    try {
+      await ref.read(monetizationNotifierProvider.future);
+    } catch (_) {}
+    final current = ref.read(monetizationNotifierProvider).valueOrNull;
+    if (current == null) return;
+    final repo = ref.read(monetizationRepositoryProvider);
+    await repo.save(current.copyWith(hasThemeSlots: !current.hasThemeSlots));
     ref.invalidate(monetizationNotifierProvider);
   }
 

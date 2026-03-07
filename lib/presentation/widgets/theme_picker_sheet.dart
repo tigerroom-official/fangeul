@@ -529,9 +529,9 @@ class _PaletteGrid extends ConsumerWidget {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
-        childAspectRatio: 0.85,
+        mainAxisSpacing: 6,
+        crossAxisSpacing: 10,
+        childAspectRatio: 0.82,
       ),
       itemCount: packs.length,
       itemBuilder: (context, index) {
