@@ -294,6 +294,36 @@ void main() {
       });
     });
 
+    group('unlockThemeSlots', () {
+      test('should set hasThemeSlots to true', () async {
+        setUpDefault();
+
+        final notifier = container.read(monetizationNotifierProvider.notifier);
+        await container.read(monetizationNotifierProvider.future);
+
+        await notifier.unlockThemeSlots();
+
+        final state = await container.read(monetizationNotifierProvider.future);
+        expect(state.hasThemeSlots, true);
+      });
+    });
+
+    group('unlockThemeBundle', () {
+      test('should set both hasThemePicker and hasThemeSlots to true',
+          () async {
+        setUpDefault();
+
+        final notifier = container.read(monetizationNotifierProvider.notifier);
+        await container.read(monetizationNotifierProvider.future);
+
+        await notifier.unlockThemeBundle();
+
+        final state = await container.read(monetizationNotifierProvider.future);
+        expect(state.hasThemePicker, true);
+        expect(state.hasThemeSlots, true);
+      });
+    });
+
     group('unlockThemePalettes', () {
       test('should set themeUnlocked to true', () async {
         setUpDefault();
@@ -702,6 +732,64 @@ void main() {
       await notifier.unlockThemePalettes();
 
       expect(container.read(isThemeUnlockedProvider), true);
+    });
+
+    test('hasThemeSlots should reflect unlockThemeSlots', () async {
+      mockStorage = MockFlutterSecureStorage();
+      when(() => mockStorage.read(key: any(named: 'key')))
+          .thenAnswer((_) async => null);
+      when(() => mockStorage.write(
+          key: any(named: 'key'),
+          value: any(named: 'value'))).thenAnswer((_) async {});
+
+      container = ProviderContainer(
+        overrides: [
+          monetizationStorageProvider.overrideWithValue(mockStorage),
+          remoteConfigValuesProvider
+              .overrideWithValue(const RemoteConfigValues()),
+        ],
+      );
+
+      final notifier = container.read(monetizationNotifierProvider.notifier);
+      await container.read(monetizationNotifierProvider.future);
+
+      final sub = container.listen(hasThemeSlotsProvider, (_, __) {});
+      addTearDown(sub.close);
+
+      expect(container.read(hasThemeSlotsProvider), false);
+
+      await notifier.unlockThemeSlots();
+
+      expect(container.read(hasThemeSlotsProvider), true);
+    });
+
+    test('hasThemePicker should reflect unlockThemePicker', () async {
+      mockStorage = MockFlutterSecureStorage();
+      when(() => mockStorage.read(key: any(named: 'key')))
+          .thenAnswer((_) async => null);
+      when(() => mockStorage.write(
+          key: any(named: 'key'),
+          value: any(named: 'value'))).thenAnswer((_) async {});
+
+      container = ProviderContainer(
+        overrides: [
+          monetizationStorageProvider.overrideWithValue(mockStorage),
+          remoteConfigValuesProvider
+              .overrideWithValue(const RemoteConfigValues()),
+        ],
+      );
+
+      final notifier = container.read(monetizationNotifierProvider.notifier);
+      await container.read(monetizationNotifierProvider.future);
+
+      final sub = container.listen(hasThemePickerProvider, (_, __) {});
+      addTearDown(sub.close);
+
+      expect(container.read(hasThemePickerProvider), false);
+
+      await notifier.unlockThemePicker();
+
+      expect(container.read(hasThemePickerProvider), true);
     });
 
     test('favoriteSlotLimit should reflect state', () async {

@@ -305,5 +305,18 @@
   "paletteGoldenHour": "골든 아워",
   "paletteNeonNight": "네온 나잇",
   "paletteMintBreeze": "민트 브리즈",
-  "paletteSunsetCafe": "선셋 카페"
+  "paletteSunsetCafe": "선셋 카페",
+
+  "themePickerChroma": "채도",
+  "themePickerTone": "명도",
+  "themePickerSlots": "테마 슬롯",
+  "themePickerSlotSave": "현재 테마 저장",
+  "themePickerSlotLocked": "슬롯을 해금하세요",
+  "themePickerSlotName": "슬롯 이름",
+  "themePickerRecommended": "추천",
+  "themePickerFreePickerTitle": "자유 글자색 선택",
+  "iapThemeCustomColor": "배경·글자색 자유선택",
+  "iapThemeSlots": "테마 슬롯 3개",
+  "iapThemeBundle": "전체 번들 (24% 할인)",
+  "iapThemeBundleSave": "₩480 절약"
 }

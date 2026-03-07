@@ -224,5 +224,18 @@
   "paletteGoldenHour": "Golden Hour",
   "paletteNeonNight": "Neon Night",
   "paletteMintBreeze": "Mint Breeze",
-  "paletteSunsetCafe": "Sunset Café"
+  "paletteSunsetCafe": "Sunset Café",
+
+  "themePickerChroma": "Chroma",
+  "themePickerTone": "Tone",
+  "themePickerSlots": "Theme Slots",
+  "themePickerSlotSave": "Save current theme",
+  "themePickerSlotLocked": "Unlock slots",
+  "themePickerSlotName": "Slot name",
+  "themePickerRecommended": "Recommended",
+  "themePickerFreePickerTitle": "Custom text color",
+  "iapThemeCustomColor": "Custom background & text",
+  "iapThemeSlots": "3 Theme Slots",
+  "iapThemeBundle": "Full Bundle (24% off)",
+  "iapThemeBundleSave": "Save ₩480"
 }

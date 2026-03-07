@@ -111,6 +111,44 @@ final isThemeUnlockedProvider = AutoDisposeProvider<bool>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef IsThemeUnlockedRef = AutoDisposeProviderRef<bool>;
+String _$hasThemeSlotsHash() => r'1a8a3818b6b580a28a09319d9e7e9b22ac16e287';
+
+/// 테마 슬롯 IAP 구매 여부 편의 Provider.
+///
+/// Copied from [hasThemeSlots].
+@ProviderFor(hasThemeSlots)
+final hasThemeSlotsProvider = AutoDisposeProvider<bool>.internal(
+  hasThemeSlots,
+  name: r'hasThemeSlotsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$hasThemeSlotsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef HasThemeSlotsRef = AutoDisposeProviderRef<bool>;
+String _$hasThemePickerHash() => r'fb4d860cc075b5838c941fb5167e0317965b29d9';
+
+/// 테마 피커 IAP 구매 여부 편의 Provider.
+///
+/// Copied from [hasThemePicker].
+@ProviderFor(hasThemePicker)
+final hasThemePickerProvider = AutoDisposeProvider<bool>.internal(
+  hasThemePicker,
+  name: r'hasThemePickerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$hasThemePickerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef HasThemePickerRef = AutoDisposeProviderRef<bool>;
 String _$favoriteSlotLimitHash() => r'bb13de5baada37945b2a84f21a6ba1420284c437';
 
 /// 즐겨찾기 슬롯 제한 편의 Provider.
@@ -131,7 +169,7 @@ final favoriteSlotLimitProvider = AutoDisposeProvider<int>.internal(
 // ignore: unused_element
 typedef FavoriteSlotLimitRef = AutoDisposeProviderRef<int>;
 String _$monetizationNotifierHash() =>
-    r'0b58c0d30d57e9014a8b6acf31b407168d8ff56b';
+    r'1acff7d3244e92d0dba9d0f543ce0c2e84b5b327';
 
 /// 수익화 상태를 관리하는 중앙 Notifier.
 ///

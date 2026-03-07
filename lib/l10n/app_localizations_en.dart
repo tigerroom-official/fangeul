@@ -578,4 +578,40 @@ class LEn extends L {
 
   @override
   String get paletteSunsetCafe => 'Sunset Café';
+
+  @override
+  String get themePickerChroma => 'Chroma';
+
+  @override
+  String get themePickerTone => 'Tone';
+
+  @override
+  String get themePickerSlots => 'Theme Slots';
+
+  @override
+  String get themePickerSlotSave => 'Save current theme';
+
+  @override
+  String get themePickerSlotLocked => 'Unlock slots';
+
+  @override
+  String get themePickerSlotName => 'Slot name';
+
+  @override
+  String get themePickerRecommended => 'Recommended';
+
+  @override
+  String get themePickerFreePickerTitle => 'Custom text color';
+
+  @override
+  String get iapThemeCustomColor => 'Custom background & text';
+
+  @override
+  String get iapThemeSlots => '3 Theme Slots';
+
+  @override
+  String get iapThemeBundle => 'Full Bundle (24% off)';
+
+  @override
+  String get iapThemeBundleSave => 'Save ₩480';
 }

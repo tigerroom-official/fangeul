@@ -575,4 +575,40 @@ class LTh extends L {
 
   @override
   String get paletteSunsetCafe => 'ซันเซ็ตคาเฟ่';
+
+  @override
+  String get themePickerChroma => 'ความอิ่มตัว';
+
+  @override
+  String get themePickerTone => 'โทนสี';
+
+  @override
+  String get themePickerSlots => 'สล็อตธีม';
+
+  @override
+  String get themePickerSlotSave => 'บันทึกธีมปัจจุบัน';
+
+  @override
+  String get themePickerSlotLocked => 'ปลดล็อกสล็อต';
+
+  @override
+  String get themePickerSlotName => 'ชื่อสล็อต';
+
+  @override
+  String get themePickerRecommended => 'แนะนำ';
+
+  @override
+  String get themePickerFreePickerTitle => 'เลือกสีตัวอักษร';
+
+  @override
+  String get iapThemeCustomColor => 'พื้นหลังและตัวอักษรกำหนดเอง';
+
+  @override
+  String get iapThemeSlots => 'สล็อตธีม 3 ช่อง';
+
+  @override
+  String get iapThemeBundle => 'แพ็กเกจเต็ม (ลด 24%)';
+
+  @override
+  String get iapThemeBundleSave => 'ประหยัด ₩480';
 }

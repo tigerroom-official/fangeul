@@ -13,6 +13,12 @@ import 'package:fangeul/presentation/providers/theme_providers.dart'
 import 'package:fangeul/presentation/theme/choeae_color_config.dart';
 import 'package:fangeul/presentation/theme/palette_pack.dart';
 import 'package:fangeul/presentation/theme/palette_registry.dart';
+import 'package:fangeul/presentation/models/theme_slot.dart';
+import 'package:fangeul/presentation/providers/iap_provider.dart';
+import 'package:fangeul/presentation/providers/theme_slot_provider.dart';
+import 'package:fangeul/services/iap_products.dart';
+import 'package:fangeul/presentation/widgets/hct_color_picker.dart';
+import 'package:fangeul/presentation/widgets/text_color_picker_dialog.dart';
 
 /// 테마 색상 선택 바텀시트.
 ///
@@ -42,10 +48,13 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
   final _sheetController = DraggableScrollableController();
   final _customPickerKey = GlobalKey();
 
-  // Hue-only slider ephemeral state (HCT 기반)
+  // HCT 피커 ephemeral state
   double _hue = 180;
+  double _chroma = 48.0;
+  double _tone = 50.0;
 
   bool _slidersInitialized = false;
+  int _pickerResetCount = 0;
 
   // 프리뷰 모드 (미구매자): 시트 닫힘 시 복원용 백업.
   ChoeaeColorConfig? _savedConfigBeforePreview;
@@ -57,9 +66,6 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
     super.dispose();
   }
 
-  /// 현재 슬라이더 hue로 선명한 중간 밝기 Color 생성 (HCT chroma 48, tone 50).
-  Color get _pickerColor => Color(Hct.from(_hue, 48.0, 50.0).toInt());
-
   void _initSlidersFromConfig(ChoeaeColorConfig config) {
     if (_slidersInitialized) return;
     _slidersInitialized = true;
@@ -69,7 +75,10 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
       ChoeaeColorPalette(:final packId) =>
         PaletteRegistry.get(packId).previewColor,
     };
-    _hue = Hct.fromInt(color.toARGB32()).hue;
+    final hct = Hct.fromInt(color.toARGB32());
+    _hue = hct.hue;
+    _chroma = hct.chroma.clamp(12.0, 130.0);
+    _tone = hct.tone.clamp(15.0, 85.0);
   }
 
   /// 커스텀 피커 IAP 해금 여부.
@@ -99,6 +108,9 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
     final monState =
         ref.watch(monetizationNotifierProvider).valueOrNull;
     final hasPickerIap = _hasPickerAccess(monState);
+    final hasSlotIap = monState?.hasThemeSlots ?? false;
+    final slotList = ref.watch(themeSlotNotifierProvider);
+    final slotNotifier = ref.read(themeSlotNotifierProvider.notifier);
     _initSlidersFromConfig(choeaeColor);
 
     return PopScope(
@@ -134,7 +146,36 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                 canUndo: ref.read(choeaeColorNotifierProvider.notifier).canUndo,
                 onUndo: () {
                   ref.read(choeaeColorNotifierProvider.notifier).undo();
-                  setState(() => _slidersInitialized = false);
+                  setState(() {
+                    _slidersInitialized = false;
+                    _pickerResetCount++;
+                  });
+                },
+              ),
+              const SizedBox(height: 12),
+              _ThemeSlotRow(
+                slots: slotList,
+                activeIndex: slotNotifier.activeIndex,
+                maxSlots: slotNotifier.availableSlots(hasSlotIap),
+                hasSlotIap: hasSlotIap,
+                onSlotTap: (index) {
+                  slotNotifier.applySlot(index);
+                  setState(() {
+                    _slidersInitialized = false;
+                    _pickerResetCount++;
+                  });
+                },
+                onSlotSave: (index) {
+                  final slot = ThemeSlot.fromConfig(
+                    slotList.length > index
+                        ? slotList[index].name
+                        : 'Slot ${index + 1}',
+                    choeaeColor,
+                  );
+                  slotNotifier.saveToSlot(index, slot);
+                },
+                onSlotRename: (index, name) {
+                  slotNotifier.renameSlot(index, name);
                 },
               ),
               const SizedBox(height: 16),
@@ -147,6 +188,7 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                       .selectPalette(PaletteRegistry.defaultId);
                   setState(() {
                     _slidersInitialized = false;
+                    _pickerResetCount++;
                   });
                 },
               ),
@@ -159,6 +201,7 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                       .selectPalette(pack.id);
                   setState(() {
                     _slidersInitialized = false;
+                    _pickerResetCount++;
                   });
                 },
               ),
@@ -201,16 +244,24 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
               ),
               if (_customPickerExpanded) ...[
                 SizedBox(key: _customPickerKey, height: 16),
-                _HueSlider(
-                  value: _hue,
-                  onChanged: (v) {
-                    setState(() => _hue = v);
+                HctColorPicker(
+                  key: ValueKey(_pickerResetCount),
+                  initialHue: _hue,
+                  initialChroma: _chroma,
+                  initialTone: _tone,
+                  onColorChanged: (color) {
+                    final hct = Hct.fromInt(color.toARGB32());
+                    setState(() {
+                      _hue = hct.hue;
+                      _chroma = hct.chroma;
+                      _tone = hct.tone;
+                    });
                     final existing = choeaeColor is ChoeaeColorCustom
                         ? choeaeColor.textColorOverride
                         : null;
                     ref
                         .read(choeaeColorNotifierProvider.notifier)
-                        .setCustomColor(_pickerColor, textColor: existing);
+                        .setCustomColor(color, textColor: existing);
                   },
                 ),
                 const SizedBox(height: 16),
@@ -218,6 +269,9 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                   currentTextColor: choeaeColor is ChoeaeColorCustom
                       ? choeaeColor.textColorOverride
                       : null,
+                  backgroundColor: choeaeColor
+                      .buildColorScheme(theme.brightness)
+                      .surface,
                   onColorSelected: (color) {
                     ref
                         .read(choeaeColorNotifierProvider.notifier)
@@ -297,6 +351,10 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                   ),
                 ],
               ],
+              _IapPurchaseSection(
+                hasThemePicker: hasPickerIap,
+                hasThemeSlots: hasSlotIap,
+              ),
               const SizedBox(height: 24),
             ],
           ),
@@ -660,14 +718,24 @@ class _CustomPickerToggle extends StatelessWidget {
   }
 }
 
-class _HueSlider extends StatelessWidget {
-  const _HueSlider({
-    required this.value,
-    required this.onChanged,
+class _ThemeSlotRow extends StatelessWidget {
+  const _ThemeSlotRow({
+    required this.slots,
+    required this.activeIndex,
+    required this.maxSlots,
+    required this.hasSlotIap,
+    required this.onSlotTap,
+    required this.onSlotSave,
+    required this.onSlotRename,
   });
 
-  final double value;
-  final ValueChanged<double> onChanged;
+  final List<ThemeSlot> slots;
+  final int activeIndex;
+  final int maxSlots;
+  final bool hasSlotIap;
+  final void Function(int) onSlotTap;
+  final void Function(int) onSlotSave;
+  final void Function(int, String) onSlotRename;
 
   @override
   Widget build(BuildContext context) {
@@ -678,52 +746,192 @@ class _HueSlider extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          l.themePickerHue,
+          l.themePickerSlots,
           style: theme.textTheme.labelMedium?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 8),
         SizedBox(
-          height: 36,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                height: 12,
-                margin: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  gradient: const LinearGradient(
-                    colors: [
-                      Color(0xFFFF0000), // 0° red
-                      Color(0xFFFFFF00), // 60° yellow
-                      Color(0xFF00FF00), // 120° green
-                      Color(0xFF00FFFF), // 180° cyan
-                      Color(0xFF0000FF), // 240° blue
-                      Color(0xFFFF00FF), // 300° magenta
-                      Color(0xFFFF0000), // 360° red
-                    ],
-                  ),
+          height: 72,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: maxSlots,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (context, index) {
+              final isLocked = index >= 1 && !hasSlotIap;
+              final hasSlot = index < slots.length;
+              final slot = hasSlot ? slots[index] : null;
+              final isActive = index == activeIndex && hasSlot;
+
+              // 슬롯 프리뷰 색상
+              Color? previewColor;
+              if (slot != null) {
+                final config = slot.toConfig();
+                previewColor = switch (config) {
+                  ChoeaeColorCustom(:final seedColor) => seedColor,
+                  ChoeaeColorPalette(:final packId) =>
+                    PaletteRegistry.get(packId).previewColor,
+                };
+              }
+
+              return GestureDetector(
+                onTap: () {
+                  if (isLocked) {
+                    ScaffoldMessenger.of(context)
+                      ..clearSnackBars()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Text(l.themePickerSlotLocked),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    return;
+                  }
+                  if (hasSlot) {
+                    onSlotTap(index);
+                  } else {
+                    onSlotSave(index);
+                  }
+                },
+                onLongPress: isLocked || !hasSlot
+                    ? null
+                    : () => _showSlotMenu(context, index, slot!),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: isLocked
+                            ? theme.colorScheme.surfaceContainerHigh
+                            : previewColor ??
+                                theme.colorScheme.surfaceContainerHigh,
+                        shape: BoxShape.circle,
+                        border: isActive
+                            ? Border.all(
+                                color: theme.colorScheme.primary,
+                                width: 2.5,
+                              )
+                            : Border.all(
+                                color: theme.colorScheme.outlineVariant,
+                              ),
+                      ),
+                      child: isLocked
+                          ? Icon(
+                              Icons.lock_rounded,
+                              size: 18,
+                              color: theme.colorScheme.onSurfaceVariant,
+                            )
+                          : !hasSlot
+                              ? Icon(
+                                  Icons.add,
+                                  size: 20,
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                )
+                              : isActive
+                                  ? Icon(
+                                      Icons.check,
+                                      size: 18,
+                                      color: previewColor != null &&
+                                              previewColor.computeLuminance() >
+                                                  0.5
+                                          ? Colors.black87
+                                          : Colors.white,
+                                    )
+                                  : null,
+                    ),
+                    const SizedBox(height: 4),
+                    SizedBox(
+                      width: 52,
+                      child: Text(
+                        isLocked
+                            ? ''
+                            : slot?.name ?? l.themePickerSlotSave,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: isActive
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.onSurfaceVariant,
+                          fontSize: 10,
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              SliderTheme(
-                data: _sliderThemeData(
-                  context,
-                  HSLColor.fromAHSL(1.0, value, 1.0, 0.5).toColor(),
-                ),
-                child: Slider(
-                  value: value,
-                  min: 0,
-                  max: 360,
-                  onChanged: onChanged,
-                ),
-              ),
-            ],
+              );
+            },
           ),
         ),
       ],
     );
+  }
+
+  void _showSlotMenu(BuildContext context, int index, ThemeSlot slot) {
+    final l = L.of(context);
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.save_rounded),
+              title: Text(l.themePickerSlotSave),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                onSlotSave(index);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.edit_rounded),
+              title: Text(l.themePickerSlotName),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                _showRenameDialog(context, index, slot);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showRenameDialog(BuildContext context, int index, ThemeSlot slot) {
+    final controller = TextEditingController(text: slot.name);
+    final l = L.of(context);
+
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l.themePickerSlotName),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          maxLength: 20,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child:
+                Text(MaterialLocalizations.of(ctx).cancelButtonLabel),
+          ),
+          FilledButton(
+            onPressed: () {
+              final name = controller.text.trim();
+              if (name.isNotEmpty) {
+                onSlotRename(index, name);
+              }
+              Navigator.of(ctx).pop();
+            },
+            child: Text(l.complete),
+          ),
+        ],
+      ),
+    ).then((_) => controller.dispose());
   }
 }
 
@@ -731,10 +939,12 @@ class _TextColorSelector extends StatelessWidget {
   const _TextColorSelector({
     required this.currentTextColor,
     required this.onColorSelected,
+    required this.backgroundColor,
   });
 
   final Color? currentTextColor;
   final void Function(Color?) onColorSelected;
+  final Color backgroundColor;
 
   /// 프리셋 글자색 목록.
   static const _presets = <Color>[
@@ -750,6 +960,7 @@ class _TextColorSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = L.of(context);
     final theme = Theme.of(context);
+    final recommended = suggestTextColors(backgroundColor);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -768,6 +979,29 @@ class _TextColorSelector extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
+        // WCAG 추천
+        if (recommended.isNotEmpty) ...[
+          Text(
+            l.themePickerRecommended,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: theme.colorScheme.primary,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: [
+              for (final color in recommended)
+                _ColorCircle(
+                  color: color,
+                  isSelected: currentTextColor == color,
+                  onTap: () => onColorSelected(color),
+                ),
+            ],
+          ),
+          const SizedBox(height: 8),
+        ],
         Wrap(
           spacing: 10,
           runSpacing: 10,
@@ -786,6 +1020,33 @@ class _TextColorSelector extends StatelessWidget {
                 isSelected: currentTextColor == color,
                 onTap: () => onColorSelected(color),
               ),
+            // "+" 자유 피커 버튼
+            GestureDetector(
+              onTap: () async {
+                final result = await TextColorPickerDialog.show(
+                  context,
+                  backgroundColor: backgroundColor,
+                  initialColor: currentTextColor,
+                );
+                if (result != null) onColorSelected(result);
+              },
+              child: Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: theme.colorScheme.surfaceContainerHigh,
+                  border: Border.all(
+                    color: theme.colorScheme.outline.withValues(alpha: 0.5),
+                  ),
+                ),
+                child: Icon(
+                  Icons.add,
+                  size: 16,
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
+            ),
           ],
         ),
       ],
@@ -1100,6 +1361,167 @@ class _ThemeUnlockButton extends ConsumerWidget {
   }
 }
 
+/// IAP 구매 섹션 — 3-SKU 버튼과 번들 할인 표시.
+///
+/// 피커/슬롯 미구매 시에만 표시. 둘 다 구매 시 숨김.
+class _IapPurchaseSection extends ConsumerWidget {
+  const _IapPurchaseSection({
+    required this.hasThemePicker,
+    required this.hasThemeSlots,
+  });
+
+  final bool hasThemePicker;
+  final bool hasThemeSlots;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // 둘 다 구매 완료 → 숨김
+    if (hasThemePicker && hasThemeSlots) return const SizedBox.shrink();
+
+    final l = L.of(context);
+    final theme = Theme.of(context);
+    final iapSvc = ref.read(iapServiceProvider);
+    final showBundle = !hasThemePicker && !hasThemeSlots;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // 커스텀 피커 미구매
+          if (!hasThemePicker)
+            _IapButton(
+              icon: Icons.palette_outlined,
+              label: l.iapThemeCustomColor,
+              price: iapSvc.getProduct(IapProducts.themeCustomColor)?.price,
+              onTap: () => iapSvc.buyPack(IapProducts.themeCustomColor),
+              theme: theme,
+            ),
+          // 슬롯 미구매
+          if (!hasThemeSlots) ...[
+            if (!hasThemePicker) const SizedBox(height: 8),
+            _IapButton(
+              icon: Icons.grid_view_rounded,
+              label: l.iapThemeSlots,
+              price: iapSvc.getProduct(IapProducts.themeSlots)?.price,
+              onTap: () => iapSvc.buyPack(IapProducts.themeSlots),
+              theme: theme,
+            ),
+          ],
+          // 번들 — 둘 다 미구매 시에만
+          if (showBundle) ...[
+            const SizedBox(height: 8),
+            _IapButton(
+              icon: Icons.auto_awesome,
+              label: l.iapThemeBundle,
+              price: iapSvc.getProduct(IapProducts.themeBundle)?.price,
+              subtitle: l.iapThemeBundleSave,
+              isHighlighted: true,
+              onTap: () => iapSvc.buyPack(IapProducts.themeBundle),
+              theme: theme,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// 개별 IAP 구매 버튼.
+class _IapButton extends StatelessWidget {
+  const _IapButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    required this.theme,
+    this.price,
+    this.subtitle,
+    this.isHighlighted = false,
+  });
+
+  final IconData icon;
+  final String label;
+  final String? price;
+  final String? subtitle;
+  final bool isHighlighted;
+  final VoidCallback onTap;
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    final borderColor = isHighlighted
+        ? theme.colorScheme.primary
+        : theme.colorScheme.outlineVariant;
+    final bgColor = isHighlighted
+        ? theme.colorScheme.primaryContainer.withValues(alpha: 0.3)
+        : theme.colorScheme.surfaceContainerHigh;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: borderColor),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              size: 20,
+              color: isHighlighted
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                  if (subtitle != null)
+                    Text(
+                      subtitle!,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            if (price != null)
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: isHighlighted
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Text(
+                  price!,
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: isHighlighted
+                        ? theme.colorScheme.onPrimary
+                        : theme.colorScheme.onSurface,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 // ─────────────────────────────────────────────────────────────
 // Helpers
 // ─────────────────────────────────────────────────────────────
@@ -1130,66 +1552,3 @@ String _paletteName(L l, String nameKey) {
   };
 }
 
-/// 슬라이더 테마 — 투명 트랙 + 컬러 Thumb.
-SliderThemeData _sliderThemeData(BuildContext context, Color thumbColor) {
-  return SliderThemeData(
-    trackHeight: 0,
-    activeTrackColor: Colors.transparent,
-    inactiveTrackColor: Colors.transparent,
-    thumbColor: thumbColor,
-    overlayColor: thumbColor.withValues(alpha: 0.2),
-    thumbShape: const _CircleThumbShape(radius: 10),
-  );
-}
-
-/// 커스텀 원형 Thumb (흰 테두리 + 색상 채움).
-class _CircleThumbShape extends SliderComponentShape {
-  const _CircleThumbShape({required this.radius});
-
-  final double radius;
-
-  @override
-  Size getPreferredSize(bool isEnabled, bool isDiscrete) =>
-      Size.fromRadius(radius);
-
-  @override
-  void paint(
-    PaintingContext context,
-    Offset center, {
-    required Animation<double> activationAnimation,
-    required Animation<double> enableAnimation,
-    required bool isDiscrete,
-    required TextPainter labelPainter,
-    required RenderBox parentBox,
-    required SliderThemeData sliderTheme,
-    required TextDirection textDirection,
-    required double value,
-    required double textScaleFactor,
-    required Size sizeWithOverflow,
-  }) {
-    final canvas = context.canvas;
-
-    // White border
-    canvas.drawCircle(
-      center,
-      radius + 1.5,
-      Paint()..color = Colors.white,
-    );
-
-    // Colored fill
-    canvas.drawCircle(
-      center,
-      radius,
-      Paint()..color = sliderTheme.thumbColor ?? Colors.white,
-    );
-
-    // Subtle shadow
-    canvas.drawCircle(
-      center,
-      radius + 1.5,
-      Paint()
-        ..color = Colors.black.withValues(alpha: 0.15)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2),
-    );
-  }
-}

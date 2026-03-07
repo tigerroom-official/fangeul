@@ -582,4 +582,40 @@ class LEs extends L {
 
   @override
   String get paletteSunsetCafe => 'Café del Atardecer';
+
+  @override
+  String get themePickerChroma => 'Croma';
+
+  @override
+  String get themePickerTone => 'Tono';
+
+  @override
+  String get themePickerSlots => 'Slots de tema';
+
+  @override
+  String get themePickerSlotSave => 'Guardar tema actual';
+
+  @override
+  String get themePickerSlotLocked => 'Desbloquea slots';
+
+  @override
+  String get themePickerSlotName => 'Nombre del slot';
+
+  @override
+  String get themePickerRecommended => 'Recomendado';
+
+  @override
+  String get themePickerFreePickerTitle => 'Color de texto libre';
+
+  @override
+  String get iapThemeCustomColor => 'Fondo y texto personalizados';
+
+  @override
+  String get iapThemeSlots => '3 Slots de tema';
+
+  @override
+  String get iapThemeBundle => 'Paquete completo (24% desc.)';
+
+  @override
+  String get iapThemeBundleSave => 'Ahorra ₩480';
 }

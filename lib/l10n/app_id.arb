@@ -224,5 +224,18 @@
   "paletteGoldenHour": "Jam Emas",
   "paletteNeonNight": "Malam Neon",
   "paletteMintBreeze": "Semilir Mint",
-  "paletteSunsetCafe": "Kafe Senja"
+  "paletteSunsetCafe": "Kafe Senja",
+
+  "themePickerChroma": "Kroma",
+  "themePickerTone": "Nada",
+  "themePickerSlots": "Slot Tema",
+  "themePickerSlotSave": "Simpan tema saat ini",
+  "themePickerSlotLocked": "Buka kunci slot",
+  "themePickerSlotName": "Nama slot",
+  "themePickerRecommended": "Rekomendasi",
+  "themePickerFreePickerTitle": "Warna teks kustom",
+  "iapThemeCustomColor": "Latar & teks kustom",
+  "iapThemeSlots": "3 Slot Tema",
+  "iapThemeBundle": "Paket lengkap (diskon 24%)",
+  "iapThemeBundleSave": "Hemat ₩480"
 }

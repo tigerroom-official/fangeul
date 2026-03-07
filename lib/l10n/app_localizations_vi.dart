@@ -579,4 +579,40 @@ class LVi extends L {
 
   @override
   String get paletteSunsetCafe => 'Quán Hoàng Hôn';
+
+  @override
+  String get themePickerChroma => 'Sắc độ';
+
+  @override
+  String get themePickerTone => 'Tông màu';
+
+  @override
+  String get themePickerSlots => 'Slot chủ đề';
+
+  @override
+  String get themePickerSlotSave => 'Lưu chủ đề hiện tại';
+
+  @override
+  String get themePickerSlotLocked => 'Mở khóa slot';
+
+  @override
+  String get themePickerSlotName => 'Tên slot';
+
+  @override
+  String get themePickerRecommended => 'Gợi ý';
+
+  @override
+  String get themePickerFreePickerTitle => 'Chọn màu chữ tùy ý';
+
+  @override
+  String get iapThemeCustomColor => 'Nền & chữ tùy chỉnh';
+
+  @override
+  String get iapThemeSlots => '3 Slot chủ đề';
+
+  @override
+  String get iapThemeBundle => 'Gói đầy đủ (giảm 24%)';
+
+  @override
+  String get iapThemeBundleSave => 'Tiết kiệm ₩480';
 }

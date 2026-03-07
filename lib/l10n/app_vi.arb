@@ -224,5 +224,18 @@
   "paletteGoldenHour": "Giờ Vàng",
   "paletteNeonNight": "Đêm Neon",
   "paletteMintBreeze": "Gió Bạc Hà",
-  "paletteSunsetCafe": "Quán Hoàng Hôn"
+  "paletteSunsetCafe": "Quán Hoàng Hôn",
+
+  "themePickerChroma": "Sắc độ",
+  "themePickerTone": "Tông màu",
+  "themePickerSlots": "Slot chủ đề",
+  "themePickerSlotSave": "Lưu chủ đề hiện tại",
+  "themePickerSlotLocked": "Mở khóa slot",
+  "themePickerSlotName": "Tên slot",
+  "themePickerRecommended": "Gợi ý",
+  "themePickerFreePickerTitle": "Chọn màu chữ tùy ý",
+  "iapThemeCustomColor": "Nền & chữ tùy chỉnh",
+  "iapThemeSlots": "3 Slot chủ đề",
+  "iapThemeBundle": "Gói đầy đủ (giảm 24%)",
+  "iapThemeBundleSave": "Tiết kiệm ₩480"
 }

@@ -17,12 +17,30 @@ abstract final class IapProducts {
   /// 새벽 응원봉 잔광 팩 (₩1,900).
   static const dawnLightstick = 'fangeul_color_dawn_lightstick';
 
-  /// 전체 SKU 목록.
-  static const allIds = [
+  /// 테마 배경·글자색 자유선택 (₩990).
+  static const themeCustomColor = 'fangeul_theme_custom_color';
+
+  /// 테마 슬롯 3개 추가 (₩990).
+  static const themeSlots = 'fangeul_theme_slots';
+
+  /// 테마 전체 번들 — 피커 + 슬롯 (₩1,500).
+  static const themeBundle = 'fangeul_theme_bundle';
+
+  /// 테마 SKU 목록.
+  static const themeSkuIds = [themeCustomColor, themeSlots, themeBundle];
+
+  /// 컬러 팩 SKU 목록.
+  static const colorPackIds = [
     starterPack,
     purpleDream,
     goldenHour,
     concertSky,
     dawnLightstick,
+  ];
+
+  /// 전체 SKU 목록.
+  static const allIds = [
+    ...colorPackIds,
+    ...themeSkuIds,
   ];
 }

@@ -47,6 +47,9 @@ class MonetizationState with _$MonetizationState {
     /// 자유 컬러 피커 IAP 구매 여부.
     @Default(false) bool hasThemePicker,
 
+    /// 테마 슬롯 IAP 구매 여부.
+    @Default(false) bool hasThemeSlots,
+
     /// 보상형 광고로 테마 팔레트 영구 해금 여부.
     @Default(false) bool themeUnlocked,
 

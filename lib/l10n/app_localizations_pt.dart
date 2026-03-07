@@ -581,4 +581,40 @@ class LPt extends L {
 
   @override
   String get paletteSunsetCafe => 'Café do Pôr do Sol';
+
+  @override
+  String get themePickerChroma => 'Croma';
+
+  @override
+  String get themePickerTone => 'Tom';
+
+  @override
+  String get themePickerSlots => 'Slots de tema';
+
+  @override
+  String get themePickerSlotSave => 'Salvar tema atual';
+
+  @override
+  String get themePickerSlotLocked => 'Desbloqueie slots';
+
+  @override
+  String get themePickerSlotName => 'Nome do slot';
+
+  @override
+  String get themePickerRecommended => 'Recomendado';
+
+  @override
+  String get themePickerFreePickerTitle => 'Cor de texto livre';
+
+  @override
+  String get iapThemeCustomColor => 'Fundo e texto personalizados';
+
+  @override
+  String get iapThemeSlots => '3 Slots de tema';
+
+  @override
+  String get iapThemeBundle => 'Pacote completo (24% desc.)';
+
+  @override
+  String get iapThemeBundleSave => 'Economize ₩480';
 }

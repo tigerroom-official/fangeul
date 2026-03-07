@@ -244,6 +244,29 @@ class MonetizationNotifier extends _$MonetizationNotifier {
     await _updateState(current.copyWith(hasThemePicker: true));
   }
 
+  /// 테마 슬롯을 해금한다 (IAP 구매 후).
+  Future<void> unlockThemeSlots() async {
+    try {
+      await future;
+    } catch (_) {}
+    final current = state.valueOrNull;
+    if (current == null) return;
+
+    await _updateState(current.copyWith(hasThemeSlots: true));
+  }
+
+  /// 테마 번들을 해금한다 (피커+슬롯 동시).
+  Future<void> unlockThemeBundle() async {
+    try {
+      await future;
+    } catch (_) {}
+    final current = state.valueOrNull;
+    if (current == null) return;
+
+    await _updateState(
+        current.copyWith(hasThemePicker: true, hasThemeSlots: true));
+  }
+
   /// 보상형 광고로 테마 팔레트를 영구 해금한다.
   Future<void> unlockThemePalettes() async {
     try {
@@ -471,6 +494,20 @@ bool isRewardedUnlockActive(IsRewardedUnlockActiveRef ref) {
 bool isThemeUnlocked(IsThemeUnlockedRef ref) {
   final asyncState = ref.watch(monetizationNotifierProvider);
   return asyncState.valueOrNull?.themeUnlocked ?? false;
+}
+
+/// 테마 슬롯 IAP 구매 여부 편의 Provider.
+@riverpod
+bool hasThemeSlots(HasThemeSlotsRef ref) {
+  final asyncState = ref.watch(monetizationNotifierProvider);
+  return asyncState.valueOrNull?.hasThemeSlots ?? false;
+}
+
+/// 테마 피커 IAP 구매 여부 편의 Provider.
+@riverpod
+bool hasThemePicker(HasThemePickerRef ref) {
+  final asyncState = ref.watch(monetizationNotifierProvider);
+  return asyncState.valueOrNull?.hasThemePicker ?? false;
 }
 
 /// 즐겨찾기 슬롯 제한 편의 Provider.

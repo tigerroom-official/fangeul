@@ -6,11 +6,11 @@ part of 'iap_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$iapServiceHash() => r'dca96bef0f9c6cb1d10de775cea1a9f297cea212';
+String _$iapServiceHash() => r'8d628a351b9af77d158528d92ae876239f8c2442';
 
 /// IapService 인스턴스 Provider.
 ///
-/// 앱 시작 시 초기화. 구매 성공 시 MonetizationNotifier.addPurchasedPack() 연동.
+/// 앱 시작 시 초기화. 구매 성공 시 SKU별 분기하여 MonetizationNotifier 연동.
 /// 테스트에서 mock으로 override 가능.
 ///
 /// Copied from [iapService].

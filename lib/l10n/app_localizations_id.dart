@@ -581,4 +581,40 @@ class LId extends L {
 
   @override
   String get paletteSunsetCafe => 'Kafe Senja';
+
+  @override
+  String get themePickerChroma => 'Kroma';
+
+  @override
+  String get themePickerTone => 'Nada';
+
+  @override
+  String get themePickerSlots => 'Slot Tema';
+
+  @override
+  String get themePickerSlotSave => 'Simpan tema saat ini';
+
+  @override
+  String get themePickerSlotLocked => 'Buka kunci slot';
+
+  @override
+  String get themePickerSlotName => 'Nama slot';
+
+  @override
+  String get themePickerRecommended => 'Rekomendasi';
+
+  @override
+  String get themePickerFreePickerTitle => 'Warna teks kustom';
+
+  @override
+  String get iapThemeCustomColor => 'Latar & teks kustom';
+
+  @override
+  String get iapThemeSlots => '3 Slot Tema';
+
+  @override
+  String get iapThemeBundle => 'Paket lengkap (diskon 24%)';
+
+  @override
+  String get iapThemeBundleSave => 'Hemat ₩480';
 }

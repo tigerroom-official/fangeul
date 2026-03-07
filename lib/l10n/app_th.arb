@@ -224,5 +224,18 @@
   "paletteGoldenHour": "โกลเด้นอาวร์",
   "paletteNeonNight": "นีออนไนท์",
   "paletteMintBreeze": "มินต์บรีซ",
-  "paletteSunsetCafe": "ซันเซ็ตคาเฟ่"
+  "paletteSunsetCafe": "ซันเซ็ตคาเฟ่",
+
+  "themePickerChroma": "ความอิ่มตัว",
+  "themePickerTone": "โทนสี",
+  "themePickerSlots": "สล็อตธีม",
+  "themePickerSlotSave": "บันทึกธีมปัจจุบัน",
+  "themePickerSlotLocked": "ปลดล็อกสล็อต",
+  "themePickerSlotName": "ชื่อสล็อต",
+  "themePickerRecommended": "แนะนำ",
+  "themePickerFreePickerTitle": "เลือกสีตัวอักษร",
+  "iapThemeCustomColor": "พื้นหลังและตัวอักษรกำหนดเอง",
+  "iapThemeSlots": "สล็อตธีม 3 ช่อง",
+  "iapThemeBundle": "แพ็กเกจเต็ม (ลด 24%)",
+  "iapThemeBundleSave": "ประหยัด ₩480"
 }

@@ -125,6 +125,18 @@ void main() {
       expect(a, isNot(b));
     });
 
+    test('should default hasThemeSlots to false', () {
+      const state = MonetizationState();
+      expect(state.hasThemeSlots, isFalse);
+    });
+
+    test('should round-trip hasThemeSlots through JSON', () {
+      const state = MonetizationState(hasThemeSlots: true);
+      final json = state.toJson();
+      final restored = MonetizationState.fromJson(json);
+      expect(restored.hasThemeSlots, isTrue);
+    });
+
     test('should default themeUnlocked to false', () {
       const state = MonetizationState();
       expect(state.themeUnlocked, isFalse);

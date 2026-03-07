@@ -568,4 +568,40 @@ class LKo extends L {
 
   @override
   String get paletteSunsetCafe => '선셋 카페';
+
+  @override
+  String get themePickerChroma => '채도';
+
+  @override
+  String get themePickerTone => '명도';
+
+  @override
+  String get themePickerSlots => '테마 슬롯';
+
+  @override
+  String get themePickerSlotSave => '현재 테마 저장';
+
+  @override
+  String get themePickerSlotLocked => '슬롯을 해금하세요';
+
+  @override
+  String get themePickerSlotName => '슬롯 이름';
+
+  @override
+  String get themePickerRecommended => '추천';
+
+  @override
+  String get themePickerFreePickerTitle => '자유 글자색 선택';
+
+  @override
+  String get iapThemeCustomColor => '배경·글자색 자유선택';
+
+  @override
+  String get iapThemeSlots => '테마 슬롯 3개';
+
+  @override
+  String get iapThemeBundle => '전체 번들 (24% 할인)';
+
+  @override
+  String get iapThemeBundleSave => '₩480 절약';
 }

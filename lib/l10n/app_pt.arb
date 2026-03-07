@@ -224,5 +224,18 @@
   "paletteGoldenHour": "Hora Dourada",
   "paletteNeonNight": "Noite Neon",
   "paletteMintBreeze": "Brisa de Menta",
-  "paletteSunsetCafe": "Café do Pôr do Sol"
+  "paletteSunsetCafe": "Café do Pôr do Sol",
+
+  "themePickerChroma": "Croma",
+  "themePickerTone": "Tom",
+  "themePickerSlots": "Slots de tema",
+  "themePickerSlotSave": "Salvar tema atual",
+  "themePickerSlotLocked": "Desbloqueie slots",
+  "themePickerSlotName": "Nome do slot",
+  "themePickerRecommended": "Recomendado",
+  "themePickerFreePickerTitle": "Cor de texto livre",
+  "iapThemeCustomColor": "Fundo e texto personalizados",
+  "iapThemeSlots": "3 Slots de tema",
+  "iapThemeBundle": "Pacote completo (24% desc.)",
+  "iapThemeBundleSave": "Economize ₩480"
 }

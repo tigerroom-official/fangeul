@@ -1162,6 +1162,78 @@ abstract class L {
   /// In ko, this message translates to:
   /// **'선셋 카페'**
   String get paletteSunsetCafe;
+
+  /// No description provided for @themePickerChroma.
+  ///
+  /// In ko, this message translates to:
+  /// **'채도'**
+  String get themePickerChroma;
+
+  /// No description provided for @themePickerTone.
+  ///
+  /// In ko, this message translates to:
+  /// **'명도'**
+  String get themePickerTone;
+
+  /// No description provided for @themePickerSlots.
+  ///
+  /// In ko, this message translates to:
+  /// **'테마 슬롯'**
+  String get themePickerSlots;
+
+  /// No description provided for @themePickerSlotSave.
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 테마 저장'**
+  String get themePickerSlotSave;
+
+  /// No description provided for @themePickerSlotLocked.
+  ///
+  /// In ko, this message translates to:
+  /// **'슬롯을 해금하세요'**
+  String get themePickerSlotLocked;
+
+  /// No description provided for @themePickerSlotName.
+  ///
+  /// In ko, this message translates to:
+  /// **'슬롯 이름'**
+  String get themePickerSlotName;
+
+  /// No description provided for @themePickerRecommended.
+  ///
+  /// In ko, this message translates to:
+  /// **'추천'**
+  String get themePickerRecommended;
+
+  /// No description provided for @themePickerFreePickerTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'자유 글자색 선택'**
+  String get themePickerFreePickerTitle;
+
+  /// No description provided for @iapThemeCustomColor.
+  ///
+  /// In ko, this message translates to:
+  /// **'배경·글자색 자유선택'**
+  String get iapThemeCustomColor;
+
+  /// No description provided for @iapThemeSlots.
+  ///
+  /// In ko, this message translates to:
+  /// **'테마 슬롯 3개'**
+  String get iapThemeSlots;
+
+  /// No description provided for @iapThemeBundle.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 번들 (24% 할인)'**
+  String get iapThemeBundle;
+
+  /// No description provided for @iapThemeBundleSave.
+  ///
+  /// In ko, this message translates to:
+  /// **'₩480 절약'**
+  String get iapThemeBundleSave;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {
