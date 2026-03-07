@@ -26,7 +26,7 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
 
   @override
   ChoeaeColorConfig build() {
-    final prefs = ref.read(sharedPreferencesProvider);
+    final prefs = ref.watch(sharedPreferencesProvider);
     final type = prefs.getString(_typeKey);
     final value = prefs.getString(_valueKey);
 

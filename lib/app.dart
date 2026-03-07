@@ -52,7 +52,7 @@ class FangeulApp extends ConsumerWidget {
         statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
         systemNavigationBarColor: choeaeColor
             .buildColorScheme(isDark ? Brightness.dark : Brightness.light)
-            .surface,
+            .surfaceContainerLowest,
         systemNavigationBarDividerColor: Colors.transparent,
         systemNavigationBarIconBrightness:
             isDark ? Brightness.light : Brightness.dark,
