@@ -71,10 +71,13 @@ void main() {
       final darkScheme = config.buildColorScheme(Brightness.dark);
       final lightScheme = config.buildColorScheme(Brightness.light);
 
-      // Matches the logic in app.dart AnnotatedRegion
-      expect(darkScheme.surface, isNotNull);
-      expect(lightScheme.surface, isNotNull);
-      expect(darkScheme.surface, isNot(equals(lightScheme.surface)));
+      // Matches the logic in app.dart AnnotatedRegion — uses surfaceContainerLowest
+      expect(darkScheme.surfaceContainerLowest, isNotNull);
+      expect(lightScheme.surfaceContainerLowest, isNotNull);
+      expect(
+        darkScheme.surfaceContainerLowest,
+        isNot(equals(lightScheme.surfaceContainerLowest)),
+      );
     });
 
     test('choeaeColorNotifierProvider should supply default config', () {
