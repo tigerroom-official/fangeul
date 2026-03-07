@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_color_utilities/material_color_utilities.dart';
 
 import 'package:fangeul/core/entities/monetization_state.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
@@ -15,7 +16,7 @@ import 'package:fangeul/presentation/theme/palette_registry.dart';
 
 /// 테마 색상 선택 바텀시트.
 ///
-/// 추천 팔레트 그리드, 커스텀 HSL 피커, 글자색 선택, 프리뷰 카드를 포함한다.
+/// 추천 팔레트 그리드, 커스텀 HCT 피커, 글자색 선택, 프리뷰 카드를 포함한다.
 /// [ThemePickerSheet.show]로 호출.
 class ThemePickerSheet extends ConsumerStatefulWidget {
   /// 바텀시트를 표시한다.
@@ -41,10 +42,8 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
   final _sheetController = DraggableScrollableController();
   final _customPickerKey = GlobalKey();
 
-  // HSL slider ephemeral state
+  // Hue-only slider ephemeral state (HCT 기반)
   double _hue = 180;
-  double _saturation = 0.7;
-  double _lightness = 0.5;
 
   bool _slidersInitialized = false;
 
@@ -58,9 +57,8 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
     super.dispose();
   }
 
-  /// 현재 슬라이더 HSL 값으로 Color 생성.
-  Color get _hslColor =>
-      HSLColor.fromAHSL(1.0, _hue, _saturation, _lightness).toColor();
+  /// 현재 슬라이더 hue로 선명한 중간 밝기 Color 생성 (HCT chroma 48, tone 50).
+  Color get _pickerColor => Color(Hct.from(_hue, 48.0, 50.0).toInt());
 
   void _initSlidersFromConfig(ChoeaeColorConfig config) {
     if (_slidersInitialized) return;
@@ -71,10 +69,7 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
       ChoeaeColorPalette(:final packId) =>
         PaletteRegistry.get(packId).previewColor,
     };
-    final hsl = HSLColor.fromColor(color);
-    _hue = hsl.hue;
-    _saturation = hsl.saturation;
-    _lightness = hsl.lightness;
+    _hue = Hct.fromInt(color.toARGB32()).hue;
   }
 
   /// 커스텀 피커 IAP 해금 여부.
@@ -215,36 +210,7 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                         : null;
                     ref
                         .read(choeaeColorNotifierProvider.notifier)
-                        .setCustomColor(_hslColor, textColor: existing);
-                  },
-                ),
-                const SizedBox(height: 12),
-                _SaturationSlider(
-                  hue: _hue,
-                  value: _saturation,
-                  onChanged: (v) {
-                    setState(() => _saturation = v);
-                    final existing = choeaeColor is ChoeaeColorCustom
-                        ? choeaeColor.textColorOverride
-                        : null;
-                    ref
-                        .read(choeaeColorNotifierProvider.notifier)
-                        .setCustomColor(_hslColor, textColor: existing);
-                  },
-                ),
-                const SizedBox(height: 12),
-                _LightnessSlider(
-                  hue: _hue,
-                  saturation: _saturation,
-                  value: _lightness,
-                  onChanged: (v) {
-                    setState(() => _lightness = v);
-                    final existing = choeaeColor is ChoeaeColorCustom
-                        ? choeaeColor.textColorOverride
-                        : null;
-                    ref
-                        .read(choeaeColorNotifierProvider.notifier)
-                        .setCustomColor(_hslColor, textColor: existing);
+                        .setCustomColor(_pickerColor, textColor: existing);
                   },
                 ),
                 const SizedBox(height: 16),
@@ -750,135 +716,6 @@ class _HueSlider extends StatelessWidget {
                   value: value,
                   min: 0,
                   max: 360,
-                  onChanged: onChanged,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _SaturationSlider extends StatelessWidget {
-  const _SaturationSlider({
-    required this.hue,
-    required this.value,
-    required this.onChanged,
-  });
-
-  final double hue;
-  final double value;
-  final ValueChanged<double> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = L.of(context);
-    final theme = Theme.of(context);
-
-    final grayColor = HSLColor.fromAHSL(1.0, hue, 0.0, 0.5).toColor();
-    final fullColor = HSLColor.fromAHSL(1.0, hue, 1.0, 0.5).toColor();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          l.themePickerSaturation,
-          style: theme.textTheme.labelMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-        const SizedBox(height: 4),
-        SizedBox(
-          height: 36,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                height: 12,
-                margin: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  gradient: LinearGradient(
-                    colors: [grayColor, fullColor],
-                  ),
-                ),
-              ),
-              SliderTheme(
-                data: _sliderThemeData(
-                  context,
-                  HSLColor.fromAHSL(1.0, hue, value, 0.5).toColor(),
-                ),
-                child: Slider(
-                  value: value,
-                  min: 0,
-                  max: 1,
-                  onChanged: onChanged,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _LightnessSlider extends StatelessWidget {
-  const _LightnessSlider({
-    required this.hue,
-    required this.saturation,
-    required this.value,
-    required this.onChanged,
-  });
-
-  final double hue;
-  final double saturation;
-  final double value;
-  final ValueChanged<double> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = L.of(context);
-    final theme = Theme.of(context);
-
-    final midColor = HSLColor.fromAHSL(1.0, hue, saturation, 0.5).toColor();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          l.themePickerLightness,
-          style: theme.textTheme.labelMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-        const SizedBox(height: 4),
-        SizedBox(
-          height: 36,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                height: 12,
-                margin: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  gradient: LinearGradient(
-                    colors: [Colors.black, midColor, Colors.white],
-                  ),
-                ),
-              ),
-              SliderTheme(
-                data: _sliderThemeData(
-                  context,
-                  HSLColor.fromAHSL(1.0, hue, saturation, value).toColor(),
-                ),
-                child: Slider(
-                  value: value,
-                  min: 0,
-                  max: 1,
                   onChanged: onChanged,
                 ),
               ),

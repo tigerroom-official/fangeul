@@ -37,13 +37,13 @@ abstract final class FangeulTheme {
     return base.copyWith(
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: cs.surface,
-        indicatorColor: cs.primary.withValues(alpha: isDark ? 0.15 : 0.35),
+        indicatorColor: cs.primary.withValues(alpha: isDark ? 0.30 : 0.35),
         labelTextStyle: WidgetStatePropertyAll(
           FangeulTextStyles.textTheme.labelMedium,
         ),
       ),
       appBarTheme: AppBarTheme(
-        backgroundColor: base.scaffoldBackgroundColor,
+        backgroundColor: cs.surfaceContainerHigh,
         foregroundColor: cs.onSurface,
         elevation: 0,
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_color_utilities/material_color_utilities.dart';
 
 import 'package:fangeul/presentation/theme/choeae_color_config.dart';
 import 'package:fangeul/presentation/theme/fangeul_theme.dart';
@@ -43,8 +44,10 @@ void main() {
         ),
       );
       expect(theme.brightness, Brightness.dark);
-      final hsl = HSLColor.fromColor(theme.colorScheme.surface);
-      expect(hsl.saturation, greaterThan(0.05));
+      // HCT chroma — neutral 24 기반이므로 surface chroma가 충분히 높아야 함
+      final chroma =
+          Hct.fromInt(theme.colorScheme.surface.toARGB32()).chroma;
+      expect(chroma, greaterThan(5));
     });
 
     test('should apply custom text color override', () {
@@ -98,8 +101,8 @@ void main() {
       );
       final cs = theme.colorScheme;
 
-      // AppBar
-      expect(theme.appBarTheme.backgroundColor, isNotNull);
+      // AppBar — uses surfaceContainerHigh for color differentiation
+      expect(theme.appBarTheme.backgroundColor, cs.surfaceContainerHigh);
       expect(theme.appBarTheme.foregroundColor, cs.onSurface);
       expect(theme.appBarTheme.elevation, 0);
 
@@ -145,7 +148,7 @@ void main() {
         choeaeColor: const ChoeaeColorConfig.palette('midnight'),
       );
 
-      // Dark uses 0.15, light uses 0.35
+      // Dark uses 0.30, light uses 0.35
       final darkAlpha = dark.navigationBarTheme.indicatorColor!.a;
       final lightAlpha = light.navigationBarTheme.indicatorColor!.a;
       expect(darkAlpha, lessThan(lightAlpha));

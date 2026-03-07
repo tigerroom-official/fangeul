@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:material_color_utilities/material_color_utilities.dart';
 
 /// 유저 선택 seed color에서 [ColorScheme]을 직접 생성한다.
 ///
-/// Material 3 [ColorScheme.fromSeed]의 HCT 알고리즘은 surface 채도를 ~5%로
-/// 저감하여 테마 색상 변경 체감이 약하다. 이 빌더는 seed hue를 surface 전체에
-/// 15~30% 채도로 반영하여 앱 전체가 선택 색상에 "젖는" 효과를 만든다.
+/// Material 3 [ColorScheme.fromSeed]의 HCT 알고리즘은 neutral chroma ~6으로
+/// surface 채도를 극히 낮춰 테마 색상 변경 체감이 약하다. 이 빌더는
+/// neutral chroma 24 (4배)로 surface에 seed hue를 강하게 반영하여
+/// "내가 고른 색 = 앱 색상"을 체감시킨다.
 abstract final class CustomSchemeBuilder {
   /// [seedColor] + [brightness]로 풀 [ColorScheme]을 생성한다.
   ///
@@ -14,165 +16,101 @@ abstract final class CustomSchemeBuilder {
     required Brightness brightness,
     Color? textColorOverride,
   }) {
-    final hsl = HSLColor.fromColor(seedColor);
-    return brightness == Brightness.dark
-        ? _buildDark(hsl, textColorOverride)
-        : _buildLight(hsl, textColorOverride);
-  }
+    final isDark = brightness == Brightness.dark;
+    final src = Hct.fromInt(seedColor.toARGB32());
 
-  static ColorScheme _buildDark(HSLColor hsl, Color? textOverride) {
-    final primary =
-        hsl.withLightness(hsl.lightness.clamp(0.55, 0.70)).toColor();
-    final onPrimary = textOverride ?? _autoContrast(primary);
-    final surface = hsl
-        .withLightness(0.10)
-        .withSaturation((hsl.saturation * 0.25).clamp(0.0, 1.0))
-        .toColor();
+    final scheme = _SchemeVividTint(
+      sourceColorHct: src,
+      isDark: isDark,
+    );
 
-    return ColorScheme(
-      brightness: Brightness.dark,
-      primary: primary,
-      onPrimary: onPrimary,
-      primaryContainer: hsl
-          .withLightness(0.25)
-          .withSaturation((hsl.saturation * 0.70).clamp(0.0, 1.0))
-          .toColor(),
-      onPrimaryContainer: textOverride ?? Colors.white,
-      secondary: hsl
-          .withHue((hsl.hue + 30) % 360)
-          .withLightness(0.60)
-          .withSaturation((hsl.saturation * 0.60).clamp(0.0, 1.0))
-          .toColor(),
-      onSecondary: textOverride ?? Colors.white,
-      secondaryContainer: hsl
-          .withHue((hsl.hue + 30) % 360)
-          .withLightness(0.20)
-          .withSaturation((hsl.saturation * 0.50).clamp(0.0, 1.0))
-          .toColor(),
-      onSecondaryContainer: textOverride ?? Colors.white,
-      tertiary: hsl
-          .withHue((hsl.hue + 60) % 360)
-          .withLightness(0.60)
-          .withSaturation((hsl.saturation * 0.50).clamp(0.0, 1.0))
-          .toColor(),
-      onTertiary: textOverride ?? Colors.white,
-      error: const Color(0xFFCF6679),
-      onError: Colors.black,
-      surface: surface,
-      onSurface: textOverride ?? Colors.white,
-      onSurfaceVariant: textOverride != null
-          ? textOverride.withValues(alpha: textOverride.a * 0.78)
-          : const Color(0xC8FFFFFF),
-      surfaceContainerLowest: hsl
-          .withLightness(0.06)
-          .withSaturation((hsl.saturation * 0.15).clamp(0.0, 1.0))
-          .toColor(),
-      surfaceContainerLow: hsl
-          .withLightness(0.12)
-          .withSaturation((hsl.saturation * 0.20).clamp(0.0, 1.0))
-          .toColor(),
-      surfaceContainer: hsl
-          .withLightness(0.15)
-          .withSaturation((hsl.saturation * 0.22).clamp(0.0, 1.0))
-          .toColor(),
-      surfaceContainerHigh: hsl
-          .withLightness(0.18)
-          .withSaturation((hsl.saturation * 0.25).clamp(0.0, 1.0))
-          .toColor(),
-      surfaceContainerHighest: hsl
-          .withLightness(0.22)
-          .withSaturation((hsl.saturation * 0.28).clamp(0.0, 1.0))
-          .toColor(),
-      outline: hsl
-          .withLightness(0.40)
-          .withSaturation((hsl.saturation * 0.30).clamp(0.0, 1.0))
-          .toColor(),
-      outlineVariant: hsl
-          .withLightness(0.25)
-          .withSaturation((hsl.saturation * 0.20).clamp(0.0, 1.0))
-          .toColor(),
+    final cs = _colorSchemeFromDynamic(scheme, brightness);
+
+    if (textColorOverride == null) return cs;
+
+    final dimmed =
+        textColorOverride.withValues(alpha: textColorOverride.a * 0.78);
+    return cs.copyWith(
+      onSurface: textColorOverride,
+      onSurfaceVariant: dimmed,
+      onPrimary: textColorOverride,
+      onPrimaryContainer: textColorOverride,
+      onSecondary: textColorOverride,
+      onSecondaryContainer: textColorOverride,
+      onTertiary: textColorOverride,
+      onTertiaryContainer: textColorOverride,
+      onError: textColorOverride,
+      onErrorContainer: dimmed,
     );
   }
 
-  static ColorScheme _buildLight(HSLColor hsl, Color? textOverride) {
-    final primary =
-        hsl.withLightness(hsl.lightness.clamp(0.30, 0.45)).toColor();
-    final secondary = hsl
-        .withHue((hsl.hue + 30) % 360)
-        .withLightness(0.40)
-        .withSaturation((hsl.saturation * 0.50).clamp(0.0, 1.0))
-        .toColor();
-    final tertiary = hsl
-        .withHue((hsl.hue + 60) % 360)
-        .withLightness(0.40)
-        .withSaturation((hsl.saturation * 0.40).clamp(0.0, 1.0))
-        .toColor();
-    final surface = hsl
-        .withLightness(0.96)
-        .withSaturation((hsl.saturation * 0.12).clamp(0.0, 1.0))
-        .toColor();
-
+  /// [DynamicScheme] convenience getters → Flutter [ColorScheme] 변환.
+  static ColorScheme _colorSchemeFromDynamic(
+    DynamicScheme s,
+    Brightness brightness,
+  ) {
     return ColorScheme(
-      brightness: Brightness.light,
-      primary: primary,
-      onPrimary: textOverride ?? _autoContrast(primary),
-      primaryContainer: hsl
-          .withLightness(0.85)
-          .withSaturation((hsl.saturation * 0.50).clamp(0.0, 1.0))
-          .toColor(),
-      onPrimaryContainer: textOverride ?? hsl.withLightness(0.15).toColor(),
-      secondary: secondary,
-      onSecondary: textOverride ?? _autoContrast(secondary),
-      secondaryContainer: hsl
-          .withHue((hsl.hue + 30) % 360)
-          .withLightness(0.90)
-          .withSaturation((hsl.saturation * 0.40).clamp(0.0, 1.0))
-          .toColor(),
-      onSecondaryContainer: textOverride ?? hsl.withLightness(0.15).toColor(),
-      tertiary: tertiary,
-      onTertiary: textOverride ?? _autoContrast(tertiary),
-      error: const Color(0xFFB00020),
-      onError: Colors.white,
-      surface: surface,
-      onSurface: textOverride ?? Colors.black87,
-      onSurfaceVariant: textOverride != null
-          ? textOverride.withValues(alpha: textOverride.a * 0.78)
-          : const Color(0xFF424242),
-      surfaceContainerLowest: hsl
-          .withLightness(0.99)
-          .withSaturation((hsl.saturation * 0.05).clamp(0.0, 1.0))
-          .toColor(),
-      surfaceContainerLow: hsl
-          .withLightness(0.95)
-          .withSaturation((hsl.saturation * 0.10).clamp(0.0, 1.0))
-          .toColor(),
-      surfaceContainer: hsl
-          .withLightness(0.93)
-          .withSaturation((hsl.saturation * 0.12).clamp(0.0, 1.0))
-          .toColor(),
-      surfaceContainerHigh: hsl
-          .withLightness(0.90)
-          .withSaturation((hsl.saturation * 0.15).clamp(0.0, 1.0))
-          .toColor(),
-      surfaceContainerHighest: hsl
-          .withLightness(0.87)
-          .withSaturation((hsl.saturation * 0.18).clamp(0.0, 1.0))
-          .toColor(),
-      outline: hsl
-          .withLightness(0.50)
-          .withSaturation((hsl.saturation * 0.25).clamp(0.0, 1.0))
-          .toColor(),
-      outlineVariant: hsl
-          .withLightness(0.80)
-          .withSaturation((hsl.saturation * 0.15).clamp(0.0, 1.0))
-          .toColor(),
+      brightness: brightness,
+      primary: Color(s.primary),
+      onPrimary: Color(s.onPrimary),
+      primaryContainer: Color(s.primaryContainer),
+      onPrimaryContainer: Color(s.onPrimaryContainer),
+      secondary: Color(s.secondary),
+      onSecondary: Color(s.onSecondary),
+      secondaryContainer: Color(s.secondaryContainer),
+      onSecondaryContainer: Color(s.onSecondaryContainer),
+      tertiary: Color(s.tertiary),
+      onTertiary: Color(s.onTertiary),
+      tertiaryContainer: Color(s.tertiaryContainer),
+      onTertiaryContainer: Color(s.onTertiaryContainer),
+      error: Color(s.error),
+      onError: Color(s.onError),
+      errorContainer: Color(s.errorContainer),
+      onErrorContainer: Color(s.onErrorContainer),
+      surface: Color(s.surface),
+      onSurface: Color(s.onSurface),
+      onSurfaceVariant: Color(s.onSurfaceVariant),
+      surfaceDim: Color(s.surfaceDim),
+      surfaceBright: Color(s.surfaceBright),
+      surfaceContainerLowest: Color(s.surfaceContainerLowest),
+      surfaceContainerLow: Color(s.surfaceContainerLow),
+      surfaceContainer: Color(s.surfaceContainer),
+      surfaceContainerHigh: Color(s.surfaceContainerHigh),
+      surfaceContainerHighest: Color(s.surfaceContainerHighest),
+      inverseSurface: Color(s.inverseSurface),
+      onInverseSurface: Color(s.inverseOnSurface),
+      inversePrimary: Color(s.inversePrimary),
+      outline: Color(s.outline),
+      outlineVariant: Color(s.outlineVariant),
+      shadow: Color(s.shadow),
+      scrim: Color(s.scrim),
+      surfaceTint: Color(s.surfaceTint),
     );
   }
+}
 
-  /// 배경색 luminance 기반 흑/백 자동 선택.
-  static Color _autoContrast(Color background) {
-    return background.computeLuminance() > 0.20
-        ? Colors.black87
-        : Colors.white;
-  }
+/// 높은 neutral chroma로 surface에 seed hue를 강하게 반영하는 커스텀 스킴.
+///
+/// M3 기본 SchemeVibrant의 neutral chroma는 10 (거의 무색).
+/// 이 스킴은 neutral 24 / neutralVariant 28로 surface 색감을 4배 강화한다.
+class _SchemeVividTint extends DynamicScheme {
+  // ignore: use_super_parameters — sourceColorHct referenced in initializer
+  _SchemeVividTint({
+    required Hct sourceColorHct,
+    required super.isDark,
+  }) : super(
+          sourceColorHct: sourceColorHct,
+          variant: Variant.vibrant,
+          primaryPalette:
+              TonalPalette.of(sourceColorHct.hue, _maxChroma(sourceColorHct)),
+          secondaryPalette:
+              TonalPalette.of((sourceColorHct.hue + 30) % 360, 24.0),
+          tertiaryPalette:
+              TonalPalette.of((sourceColorHct.hue + 60) % 360, 32.0),
+          neutralPalette: TonalPalette.of(sourceColorHct.hue, 24.0),
+          neutralVariantPalette: TonalPalette.of(sourceColorHct.hue, 28.0),
+        );
+
+  /// primary chroma: seed chroma와 48 중 큰 값.
+  static double _maxChroma(Hct src) => src.chroma < 48.0 ? 48.0 : src.chroma;
 }
