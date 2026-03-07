@@ -53,7 +53,8 @@ class ThemeSlot {
   ChoeaeColorConfig toConfig() {
     if (type == 'custom') {
       final seedInt = int.tryParse(value, radix: 16);
-      final seedColor = seedInt != null ? Color(seedInt) : const Color(0xFF00BCD4);
+      final seedColor =
+          seedInt != null ? Color(seedInt) : const Color(0xFF00BCD4);
       Color? textColor;
       if (textOverride != null) {
         final textInt = int.tryParse(textOverride!, radix: 16);
@@ -92,10 +93,8 @@ class ThemeSlot {
           name: name,
           type: 'custom',
           value: seedColor.toARGB32().toRadixString(16).padLeft(8, '0'),
-          textOverride: textColorOverride
-              ?.toARGB32()
-              .toRadixString(16)
-              .padLeft(8, '0'),
+          textOverride:
+              textColorOverride?.toARGB32().toRadixString(16).padLeft(8, '0'),
           brightnessOverride: brightnessOverride.name,
         ),
     };

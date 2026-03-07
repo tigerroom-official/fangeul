@@ -593,6 +593,13 @@ class LEs extends L {
   String get themePickerHexInput => 'Código de color';
 
   @override
+  String get themePickerBrightness => 'Brillo';
+
+  @override
+  String get themeModeLocked =>
+      'El tema personalizado controla el brillo de forma independiente';
+
+  @override
   String get themePickerSlots => 'Slots de tema';
 
   @override

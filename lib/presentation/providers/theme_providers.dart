@@ -73,7 +73,9 @@ class LocaleNotifier extends _$LocaleNotifier {
 /// 반환값: 1.0 (동일) ~ 21.0 (흑백). 4.5 미만이면 AA 미충족.
 double contrastRatio(Color fg, Color bg) {
   double luminanceComponent(double c) {
-    return c <= 0.04045 ? c / 12.92 : math.pow((c + 0.055) / 1.055, 2.4).toDouble();
+    return c <= 0.04045
+        ? c / 12.92
+        : math.pow((c + 0.055) / 1.055, 2.4).toDouble();
   }
 
   double relativeLuminance(Color color) {

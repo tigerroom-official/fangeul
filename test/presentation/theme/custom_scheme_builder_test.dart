@@ -246,12 +246,10 @@ void main() {
         seedColor: const Color(0xFF9C27B0),
         brightness: Brightness.dark,
       );
-      final lowest =
-          Hct.fromInt(scheme.surfaceContainerLowest.toARGB32()).tone;
+      final lowest = Hct.fromInt(scheme.surfaceContainerLowest.toARGB32()).tone;
       final surface = Hct.fromInt(scheme.surface.toARGB32()).tone;
       final container = Hct.fromInt(scheme.surfaceContainer.toARGB32()).tone;
-      final high =
-          Hct.fromInt(scheme.surfaceContainerHigh.toARGB32()).tone;
+      final high = Hct.fromInt(scheme.surfaceContainerHigh.toARGB32()).tone;
       final highest =
           Hct.fromInt(scheme.surfaceContainerHighest.toARGB32()).tone;
       expect(lowest, lessThan(surface));
@@ -267,12 +265,10 @@ void main() {
         seedColor: const Color(0xFF9C27B0),
         brightness: Brightness.light,
       );
-      final lowest =
-          Hct.fromInt(scheme.surfaceContainerLowest.toARGB32()).tone;
+      final lowest = Hct.fromInt(scheme.surfaceContainerLowest.toARGB32()).tone;
       final surface = Hct.fromInt(scheme.surface.toARGB32()).tone;
       final container = Hct.fromInt(scheme.surfaceContainer.toARGB32()).tone;
-      final high =
-          Hct.fromInt(scheme.surfaceContainerHigh.toARGB32()).tone;
+      final high = Hct.fromInt(scheme.surfaceContainerHigh.toARGB32()).tone;
       final highest =
           Hct.fromInt(scheme.surfaceContainerHighest.toARGB32()).tone;
       expect(highest, lessThan(high));
@@ -340,15 +336,13 @@ void main() {
               reason: '${entry.key} surface vs onSurface');
         });
 
-        test(
-            'dark onSurfaceVariant contrast >= 4.5:1 for ${entry.key} seed',
+        test('dark onSurfaceVariant contrast >= 4.5:1 for ${entry.key} seed',
             () {
           final scheme = CustomSchemeBuilder.build(
             seedColor: entry.value,
             brightness: Brightness.dark,
           );
-          final ratio =
-              contrastRatio(scheme.onSurfaceVariant, scheme.surface);
+          final ratio = contrastRatio(scheme.onSurfaceVariant, scheme.surface);
           expect(ratio, greaterThanOrEqualTo(4.5),
               reason: '${entry.key} surface vs onSurfaceVariant');
         });
@@ -361,8 +355,8 @@ void main() {
             brightness: Brightness.dark,
           );
           // AppBar uses surfaceContainerHigh — large text needs 3:1
-          final ratio = contrastRatio(
-              scheme.onSurface, scheme.surfaceContainerHigh);
+          final ratio =
+              contrastRatio(scheme.onSurface, scheme.surfaceContainerHigh);
           expect(ratio, greaterThanOrEqualTo(3.0),
               reason:
                   '${entry.key} surfaceContainerHigh vs onSurface (large text)');

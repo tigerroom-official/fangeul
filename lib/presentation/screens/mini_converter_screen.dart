@@ -219,43 +219,43 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
         systemNavigationBarDividerColor: Colors.transparent,
       ),
       child: Scaffold(
-      backgroundColor: Colors.transparent,
-      resizeToAvoidBottomInset: false,
-      body: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: _dismiss,
-        // 외부 영역 vertical drag 제거 — 내부 드래그 핸들과 제스처 충돌 방지
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: GestureDetector(
-            onTap: () {},
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              height: math.max(
-                120,
-                (isCompact
-                        ? MediaQuery.of(context).size.height * 0.43
-                        : MediaQuery.of(context).size.height * 0.70) +
-                    MediaQuery.of(context).viewPadding.bottom,
-              ),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(20),
+        backgroundColor: Colors.transparent,
+        resizeToAvoidBottomInset: false,
+        body: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: _dismiss,
+          // 외부 영역 vertical drag 제거 — 내부 드래그 핸들과 제스처 충돌 방지
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: GestureDetector(
+              onTap: () {},
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                height: math.max(
+                  120,
+                  (isCompact
+                          ? MediaQuery.of(context).size.height * 0.43
+                          : MediaQuery.of(context).size.height * 0.70) +
+                      MediaQuery.of(context).viewPadding.bottom,
                 ),
-              ),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(20),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(20),
+                  ),
                 ),
-                child: isCompact ? _buildCompactMode() : _buildExpandedMode(),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(20),
+                  ),
+                  child: isCompact ? _buildCompactMode() : _buildExpandedMode(),
+                ),
               ),
             ),
           ),
         ),
       ),
-    ),
     );
   }
 

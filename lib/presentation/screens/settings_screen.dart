@@ -51,6 +51,7 @@ class SettingsScreen extends ConsumerWidget {
     final themeMode = ref.watch(themeModeNotifierProvider);
     final userLocale = ref.watch(localeNotifierProvider);
     final choeaeColor = ref.watch(choeaeColorNotifierProvider);
+    final hasOverride = choeaeColor is ChoeaeColorCustom;
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -84,12 +85,24 @@ class SettingsScreen extends ConsumerWidget {
                     ),
                   ],
                   selected: {themeMode},
-                  onSelectionChanged: (modes) {
-                    ref
-                        .read(themeModeNotifierProvider.notifier)
-                        .setThemeMode(modes.first);
-                  },
+                  onSelectionChanged: hasOverride
+                      ? null
+                      : (modes) {
+                          ref
+                              .read(themeModeNotifierProvider.notifier)
+                              .setThemeMode(modes.first);
+                        },
                 ),
+                if (hasOverride)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      l.themeModeLocked,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -476,7 +489,8 @@ class _DebugMonetizationPanel extends ConsumerWidget {
 
     // honeymoonActive는 Day 14 기준으로 자동 조정
     final honeymoonActive = days < 14;
-    final slotLimit = honeymoonActive ? 0 : MonetizationNotifier.defaultSlotLimit;
+    final slotLimit =
+        honeymoonActive ? 0 : MonetizationNotifier.defaultSlotLimit;
 
     final repo = ref.read(monetizationRepositoryProvider);
     final updated = current.copyWith(
@@ -490,7 +504,9 @@ class _DebugMonetizationPanel extends ConsumerWidget {
 
   Future<void> _toggleRewardedUnlock(WidgetRef ref, bool activate) async {
     if (activate) {
-      await ref.read(monetizationNotifierProvider.notifier).activateRewardedUnlock();
+      await ref
+          .read(monetizationNotifierProvider.notifier)
+          .activateRewardedUnlock();
     } else {
       try {
         await ref.read(monetizationNotifierProvider.future);

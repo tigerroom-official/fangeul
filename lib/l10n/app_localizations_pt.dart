@@ -592,6 +592,13 @@ class LPt extends L {
   String get themePickerHexInput => 'Código de cor';
 
   @override
+  String get themePickerBrightness => 'Brilho';
+
+  @override
+  String get themeModeLocked =>
+      'O tema personalizado controla o brilho de forma independente';
+
+  @override
   String get themePickerSlots => 'Slots de tema';
 
   @override

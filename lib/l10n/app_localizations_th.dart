@@ -586,6 +586,12 @@ class LTh extends L {
   String get themePickerHexInput => 'รหัสสี';
 
   @override
+  String get themePickerBrightness => 'ความสว่าง';
+
+  @override
+  String get themeModeLocked => 'ธีมที่กำหนดเองควบคุมความสว่างอย่างอิสระ';
+
+  @override
   String get themePickerSlots => 'สล็อตธีม';
 
   @override

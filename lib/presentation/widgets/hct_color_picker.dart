@@ -88,7 +88,8 @@ class _HctColorPickerState extends State<HctColorPicker> {
     for (int y = 0; y < height; y++) {
       final tone = _maxTone - (y / (height - 1)) * _toneRange;
       for (int x = 0; x < width; x++) {
-        final chroma = _minChroma + (x / (width - 1)) * (_maxChroma - _minChroma);
+        final chroma =
+            _minChroma + (x / (width - 1)) * (_maxChroma - _minChroma);
         final argb = Hct.from(hue, chroma, tone).toInt();
         final offset = (y * width + x) * 4;
         pixels[offset] = (argb >> 16) & 0xFF; // R
@@ -153,8 +154,7 @@ class _HctColorPickerState extends State<HctColorPicker> {
           // 마커 위치 계산
           final markerX =
               ((_chroma - _minChroma) / (_maxChroma - _minChroma)) * areaWidth;
-          final markerY =
-              ((_maxTone - _tone) / _toneRange) * areaHeight;
+          final markerY = ((_maxTone - _tone) / _toneRange) * areaHeight;
 
           return GestureDetector(
             onPanDown: (d) =>
@@ -186,8 +186,7 @@ class _HctColorPickerState extends State<HctColorPicker> {
                         height: 20,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Color(
-                              Hct.from(_hue, _chroma, _tone).toInt()),
+                          color: Color(Hct.from(_hue, _chroma, _tone).toInt()),
                           border: Border.all(color: Colors.white, width: 2),
                           boxShadow: const [
                             BoxShadow(

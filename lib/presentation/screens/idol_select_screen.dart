@@ -108,7 +108,8 @@ class _IdolSelectScreenState extends ConsumerState<IdolSelectScreen> {
 
   /// 활성 필드가 보이도록 ListView를 자동 스크롤한다.
   void _scrollToActiveField(_ActiveField field) {
-    final key = field == _ActiveField.custom ? _customFieldKey : _memberFieldKey;
+    final key =
+        field == _ActiveField.custom ? _customFieldKey : _memberFieldKey;
     final ctx = key.currentContext;
     if (ctx != null) {
       Scrollable.ensureVisible(

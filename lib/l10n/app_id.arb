@@ -229,6 +229,8 @@
   "themePickerChroma": "Kroma",
   "themePickerTone": "Nada",
   "themePickerHexInput": "Kode warna",
+  "themePickerBrightness": "Kecerahan",
+  "themeModeLocked": "Tema kustom mengontrol kecerahan secara mandiri",
   "themePickerSlots": "Slot Tema",
   "themePickerSlotSave": "Simpan tema saat ini",
   "themePickerSlotLocked": "Buka kunci slot",

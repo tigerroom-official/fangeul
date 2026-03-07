@@ -579,6 +579,12 @@ class LKo extends L {
   String get themePickerHexInput => '색상 코드';
 
   @override
+  String get themePickerBrightness => '밝기';
+
+  @override
+  String get themeModeLocked => '커스텀 테마가 밝기를 직접 관리합니다';
+
+  @override
   String get themePickerSlots => '테마 슬롯';
 
   @override

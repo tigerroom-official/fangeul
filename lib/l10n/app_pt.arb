@@ -229,6 +229,8 @@
   "themePickerChroma": "Croma",
   "themePickerTone": "Tom",
   "themePickerHexInput": "Código de cor",
+  "themePickerBrightness": "Brilho",
+  "themeModeLocked": "O tema personalizado controla o brilho de forma independente",
   "themePickerSlots": "Slots de tema",
   "themePickerSlotSave": "Salvar tema atual",
   "themePickerSlotLocked": "Desbloqueie slots",

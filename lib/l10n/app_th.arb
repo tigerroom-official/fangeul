@@ -229,6 +229,8 @@
   "themePickerChroma": "ความอิ่มตัว",
   "themePickerTone": "โทนสี",
   "themePickerHexInput": "รหัสสี",
+  "themePickerBrightness": "ความสว่าง",
+  "themeModeLocked": "ธีมที่กำหนดเองควบคุมความสว่างอย่างอิสระ",
   "themePickerSlots": "สล็อตธีม",
   "themePickerSlotSave": "บันทึกธีมปัจจุบัน",
   "themePickerSlotLocked": "ปลดล็อกสล็อต",

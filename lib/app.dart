@@ -70,9 +70,8 @@ class FangeulApp extends ConsumerWidget {
       );
       lightTheme = overriddenTheme;
       darkTheme = overriddenTheme;
-      effectiveThemeMode = brightOverride == Brightness.dark
-          ? ThemeMode.dark
-          : ThemeMode.light;
+      effectiveThemeMode =
+          brightOverride == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
     } else {
       lightTheme = FangeulTheme.build(
         brightness: Brightness.light,

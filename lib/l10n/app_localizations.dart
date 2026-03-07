@@ -1181,6 +1181,18 @@ abstract class L {
   /// **'색상 코드'**
   String get themePickerHexInput;
 
+  /// No description provided for @themePickerBrightness.
+  ///
+  /// In ko, this message translates to:
+  /// **'밝기'**
+  String get themePickerBrightness;
+
+  /// No description provided for @themeModeLocked.
+  ///
+  /// In ko, this message translates to:
+  /// **'커스텀 테마가 밝기를 직접 관리합니다'**
+  String get themeModeLocked;
+
   /// No description provided for @themePickerSlots.
   ///
   /// In ko, this message translates to:

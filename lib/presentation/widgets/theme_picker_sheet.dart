@@ -105,8 +105,7 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
   @override
   Widget build(BuildContext context) {
     final choeaeColor = ref.watch(choeaeColorNotifierProvider);
-    final monState =
-        ref.watch(monetizationNotifierProvider).valueOrNull;
+    final monState = ref.watch(monetizationNotifierProvider).valueOrNull;
     final hasPickerIap = _hasPickerAccess(monState);
     final hasSlotIap = monState?.hasThemeSlots ?? false;
     final slotList = ref.watch(themeSlotNotifierProvider);
@@ -126,240 +125,265 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
         minChildSize: 0.4,
         maxChildSize: 0.85,
         builder: (context, scrollController) {
-        final theme = Theme.of(context);
-        final colorScheme = theme.colorScheme;
+          final theme = Theme.of(context);
+          final colorScheme = theme.colorScheme;
 
-        return Container(
-          decoration: BoxDecoration(
-            color: colorScheme.surface,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(20),
+          return Container(
+            decoration: BoxDecoration(
+              color: colorScheme.surface,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
             ),
-          ),
-          child: ListView(
-            controller: scrollController,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            children: [
-              const _HandleBar(),
-              const SizedBox(height: 12),
-              _TitleSection(
-                canUndo: ref.read(choeaeColorNotifierProvider.notifier).canUndo,
-                onUndo: () {
-                  ref.read(choeaeColorNotifierProvider.notifier).undo();
-                  setState(() {
-                    _slidersInitialized = false;
-                    _pickerResetCount++;
-                  });
-                },
-              ),
-              const SizedBox(height: 12),
-              _ThemeSlotRow(
-                slots: slotList,
-                activeIndex: slotNotifier.activeIndex,
-                maxSlots: slotNotifier.availableSlots(hasSlotIap),
-                hasSlotIap: hasSlotIap,
-                onSlotTap: (index) {
-                  slotNotifier.applySlot(index);
-                  setState(() {
-                    _slidersInitialized = false;
-                    _pickerResetCount++;
-                  });
-                },
-                onSlotSave: (index) {
-                  final slot = ThemeSlot.fromConfig(
-                    slotList.length > index
-                        ? slotList[index].name
-                        : 'Slot ${index + 1}',
-                    choeaeColor,
-                  );
-                  slotNotifier.saveToSlot(index, slot);
-                },
-                onSlotRename: (index, name) {
-                  slotNotifier.renameSlot(index, name);
-                },
-              ),
-              const SizedBox(height: 16),
-              _DefaultThemeChip(
-                isSelected: choeaeColor is ChoeaeColorPalette &&
-                    choeaeColor.packId == PaletteRegistry.defaultId,
-                onTap: () {
-                  ref
-                      .read(choeaeColorNotifierProvider.notifier)
-                      .selectPalette(PaletteRegistry.defaultId);
-                  setState(() {
-                    _slidersInitialized = false;
-                    _pickerResetCount++;
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
-              _PaletteGrid(
-                currentConfig: choeaeColor,
-                onPaletteTap: (pack) {
-                  ref
-                      .read(choeaeColorNotifierProvider.notifier)
-                      .selectPalette(pack.id);
-                  setState(() {
-                    _slidersInitialized = false;
-                    _pickerResetCount++;
-                  });
-                },
-              ),
-              const _ThemeUnlockButton(),
-              const SizedBox(height: 16),
-              _CustomPickerToggle(
-                isExpanded: _customPickerExpanded,
-                isLocked: !hasPickerIap,
-                onToggle: () {
-                  if (!hasPickerIap && !_customPickerExpanded) {
-                    _enterPreviewMode();
-                  }
-                  setState(() {
-                    _customPickerExpanded = !_customPickerExpanded;
-                  });
-                  if (_customPickerExpanded) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (!mounted) return;
-                      _sheetController
-                          .animateTo(
-                        0.85,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeOut,
-                      )
-                          .then((_) {
-                        if (!mounted) return;
-                        final ctx = _customPickerKey.currentContext;
-                        if (ctx != null) {
-                          Scrollable.ensureVisible(
-                            // ignore: use_build_context_synchronously
-                            ctx,
-                            duration: const Duration(milliseconds: 200),
-                            curve: Curves.easeOut,
-                          );
-                        }
-                      });
-                    });
-                  }
-                },
-              ),
-              if (_customPickerExpanded) ...[
-                SizedBox(key: _customPickerKey, height: 16),
-                HctColorPicker(
-                  key: ValueKey(_pickerResetCount),
-                  initialHue: _hue,
-                  initialChroma: _chroma,
-                  initialTone: _tone,
-                  onColorChanged: (color) {
-                    final hct = Hct.fromInt(color.toARGB32());
+            child: ListView(
+              controller: scrollController,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              children: [
+                const _HandleBar(),
+                const SizedBox(height: 12),
+                _TitleSection(
+                  canUndo:
+                      ref.read(choeaeColorNotifierProvider.notifier).canUndo,
+                  onUndo: () {
+                    ref.read(choeaeColorNotifierProvider.notifier).undo();
                     setState(() {
-                      _hue = hct.hue;
-                      _chroma = hct.chroma;
-                      _tone = hct.tone;
+                      _slidersInitialized = false;
+                      _pickerResetCount++;
                     });
-                    final existing = choeaeColor is ChoeaeColorCustom
-                        ? choeaeColor.textColorOverride
-                        : null;
-                    ref
-                        .read(choeaeColorNotifierProvider.notifier)
-                        .setCustomColor(color, textColor: existing);
+                  },
+                ),
+                const SizedBox(height: 12),
+                _ThemeSlotRow(
+                  slots: slotList,
+                  activeIndex: slotNotifier.activeIndex,
+                  maxSlots: slotNotifier.availableSlots(hasSlotIap),
+                  hasSlotIap: hasSlotIap,
+                  onSlotTap: (index) {
+                    slotNotifier.applySlot(index);
+                    setState(() {
+                      _slidersInitialized = false;
+                      _pickerResetCount++;
+                    });
+                  },
+                  onSlotSave: (index) {
+                    final slot = ThemeSlot.fromConfig(
+                      slotList.length > index
+                          ? slotList[index].name
+                          : 'Slot ${index + 1}',
+                      choeaeColor,
+                    );
+                    slotNotifier.saveToSlot(index, slot);
+                  },
+                  onSlotRename: (index, name) {
+                    slotNotifier.renameSlot(index, name);
                   },
                 ),
                 const SizedBox(height: 16),
-                _TextColorSelector(
-                  currentTextColor: choeaeColor is ChoeaeColorCustom
-                      ? choeaeColor.textColorOverride
-                      : null,
-                  backgroundColor: choeaeColor
-                      .buildColorScheme(theme.brightness)
-                      .surface,
-                  onColorSelected: (color) {
+                _DefaultThemeChip(
+                  isSelected: choeaeColor is ChoeaeColorPalette &&
+                      choeaeColor.packId == PaletteRegistry.defaultId,
+                  onTap: () {
                     ref
                         .read(choeaeColorNotifierProvider.notifier)
-                        .setTextColorOverride(color);
+                        .selectPalette(PaletteRegistry.defaultId);
+                    setState(() {
+                      _slidersInitialized = false;
+                      _pickerResetCount++;
+                    });
                   },
                 ),
-                // 가독성 가드레일: 대비율 < 4.5:1 시 경고
-                Builder(builder: (context) {
-                  final textColor = choeaeColor is ChoeaeColorCustom
-                      ? choeaeColor.textColorOverride
-                      : null;
-                  if (textColor == null) return const SizedBox.shrink();
-                  final bgColor =
-                      choeaeColor.buildColorScheme(theme.brightness).surface;
-                  final ratio = contrastRatio(textColor, bgColor);
-                  if (ratio >= 4.5) return const SizedBox.shrink();
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Chip(
-                      avatar: Icon(
-                        Icons.warning_amber_rounded,
-                        size: 16,
-                        color: theme.colorScheme.error,
-                      ),
-                      label: Text(
-                        L.of(context).themePickerLowContrast,
-                        style: TextStyle(
-                          color: theme.colorScheme.error,
-                          fontSize: 12,
-                        ),
-                      ),
-                      backgroundColor:
-                          theme.colorScheme.errorContainer,
-                      side: BorderSide.none,
-                    ),
-                  );
-                }),
                 const SizedBox(height: 16),
-                _PreviewCard(
-                  choeaeColor: choeaeColor,
-                  brightness: theme.brightness,
+                _PaletteGrid(
+                  currentConfig: choeaeColor,
+                  onPaletteTap: (pack) {
+                    ref
+                        .read(choeaeColorNotifierProvider.notifier)
+                        .selectPalette(pack.id);
+                    setState(() {
+                      _slidersInitialized = false;
+                      _pickerResetCount++;
+                    });
+                  },
                 ),
-                if (!hasPickerIap) ...[
-                  const SizedBox(height: 12),
-                  Text(
-                    L.of(context).themePickerPreviewHint,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  FilledButton.tonal(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context)
-                        ..clearSnackBars()
-                        ..showSnackBar(
-                          SnackBar(
-                            content:
-                                Text(L.of(context).themePickerApplyLocked),
-                            duration: const Duration(seconds: 2),
-                          ),
-                        );
+                const _ThemeUnlockButton(),
+                const SizedBox(height: 16),
+                _CustomPickerToggle(
+                  isExpanded: _customPickerExpanded,
+                  isLocked: !hasPickerIap,
+                  onToggle: () {
+                    if (!hasPickerIap && !_customPickerExpanded) {
+                      _enterPreviewMode();
+                    }
+                    setState(() {
+                      _customPickerExpanded = !_customPickerExpanded;
+                    });
+                    if (_customPickerExpanded) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (!mounted) return;
+                        _sheetController
+                            .animateTo(
+                          0.85,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeOut,
+                        )
+                            .then((_) {
+                          if (!mounted) return;
+                          final ctx = _customPickerKey.currentContext;
+                          if (ctx != null) {
+                            Scrollable.ensureVisible(
+                              // ignore: use_build_context_synchronously
+                              ctx,
+                              duration: const Duration(milliseconds: 200),
+                              curve: Curves.easeOut,
+                            );
+                          }
+                        });
+                      });
+                    }
+                  },
+                ),
+                if (_customPickerExpanded) ...[
+                  SizedBox(key: _customPickerKey, height: 16),
+                  HctColorPicker(
+                    key: ValueKey(_pickerResetCount),
+                    initialHue: _hue,
+                    initialChroma: _chroma,
+                    initialTone: _tone,
+                    onColorChanged: (color) {
+                      final hct = Hct.fromInt(color.toARGB32());
+                      setState(() {
+                        _hue = hct.hue;
+                        _chroma = hct.chroma;
+                        _tone = hct.tone;
+                      });
+                      final existing = choeaeColor is ChoeaeColorCustom
+                          ? choeaeColor.textColorOverride
+                          : null;
+                      ref
+                          .read(choeaeColorNotifierProvider.notifier)
+                          .setCustomColor(color, textColor: existing);
                     },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.lock_rounded,
-                          size: 16,
-                          color: theme.colorScheme.onSecondaryContainer,
-                        ),
-                        const SizedBox(width: 6),
-                        Text(L.of(context).themePickerApplyLocked),
-                      ],
-                    ),
                   ),
+                  const SizedBox(height: 16),
+                  _BrightnessToggle(
+                    current: choeaeColor is ChoeaeColorCustom
+                        ? choeaeColor.brightnessOverride
+                        : Brightness.dark,
+                    onChanged: (br) {
+                      ref
+                          .read(choeaeColorNotifierProvider.notifier)
+                          .setBrightnessOverride(br);
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  Builder(builder: (context) {
+                    final effectiveBrightness = choeaeColor is ChoeaeColorCustom
+                        ? choeaeColor.brightnessOverride
+                        : theme.brightness;
+                    return Column(
+                      children: [
+                        _TextColorSelector(
+                          currentTextColor: choeaeColor is ChoeaeColorCustom
+                              ? choeaeColor.textColorOverride
+                              : null,
+                          backgroundColor: choeaeColor
+                              .buildColorScheme(effectiveBrightness)
+                              .surface,
+                          onColorSelected: (color) {
+                            ref
+                                .read(choeaeColorNotifierProvider.notifier)
+                                .setTextColorOverride(color);
+                          },
+                        ),
+                        // 가독성 가드레일: 대비율 < 4.5:1 시 경고
+                        Builder(builder: (context) {
+                          final textColor = choeaeColor is ChoeaeColorCustom
+                              ? choeaeColor.textColorOverride
+                              : null;
+                          if (textColor == null) {
+                            return const SizedBox.shrink();
+                          }
+                          final bgColor = choeaeColor
+                              .buildColorScheme(effectiveBrightness)
+                              .surface;
+                          final ratio = contrastRatio(textColor, bgColor);
+                          if (ratio >= 4.5) {
+                            return const SizedBox.shrink();
+                          }
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Chip(
+                              avatar: Icon(
+                                Icons.warning_amber_rounded,
+                                size: 16,
+                                color: theme.colorScheme.error,
+                              ),
+                              label: Text(
+                                L.of(context).themePickerLowContrast,
+                                style: TextStyle(
+                                  color: theme.colorScheme.error,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              backgroundColor: theme.colorScheme.errorContainer,
+                              side: BorderSide.none,
+                            ),
+                          );
+                        }),
+                        const SizedBox(height: 16),
+                        _PreviewCard(
+                          choeaeColor: choeaeColor,
+                          brightness: effectiveBrightness,
+                        ),
+                      ],
+                    );
+                  }),
+                  if (!hasPickerIap) ...[
+                    const SizedBox(height: 12),
+                    Text(
+                      L.of(context).themePickerPreviewHint,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    FilledButton.tonal(
+                      onPressed: () {
+                        ScaffoldMessenger.of(context)
+                          ..clearSnackBars()
+                          ..showSnackBar(
+                            SnackBar(
+                              content:
+                                  Text(L.of(context).themePickerApplyLocked),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.lock_rounded,
+                            size: 16,
+                            color: theme.colorScheme.onSecondaryContainer,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(L.of(context).themePickerApplyLocked),
+                        ],
+                      ),
+                    ),
+                  ],
                 ],
+                _IapPurchaseSection(
+                  hasThemePicker: hasPickerIap,
+                  hasThemeSlots: hasSlotIap,
+                ),
+                const SizedBox(height: 24),
               ],
-              _IapPurchaseSection(
-                hasThemePicker: hasPickerIap,
-                hasThemeSlots: hasSlotIap,
-              ),
-              const SizedBox(height: 24),
-            ],
-          ),
-        );
-      },
+            ),
+          );
+        },
       ),
     );
   }
@@ -477,8 +501,8 @@ class _DefaultThemeChip extends StatelessWidget {
               width: 24,
               height: 24,
               decoration: BoxDecoration(
-                color: PaletteRegistry.get(PaletteRegistry.defaultId)
-                    .previewColor,
+                color:
+                    PaletteRegistry.get(PaletteRegistry.defaultId).previewColor,
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: theme.colorScheme.outline,
@@ -846,9 +870,7 @@ class _ThemeSlotRow extends StatelessWidget {
                     SizedBox(
                       width: 52,
                       child: Text(
-                        isLocked
-                            ? ''
-                            : slot?.name ?? l.themePickerSlotSave,
+                        isLocked ? '' : slot?.name ?? l.themePickerSlotSave,
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: isActive
                               ? theme.colorScheme.primary
@@ -916,8 +938,7 @@ class _ThemeSlotRow extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child:
-                Text(MaterialLocalizations.of(ctx).cancelButtonLabel),
+            child: Text(MaterialLocalizations.of(ctx).cancelButtonLabel),
           ),
           FilledButton(
             onPressed: () {
@@ -1138,6 +1159,52 @@ class _ColorCircle extends StatelessWidget {
   }
 }
 
+/// 밝기 토글 — dark/light 전환.
+class _BrightnessToggle extends StatelessWidget {
+  const _BrightnessToggle({
+    required this.current,
+    required this.onChanged,
+  });
+
+  final Brightness current;
+  final ValueChanged<Brightness> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = L.of(context);
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l.themePickerBrightness,
+          style: theme.textTheme.labelMedium?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 8),
+        SegmentedButton<Brightness>(
+          segments: [
+            ButtonSegment(
+              value: Brightness.dark,
+              icon: const Icon(Icons.dark_mode_outlined, size: 18),
+              label: Text(l.themeDark),
+            ),
+            ButtonSegment(
+              value: Brightness.light,
+              icon: const Icon(Icons.light_mode_outlined, size: 18),
+              label: Text(l.themeLight),
+            ),
+          ],
+          selected: {current},
+          onSelectionChanged: (modes) => onChanged(modes.first),
+        ),
+      ],
+    );
+  }
+}
+
 class _PreviewCard extends StatelessWidget {
   const _PreviewCard({
     required this.choeaeColor,
@@ -1325,8 +1392,7 @@ class _ThemeUnlockButton extends ConsumerWidget {
             return;
           }
 
-          final notifier =
-              ref.read(monetizationNotifierProvider.notifier);
+          final notifier = ref.read(monetizationNotifierProvider.notifier);
           final recorded = await notifier.recordAdWatch();
           if (!recorded) return;
 
@@ -1551,4 +1617,3 @@ String _paletteName(L l, String nameKey) {
     _ => nameKey,
   };
 }
-

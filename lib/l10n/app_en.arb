@@ -229,6 +229,8 @@
   "themePickerChroma": "Chroma",
   "themePickerTone": "Tone",
   "themePickerHexInput": "Color code",
+  "themePickerBrightness": "Brightness",
+  "themeModeLocked": "Custom theme controls brightness independently",
   "themePickerSlots": "Theme Slots",
   "themePickerSlotSave": "Save current theme",
   "themePickerSlotLocked": "Unlock slots",

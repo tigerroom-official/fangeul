@@ -45,8 +45,7 @@ void main() {
       );
       expect(theme.brightness, Brightness.dark);
       // HCT chroma — neutral 24 기반이므로 surface chroma가 충분히 높아야 함
-      final chroma =
-          Hct.fromInt(theme.colorScheme.surface.toARGB32()).chroma;
+      final chroma = Hct.fromInt(theme.colorScheme.surface.toARGB32()).chroma;
       expect(chroma, greaterThan(5));
     });
 

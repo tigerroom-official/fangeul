@@ -108,8 +108,7 @@ void main() {
         for (final color in suggestions) {
           final ratio = contrastRatio(color, bg);
           expect(ratio, greaterThanOrEqualTo(4.5),
-              reason:
-                  'Failed for bg ${bg.toARGB32().toRadixString(16)}: '
+              reason: 'Failed for bg ${bg.toARGB32().toRadixString(16)}: '
                   'color ${color.toARGB32().toRadixString(16)} ratio $ratio');
         }
       }

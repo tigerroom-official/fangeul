@@ -589,6 +589,13 @@ class LEn extends L {
   String get themePickerHexInput => 'Color code';
 
   @override
+  String get themePickerBrightness => 'Brightness';
+
+  @override
+  String get themeModeLocked =>
+      'Custom theme controls brightness independently';
+
+  @override
   String get themePickerSlots => 'Theme Slots';
 
   @override

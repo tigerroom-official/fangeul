@@ -52,8 +52,7 @@ class CompactPhraseFilterNotifier extends _$CompactPhraseFilterNotifier {
     }
 
     // 최초 진입 — 스마트 기본값: 즐찾 → 마이아이돌 → 첫 번째 팩
-    final favorites =
-        await ref.read(favoritePhrasesNotifierProvider.future);
+    final favorites = await ref.read(favoritePhrasesNotifierProvider.future);
     if (favorites.isNotEmpty) {
       return const CompactPhraseFilter.favorites();
     }

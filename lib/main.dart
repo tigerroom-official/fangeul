@@ -31,8 +31,7 @@ void main() async {
 
   // 디버그 빌드에서는 Crashlytics 비활성화 (노이즈 방지)
   if (kDebugMode) {
-    await FirebaseCrashlytics.instance
-        .setCrashlyticsCollectionEnabled(false);
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
   }
 
   final configService = FirebaseRemoteConfigService();

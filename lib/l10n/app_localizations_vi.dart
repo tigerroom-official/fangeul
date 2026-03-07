@@ -590,6 +590,12 @@ class LVi extends L {
   String get themePickerHexInput => 'Mã màu';
 
   @override
+  String get themePickerBrightness => 'Độ sáng';
+
+  @override
+  String get themeModeLocked => 'Chủ đề tùy chỉnh kiểm soát độ sáng độc lập';
+
+  @override
   String get themePickerSlots => 'Slot chủ đề';
 
   @override

@@ -168,7 +168,8 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
 
     return Container(
       color: bgColor,
-      padding: EdgeInsets.only(left: 4, right: 4, top: 8, bottom: 8 + bottomInset),
+      padding:
+          EdgeInsets.only(left: 4, right: 4, top: 8, bottom: 8 + bottomInset),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

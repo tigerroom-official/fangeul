@@ -229,6 +229,8 @@
   "themePickerChroma": "Sắc độ",
   "themePickerTone": "Tông màu",
   "themePickerHexInput": "Mã màu",
+  "themePickerBrightness": "Độ sáng",
+  "themeModeLocked": "Chủ đề tùy chỉnh kiểm soát độ sáng độc lập",
   "themePickerSlots": "Slot chủ đề",
   "themePickerSlotSave": "Lưu chủ đề hiện tại",
   "themePickerSlotLocked": "Mở khóa slot",

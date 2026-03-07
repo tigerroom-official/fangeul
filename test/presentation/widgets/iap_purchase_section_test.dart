@@ -47,8 +47,7 @@ void main() {
     test('allIds should include both colorPack and theme SKUs', () {
       expect(
         IapProducts.allIds,
-        containsAll(
-            [...IapProducts.colorPackIds, ...IapProducts.themeSkuIds]),
+        containsAll([...IapProducts.colorPackIds, ...IapProducts.themeSkuIds]),
       );
     });
   });
