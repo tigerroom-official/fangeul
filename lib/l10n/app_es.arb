@@ -228,6 +228,7 @@
 
   "themePickerChroma": "Croma",
   "themePickerTone": "Tono",
+  "themePickerHexInput": "Código de color",
   "themePickerSlots": "Slots de tema",
   "themePickerSlotSave": "Guardar tema actual",
   "themePickerSlotLocked": "Desbloquea slots",

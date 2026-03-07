@@ -1175,6 +1175,12 @@ abstract class L {
   /// **'명도'**
   String get themePickerTone;
 
+  /// No description provided for @themePickerHexInput.
+  ///
+  /// In ko, this message translates to:
+  /// **'색상 코드'**
+  String get themePickerHexInput;
+
   /// No description provided for @themePickerSlots.
   ///
   /// In ko, this message translates to:

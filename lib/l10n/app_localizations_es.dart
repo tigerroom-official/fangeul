@@ -590,6 +590,9 @@ class LEs extends L {
   String get themePickerTone => 'Tono';
 
   @override
+  String get themePickerHexInput => 'Código de color';
+
+  @override
   String get themePickerSlots => 'Slots de tema';
 
   @override

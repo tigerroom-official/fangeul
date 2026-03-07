@@ -576,6 +576,9 @@ class LKo extends L {
   String get themePickerTone => '명도';
 
   @override
+  String get themePickerHexInput => '색상 코드';
+
+  @override
   String get themePickerSlots => '테마 슬롯';
 
   @override

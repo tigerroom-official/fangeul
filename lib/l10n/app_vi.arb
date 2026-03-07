@@ -228,6 +228,7 @@
 
   "themePickerChroma": "Sắc độ",
   "themePickerTone": "Tông màu",
+  "themePickerHexInput": "Mã màu",
   "themePickerSlots": "Slot chủ đề",
   "themePickerSlotSave": "Lưu chủ đề hiện tại",
   "themePickerSlotLocked": "Mở khóa slot",

@@ -589,6 +589,9 @@ class LPt extends L {
   String get themePickerTone => 'Tom';
 
   @override
+  String get themePickerHexInput => 'Código de cor';
+
+  @override
   String get themePickerSlots => 'Slots de tema';
 
   @override

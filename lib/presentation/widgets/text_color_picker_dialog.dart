@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
 
 import 'package:fangeul/l10n/app_localizations.dart';
@@ -89,7 +90,11 @@ class TextColorPickerDialog extends StatefulWidget {
 class _TextColorPickerDialogState extends State<TextColorPickerDialog> {
   late double _hue;
   late double _tone;
-  static const _chroma = 20.0; // 글자색은 채도보다 명도 중요
+  late double _chroma;
+  bool _chromaExpanded = false;
+
+  late final TextEditingController _hexController;
+  bool _hexEditing = false; // hex→slider 동기화 루프 방지
 
   @override
   void initState() {
@@ -98,13 +103,53 @@ class _TextColorPickerDialogState extends State<TextColorPickerDialog> {
       final hct = Hct.fromInt(widget.initialColor!.toARGB32());
       _hue = hct.hue;
       _tone = hct.tone.clamp(0.0, 100.0);
+      _chroma = hct.chroma.clamp(10.0, 100.0);
     } else {
       _hue = 0;
       _tone = 90;
+      _chroma = 20.0;
     }
+    _hexController = TextEditingController(
+      text: _colorToHex6(_currentColor),
+    );
+  }
+
+  @override
+  void dispose() {
+    _hexController.dispose();
+    super.dispose();
   }
 
   Color get _currentColor => Color(Hct.from(_hue, _chroma, _tone).toInt());
+
+  /// Hex 입력 → 슬라이더 동기화.
+  void _onHexChanged(String value) {
+    if (value.length != 6) return;
+    final parsed = int.tryParse(value, radix: 16);
+    if (parsed == null) return;
+    final color = Color(0xFF000000 | parsed);
+    final hct = Hct.fromInt(color.toARGB32());
+    _hexEditing = true;
+    setState(() {
+      _hue = hct.hue;
+      _chroma = hct.chroma.clamp(10.0, 100.0);
+      _tone = hct.tone.clamp(0.0, 100.0);
+    });
+    _hexEditing = false;
+  }
+
+  /// 슬라이더 → hex 입력 동기화.
+  void _syncHexFromSliders() {
+    if (_hexEditing) return;
+    _hexController.text = _colorToHex6(_currentColor);
+  }
+
+  static String _colorToHex6(Color c) {
+    return (c.toARGB32() & 0x00FFFFFF)
+        .toRadixString(16)
+        .padLeft(6, '0')
+        .toUpperCase();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,63 +157,137 @@ class _TextColorPickerDialogState extends State<TextColorPickerDialog> {
     final theme = Theme.of(context);
     final color = _currentColor;
     final ratio = contrastRatio(color, widget.backgroundColor);
-    final passesWcag = ratio >= 4.5;
+
+    // WCAG 3-level: AA (>=4.5), AA18 (>=3.0), fail (<3.0)
+    final Color wcagColor;
+    final IconData wcagIcon;
+    final String wcagLabel;
+    if (ratio >= 4.5) {
+      wcagColor = Colors.green;
+      wcagIcon = Icons.check_circle_outline;
+      wcagLabel = 'AA';
+    } else if (ratio >= 3.0) {
+      wcagColor = Colors.orange;
+      wcagIcon = Icons.warning_amber_rounded;
+      wcagLabel = 'AA18';
+    } else {
+      wcagColor = theme.colorScheme.error;
+      wcagIcon = Icons.error_outline;
+      wcagLabel = '';
+    }
 
     return AlertDialog(
       title: Text(l.themePickerFreePickerTitle),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // 프리뷰
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: widget.backgroundColor,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              '가나다라마바사 ABC 123',
-              style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontSize: 16,
-                color: color,
+          // 프리뷰 (대비율 <3.0이면 오버레이 표시)
+          Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: widget.backgroundColor,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  '가나다라마바사 ABC 123',
+                  style: TextStyle(
+                    fontFamily: 'NotoSansKR',
+                    fontSize: 16,
+                    color: color,
+                  ),
+                ),
               ),
-            ),
+              if (ratio < 3.0)
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.visibility_off,
+                      color: Colors.white.withValues(alpha: 0.7),
+                      size: 24,
+                    ),
+                  ),
+                ),
+            ],
           ),
           const SizedBox(height: 8),
-          // WCAG 대비율
+          // WCAG 대비율 (3-level)
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                passesWcag
-                    ? Icons.check_circle_outline
-                    : Icons.warning_amber_rounded,
-                size: 16,
-                color: passesWcag
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.error,
-              ),
+              Icon(wcagIcon, size: 16, color: wcagColor),
               const SizedBox(width: 4),
               Text(
-                '${ratio.toStringAsFixed(1)}:1',
+                wcagLabel.isEmpty
+                    ? '${ratio.toStringAsFixed(1)}:1'
+                    : '$wcagLabel ${ratio.toStringAsFixed(1)}:1',
                 style: theme.textTheme.labelMedium?.copyWith(
-                  color: passesWcag
-                      ? theme.colorScheme.primary
-                      : theme.colorScheme.error,
+                  color: wcagColor,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
+          // Hex 입력
+          Row(
+            children: [
+              Text(
+                '#',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(width: 4),
+              Expanded(
+                child: TextField(
+                  controller: _hexController,
+                  maxLength: 6,
+                  decoration: const InputDecoration(
+                    counterText: '',
+                    hintText: 'FFD700',
+                    isDense: true,
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  ),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontFamily: 'monospace',
+                  ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]')),
+                  ],
+                  onChanged: _onHexChanged,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: color,
+                  border: Border.all(color: theme.colorScheme.outlineVariant),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
           // Hue 슬라이더
           _buildSlider(
             label: l.themePickerHue,
             value: _hue,
             min: 0,
             max: 360,
-            onChanged: (v) => setState(() => _hue = v),
+            onChanged: (v) {
+              setState(() => _hue = v);
+              _syncHexFromSliders();
+            },
             theme: theme,
           ),
           const SizedBox(height: 8),
@@ -178,9 +297,42 @@ class _TextColorPickerDialogState extends State<TextColorPickerDialog> {
             value: _tone,
             min: 0,
             max: 100,
-            onChanged: (v) => setState(() => _tone = v),
+            onChanged: (v) {
+              setState(() => _tone = v);
+              _syncHexFromSliders();
+            },
             theme: theme,
           ),
+          const SizedBox(height: 8),
+          // 접이식 Chroma 슬라이더
+          GestureDetector(
+            onTap: () => setState(() => _chromaExpanded = !_chromaExpanded),
+            child: Row(
+              children: [
+                Text(
+                  l.themePickerChroma,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                Icon(
+                  _chromaExpanded ? Icons.expand_less : Icons.expand_more,
+                  size: 16,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ],
+            ),
+          ),
+          if (_chromaExpanded)
+            Slider(
+              value: _chroma,
+              min: 10,
+              max: 100,
+              onChanged: (v) {
+                setState(() => _chroma = v);
+                _syncHexFromSliders();
+              },
+            ),
         ],
       ),
       actions: [

@@ -587,6 +587,9 @@ class LVi extends L {
   String get themePickerTone => 'Tông màu';
 
   @override
+  String get themePickerHexInput => 'Mã màu';
+
+  @override
   String get themePickerSlots => 'Slot chủ đề';
 
   @override

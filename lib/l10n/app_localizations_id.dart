@@ -589,6 +589,9 @@ class LId extends L {
   String get themePickerTone => 'Nada';
 
   @override
+  String get themePickerHexInput => 'Kode warna';
+
+  @override
   String get themePickerSlots => 'Slot Tema';
 
   @override

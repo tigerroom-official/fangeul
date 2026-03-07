@@ -309,6 +309,7 @@
 
   "themePickerChroma": "채도",
   "themePickerTone": "명도",
+  "themePickerHexInput": "색상 코드",
   "themePickerSlots": "테마 슬롯",
   "themePickerSlotSave": "현재 테마 저장",
   "themePickerSlotLocked": "슬롯을 해금하세요",
