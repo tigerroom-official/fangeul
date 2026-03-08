@@ -22,6 +22,9 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
   ChoeaeColorConfig? _previousConfig;
   bool _canUndo = false;
 
+  /// SharedPreferences 쓰기 직렬화 — 겹치는 mutation의 race condition 방지.
+  Future<void> _writeChain = Future.value();
+
   /// Undo 가능 여부.
   bool get canUndo => _canUndo;
 
@@ -69,9 +72,7 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
     _previousConfig = state;
     _canUndo = true;
     state = ChoeaeColorConfig.palette(packId);
-    await _save('palette', packId);
-    await _removeTextOverride();
-    await _removeBrightnessOverride();
+    await _persistCurrentState();
   }
 
   /// 커스텀 색상 설정.
@@ -88,14 +89,7 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
       textColorOverride: textColor,
       brightnessOverride: existingBr,
     );
-    final hex = seed.toARGB32().toRadixString(16).padLeft(8, '0');
-    await _save('custom', hex);
-    if (textColor != null) {
-      await _saveTextOverride(textColor);
-    } else {
-      await _removeTextOverride();
-    }
-    await _saveBrightnessOverride(existingBr);
+    await _persistCurrentState();
   }
 
   /// 커스텀 글자색만 변경 (seed color + brightnessOverride 유지).
@@ -109,35 +103,13 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
       textColorOverride: color,
       brightnessOverride: current.brightnessOverride,
     );
-    if (color != null) {
-      await _saveTextOverride(color);
-    } else {
-      await _removeTextOverride();
-    }
+    await _persistCurrentState();
   }
 
   /// Undo 기록 없이 설정을 복원한다 (프리뷰 복원용).
   Future<void> restoreConfig(ChoeaeColorConfig config) async {
     state = config;
-    switch (config) {
-      case ChoeaeColorPalette(:final packId):
-        await _save('palette', packId);
-        await _removeTextOverride();
-        await _removeBrightnessOverride();
-      case ChoeaeColorCustom(
-          :final seedColor,
-          :final textColorOverride,
-          :final brightnessOverride,
-        ):
-        final hex = seedColor.toARGB32().toRadixString(16).padLeft(8, '0');
-        await _save('custom', hex);
-        if (textColorOverride != null) {
-          await _saveTextOverride(textColorOverride);
-        } else {
-          await _removeTextOverride();
-        }
-        await _saveBrightnessOverride(brightnessOverride);
-    }
+    await _persistCurrentState();
   }
 
   /// 마지막 변경 되돌리기 (1단계).
@@ -145,52 +117,7 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
     if (!_canUndo || _previousConfig == null) return;
     _canUndo = false;
     state = _previousConfig!;
-    // Persist restored state.
-    switch (_previousConfig!) {
-      case ChoeaeColorPalette(:final packId):
-        await _save('palette', packId);
-        await _removeTextOverride();
-        await _removeBrightnessOverride();
-      case ChoeaeColorCustom(
-          :final seedColor,
-          :final textColorOverride,
-          :final brightnessOverride,
-        ):
-        final hex = seedColor.toARGB32().toRadixString(16).padLeft(8, '0');
-        await _save('custom', hex);
-        if (textColorOverride != null) {
-          await _saveTextOverride(textColorOverride);
-        } else {
-          await _removeTextOverride();
-        }
-        await _saveBrightnessOverride(brightnessOverride);
-    }
-  }
-
-  Future<void> _save(String type, String value) async {
-    final prefs = ref.read(sharedPreferencesProvider);
-    await prefs.setString(_typeKey, type);
-    await prefs.setString(_valueKey, value);
-  }
-
-  Color? _loadTextOverride(SharedPreferences prefs) {
-    final hex = prefs.getString(_textKey);
-    if (hex == null) return null;
-    final value = int.tryParse(hex, radix: 16);
-    return value != null ? Color(value) : null;
-  }
-
-  Future<void> _saveTextOverride(Color color) async {
-    final prefs = ref.read(sharedPreferencesProvider);
-    await prefs.setString(
-      _textKey,
-      color.toARGB32().toRadixString(16).padLeft(8, '0'),
-    );
-  }
-
-  Future<void> _removeTextOverride() async {
-    final prefs = ref.read(sharedPreferencesProvider);
-    await prefs.remove(_textKey);
+    await _persistCurrentState();
   }
 
   /// Brightness 오버라이드 변경 (custom 상태에서만 동작).
@@ -204,16 +131,51 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
       textColorOverride: current.textColorOverride,
       brightnessOverride: br,
     );
-    await _saveBrightnessOverride(br);
+    await _persistCurrentState();
   }
 
-  Future<void> _saveBrightnessOverride(Brightness br) async {
-    final prefs = ref.read(sharedPreferencesProvider);
-    await prefs.setString(_brightnessKey, br.name);
+  Color? _loadTextOverride(SharedPreferences prefs) {
+    final hex = prefs.getString(_textKey);
+    if (hex == null) return null;
+    final value = int.tryParse(hex, radix: 16);
+    return value != null ? Color(value) : null;
   }
 
-  Future<void> _removeBrightnessOverride() async {
+  /// 현재 in-memory state를 SharedPreferences에 직렬화하여 저장한다.
+  ///
+  /// [_writeChain]으로 직렬화되어 겹치는 호출의 race condition을 방지한다.
+  /// 각 호출 시점의 최신 [state]를 저장하므로 이전 mutation이 이후 값을
+  /// 덮어쓰지 않는다.
+  Future<void> _persistCurrentState() {
+    _writeChain = _writeChain.then((_) => _doWriteState());
+    return _writeChain;
+  }
+
+  Future<void> _doWriteState() async {
+    final current = state;
     final prefs = ref.read(sharedPreferencesProvider);
-    await prefs.remove(_brightnessKey);
+    switch (current) {
+      case ChoeaeColorPalette(:final packId):
+        await prefs.setString(_typeKey, 'palette');
+        await prefs.setString(_valueKey, packId);
+        await prefs.remove(_textKey);
+        await prefs.remove(_brightnessKey);
+      case ChoeaeColorCustom(
+          :final seedColor,
+          :final textColorOverride,
+          :final brightnessOverride,
+        ):
+        final hex = seedColor.toARGB32().toRadixString(16).padLeft(8, '0');
+        await prefs.setString(_typeKey, 'custom');
+        await prefs.setString(_valueKey, hex);
+        if (textColorOverride != null) {
+          final textHex =
+              textColorOverride.toARGB32().toRadixString(16).padLeft(8, '0');
+          await prefs.setString(_textKey, textHex);
+        } else {
+          await prefs.remove(_textKey);
+        }
+        await prefs.setString(_brightnessKey, brightnessOverride.name);
+    }
   }
 }

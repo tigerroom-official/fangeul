@@ -141,6 +141,8 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
               children: [
                 const _HandleBar(),
                 const SizedBox(height: 12),
+                // canUndo는 notifier side-property — ref.read는 의도적.
+                // 인접 setState 호출이 리빌드를 보장한다.
                 _TitleSection(
                   canUndo:
                       ref.read(choeaeColorNotifierProvider.notifier).canUndo,
@@ -268,7 +270,7 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                   _BrightnessToggle(
                     current: choeaeColor is ChoeaeColorCustom
                         ? choeaeColor.brightnessOverride
-                        : Brightness.dark,
+                        : theme.brightness,
                     onChanged: (br) {
                       ref
                           .read(choeaeColorNotifierProvider.notifier)
@@ -295,7 +297,7 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                                 .setTextColorOverride(color);
                           },
                         ),
-                        // 가독성 가드레일: 대비율 < 4.5:1 시 경고
+                        // 가독성 가드레일: surface + surfaceContainerHigh(Dialog 배경) 대비 체크
                         Builder(builder: (context) {
                           final textColor = choeaeColor is ChoeaeColorCustom
                               ? choeaeColor.textColorOverride
@@ -303,10 +305,15 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                           if (textColor == null) {
                             return const SizedBox.shrink();
                           }
-                          final bgColor = choeaeColor
-                              .buildColorScheme(effectiveBrightness)
-                              .surface;
-                          final ratio = contrastRatio(textColor, bgColor);
+                          final scheme = choeaeColor
+                              .buildColorScheme(effectiveBrightness);
+                          final surfaceRatio =
+                              contrastRatio(textColor, scheme.surface);
+                          final containerHighRatio = contrastRatio(
+                              textColor, scheme.surfaceContainerHigh);
+                          final ratio = surfaceRatio < containerHighRatio
+                              ? surfaceRatio
+                              : containerHighRatio;
                           if (ratio >= 4.5) {
                             return const SizedBox.shrink();
                           }

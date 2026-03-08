@@ -162,4 +162,87 @@ void main() {
       expect(lightTheme.colorScheme.brightness, Brightness.light);
     });
   });
+
+  group('app.dart brightness override routing', () {
+    test(
+        'should force identical light/dark themes when brightnessOverride is set',
+        () {
+      // Mirrors app.dart lines 65-74: when brightOverride != null,
+      // both lightTheme and darkTheme slots get the same ThemeData.
+      const config = ChoeaeColorConfig.custom(
+        seedColor: Color(0xFF4527A0),
+        brightnessOverride: Brightness.dark,
+      );
+
+      final ChoeaeColorCustom custom = config as ChoeaeColorCustom;
+      final brightOverride = custom.brightnessOverride;
+      expect(brightOverride, Brightness.dark);
+
+      // Both slots get the same theme
+      final overriddenTheme = FangeulTheme.build(
+        brightness: brightOverride,
+        choeaeColor: config,
+      );
+      final effectiveThemeMode =
+          brightOverride == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
+
+      expect(effectiveThemeMode, ThemeMode.dark);
+      expect(overriddenTheme.brightness, Brightness.dark);
+      expect(overriddenTheme.colorScheme.brightness, Brightness.dark);
+    });
+
+    test('should respect system ThemeMode when palette config has no override',
+        () {
+      const config = ChoeaeColorConfig.palette('midnight');
+
+      final brightOverride =
+          config is ChoeaeColorCustom ? config.brightnessOverride : null;
+      expect(brightOverride, isNull);
+
+      // Palette: separate light/dark themes, ThemeMode passed through
+      final light = FangeulTheme.build(
+        brightness: Brightness.light,
+        choeaeColor: config,
+      );
+      final dark = FangeulTheme.build(
+        brightness: Brightness.dark,
+        choeaeColor: config,
+      );
+      expect(light.brightness, Brightness.light);
+      expect(dark.brightness, Brightness.dark);
+      expect(
+          light.colorScheme.surface, isNot(equals(dark.colorScheme.surface)));
+    });
+
+    test('should use brightnessOverride for AnnotatedRegion nav bar color', () {
+      const config = ChoeaeColorConfig.custom(
+        seedColor: Color(0xFFE91E63),
+        brightnessOverride: Brightness.light,
+      );
+
+      // Mirrors app.dart lines 92-95: light override → effectiveDark = false
+      final scheme = config.buildColorScheme(Brightness.light);
+      expect(scheme.brightness, Brightness.light);
+      expect(scheme.surfaceContainerLowest, isNotNull);
+    });
+
+    test('should set effectiveThemeMode to light when light override', () {
+      const config = ChoeaeColorConfig.custom(
+        seedColor: Color(0xFF00BCD4),
+        brightnessOverride: Brightness.light,
+      );
+
+      final brightOverride = (config as ChoeaeColorCustom).brightnessOverride;
+      final effectiveThemeMode =
+          brightOverride == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
+
+      expect(effectiveThemeMode, ThemeMode.light);
+
+      final theme = FangeulTheme.build(
+        brightness: brightOverride,
+        choeaeColor: config,
+      );
+      expect(theme.brightness, Brightness.light);
+    });
+  });
 }

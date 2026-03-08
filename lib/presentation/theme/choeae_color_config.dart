@@ -31,6 +31,10 @@ sealed class ChoeaeColorConfig with _$ChoeaeColorConfig {
   ///
   /// palette → [PaletteRegistry]에서 수동 디자인 scheme 반환.
   /// custom → [CustomSchemeBuilder]로 seed 기반 tinted scheme 생성.
+  ///
+  /// **주의:** custom 타입에서는 [brightness] 파라미터가 무시되고
+  /// [ChoeaeColorCustom.brightnessOverride]가 사용된다.
+  /// palette 타입에서만 [brightness]가 반영된다.
   ColorScheme buildColorScheme(Brightness brightness) {
     return switch (this) {
       ChoeaeColorPalette(:final packId) =>
