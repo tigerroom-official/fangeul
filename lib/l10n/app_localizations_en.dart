@@ -605,6 +605,10 @@ class LEn extends L {
   String get themePickerSlotLocked => 'Unlock slots';
 
   @override
+  String get themePickerSlotLongPressHint =>
+      'Long press a slot to rename or overwrite';
+
+  @override
   String get themePickerSlotName => 'Slot name';
 
   @override

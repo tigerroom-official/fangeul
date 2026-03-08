@@ -62,14 +62,16 @@ void main() {
     });
 
     test(
-      'should build light ColorScheme when custom with light brightnessOverride',
+      'should derive brightness from seed tone, ignoring brightnessOverride',
       () {
+        // 0xFF4527A0 = deep purple, tone ~25 → dark, regardless of brightnessOverride
         const config = ChoeaeColorConfig.custom(
           seedColor: Color(0xFF4527A0),
           brightnessOverride: Brightness.light,
         );
-        final scheme = config.buildColorScheme(Brightness.dark);
-        expect(scheme.brightness, Brightness.light);
+        final scheme = config.buildColorScheme(Brightness.light);
+        // Brightness comes from seed tone, not override
+        expect(scheme.brightness, Brightness.dark);
       },
     );
 
@@ -136,19 +138,21 @@ void main() {
       expect(a.hashCode, equals(b.hashCode));
     });
 
-    test('custom brightnessOverride should override passed brightness', () {
+    test('custom brightness is derived from seed tone, not brightnessOverride',
+        () {
+      // Dark seed → always dark, regardless of brightnessOverride or passed brightness
       const config = ChoeaeColorConfig.custom(
         seedColor: Color(0xFF4527A0),
-        brightnessOverride: Brightness.dark,
+        brightnessOverride: Brightness.light,
       );
       final scheme = config.buildColorScheme(Brightness.light);
       expect(scheme.brightness, Brightness.dark);
     });
 
-    test('custom with light override should produce light scheme', () {
+    test('custom with light seed should produce light scheme', () {
+      // Light seed (tone >= 50) → light scheme
       const config = ChoeaeColorConfig.custom(
-        seedColor: Color(0xFF4527A0),
-        brightnessOverride: Brightness.light,
+        seedColor: Color(0xFFF8BBD0), // light pink, tone ~83
       );
       final scheme = config.buildColorScheme(Brightness.dark);
       expect(scheme.brightness, Brightness.light);

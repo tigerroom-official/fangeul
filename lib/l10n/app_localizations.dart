@@ -1211,6 +1211,12 @@ abstract class L {
   /// **'슬롯을 해금하세요'**
   String get themePickerSlotLocked;
 
+  /// No description provided for @themePickerSlotLongPressHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'길게 눌러서 이름 변경·덮어쓰기 가능해요'**
+  String get themePickerSlotLongPressHint;
+
   /// No description provided for @themePickerSlotName.
   ///
   /// In ko, this message translates to:

@@ -315,6 +315,7 @@
   "themePickerSlots": "테마 슬롯",
   "themePickerSlotSave": "현재 테마 저장",
   "themePickerSlotLocked": "슬롯을 해금하세요",
+  "themePickerSlotLongPressHint": "길게 눌러서 이름 변경·덮어쓰기 가능해요",
   "themePickerSlotName": "슬롯 이름",
   "themePickerRecommended": "추천",
   "themePickerFreePickerTitle": "자유 글자색 선택",

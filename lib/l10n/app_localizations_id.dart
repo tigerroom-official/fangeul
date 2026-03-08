@@ -608,6 +608,10 @@ class LId extends L {
   String get themePickerSlotLocked => 'Buka kunci slot';
 
   @override
+  String get themePickerSlotLongPressHint =>
+      'Tekan lama slot untuk mengganti nama atau menimpa';
+
+  @override
   String get themePickerSlotName => 'Nama slot';
 
   @override

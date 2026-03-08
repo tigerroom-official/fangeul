@@ -50,15 +50,15 @@ void main() {
     });
 
     test('should build theme from custom color with text override', () {
+      // Dark seed (tone < 50)
       const darkConfig = ChoeaeColorConfig.custom(
-        seedColor: Color(0xFF4527A0),
+        seedColor: Color(0xFF4527A0), // deep purple, tone ~25
         textColorOverride: Color(0xFFFFF8E1),
-        brightnessOverride: Brightness.dark,
       );
+      // Light seed (tone >= 50)
       const lightConfig = ChoeaeColorConfig.custom(
-        seedColor: Color(0xFF4527A0),
-        textColorOverride: Color(0xFFFFF8E1),
-        brightnessOverride: Brightness.light,
+        seedColor: Color(0xFFFFCDD2), // light pink, tone ~87
+        textColorOverride: Color(0xFF3E2723),
       );
       final light = FangeulTheme.build(
         brightness: Brightness.light,
@@ -77,12 +77,12 @@ void main() {
       final darkScheme = config.buildColorScheme(Brightness.dark);
       final lightScheme = config.buildColorScheme(Brightness.light);
 
-      // Matches the logic in app.dart AnnotatedRegion — uses surfaceContainerLowest
-      expect(darkScheme.surfaceContainerLowest, isNotNull);
-      expect(lightScheme.surfaceContainerLowest, isNotNull);
+      // Matches the logic in app.dart AnnotatedRegion — uses surface
+      expect(darkScheme.surface, isNotNull);
+      expect(lightScheme.surface, isNotNull);
       expect(
-        darkScheme.surfaceContainerLowest,
-        isNot(equals(lightScheme.surfaceContainerLowest)),
+        darkScheme.surface,
+        isNot(equals(lightScheme.surface)),
       );
     });
 
@@ -136,13 +136,13 @@ void main() {
       addTearDown(container.dispose);
       container.listen(choeaeColorNotifierProvider, (_, __) {});
 
+      // 0xFF311B92 = dark deep purple, HCT tone ~20 → dark
       await container
           .read(choeaeColorNotifierProvider.notifier)
-          .setCustomColor(const Color(0xFFE91E63));
+          .setCustomColor(const Color(0xFF311B92));
       final config = container.read(choeaeColorNotifierProvider);
 
-      // Custom config defaults to brightnessOverride: dark, so both
-      // FangeulTheme.build calls produce dark themes.
+      // Brightness is auto-derived from seed tone (tone < 50 → dark).
       final theme = FangeulTheme.build(
         brightness: Brightness.dark,
         choeaeColor: config,
@@ -150,9 +150,10 @@ void main() {
       expect(theme.brightness, Brightness.dark);
       expect(theme.colorScheme.brightness, Brightness.dark);
 
-      // Verify light override works too.
-      final notifier = container.read(choeaeColorNotifierProvider.notifier);
-      await notifier.setBrightnessOverride(Brightness.light);
+      // Light seed (high tone) produces light brightness.
+      await container
+          .read(choeaeColorNotifierProvider.notifier)
+          .setCustomColor(const Color(0xFFFFCDD2)); // light pink, tone > 50
       final lightConfig = container.read(choeaeColorNotifierProvider);
       final lightTheme = FangeulTheme.build(
         brightness: Brightness.light,
@@ -163,41 +164,28 @@ void main() {
     });
   });
 
-  group('app.dart brightness override routing', () {
-    test(
-        'should force identical light/dark themes when brightnessOverride is set',
-        () {
-      // Mirrors app.dart lines 65-74: when brightOverride != null,
-      // both lightTheme and darkTheme slots get the same ThemeData.
+  group('app.dart seed-tone brightness routing', () {
+    test('should force identical light/dark theme slots for custom config', () {
+      // Mirrors app.dart: custom config → single theme for both slots.
+      // Dark seed (tone < 50).
       const config = ChoeaeColorConfig.custom(
-        seedColor: Color(0xFF4527A0),
-        brightnessOverride: Brightness.dark,
+        seedColor: Color(0xFF4527A0), // deep purple, tone ~25
       );
 
-      final ChoeaeColorCustom custom = config as ChoeaeColorCustom;
-      final brightOverride = custom.brightnessOverride;
-      expect(brightOverride, Brightness.dark);
+      final scheme = config.buildColorScheme(Brightness.dark);
+      expect(scheme.brightness, Brightness.dark);
 
-      // Both slots get the same theme
-      final overriddenTheme = FangeulTheme.build(
-        brightness: brightOverride,
+      // Both light/dark slots get the same theme
+      final theme = FangeulTheme.build(
+        brightness: Brightness.dark,
         choeaeColor: config,
       );
-      final effectiveThemeMode =
-          brightOverride == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
-
-      expect(effectiveThemeMode, ThemeMode.dark);
-      expect(overriddenTheme.brightness, Brightness.dark);
-      expect(overriddenTheme.colorScheme.brightness, Brightness.dark);
+      expect(theme.brightness, Brightness.dark);
+      expect(theme.colorScheme.brightness, Brightness.dark);
     });
 
-    test('should respect system ThemeMode when palette config has no override',
-        () {
+    test('should respect system ThemeMode when palette config is active', () {
       const config = ChoeaeColorConfig.palette('midnight');
-
-      final brightOverride =
-          config is ChoeaeColorCustom ? config.brightnessOverride : null;
-      expect(brightOverride, isNull);
 
       // Palette: separate light/dark themes, ThemeMode passed through
       final light = FangeulTheme.build(
@@ -214,32 +202,28 @@ void main() {
           light.colorScheme.surface, isNot(equals(dark.colorScheme.surface)));
     });
 
-    test('should use brightnessOverride for AnnotatedRegion nav bar color', () {
+    test('should derive nav bar color from seed-tone brightness', () {
+      // Light seed (tone >= 50) → light scheme
       const config = ChoeaeColorConfig.custom(
-        seedColor: Color(0xFFE91E63),
-        brightnessOverride: Brightness.light,
+        seedColor: Color(0xFFFFCDD2), // light pink, tone ~87
       );
 
-      // Mirrors app.dart lines 92-95: light override → effectiveDark = false
       final scheme = config.buildColorScheme(Brightness.light);
       expect(scheme.brightness, Brightness.light);
-      expect(scheme.surfaceContainerLowest, isNotNull);
+      expect(scheme.surface, isNotNull);
     });
 
-    test('should set effectiveThemeMode to light when light override', () {
+    test('should auto-derive light brightness for high-tone seed', () {
+      // 0xFF90CAF9 = light blue, HCT tone ~77 → light
       const config = ChoeaeColorConfig.custom(
-        seedColor: Color(0xFF00BCD4),
-        brightnessOverride: Brightness.light,
+        seedColor: Color(0xFF90CAF9),
       );
 
-      final brightOverride = (config as ChoeaeColorCustom).brightnessOverride;
-      final effectiveThemeMode =
-          brightOverride == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
-
-      expect(effectiveThemeMode, ThemeMode.light);
+      final scheme = config.buildColorScheme(Brightness.light);
+      expect(scheme.brightness, Brightness.light);
 
       final theme = FangeulTheme.build(
-        brightness: brightOverride,
+        brightness: Brightness.light,
         choeaeColor: config,
       );
       expect(theme.brightness, Brightness.light);

@@ -10,6 +10,7 @@ import 'package:fangeul/presentation/providers/theme_providers.dart';
 import 'package:fangeul/presentation/router/app_router.dart';
 import 'package:fangeul/presentation/theme/choeae_color_config.dart';
 import 'package:fangeul/presentation/theme/fangeul_theme.dart';
+import 'package:material_color_utilities/material_color_utilities.dart';
 
 /// Android 12+의 stretch 오버스크롤을 글로우 효과로 대체한다.
 ///
@@ -43,36 +44,31 @@ class FangeulApp extends ConsumerWidget {
     final userLocale = ref.watch(localeNotifierProvider);
     final choeaeColor = ref.watch(choeaeColorNotifierProvider);
 
-    // Determine effective brightness — custom theme can override system setting
-    final Brightness? brightOverride = choeaeColor is ChoeaeColorCustom
-        ? choeaeColor.brightnessOverride
-        : null;
-
+    // Determine effective brightness.
+    // custom: seed tone이 brightness를 자동 결정 (시스템 모드 무시).
+    // palette: ThemeMode 설정에 따름.
     final bool effectiveDark;
-    if (brightOverride != null) {
-      effectiveDark = brightOverride == Brightness.dark;
-    } else {
-      effectiveDark = themeMode == ThemeMode.dark ||
-          (themeMode == ThemeMode.system &&
-              MediaQuery.platformBrightnessOf(context) == Brightness.dark);
-    }
-
-    // Build themes — brightness override forces identical light/dark themes
     final ThemeMode effectiveThemeMode;
     final ThemeData lightTheme;
     final ThemeData darkTheme;
 
-    if (brightOverride != null) {
-      // Custom theme with brightness override: same theme for both slots
-      final overriddenTheme = FangeulTheme.build(
-        brightness: brightOverride,
+    if (choeaeColor is ChoeaeColorCustom) {
+      // Seed tone < 50 → dark, >= 50 → light
+      final seedTone = Hct.fromInt(choeaeColor.seedColor.toARGB32()).tone;
+      effectiveDark = seedTone < 50;
+      final derivedBrightness =
+          effectiveDark ? Brightness.dark : Brightness.light;
+      final singleTheme = FangeulTheme.build(
+        brightness: derivedBrightness,
         choeaeColor: choeaeColor,
       );
-      lightTheme = overriddenTheme;
-      darkTheme = overriddenTheme;
-      effectiveThemeMode =
-          brightOverride == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
+      lightTheme = singleTheme;
+      darkTheme = singleTheme;
+      effectiveThemeMode = effectiveDark ? ThemeMode.dark : ThemeMode.light;
     } else {
+      effectiveDark = themeMode == ThemeMode.dark ||
+          (themeMode == ThemeMode.system &&
+              MediaQuery.platformBrightnessOf(context) == Brightness.dark);
       lightTheme = FangeulTheme.build(
         brightness: Brightness.light,
         choeaeColor: choeaeColor,
@@ -92,7 +88,7 @@ class FangeulApp extends ConsumerWidget {
         systemNavigationBarColor: choeaeColor
             .buildColorScheme(
                 effectiveDark ? Brightness.dark : Brightness.light)
-            .surfaceContainerLowest,
+            .surface,
         systemNavigationBarDividerColor: Colors.transparent,
         systemNavigationBarIconBrightness:
             effectiveDark ? Brightness.light : Brightness.dark,

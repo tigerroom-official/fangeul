@@ -234,6 +234,7 @@
   "themePickerSlots": "Slots de tema",
   "themePickerSlotSave": "Salvar tema atual",
   "themePickerSlotLocked": "Desbloqueie slots",
+  "themePickerSlotLongPressHint": "Pressione e segure um slot para renomear ou substituir",
   "themePickerSlotName": "Nome do slot",
   "themePickerRecommended": "Recomendado",
   "themePickerFreePickerTitle": "Cor de texto livre",

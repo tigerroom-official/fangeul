@@ -5,26 +5,30 @@ import 'package:material_color_utilities/material_color_utilities.dart';
 ///
 /// Material 3 [ColorScheme.fromSeed]의 HCT 알고리즘은 neutral chroma ~6으로
 /// surface 채도를 극히 낮춰 테마 색상 변경 체감이 약하다. 이 빌더는
-/// neutral chroma 24 (4배)로 surface에 seed hue를 강하게 반영하여
-/// "내가 고른 색 = 앱 색상"을 체감시킨다.
+/// seed color의 HCT tone을 기준으로 surface를 직접 앵커링하여
+/// "내가 고른 색 = 앱 배경색"을 체감시킨다.
+///
+/// brightness는 seed의 tone에서 자동 유도된다 (tone < 50 → dark).
+/// 시스템 다크/라이트 모드와 완전히 독립적이다.
 abstract final class CustomSchemeBuilder {
-  /// [seedColor] + [brightness]로 풀 [ColorScheme]을 생성한다.
+  /// [seedColor]로 풀 [ColorScheme]을 생성한다.
   ///
+  /// brightness는 seed의 HCT tone에서 자동 유도된다.
   /// [textColorOverride]가 null이면 배경 luminance 기반 auto contrast를 적용한다.
   static ColorScheme build({
     required Color seedColor,
-    required Brightness brightness,
     Color? textColorOverride,
   }) {
-    final isDark = brightness == Brightness.dark;
     final src = Hct.fromInt(seedColor.toARGB32());
+    final isDark = src.tone < 50;
+    final brightness = isDark ? Brightness.dark : Brightness.light;
 
     final scheme = _SchemeVividTint(
       sourceColorHct: src,
       isDark: isDark,
     );
 
-    final cs = _colorSchemeFromDynamic(scheme, brightness);
+    final cs = _colorSchemeFromDynamic(scheme, brightness, src);
 
     if (textColorOverride == null) return cs;
 
@@ -39,15 +43,18 @@ abstract final class CustomSchemeBuilder {
   /// [DynamicScheme] convenience getters → Flutter [ColorScheme] 변환.
   ///
   /// primary/secondary/tertiary/error 계열은 DynamicScheme 그대로 사용하고,
-  /// surface 계열 8개 슬롯 + surfaceDim/surfaceBright는 seed hue 기반
-  /// [Hct.from]으로 직접 생성하여 tone을 M3 기본값보다 올린다.
+  /// surface 계열은 seed의 HCT 좌표(hue, chroma, tone)를 기준으로
+  /// 직접 앵커링하여 "내가 고른 색 = 앱 배경색"을 실현한다.
   static ColorScheme _colorSchemeFromDynamic(
     DynamicScheme s,
     Brightness brightness,
+    Hct seed,
   ) {
-    final hue = s.sourceColorHct.hue;
-    final isDark = brightness == Brightness.dark;
-    final surfaces = _buildTintedSurfaces(hue, isDark);
+    final surfaces = _buildSeedAnchoredSurfaces(
+      seed.hue,
+      seed.chroma,
+      seed.tone,
+    );
 
     return ColorScheme(
       brightness: brightness,
@@ -88,32 +95,57 @@ abstract final class CustomSchemeBuilder {
     );
   }
 
-  /// seed [hue] + [isDark] 기반으로 surface 계열 8색을 직접 생성한다.
+  /// seed HCT 좌표 기반으로 surface 계열 8색을 생성한다.
   ///
-  /// M3 기본 tone 대비 dark는 +4~8, light는 -2~-8 시프트하여
-  /// 테마 색상 체감을 강화한다. chroma도 슬롯별로 차등 적용.
-  static _TintedSurfaces _buildTintedSurfaces(double hue, bool isDark) {
+  /// surface의 tone을 seed의 tone에 앵커링하여 "내가 고른 색이 곧 배경색"을
+  /// 실현한다. scaffold = surface(seed tone), AppBar = surfaceContainerLow(+2),
+  /// card = surfaceContainer(+5). 전체 tone spread ≈17.
+  ///
+  /// chroma는 seed chroma의 85%를 균일 적용. 컨테이너 간 채도 차이 없이
+  /// tone 차이만으로 계층 분리. 카드 경계는 outlineVariant로 구분.
+  ///
+  /// 오프셋 설계 근거: 2026-03-08 UX 패널 합의.
+  /// `docs/discussions/2026-03-08-theme-surface-hierarchy-slots.md` 참조.
+  static _TintedSurfaces _buildSeedAnchoredSurfaces(
+    double hue,
+    double seedChroma,
+    double seedTone,
+  ) {
+    final isDark = seedTone < 50;
+    // 채도: seed chroma의 85% 유지 → "내가 고른 색 = 앱 색" 체감.
+    // 극저채도 seed(회색/흰/검정)는 최소 8 보장.
+    final raw = seedChroma * 0.85;
+    final sc = raw < 8.0 ? 8.0 : raw;
+
     if (isDark) {
+      // 어두운 seed: 컨테이너가 점점 밝아지는 계층 (spread 17)
       return _TintedSurfaces(
-        surfaceContainerLowest: _hctColor(hue, 16, 8),
-        surfaceDim: _hctColor(hue, 18, 10),
-        surface: _hctColor(hue, 20, 14),
-        surfaceContainerLow: _hctColor(hue, 18, 16),
-        surfaceContainer: _hctColor(hue, 22, 20),
-        surfaceContainerHigh: _hctColor(hue, 24, 25),
-        surfaceContainerHighest: _hctColor(hue, 26, 30),
-        surfaceBright: _hctColor(hue, 24, 32),
+        surfaceContainerLowest:
+            _hctColor(hue, sc, (seedTone - 4).clamp(4, 90)),
+        surfaceDim: _hctColor(hue, sc, (seedTone - 2).clamp(4, 90)),
+        surface: _hctColor(hue, sc, seedTone),
+        surfaceContainerLow: _hctColor(hue, sc, (seedTone + 2).clamp(4, 90)),
+        surfaceContainer: _hctColor(hue, sc, (seedTone + 5).clamp(4, 90)),
+        surfaceContainerHigh:
+            _hctColor(hue, sc, (seedTone + 8).clamp(4, 90)),
+        surfaceContainerHighest:
+            _hctColor(hue, sc, (seedTone + 11).clamp(4, 90)),
+        surfaceBright: _hctColor(hue, sc, (seedTone + 13).clamp(4, 90)),
       );
     }
+    // 밝은 seed: 컨테이너가 점점 어두워지는 계층 (spread 17)
     return _TintedSurfaces(
-      surfaceContainerLowest: _hctColor(hue, 4, 99),
-      surfaceBright: _hctColor(hue, 6, 98),
-      surface: _hctColor(hue, 8, 96),
-      surfaceContainerLow: _hctColor(hue, 10, 93),
-      surfaceDim: _hctColor(hue, 14, 87),
-      surfaceContainer: _hctColor(hue, 14, 90),
-      surfaceContainerHigh: _hctColor(hue, 18, 86),
-      surfaceContainerHighest: _hctColor(hue, 22, 82),
+      surfaceContainerLowest:
+          _hctColor(hue, sc, (seedTone + 3).clamp(10, 99)),
+      surfaceBright: _hctColor(hue, sc, (seedTone + 2).clamp(10, 99)),
+      surface: _hctColor(hue, sc, seedTone),
+      surfaceContainerLow: _hctColor(hue, sc, (seedTone - 2).clamp(10, 99)),
+      surfaceDim: _hctColor(hue, sc, (seedTone - 7).clamp(10, 99)),
+      surfaceContainer: _hctColor(hue, sc, (seedTone - 5).clamp(10, 99)),
+      surfaceContainerHigh:
+          _hctColor(hue, sc, (seedTone - 8).clamp(10, 99)),
+      surfaceContainerHighest:
+          _hctColor(hue, sc, (seedTone - 11).clamp(10, 99)),
     );
   }
 

@@ -61,13 +61,12 @@ void main() {
       expect(theme.colorScheme.onSurface, textColor);
     });
 
-    test('should set scaffoldBackgroundColor from surfaceContainerLowest', () {
+    test('should set scaffoldBackgroundColor from surface', () {
       final theme = FangeulTheme.build(
         brightness: Brightness.dark,
         choeaeColor: const ChoeaeColorConfig.palette('midnight'),
       );
-      expect(theme.scaffoldBackgroundColor,
-          theme.colorScheme.surfaceContainerLowest);
+      expect(theme.scaffoldBackgroundColor, theme.colorScheme.surface);
     });
 
     test('should work with all palette ids', () {
@@ -100,13 +99,13 @@ void main() {
       );
       final cs = theme.colorScheme;
 
-      // AppBar — uses surfaceContainerHigh for color differentiation
-      expect(theme.appBarTheme.backgroundColor, cs.surfaceContainerHigh);
+      // AppBar — uses surfaceContainerLow (tone+2, seed에 가까움)
+      expect(theme.appBarTheme.backgroundColor, cs.surfaceContainerLow);
       expect(theme.appBarTheme.foregroundColor, cs.onSurface);
       expect(theme.appBarTheme.elevation, 0);
 
-      // Card
-      expect(theme.cardTheme.color, cs.surface);
+      // Card — uses surfaceContainer (tone+5, scaffold와 계층 분리)
+      expect(theme.cardTheme.color, cs.surfaceContainer);
       expect(theme.cardTheme.elevation, 0);
 
       // Chip
@@ -131,7 +130,7 @@ void main() {
       final cs = theme.colorScheme;
 
       expect(theme.appBarTheme.foregroundColor, cs.onSurface);
-      expect(theme.cardTheme.color, cs.surface);
+      expect(theme.cardTheme.color, cs.surfaceContainer);
       expect(theme.chipTheme.backgroundColor, cs.surfaceContainer);
       expect(theme.navigationBarTheme.backgroundColor, cs.surface);
       expect(theme.inputDecorationTheme.fillColor, cs.surfaceContainer);

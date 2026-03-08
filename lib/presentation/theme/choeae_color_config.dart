@@ -17,8 +17,10 @@ sealed class ChoeaeColorConfig with _$ChoeaeColorConfig {
 
   /// 유저 커스텀 (IAP). [textColorOverride]가 null이면 auto contrast.
   ///
-  /// [brightnessOverride]는 시스템 brightness를 무시하고 고정 brightness를 사용한다.
-  /// 기본값 [Brightness.dark].
+  /// brightness는 [seedColor]의 HCT tone에서 자동 유도된다 (tone < 50 → dark).
+  /// 시스템 다크/라이트 모드와 완전히 독립적이다.
+  ///
+  /// [brightnessOverride]는 레거시 호환용으로 유지하되, scheme 생성 시 무시된다.
   const factory ChoeaeColorConfig.custom({
     required Color seedColor,
     Color? textColorOverride,
@@ -30,11 +32,10 @@ sealed class ChoeaeColorConfig with _$ChoeaeColorConfig {
   /// [brightness]에 따라 최종 [ColorScheme]을 생성한다.
   ///
   /// palette → [PaletteRegistry]에서 수동 디자인 scheme 반환.
-  /// custom → [CustomSchemeBuilder]로 seed 기반 tinted scheme 생성.
+  /// custom → [CustomSchemeBuilder]로 seed 기반 scheme 생성.
   ///
-  /// **주의:** custom 타입에서는 [brightness] 파라미터가 무시되고
-  /// [ChoeaeColorCustom.brightnessOverride]가 사용된다.
-  /// palette 타입에서만 [brightness]가 반영된다.
+  /// **주의:** custom 타입에서는 [brightness] 파라미터가 무시된다.
+  /// seed color의 HCT tone이 brightness를 자동 결정한다.
   ColorScheme buildColorScheme(Brightness brightness) {
     return switch (this) {
       ChoeaeColorPalette(:final packId) =>
@@ -42,11 +43,9 @@ sealed class ChoeaeColorConfig with _$ChoeaeColorConfig {
       ChoeaeColorCustom(
         :final seedColor,
         :final textColorOverride,
-        :final brightnessOverride,
       ) =>
         CustomSchemeBuilder.build(
           seedColor: seedColor,
-          brightness: brightnessOverride,
           textColorOverride: textColorOverride,
         ),
     };

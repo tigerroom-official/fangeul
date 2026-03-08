@@ -601,6 +601,10 @@ class LTh extends L {
   String get themePickerSlotLocked => 'ปลดล็อกสล็อต';
 
   @override
+  String get themePickerSlotLongPressHint =>
+      'กดค้างสล็อตเพื่อเปลี่ยนชื่อหรือเขียนทับ';
+
+  @override
   String get themePickerSlotName => 'ชื่อสล็อต';
 
   @override

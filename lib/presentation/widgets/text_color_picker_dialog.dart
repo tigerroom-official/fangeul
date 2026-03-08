@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -91,9 +93,9 @@ class _TextColorPickerDialogState extends State<TextColorPickerDialog> {
   late double _hue;
   late double _tone;
   late double _chroma;
-  bool _chromaExpanded = false;
 
   late final TextEditingController _hexController;
+  late final FocusNode _hexFocusNode;
   bool _hexEditing = false; // hex→slider 동기화 루프 방지
 
   @override
@@ -112,17 +114,21 @@ class _TextColorPickerDialogState extends State<TextColorPickerDialog> {
     _hexController = TextEditingController(
       text: _colorToHex6(_currentColor),
     );
+    _hexFocusNode = FocusNode();
   }
 
   @override
   void dispose() {
+    _hexFocusNode.dispose();
     _hexController.dispose();
     super.dispose();
   }
 
   Color get _currentColor => Color(Hct.from(_hue, _chroma, _tone).toInt());
 
-  /// Hex 입력 → 슬라이더 동기화.
+  /// Hex 입력 → 2D 피커 동기화.
+  ///
+  /// postFrameCallback으로 defer하여 키보드 이벤트 처리 중 setState 충돌 방지.
   void _onHexChanged(String value) {
     if (value.length != 6) return;
     final parsed = int.tryParse(value, radix: 16);
@@ -130,18 +136,24 @@ class _TextColorPickerDialogState extends State<TextColorPickerDialog> {
     final color = Color(0xFF000000 | parsed);
     final hct = Hct.fromInt(color.toARGB32());
     _hexEditing = true;
-    setState(() {
-      _hue = hct.hue;
-      _chroma = hct.chroma.clamp(10.0, 100.0);
-      _tone = hct.tone.clamp(0.0, 100.0);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      setState(() {
+        _hue = hct.hue;
+        _chroma = hct.chroma.clamp(10.0, 100.0);
+        _tone = hct.tone.clamp(0.0, 100.0);
+      });
+      _hexEditing = false;
     });
-    _hexEditing = false;
   }
 
-  /// 슬라이더 → hex 입력 동기화.
+  /// 2D 피커 → hex 입력 동기화.
   void _syncHexFromSliders() {
     if (_hexEditing) return;
-    _hexController.text = _colorToHex6(_currentColor);
+    final newText = _colorToHex6(_currentColor);
+    if (_hexController.text != newText) {
+      _hexController.text = newText;
+    }
   }
 
   static String _colorToHex6(Color c) {
@@ -176,202 +188,419 @@ class _TextColorPickerDialogState extends State<TextColorPickerDialog> {
       wcagLabel = '';
     }
 
-    return AlertDialog(
-      title: Text(l.themePickerFreePickerTitle),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // 프리뷰 (대비율 <3.0이면 오버레이 표시)
-          Stack(
+    return Dialog(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 400),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: widget.backgroundColor,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  '가나다라마바사 ABC 123',
-                  style: TextStyle(
-                    fontFamily: 'NotoSansKR',
-                    fontSize: 16,
-                    color: color,
-                  ),
-                ),
+              // 타이틀
+              Text(
+                l.themePickerFreePickerTitle,
+                style: theme.textTheme.titleMedium,
               ),
-              if (ratio < 3.0)
-                Positioned.fill(
-                  child: Container(
+              const SizedBox(height: 12),
+              // 프리뷰 (대비율 <3.0이면 오버레이 표시)
+              Stack(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.3),
+                      color: widget.backgroundColor,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    alignment: Alignment.center,
-                    child: Icon(
-                      Icons.visibility_off,
-                      color: Colors.white.withValues(alpha: 0.7),
-                      size: 24,
+                    child: Text(
+                      '가나다라마바사 ABC 123',
+                      style: TextStyle(
+                        fontFamily: 'NotoSansKR',
+                        fontSize: 16,
+                        color: color,
+                      ),
+                    ),
+                  ),
+                  if (ratio < 3.0)
+                    Positioned.fill(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.3),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.visibility_off,
+                          color: Colors.white.withValues(alpha: 0.7),
+                          size: 24,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              // WCAG 대비율 (3-level)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(wcagIcon, size: 16, color: wcagColor),
+                  const SizedBox(width: 4),
+                  Text(
+                    wcagLabel.isEmpty
+                        ? '${ratio.toStringAsFixed(1)}:1'
+                        : '$wcagLabel ${ratio.toStringAsFixed(1)}:1',
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: wcagColor,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              // 2D HCT 영역 (chroma×tone) — 배경 피커와 동일한 시각 경험
+              SizedBox(
+                height: 120,
+                child: _TextColorHctArea(
+                  hue: _hue,
+                  chroma: _chroma,
+                  tone: _tone,
+                  onChanged: (chroma, tone) {
+                    setState(() {
+                      _chroma = chroma;
+                      _tone = tone;
+                    });
+                    _syncHexFromSliders();
+                  },
+                ),
+              ),
+              const SizedBox(height: 8),
+              // Hue 바 (레인보우)
+              SizedBox(
+                height: 36,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      height: 12,
+                      margin: const EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color(0xFFFF0000),
+                            Color(0xFFFFFF00),
+                            Color(0xFF00FF00),
+                            Color(0xFF00FFFF),
+                            Color(0xFF0000FF),
+                            Color(0xFFFF00FF),
+                            Color(0xFFFF0000),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SliderTheme(
+                      data: SliderThemeData(
+                        trackHeight: 0,
+                        activeTrackColor: Colors.transparent,
+                        inactiveTrackColor: Colors.transparent,
+                        thumbColor:
+                            HSLColor.fromAHSL(1, _hue, 1, 0.5).toColor(),
+                        overlayColor:
+                            HSLColor.fromAHSL(0.2, _hue, 1, 0.5).toColor(),
+                      ),
+                      child: Slider(
+                        value: _hue,
+                        min: 0,
+                        max: 360,
+                        onChanged: (v) {
+                          setState(() => _hue = v);
+                          _syncHexFromSliders();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+              // Hex 입력 + 색상 프리뷰
+              Row(
+                children: [
+                  Text(
+                    '#',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: TextField(
+                      controller: _hexController,
+                      focusNode: _hexFocusNode,
+                      maxLength: 6,
+                      // visiblePassword: IME 합성 모드 비활성화 → 키 이벤트 충돌 방지
+                      keyboardType: TextInputType.visiblePassword,
+                      autocorrect: false,
+                      enableSuggestions: false,
+                      textCapitalization: TextCapitalization.characters,
+                      decoration: const InputDecoration(
+                        counterText: '',
+                        hintText: 'FFD700',
+                        isDense: true,
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                      ),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontFamily: 'monospace',
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'[0-9a-fA-F]')),
+                      ],
+                      onChanged: _onHexChanged,
+                      onTap: () {
+                        // 탭 시 전체 선택 → 백스페이스 없이 바로 덮어쓰기
+                        _hexController.selection = TextSelection(
+                          baseOffset: 0,
+                          extentOffset: _hexController.text.length,
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    width: 28,
+                    height: 28,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: color,
+                      border:
+                          Border.all(color: theme.colorScheme.outlineVariant),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              // 버튼
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(
+                        MaterialLocalizations.of(context).cancelButtonLabel),
+                  ),
+                  const SizedBox(width: 8),
+                  FilledButton(
+                    onPressed: () => Navigator.of(context).pop(color),
+                    child: Text(l.complete),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 2D HCT 영역 (chroma×tone) — 글자색 피커용.
+///
+/// 배경 피커의 [_HctAreaPainter]와 동일한 패턴이나,
+/// 글자색 특성상 tone 범위를 0~100으로 넓혀 고대비 색상도 선택 가능.
+class _TextColorHctArea extends StatefulWidget {
+  const _TextColorHctArea({
+    required this.hue,
+    required this.chroma,
+    required this.tone,
+    required this.onChanged,
+  });
+
+  final double hue;
+  final double chroma;
+  final double tone;
+  final void Function(double chroma, double tone) onChanged;
+
+  @override
+  State<_TextColorHctArea> createState() => _TextColorHctAreaState();
+}
+
+class _TextColorHctAreaState extends State<_TextColorHctArea> {
+  ui.Image? _cachedImage;
+  double? _cachedHue;
+
+  static const _imgWidth = 96;
+  static const _imgHeight = 64;
+  static const _minTone = 0.0;
+  static const _maxTone = 100.0;
+  static const _toneRange = _maxTone - _minTone;
+  static const _minChroma = 0.0;
+  static const _maxChroma = 100.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _regenerateImage();
+  }
+
+  @override
+  void didUpdateWidget(_TextColorHctArea old) {
+    super.didUpdateWidget(old);
+    if (old.hue != widget.hue) _regenerateImage();
+  }
+
+  @override
+  void dispose() {
+    _cachedImage?.dispose();
+    super.dispose();
+  }
+
+  void _regenerateImage() {
+    if (_cachedHue == widget.hue && _cachedImage != null) return;
+    _cachedHue = widget.hue;
+    _generateImage(widget.hue, _imgWidth, _imgHeight).then((image) {
+      if (!mounted) {
+        image.dispose();
+        return;
+      }
+      final old = _cachedImage;
+      setState(() => _cachedImage = image);
+      old?.dispose();
+    });
+  }
+
+  static Future<ui.Image> _generateImage(
+    double hue,
+    int width,
+    int height,
+  ) {
+    final pixels = Uint8List(width * height * 4);
+    for (int y = 0; y < height; y++) {
+      final tone = _maxTone - (y / (height - 1)) * _toneRange;
+      for (int x = 0; x < width; x++) {
+        final chroma =
+            _minChroma + (x / (width - 1)) * (_maxChroma - _minChroma);
+        final argb = Hct.from(hue, chroma, tone).toInt();
+        final offset = (y * width + x) * 4;
+        pixels[offset] = (argb >> 16) & 0xFF; // R
+        pixels[offset + 1] = (argb >> 8) & 0xFF; // G
+        pixels[offset + 2] = argb & 0xFF; // B
+        pixels[offset + 3] = 0xFF; // A
+      }
+    }
+
+    final completer = Completer<ui.Image>();
+    ui.decodeImageFromPixels(
+      pixels,
+      width,
+      height,
+      ui.PixelFormat.rgba8888,
+      completer.complete,
+    );
+    return completer.future;
+  }
+
+  void _onGesture(Offset localPosition, Size areaSize) {
+    final x = localPosition.dx.clamp(0.0, areaSize.width);
+    final y = localPosition.dy.clamp(0.0, areaSize.height);
+
+    final chroma =
+        (_minChroma + (x / areaSize.width) * (_maxChroma - _minChroma))
+            .clamp(_minChroma, _maxChroma);
+    final tone = (_maxTone - (y / areaSize.height) * _toneRange)
+        .clamp(_minTone, _maxTone);
+
+    widget.onChanged(chroma, tone);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      final areaWidth = constraints.maxWidth;
+      final areaHeight = constraints.maxHeight;
+
+      final markerX =
+          ((widget.chroma - _minChroma) / (_maxChroma - _minChroma)) *
+              areaWidth;
+      final markerY = ((_maxTone - widget.tone) / _toneRange) * areaHeight;
+
+      return GestureDetector(
+        onPanDown: (d) =>
+            _onGesture(d.localPosition, Size(areaWidth, areaHeight)),
+        onPanUpdate: (d) =>
+            _onGesture(d.localPosition, Size(areaWidth, areaHeight)),
+        child: SizedBox(
+          width: areaWidth,
+          height: areaHeight,
+          child: Stack(
+            clipBehavior: Clip.hardEdge,
+            children: [
+              Positioned.fill(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: CustomPaint(
+                    painter: _TextColorAreaPainter(cachedImage: _cachedImage),
+                  ),
+                ),
+              ),
+              Positioned(
+                left: markerX.clamp(0, areaWidth) - 8,
+                top: markerY.clamp(0, areaHeight) - 8,
+                child: IgnorePointer(
+                  child: Container(
+                    width: 16,
+                    height: 16,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(
+                          Hct.from(widget.hue, widget.chroma, widget.tone)
+                              .toInt()),
+                      border: Border.all(color: Colors.white, width: 2),
+                      boxShadow: const [
+                        BoxShadow(color: Colors.black26, blurRadius: 4),
+                      ],
                     ),
                   ),
                 ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          // WCAG 대비율 (3-level)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(wcagIcon, size: 16, color: wcagColor),
-              const SizedBox(width: 4),
-              Text(
-                wcagLabel.isEmpty
-                    ? '${ratio.toStringAsFixed(1)}:1'
-                    : '$wcagLabel ${ratio.toStringAsFixed(1)}:1',
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: wcagColor,
-                ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          // Hex 입력
-          Row(
-            children: [
-              Text(
-                '#',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-              const SizedBox(width: 4),
-              Expanded(
-                child: TextField(
-                  controller: _hexController,
-                  maxLength: 6,
-                  decoration: const InputDecoration(
-                    counterText: '',
-                    hintText: 'FFD700',
-                    isDense: true,
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                  ),
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontFamily: 'monospace',
-                  ),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]')),
-                  ],
-                  onChanged: _onHexChanged,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Container(
-                width: 28,
-                height: 28,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: color,
-                  border: Border.all(color: theme.colorScheme.outlineVariant),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          // Hue 슬라이더
-          _buildSlider(
-            label: l.themePickerHue,
-            value: _hue,
-            min: 0,
-            max: 360,
-            onChanged: (v) {
-              setState(() => _hue = v);
-              _syncHexFromSliders();
-            },
-            theme: theme,
-          ),
-          const SizedBox(height: 8),
-          // Tone 슬라이더
-          _buildSlider(
-            label: l.themePickerTone,
-            value: _tone,
-            min: 0,
-            max: 100,
-            onChanged: (v) {
-              setState(() => _tone = v);
-              _syncHexFromSliders();
-            },
-            theme: theme,
-          ),
-          const SizedBox(height: 8),
-          // 접이식 Chroma 슬라이더
-          GestureDetector(
-            onTap: () => setState(() => _chromaExpanded = !_chromaExpanded),
-            child: Row(
-              children: [
-                Text(
-                  l.themePickerChroma,
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                Icon(
-                  _chromaExpanded ? Icons.expand_less : Icons.expand_more,
-                  size: 16,
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ],
-            ),
-          ),
-          if (_chromaExpanded)
-            Slider(
-              value: _chroma,
-              min: 10,
-              max: 100,
-              onChanged: (v) {
-                setState(() => _chroma = v);
-                _syncHexFromSliders();
-              },
-            ),
-        ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
         ),
-        FilledButton(
-          onPressed: () => Navigator.of(context).pop(color),
-          child: Text(l.complete),
-        ),
-      ],
+      );
+    });
+  }
+}
+
+/// 2D HCT 영역 CustomPainter — 캐시된 이미지를 그린다.
+class _TextColorAreaPainter extends CustomPainter {
+  const _TextColorAreaPainter({required this.cachedImage});
+
+  final ui.Image? cachedImage;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (cachedImage == null) {
+      canvas.drawRect(
+        Offset.zero & size,
+        Paint()..color = Colors.grey,
+      );
+      return;
+    }
+
+    final src = Rect.fromLTWH(
+      0,
+      0,
+      cachedImage!.width.toDouble(),
+      cachedImage!.height.toDouble(),
+    );
+    canvas.drawImageRect(
+      cachedImage!,
+      src,
+      Offset.zero & size,
+      Paint()..filterQuality = FilterQuality.medium,
     );
   }
 
-  Widget _buildSlider({
-    required String label,
-    required double value,
-    required double min,
-    required double max,
-    required ValueChanged<double> onChanged,
-    required ThemeData theme,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: theme.textTheme.labelSmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-        Slider(
-          value: value,
-          min: min,
-          max: max,
-          onChanged: onChanged,
-        ),
-      ],
-    );
-  }
+  @override
+  bool shouldRepaint(_TextColorAreaPainter old) =>
+      old.cachedImage != cachedImage;
 }

@@ -234,6 +234,7 @@
   "themePickerSlots": "Theme Slots",
   "themePickerSlotSave": "Save current theme",
   "themePickerSlotLocked": "Unlock slots",
+  "themePickerSlotLongPressHint": "Long press a slot to rename or overwrite",
   "themePickerSlotName": "Slot name",
   "themePickerRecommended": "Recommended",
   "themePickerFreePickerTitle": "Custom text color",

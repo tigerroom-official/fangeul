@@ -234,6 +234,7 @@
   "themePickerSlots": "Slot Tema",
   "themePickerSlotSave": "Simpan tema saat ini",
   "themePickerSlotLocked": "Buka kunci slot",
+  "themePickerSlotLongPressHint": "Tekan lama slot untuk mengganti nama atau menimpa",
   "themePickerSlotName": "Nama slot",
   "themePickerRecommended": "Rekomendasi",
   "themePickerFreePickerTitle": "Warna teks kustom",

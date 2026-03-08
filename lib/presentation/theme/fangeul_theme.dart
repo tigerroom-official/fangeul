@@ -22,7 +22,7 @@ abstract final class FangeulTheme {
       useMaterial3: true,
       brightness: colorScheme.brightness,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: colorScheme.surfaceContainerLowest,
+      scaffoldBackgroundColor: colorScheme.surface,
       textTheme: FangeulTextStyles.textTheme,
     ));
   }
@@ -43,12 +43,12 @@ abstract final class FangeulTheme {
         ),
       ),
       appBarTheme: AppBarTheme(
-        backgroundColor: cs.surfaceContainerHigh,
+        backgroundColor: cs.surfaceContainerLow,
         foregroundColor: cs.onSurface,
         elevation: 0,
       ),
       cardTheme: CardThemeData(
-        color: cs.surface,
+        color: cs.surfaceContainer,
         elevation: 0,
       ),
       chipTheme: ChipThemeData(

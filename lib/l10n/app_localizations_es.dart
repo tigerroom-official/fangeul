@@ -609,6 +609,10 @@ class LEs extends L {
   String get themePickerSlotLocked => 'Desbloquea slots';
 
   @override
+  String get themePickerSlotLongPressHint =>
+      'Mantén presionado un slot para renombrar o sobrescribir';
+
+  @override
   String get themePickerSlotName => 'Nombre del slot';
 
   @override

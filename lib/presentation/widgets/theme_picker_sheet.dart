@@ -9,7 +9,7 @@ import 'package:fangeul/presentation/providers/choeae_color_provider.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart'
-    show contrastRatio;
+    show contrastRatio, sharedPreferencesProvider;
 import 'package:fangeul/presentation/theme/choeae_color_config.dart';
 import 'package:fangeul/presentation/theme/palette_pack.dart';
 import 'package:fangeul/presentation/theme/palette_registry.dart';
@@ -60,10 +60,27 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
   ChoeaeColorConfig? _savedConfigBeforePreview;
   bool _isPreviewMode = false;
 
+  static const _slotHintShownKey = 'theme_slot_hint_shown';
+
   @override
   void dispose() {
     _sheetController.dispose();
     super.dispose();
+  }
+
+  /// 슬롯 첫 저장 시 롱프레스 힌트 스낵바를 1회 표시한다.
+  void _showSlotSaveHint(BuildContext ctx) {
+    final prefs = ref.read(sharedPreferencesProvider);
+    if (prefs.getBool(_slotHintShownKey) ?? false) return;
+    prefs.setBool(_slotHintShownKey, true);
+    ScaffoldMessenger.of(ctx)
+      ..clearSnackBars()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(L.of(ctx).themePickerSlotLongPressHint),
+          duration: const Duration(seconds: 3),
+        ),
+      );
   }
 
   void _initSlidersFromConfig(ChoeaeColorConfig config) {
@@ -175,6 +192,7 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                       choeaeColor,
                     );
                     slotNotifier.saveToSlot(index, slot);
+                    _showSlotSaveHint(context);
                   },
                   onSlotRename: (index, name) {
                     slotNotifier.renameSlot(index, name);
@@ -194,7 +212,7 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                     });
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
                 _PaletteGrid(
                   currentConfig: choeaeColor,
                   onPaletteTap: (pack) {
@@ -267,21 +285,17 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  _BrightnessToggle(
-                    current: choeaeColor is ChoeaeColorCustom
-                        ? choeaeColor.brightnessOverride
-                        : theme.brightness,
-                    onChanged: (br) {
-                      ref
-                          .read(choeaeColorNotifierProvider.notifier)
-                          .setBrightnessOverride(br);
-                    },
-                  ),
-                  const SizedBox(height: 16),
                   Builder(builder: (context) {
-                    final effectiveBrightness = choeaeColor is ChoeaeColorCustom
-                        ? choeaeColor.brightnessOverride
-                        : theme.brightness;
+                    // custom: seed tone에서 brightness 자동 유도
+                    final Brightness effectiveBrightness;
+                    if (choeaeColor is ChoeaeColorCustom) {
+                      final t =
+                          Hct.fromInt(choeaeColor.seedColor.toARGB32()).tone;
+                      effectiveBrightness =
+                          t < 50 ? Brightness.dark : Brightness.light;
+                    } else {
+                      effectiveBrightness = theme.brightness;
+                    }
                     return Column(
                       children: [
                         _TextColorSelector(
@@ -305,8 +319,8 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                           if (textColor == null) {
                             return const SizedBox.shrink();
                           }
-                          final scheme = choeaeColor
-                              .buildColorScheme(effectiveBrightness);
+                          final scheme =
+                              choeaeColor.buildColorScheme(effectiveBrightness);
                           final surfaceRatio =
                               contrastRatio(textColor, scheme.surface);
                           final containerHighRatio = contrastRatio(
@@ -560,9 +574,9 @@ class _PaletteGrid extends ConsumerWidget {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
-        mainAxisSpacing: 6,
+        mainAxisSpacing: 2,
         crossAxisSpacing: 10,
-        childAspectRatio: 0.82,
+        childAspectRatio: 1.0,
       ),
       itemCount: packs.length,
       itemBuilder: (context, index) {
@@ -806,7 +820,11 @@ class _ThemeSlotRow extends StatelessWidget {
                 };
               }
 
-              return GestureDetector(
+              return Semantics(
+                onLongPressHint: hasSlot && !isLocked
+                    ? l.themePickerSlotLongPressHint
+                    : null,
+                child: GestureDetector(
                 onTap: () {
                   if (isLocked) {
                     ScaffoldMessenger.of(context)
@@ -831,47 +849,70 @@ class _ThemeSlotRow extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Container(
-                      width: 44,
-                      height: 44,
-                      decoration: BoxDecoration(
-                        color: isLocked
-                            ? theme.colorScheme.surfaceContainerHigh
-                            : previewColor ??
-                                theme.colorScheme.surfaceContainerHigh,
-                        shape: BoxShape.circle,
-                        border: isActive
-                            ? Border.all(
-                                color: theme.colorScheme.primary,
-                                width: 2.5,
-                              )
-                            : Border.all(
-                                color: theme.colorScheme.outlineVariant,
-                              ),
-                      ),
-                      child: isLocked
-                          ? Icon(
-                              Icons.lock_rounded,
-                              size: 18,
-                              color: theme.colorScheme.onSurfaceVariant,
-                            )
-                          : !hasSlot
-                              ? Icon(
-                                  Icons.add,
-                                  size: 20,
-                                  color: theme.colorScheme.onSurfaceVariant,
-                                )
-                              : isActive
-                                  ? Icon(
-                                      Icons.check,
-                                      size: 18,
-                                      color: previewColor != null &&
-                                              previewColor.computeLuminance() >
-                                                  0.5
-                                          ? Colors.black87
-                                          : Colors.white,
+                    SizedBox(
+                      width: 48,
+                      height: 48,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            width: 44,
+                            height: 44,
+                            decoration: BoxDecoration(
+                              color: isLocked
+                                  ? theme.colorScheme.surfaceContainerHigh
+                                  : previewColor ??
+                                      theme.colorScheme.surfaceContainerHigh,
+                              shape: BoxShape.circle,
+                              border: isActive
+                                  ? Border.all(
+                                      color: theme.colorScheme.primary,
+                                      width: 2.5,
                                     )
-                                  : null,
+                                  : Border.all(
+                                      color: theme.colorScheme.outlineVariant,
+                                    ),
+                            ),
+                            child: isLocked
+                                ? Icon(
+                                    Icons.lock_rounded,
+                                    size: 18,
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  )
+                                : !hasSlot
+                                    ? Icon(
+                                        Icons.add,
+                                        size: 20,
+                                        color:
+                                            theme.colorScheme.onSurfaceVariant,
+                                      )
+                                    : isActive
+                                        ? Icon(
+                                            Icons.check,
+                                            size: 18,
+                                            color: previewColor != null &&
+                                                    previewColor
+                                                            .computeLuminance() >
+                                                        0.5
+                                                ? Colors.black87
+                                                : Colors.white,
+                                          )
+                                        : null,
+                          ),
+                          // ⋮ 힌트: 채워진 슬롯에 롱프레스 메뉴 어포던스
+                          if (hasSlot && !isLocked)
+                            Positioned(
+                              right: 0,
+                              top: 0,
+                              child: Icon(
+                                Icons.more_vert,
+                                size: 12,
+                                color: theme.colorScheme.onSurfaceVariant
+                                    .withValues(alpha: 0.7),
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 4),
                     SizedBox(
@@ -891,6 +932,7 @@ class _ThemeSlotRow extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
               );
             },
           ),
@@ -920,7 +962,12 @@ class _ThemeSlotRow extends StatelessWidget {
               title: Text(l.themePickerSlotName),
               onTap: () {
                 Navigator.of(ctx).pop();
-                _showRenameDialog(context, index, slot);
+                // 바텀시트 pop 완료 후 다이얼로그 표시 — 타이밍 충돌 방지
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (context.mounted) {
+                    _showRenameDialog(context, index, slot);
+                  }
+                });
               },
             ),
           ],
@@ -941,6 +988,16 @@ class _ThemeSlotRow extends StatelessWidget {
           controller: controller,
           autofocus: true,
           maxLength: 20,
+          // visiblePassword: IME 합성 모드 비활성화 → 키 이벤트 충돌 방지
+          keyboardType: TextInputType.visiblePassword,
+          autocorrect: false,
+          enableSuggestions: false,
+          onTap: () {
+            controller.selection = TextSelection(
+              baseOffset: 0,
+              extentOffset: controller.text.length,
+            );
+          },
         ),
         actions: [
           TextButton(
@@ -1166,51 +1223,7 @@ class _ColorCircle extends StatelessWidget {
   }
 }
 
-/// 밝기 토글 — dark/light 전환.
-class _BrightnessToggle extends StatelessWidget {
-  const _BrightnessToggle({
-    required this.current,
-    required this.onChanged,
-  });
-
-  final Brightness current;
-  final ValueChanged<Brightness> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = L.of(context);
-    final theme = Theme.of(context);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          l.themePickerBrightness,
-          style: theme.textTheme.labelMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-        const SizedBox(height: 8),
-        SegmentedButton<Brightness>(
-          segments: [
-            ButtonSegment(
-              value: Brightness.dark,
-              icon: const Icon(Icons.dark_mode_outlined, size: 18),
-              label: Text(l.themeDark),
-            ),
-            ButtonSegment(
-              value: Brightness.light,
-              icon: const Icon(Icons.light_mode_outlined, size: 18),
-              label: Text(l.themeLight),
-            ),
-          ],
-          selected: {current},
-          onSelectionChanged: (modes) => onChanged(modes.first),
-        ),
-      ],
-    );
-  }
-}
+// _BrightnessToggle 제거 — brightness는 seed tone에서 자동 유도.
 
 class _PreviewCard extends StatelessWidget {
   const _PreviewCard({
@@ -1242,11 +1255,55 @@ class _PreviewCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        _KeyboardPreview(previewScheme: previewScheme),
-        const SizedBox(height: 8),
-        _PhrasePreview(
-          previewScheme: previewScheme,
-          customTextColor: customTextColor,
+        // AppBar + 화면 통합 프리뷰 — 실제 적용 결과를 시각화.
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Column(
+            children: [
+              // 미니 AppBar
+              Container(
+                width: double.infinity,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                color: previewScheme.surfaceContainerLow,
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.arrow_back,
+                      size: 18,
+                      color: previewScheme.onSurface,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Fangeul',
+                      style: TextStyle(
+                        fontFamily: 'NotoSansKR',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: previewScheme.onSurface,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // 본문 영역
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                color: previewScheme.surface,
+                child: Column(
+                  children: [
+                    _KeyboardPreview(previewScheme: previewScheme),
+                    const SizedBox(height: 8),
+                    _PhrasePreview(
+                      previewScheme: previewScheme,
+                      customTextColor: customTextColor,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );

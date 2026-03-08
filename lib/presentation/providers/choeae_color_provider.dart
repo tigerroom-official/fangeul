@@ -77,17 +77,13 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
 
   /// 커스텀 색상 설정.
   ///
-  /// 기존 [brightnessOverride]를 보존한다 (custom 상태일 때).
+  /// brightness는 seed tone에서 자동 유도 — 별도 설정 불필요.
   Future<void> setCustomColor(Color seed, {Color? textColor}) async {
-    final existingBr = state is ChoeaeColorCustom
-        ? (state as ChoeaeColorCustom).brightnessOverride
-        : Brightness.dark;
     _previousConfig = state;
     _canUndo = true;
     state = ChoeaeColorConfig.custom(
       seedColor: seed,
       textColorOverride: textColor,
-      brightnessOverride: existingBr,
     );
     await _persistCurrentState();
   }
@@ -120,19 +116,7 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
     await _persistCurrentState();
   }
 
-  /// Brightness 오버라이드 변경 (custom 상태에서만 동작).
-  Future<void> setBrightnessOverride(Brightness br) async {
-    final current = state;
-    if (current is! ChoeaeColorCustom) return;
-    _previousConfig = state;
-    _canUndo = true;
-    state = ChoeaeColorConfig.custom(
-      seedColor: current.seedColor,
-      textColorOverride: current.textColorOverride,
-      brightnessOverride: br,
-    );
-    await _persistCurrentState();
-  }
+  // setBrightnessOverride 제거 — brightness는 seed tone에서 자동 유도.
 
   Color? _loadTextOverride(SharedPreferences prefs) {
     final hex = prefs.getString(_textKey);

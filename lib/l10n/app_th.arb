@@ -234,6 +234,7 @@
   "themePickerSlots": "สล็อตธีม",
   "themePickerSlotSave": "บันทึกธีมปัจจุบัน",
   "themePickerSlotLocked": "ปลดล็อกสล็อต",
+  "themePickerSlotLongPressHint": "กดค้างสล็อตเพื่อเปลี่ยนชื่อหรือเขียนทับ",
   "themePickerSlotName": "ชื่อสล็อต",
   "themePickerRecommended": "แนะนำ",
   "themePickerFreePickerTitle": "เลือกสีตัวอักษร",
