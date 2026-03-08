@@ -27,12 +27,12 @@ final ttsServiceProvider = Provider<TtsService>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef TtsServiceRef = ProviderRef<TtsService>;
-String _$canPlayTtsHash() => r'f5656d02dea5503c97da7a6a5ae415131d70bbed';
+String _$canPlayTtsHash() => r'94449ee49f4d9b8e2d63b93e4d51e9e58e380ddc';
 
 /// TTS 재생 가능 여부 편의 Provider.
 ///
-/// 허니문 중이면 무제한. 그 외에는 일일 5회 제한
-/// ([MonetizationNotifier.dailyTtsLimit]). 해금 경로는 IAP만.
+/// 허니문 중이면 무제한. 그 외에는 Remote Config의 일일 TTS 제한 적용.
+/// 해금 경로는 IAP만.
 ///
 /// Copied from [canPlayTts].
 @ProviderFor(canPlayTts)
@@ -74,7 +74,7 @@ class _SystemHash {
 /// TTS 재생을 시도한다.
 ///
 /// 일일 제한 확인 → 카운트 기록 → 재생 순서로 진행.
-/// 허니문/보상형 해금 활성 시 카운트를 소모하지 않고 무제한 재생.
+/// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
 /// 제한 도달 시 false를 반환하고 재생하지 않는다.
 ///
 /// [source]는 에셋 경로('assets/audio/...')  또는 원격 URL.
@@ -86,7 +86,7 @@ const playTtsProvider = PlayTtsFamily();
 /// TTS 재생을 시도한다.
 ///
 /// 일일 제한 확인 → 카운트 기록 → 재생 순서로 진행.
-/// 허니문/보상형 해금 활성 시 카운트를 소모하지 않고 무제한 재생.
+/// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
 /// 제한 도달 시 false를 반환하고 재생하지 않는다.
 ///
 /// [source]는 에셋 경로('assets/audio/...')  또는 원격 URL.
@@ -96,7 +96,7 @@ class PlayTtsFamily extends Family<AsyncValue<bool>> {
   /// TTS 재생을 시도한다.
   ///
   /// 일일 제한 확인 → 카운트 기록 → 재생 순서로 진행.
-  /// 허니문/보상형 해금 활성 시 카운트를 소모하지 않고 무제한 재생.
+  /// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
   /// 제한 도달 시 false를 반환하고 재생하지 않는다.
   ///
   /// [source]는 에셋 경로('assets/audio/...')  또는 원격 URL.
@@ -107,7 +107,7 @@ class PlayTtsFamily extends Family<AsyncValue<bool>> {
   /// TTS 재생을 시도한다.
   ///
   /// 일일 제한 확인 → 카운트 기록 → 재생 순서로 진행.
-  /// 허니문/보상형 해금 활성 시 카운트를 소모하지 않고 무제한 재생.
+  /// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
   /// 제한 도달 시 false를 반환하고 재생하지 않는다.
   ///
   /// [source]는 에셋 경로('assets/audio/...')  또는 원격 URL.
@@ -148,7 +148,7 @@ class PlayTtsFamily extends Family<AsyncValue<bool>> {
 /// TTS 재생을 시도한다.
 ///
 /// 일일 제한 확인 → 카운트 기록 → 재생 순서로 진행.
-/// 허니문/보상형 해금 활성 시 카운트를 소모하지 않고 무제한 재생.
+/// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
 /// 제한 도달 시 false를 반환하고 재생하지 않는다.
 ///
 /// [source]는 에셋 경로('assets/audio/...')  또는 원격 URL.
@@ -158,7 +158,7 @@ class PlayTtsProvider extends AutoDisposeFutureProvider<bool> {
   /// TTS 재생을 시도한다.
   ///
   /// 일일 제한 확인 → 카운트 기록 → 재생 순서로 진행.
-  /// 허니문/보상형 해금 활성 시 카운트를 소모하지 않고 무제한 재생.
+  /// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
   /// 제한 도달 시 false를 반환하고 재생하지 않는다.
   ///
   /// [source]는 에셋 경로('assets/audio/...')  또는 원격 URL.

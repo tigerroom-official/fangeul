@@ -92,7 +92,7 @@ void main() {
     );
 
     testWidgets(
-      'should render SizedBox.shrink when rewarded unlock is active',
+      'should render SizedBox.shrink when theme trial is active',
       (tester) async {
         await tester.pumpWidget(
           buildTestWidget(isThemeTrialActive: true),

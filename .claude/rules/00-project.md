@@ -57,7 +57,7 @@ core/         → presentation/ ❌
 - **보상형 광고 = 프리미엄 테마 24시간 체험 전용** — 기능(즐겨찾기/TTS) 시간제 해금 폐지
 - 보상형 1회 시청 → 팔레트 영구 해금(`themeUnlocked`) 유지 (진입 장벽 낮추기)
 - 보상형 1회 시청 시 세션 배너 제거 유지
-- 체험 시간: Firebase Remote Config (`themeTrialHours`, 기본 24) — A/B 테스트 가능
+- 체험 시간: Firebase Remote Config (`unlock_duration_hours`, 기본 24) — A/B 테스트 가능
 - 배너: Day 7부터 조건부 → 보상형 시청/IAP 구매 시 숨김
 - 전환 퍼널: Day 0~13 허니문(무제한) → Day 14~ 즐겨찾기 5슬롯+TTS 5회/일 제한 → IAP 직행
 - 즐겨찾기/TTS 제한 해금 경로 = **IAP만** (보상형으로 해금 불가)

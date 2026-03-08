@@ -567,6 +567,7 @@ class _PaletteGrid extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isUnlocked = ref.watch(isThemeUnlockedProvider);
+    final isTrialActive = ref.watch(isThemeTrialActiveProvider);
     final packs = PaletteRegistry.all;
 
     return GridView.builder(
@@ -583,7 +584,8 @@ class _PaletteGrid extends ConsumerWidget {
         final pack = packs[index];
         final isSelected = currentConfig is ChoeaeColorPalette &&
             (currentConfig as ChoeaeColorPalette).packId == pack.id;
-        final isAccessible = !pack.isPremium || isUnlocked;
+        final isAccessible =
+            !pack.isPremium || isUnlocked || isTrialActive;
 
         return _PaletteItem(
           pack: pack,

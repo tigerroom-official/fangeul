@@ -384,7 +384,7 @@ class _DebugMonetizationPanel extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             'installDate: $installDate (Day $daysSince)\n'
-            'honeymoon: $isHoneymoon | unlock: $isUnlocked\n'
+            'honeymoon: $isHoneymoon | trial: $isUnlocked\n'
             'hasThemePicker: ${monState?.hasThemePicker ?? false}\n'
             'hasThemeSlots: ${monState?.hasThemeSlots ?? false}\n'
             'favSlotLimit: ${monState?.favoriteSlotLimit ?? 0} (0=unlimited)\n'
@@ -431,9 +431,9 @@ class _DebugMonetizationPanel extends ConsumerWidget {
             runSpacing: 4,
             children: [
               _DebugChip(
-                label: isUnlocked ? 'Unlock: ON' : 'Unlock: OFF',
+                label: isUnlocked ? 'Trial: ON' : 'Trial: OFF',
                 color: isUnlocked ? Colors.green : null,
-                onTap: () => _toggleRewardedUnlock(ref, !isUnlocked),
+                onTap: () => _toggleThemeTrial(ref, !isUnlocked),
               ),
               _DebugChip(
                 label: monState?.hasThemePicker == true
@@ -502,7 +502,7 @@ class _DebugMonetizationPanel extends ConsumerWidget {
     ref.invalidate(monetizationNotifierProvider);
   }
 
-  Future<void> _toggleRewardedUnlock(WidgetRef ref, bool activate) async {
+  Future<void> _toggleThemeTrial(WidgetRef ref, bool activate) async {
     if (activate) {
       await ref
           .read(monetizationNotifierProvider.notifier)
