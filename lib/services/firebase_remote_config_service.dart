@@ -29,7 +29,7 @@ class FirebaseRemoteConfigService implements RemoteConfigService {
       'default_slot_limit': 5,
       'daily_ad_limit': 3,
       'ad_cooldown_minutes': 5,
-      'unlock_duration_hours': 4,
+      'unlock_duration_hours': 24,
       'daily_tts_limit': 5,
       'conversion_trigger_ad_count': 3,
     });

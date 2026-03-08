@@ -7,11 +7,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
 
-/// 보상형 해금 남은 시간 카운트다운 위젯.
+/// 테마 체험 남은 시간 카운트다운 위젯.
 ///
-/// [monetizationNotifierProvider]의 `unlockExpiresAt`을 기반으로
+/// [monetizationNotifierProvider]의 `themeTrialExpiresAt`을 기반으로
 /// 매초 남은 시간을 갱신하여 표시한다.
-/// 해금이 비활성이거나 만료되었으면 [SizedBox.shrink]을 반환한다.
+/// 체험이 비활성이거나 만료되었으면 [SizedBox.shrink]을 반환한다.
 ///
 /// 타이머 콜백에서 반드시 [mounted] 가드를 사용한다
 /// (Sprint 1 교훈: OverlayEntry 타이머 cleanup 크래시 방지).
@@ -44,14 +44,14 @@ class _UnlockTimerWidgetState extends ConsumerState<UnlockTimerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final unlockExpiresAt =
-        ref.watch(monetizationNotifierProvider).valueOrNull?.unlockExpiresAt ??
+    final themeTrialExpiresAt =
+        ref.watch(monetizationNotifierProvider).valueOrNull?.themeTrialExpiresAt ??
             0;
 
-    if (unlockExpiresAt == 0) return const SizedBox.shrink();
+    if (themeTrialExpiresAt == 0) return const SizedBox.shrink();
 
     final now = clock.now().millisecondsSinceEpoch;
-    final remainingMs = unlockExpiresAt - now;
+    final remainingMs = themeTrialExpiresAt - now;
 
     if (remainingMs <= 0) return const SizedBox.shrink();
 
@@ -62,7 +62,7 @@ class _UnlockTimerWidgetState extends ConsumerState<UnlockTimerWidget> {
     final seconds = duration.inSeconds % 60;
 
     // 자정 만료 여부 확인 (만료 시각이 자정 기준 1분 이내)
-    final expiryTime = DateTime.fromMillisecondsSinceEpoch(unlockExpiresAt);
+    final expiryTime = DateTime.fromMillisecondsSinceEpoch(themeTrialExpiresAt);
     final isMidnight = expiryTime.hour == 0 && expiryTime.minute < 1;
 
     final timeStr = hours > 0

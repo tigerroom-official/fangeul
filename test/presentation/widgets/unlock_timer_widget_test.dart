@@ -11,11 +11,11 @@ import 'package:fangeul/presentation/widgets/unlock_timer_widget.dart';
 void main() {
   /// 테스트용 위젯 빌더.
   ///
-  /// [unlockExpiresAt] 밀리초 타임스탬프로 해금 만료 시각을 설정한다.
-  Widget buildTestWidget({int unlockExpiresAt = 0}) {
+  /// [themeTrialExpiresAt] 밀리초 타임스탬프로 해금 만료 시각을 설정한다.
+  Widget buildTestWidget({int themeTrialExpiresAt = 0}) {
     final monState = MonetizationState(
       honeymoonActive: false,
-      unlockExpiresAt: unlockExpiresAt,
+      themeTrialExpiresAt: themeTrialExpiresAt,
     );
 
     return ProviderScope(
@@ -44,7 +44,7 @@ void main() {
             DateTime.now().millisecondsSinceEpoch + (2 * 60 * 60 * 1000);
 
         await tester.pumpWidget(buildTestWidget(
-          unlockExpiresAt: twoHoursFromNow,
+          themeTrialExpiresAt: twoHoursFromNow,
         ));
         await tester.pump(); // AsyncNotifier 로드 대기
 
@@ -69,7 +69,7 @@ void main() {
             (15 * 1000);
 
         await tester.pumpWidget(buildTestWidget(
-          unlockExpiresAt: expiresAt,
+          themeTrialExpiresAt: expiresAt,
         ));
         await tester.pump();
 
@@ -87,7 +87,7 @@ void main() {
             (15 * 1000);
 
         await tester.pumpWidget(buildTestWidget(
-          unlockExpiresAt: expiresAt,
+          themeTrialExpiresAt: expiresAt,
         ));
         await tester.pump();
 
@@ -101,9 +101,9 @@ void main() {
     );
 
     testWidgets(
-      'should show nothing when no unlock is active (unlockExpiresAt = 0)',
+      'should show nothing when no unlock is active (themeTrialExpiresAt = 0)',
       (tester) async {
-        await tester.pumpWidget(buildTestWidget(unlockExpiresAt: 0));
+        await tester.pumpWidget(buildTestWidget(themeTrialExpiresAt: 0));
         await tester.pump();
 
         // 타이머 아이콘 없음
@@ -128,7 +128,7 @@ void main() {
         final expiredAt =
             DateTime.now().millisecondsSinceEpoch - (60 * 60 * 1000);
 
-        await tester.pumpWidget(buildTestWidget(unlockExpiresAt: expiredAt));
+        await tester.pumpWidget(buildTestWidget(themeTrialExpiresAt: expiredAt));
         await tester.pump();
 
         // 타이머 아이콘 없음
@@ -151,7 +151,7 @@ void main() {
         final expiresAt = DateTime.now().millisecondsSinceEpoch + (5 * 1000);
 
         await tester.pumpWidget(buildTestWidget(
-          unlockExpiresAt: expiresAt,
+          themeTrialExpiresAt: expiresAt,
         ));
         await tester.pump(); // AsyncNotifier 로드 대기
 
@@ -187,7 +187,7 @@ void main() {
         final midnightMs = nextMidnight.millisecondsSinceEpoch;
 
         await tester.pumpWidget(buildTestWidget(
-          unlockExpiresAt: midnightMs,
+          themeTrialExpiresAt: midnightMs,
         ));
         await tester.pump();
 
@@ -209,7 +209,7 @@ void main() {
         final expiresAt = nonMidnight.millisecondsSinceEpoch;
 
         await tester.pumpWidget(buildTestWidget(
-          unlockExpiresAt: expiresAt,
+          themeTrialExpiresAt: expiresAt,
         ));
         await tester.pump();
 

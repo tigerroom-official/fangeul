@@ -358,7 +358,7 @@ class _DebugMonetizationPanel extends ConsumerWidget {
     final asyncState = ref.watch(monetizationNotifierProvider);
     final monState = asyncState.valueOrNull;
     final isHoneymoon = ref.watch(isHoneymoonProvider);
-    final isUnlocked = ref.watch(isRewardedUnlockActiveProvider);
+    final isUnlocked = ref.watch(isThemeTrialActiveProvider);
     final theme = Theme.of(context);
 
     final installDate = monState?.installDate ?? 'not set';
@@ -506,7 +506,7 @@ class _DebugMonetizationPanel extends ConsumerWidget {
     if (activate) {
       await ref
           .read(monetizationNotifierProvider.notifier)
-          .activateRewardedUnlock();
+          .activateThemeTrial();
     } else {
       try {
         await ref.read(monetizationNotifierProvider.future);
@@ -514,7 +514,7 @@ class _DebugMonetizationPanel extends ConsumerWidget {
       final current = ref.read(monetizationNotifierProvider).valueOrNull;
       if (current == null) return;
       final repo = ref.read(monetizationRepositoryProvider);
-      await repo.save(current.copyWith(unlockExpiresAt: 0));
+      await repo.save(current.copyWith(themeTrialExpiresAt: 0));
       ref.invalidate(monetizationNotifierProvider);
     }
   }

@@ -27,12 +27,12 @@ final ttsServiceProvider = Provider<TtsService>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef TtsServiceRef = ProviderRef<TtsService>;
-String _$canPlayTtsHash() => r'cca3785aecef9b4e097212f8f7e988f17f339346';
+String _$canPlayTtsHash() => r'f5656d02dea5503c97da7a6a5ae415131d70bbed';
 
 /// TTS 재생 가능 여부 편의 Provider.
 ///
-/// 허니문 중이거나 보상형 해금 활성 시 무제한.
-/// 그 외에는 일일 5회 제한 ([MonetizationNotifier.dailyTtsLimit]).
+/// 허니문 중이면 무제한. 그 외에는 일일 5회 제한
+/// ([MonetizationNotifier.dailyTtsLimit]). 해금 경로는 IAP만.
 ///
 /// Copied from [canPlayTts].
 @ProviderFor(canPlayTts)
@@ -48,7 +48,7 @@ final canPlayTtsProvider = AutoDisposeProvider<bool>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef CanPlayTtsRef = AutoDisposeProviderRef<bool>;
-String _$playTtsHash() => r'e77609b47c7df74c2a7f61b3cfcdcbdfe524aac5';
+String _$playTtsHash() => r'5d3f7c08d16d0fc88ec1b510921f45dbc1f8302e';
 
 /// Copied from Dart SDK
 class _SystemHash {

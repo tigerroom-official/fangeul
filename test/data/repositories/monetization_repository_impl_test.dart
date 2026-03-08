@@ -40,7 +40,7 @@ void main() {
       const state = MonetizationState(
         honeymoonActive: false,
         ttsPlayCount: 5,
-        unlockExpiresAt: 1709568000000,
+        themeTrialExpiresAt: 1709568000000,
       );
       when(() => mockDataSource.save(any())).thenAnswer((_) async {});
 

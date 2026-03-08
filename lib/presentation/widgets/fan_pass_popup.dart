@@ -72,7 +72,7 @@ class _FanPassPopupState extends ConsumerState<FanPassPopup>
   @override
   Widget build(BuildContext context) {
     final asyncState = ref.watch(monetizationNotifierProvider);
-    final expiresAt = asyncState.valueOrNull?.unlockExpiresAt ?? 0;
+    final expiresAt = asyncState.valueOrNull?.themeTrialExpiresAt ?? 0;
     final remainingText = _formatRemainingTime(expiresAt);
     final theme = Theme.of(context);
     final l = L.of(context);

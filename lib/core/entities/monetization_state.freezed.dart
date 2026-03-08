@@ -44,8 +44,12 @@ mixin _$MonetizationState {
   /// 마지막 광고 시청 타임스탬프 (ms since epoch). 5분 쿨다운 검증용.
   int get lastAdWatchTimestamp => throw _privateConstructorUsedError;
 
-  /// 해금 만료 타임스탬프 (ms since epoch). 0 = 해금 없음.
-  int get unlockExpiresAt => throw _privateConstructorUsedError;
+  /// 테마 체험 만료 타임스탬프 (ms since epoch). 0 = 체험 없음.
+  ///
+  /// 보상형 광고 시청 시 프리미엄 테마 24시간 체험 기간.
+  /// 구: unlockExpiresAt (4시간 기능 해금) → 피벗 후 테마 체험 전용.
+  @JsonKey(name: 'unlockExpiresAt')
+  int get themeTrialExpiresAt => throw _privateConstructorUsedError;
 
   /// 구매 완료된 팩 ID 목록.
   List<String> get purchasedPackIds => throw _privateConstructorUsedError;
@@ -90,7 +94,7 @@ abstract class $MonetizationStateCopyWith<$Res> {
       int adWatchCount,
       String? adLastResetDate,
       int lastAdWatchTimestamp,
-      int unlockExpiresAt,
+      @JsonKey(name: 'unlockExpiresAt') int themeTrialExpiresAt,
       List<String> purchasedPackIds,
       List<String> ddayUnlockedDates,
       bool hasThemePicker,
@@ -122,7 +126,7 @@ class _$MonetizationStateCopyWithImpl<$Res, $Val extends MonetizationState>
     Object? adWatchCount = null,
     Object? adLastResetDate = freezed,
     Object? lastAdWatchTimestamp = null,
-    Object? unlockExpiresAt = null,
+    Object? themeTrialExpiresAt = null,
     Object? purchasedPackIds = null,
     Object? ddayUnlockedDates = null,
     Object? hasThemePicker = null,
@@ -163,9 +167,9 @@ class _$MonetizationStateCopyWithImpl<$Res, $Val extends MonetizationState>
           ? _value.lastAdWatchTimestamp
           : lastAdWatchTimestamp // ignore: cast_nullable_to_non_nullable
               as int,
-      unlockExpiresAt: null == unlockExpiresAt
-          ? _value.unlockExpiresAt
-          : unlockExpiresAt // ignore: cast_nullable_to_non_nullable
+      themeTrialExpiresAt: null == themeTrialExpiresAt
+          ? _value.themeTrialExpiresAt
+          : themeTrialExpiresAt // ignore: cast_nullable_to_non_nullable
               as int,
       purchasedPackIds: null == purchasedPackIds
           ? _value.purchasedPackIds
@@ -212,7 +216,7 @@ abstract class _$$MonetizationStateImplCopyWith<$Res>
       int adWatchCount,
       String? adLastResetDate,
       int lastAdWatchTimestamp,
-      int unlockExpiresAt,
+      @JsonKey(name: 'unlockExpiresAt') int themeTrialExpiresAt,
       List<String> purchasedPackIds,
       List<String> ddayUnlockedDates,
       bool hasThemePicker,
@@ -242,7 +246,7 @@ class __$$MonetizationStateImplCopyWithImpl<$Res>
     Object? adWatchCount = null,
     Object? adLastResetDate = freezed,
     Object? lastAdWatchTimestamp = null,
-    Object? unlockExpiresAt = null,
+    Object? themeTrialExpiresAt = null,
     Object? purchasedPackIds = null,
     Object? ddayUnlockedDates = null,
     Object? hasThemePicker = null,
@@ -283,9 +287,9 @@ class __$$MonetizationStateImplCopyWithImpl<$Res>
           ? _value.lastAdWatchTimestamp
           : lastAdWatchTimestamp // ignore: cast_nullable_to_non_nullable
               as int,
-      unlockExpiresAt: null == unlockExpiresAt
-          ? _value.unlockExpiresAt
-          : unlockExpiresAt // ignore: cast_nullable_to_non_nullable
+      themeTrialExpiresAt: null == themeTrialExpiresAt
+          ? _value.themeTrialExpiresAt
+          : themeTrialExpiresAt // ignore: cast_nullable_to_non_nullable
               as int,
       purchasedPackIds: null == purchasedPackIds
           ? _value._purchasedPackIds
@@ -327,7 +331,7 @@ class _$MonetizationStateImpl implements _MonetizationState {
       this.adWatchCount = 0,
       this.adLastResetDate,
       this.lastAdWatchTimestamp = 0,
-      this.unlockExpiresAt = 0,
+      @JsonKey(name: 'unlockExpiresAt') this.themeTrialExpiresAt = 0,
       final List<String> purchasedPackIds = const [],
       final List<String> ddayUnlockedDates = const [],
       this.hasThemePicker = false,
@@ -377,10 +381,13 @@ class _$MonetizationStateImpl implements _MonetizationState {
   @JsonKey()
   final int lastAdWatchTimestamp;
 
-  /// 해금 만료 타임스탬프 (ms since epoch). 0 = 해금 없음.
+  /// 테마 체험 만료 타임스탬프 (ms since epoch). 0 = 체험 없음.
+  ///
+  /// 보상형 광고 시청 시 프리미엄 테마 24시간 체험 기간.
+  /// 구: unlockExpiresAt (4시간 기능 해금) → 피벗 후 테마 체험 전용.
   @override
-  @JsonKey()
-  final int unlockExpiresAt;
+  @JsonKey(name: 'unlockExpiresAt')
+  final int themeTrialExpiresAt;
 
   /// 구매 완료된 팩 ID 목록.
   final List<String> _purchasedPackIds;
@@ -430,7 +437,7 @@ class _$MonetizationStateImpl implements _MonetizationState {
 
   @override
   String toString() {
-    return 'MonetizationState(installDate: $installDate, honeymoonActive: $honeymoonActive, favoriteSlotLimit: $favoriteSlotLimit, ttsPlayCount: $ttsPlayCount, ttsLastResetDate: $ttsLastResetDate, adWatchCount: $adWatchCount, adLastResetDate: $adLastResetDate, lastAdWatchTimestamp: $lastAdWatchTimestamp, unlockExpiresAt: $unlockExpiresAt, purchasedPackIds: $purchasedPackIds, ddayUnlockedDates: $ddayUnlockedDates, hasThemePicker: $hasThemePicker, hasThemeSlots: $hasThemeSlots, themeUnlocked: $themeUnlocked, lastTimestamp: $lastTimestamp)';
+    return 'MonetizationState(installDate: $installDate, honeymoonActive: $honeymoonActive, favoriteSlotLimit: $favoriteSlotLimit, ttsPlayCount: $ttsPlayCount, ttsLastResetDate: $ttsLastResetDate, adWatchCount: $adWatchCount, adLastResetDate: $adLastResetDate, lastAdWatchTimestamp: $lastAdWatchTimestamp, themeTrialExpiresAt: $themeTrialExpiresAt, purchasedPackIds: $purchasedPackIds, ddayUnlockedDates: $ddayUnlockedDates, hasThemePicker: $hasThemePicker, hasThemeSlots: $hasThemeSlots, themeUnlocked: $themeUnlocked, lastTimestamp: $lastTimestamp)';
   }
 
   @override
@@ -454,8 +461,8 @@ class _$MonetizationStateImpl implements _MonetizationState {
                 other.adLastResetDate == adLastResetDate) &&
             (identical(other.lastAdWatchTimestamp, lastAdWatchTimestamp) ||
                 other.lastAdWatchTimestamp == lastAdWatchTimestamp) &&
-            (identical(other.unlockExpiresAt, unlockExpiresAt) ||
-                other.unlockExpiresAt == unlockExpiresAt) &&
+            (identical(other.themeTrialExpiresAt, themeTrialExpiresAt) ||
+                other.themeTrialExpiresAt == themeTrialExpiresAt) &&
             const DeepCollectionEquality()
                 .equals(other._purchasedPackIds, _purchasedPackIds) &&
             const DeepCollectionEquality()
@@ -482,7 +489,7 @@ class _$MonetizationStateImpl implements _MonetizationState {
       adWatchCount,
       adLastResetDate,
       lastAdWatchTimestamp,
-      unlockExpiresAt,
+      themeTrialExpiresAt,
       const DeepCollectionEquality().hash(_purchasedPackIds),
       const DeepCollectionEquality().hash(_ddayUnlockedDates),
       hasThemePicker,
@@ -517,7 +524,7 @@ abstract class _MonetizationState implements MonetizationState {
       final int adWatchCount,
       final String? adLastResetDate,
       final int lastAdWatchTimestamp,
-      final int unlockExpiresAt,
+      @JsonKey(name: 'unlockExpiresAt') final int themeTrialExpiresAt,
       final List<String> purchasedPackIds,
       final List<String> ddayUnlockedDates,
       final bool hasThemePicker,
@@ -560,9 +567,13 @@ abstract class _MonetizationState implements MonetizationState {
   @override
   int get lastAdWatchTimestamp;
 
-  /// 해금 만료 타임스탬프 (ms since epoch). 0 = 해금 없음.
+  /// 테마 체험 만료 타임스탬프 (ms since epoch). 0 = 체험 없음.
+  ///
+  /// 보상형 광고 시청 시 프리미엄 테마 24시간 체험 기간.
+  /// 구: unlockExpiresAt (4시간 기능 해금) → 피벗 후 테마 체험 전용.
   @override
-  int get unlockExpiresAt;
+  @JsonKey(name: 'unlockExpiresAt')
+  int get themeTrialExpiresAt;
 
   /// 구매 완료된 팩 ID 목록.
   @override

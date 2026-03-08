@@ -298,7 +298,7 @@ void main() {
               monetizationNotifierProvider.overrideWith(() {
                 return _TestMonetizationNotifier(MonetizationState(
                   honeymoonActive: false,
-                  unlockExpiresAt: futureExpiry,
+                  themeTrialExpiresAt: futureExpiry,
                 ));
               }),
             ],
@@ -342,7 +342,7 @@ void main() {
               monetizationNotifierProvider.overrideWith(() {
                 return _TestMonetizationNotifier(MonetizationState(
                   honeymoonActive: false,
-                  unlockExpiresAt: futureExpiry,
+                  themeTrialExpiresAt: futureExpiry,
                 ));
               }),
             ],
@@ -392,7 +392,7 @@ void main() {
               monetizationNotifierProvider.overrideWith(() {
                 return _TestMonetizationNotifier(MonetizationState(
                   honeymoonActive: false,
-                  unlockExpiresAt: futureExpiry,
+                  themeTrialExpiresAt: futureExpiry,
                 ));
               }),
             ],
@@ -438,7 +438,7 @@ void main() {
               monetizationNotifierProvider.overrideWith(() {
                 return _TestMonetizationNotifier(MonetizationState(
                   honeymoonActive: false,
-                  unlockExpiresAt: futureExpiry,
+                  themeTrialExpiresAt: futureExpiry,
                 ));
               }),
             ],
@@ -486,7 +486,7 @@ void main() {
               monetizationNotifierProvider.overrideWith(() {
                 return _TestMonetizationNotifier(MonetizationState(
                   honeymoonActive: false,
-                  unlockExpiresAt: futureExpiry,
+                  themeTrialExpiresAt: futureExpiry,
                 ));
               }),
             ],

@@ -35,8 +35,11 @@ class MonetizationState with _$MonetizationState {
     /// 마지막 광고 시청 타임스탬프 (ms since epoch). 5분 쿨다운 검증용.
     @Default(0) int lastAdWatchTimestamp,
 
-    /// 해금 만료 타임스탬프 (ms since epoch). 0 = 해금 없음.
-    @Default(0) int unlockExpiresAt,
+    /// 테마 체험 만료 타임스탬프 (ms since epoch). 0 = 체험 없음.
+    ///
+    /// 보상형 광고 시청 시 프리미엄 테마 24시간 체험 기간.
+    /// 구: unlockExpiresAt (4시간 기능 해금) → 피벗 후 테마 체험 전용.
+    @Default(0) @JsonKey(name: 'unlockExpiresAt') int themeTrialExpiresAt,
 
     /// 구매 완료된 팩 ID 목록.
     @Default([]) List<String> purchasedPackIds,

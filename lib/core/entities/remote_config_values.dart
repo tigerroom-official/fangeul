@@ -9,7 +9,7 @@ class RemoteConfigValues {
     this.defaultSlotLimit = 5,
     this.dailyAdLimit = 3,
     this.adCooldownMinutes = 5,
-    this.unlockDurationHours = 4,
+    this.unlockDurationHours = 24,
     this.dailyTtsLimit = 5,
     this.conversionTriggerAdCount = 3,
   });
@@ -26,7 +26,7 @@ class RemoteConfigValues {
   /// 광고 시청 간 쿨다운 (분).
   final int adCooldownMinutes;
 
-  /// 보상형 해금 지속 시간 (시간).
+  /// 테마 체험 지속 시간 (시간). 보상형 광고 시청 시 프리미엄 테마 체험 기간.
   final int unlockDurationHours;
 
   /// 일일 TTS 재생 제한 횟수.

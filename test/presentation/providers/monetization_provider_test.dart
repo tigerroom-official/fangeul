@@ -78,7 +78,7 @@ void main() {
         expect(state.installDate, matches(RegExp(r'^\d{4}-\d{2}-\d{2}$')));
         expect(state.purchasedPackIds, isEmpty);
         expect(state.ddayUnlockedDates, isEmpty);
-        expect(state.unlockExpiresAt, 0);
+        expect(state.themeTrialExpiresAt, 0);
       });
 
       test('should end honeymoon when install date is 14+ days ago', () async {
@@ -222,32 +222,32 @@ void main() {
       });
     });
 
-    group('activateRewardedUnlock', () {
-      test('should set approximately 4h expiry', () async {
+    group('activateThemeTrial', () {
+      test('should set theme trial expiry', () async {
         setUpDefault();
 
         final notifier = container.read(monetizationNotifierProvider.notifier);
         await container.read(monetizationNotifierProvider.future);
 
         final beforeMs = DateTime.now().millisecondsSinceEpoch;
-        await notifier.activateRewardedUnlock();
+        await notifier.activateThemeTrial();
         final afterMs = DateTime.now().millisecondsSinceEpoch;
 
         final state = await container.read(monetizationNotifierProvider.future);
-        expect(state.unlockExpiresAt, greaterThan(0));
+        expect(state.themeTrialExpiresAt, greaterThan(0));
 
         // 만료 시각이 now+4h 이내인지 확인 (자정이 더 빠를 수 있음)
-        final maxExpiry = afterMs + MonetizationNotifier.unlockDurationMs;
-        expect(state.unlockExpiresAt, lessThanOrEqualTo(maxExpiry));
+        final maxExpiry = afterMs + MonetizationNotifier.themeTrialDurationMs;
+        expect(state.themeTrialExpiresAt, lessThanOrEqualTo(maxExpiry));
         expect(
-          state.unlockExpiresAt,
+          state.themeTrialExpiresAt,
           greaterThanOrEqualTo(beforeMs),
         );
       });
     });
 
-    group('computeUnlockExpiry', () {
-      test('should cap at midnight when less than 4h away', () async {
+    group('computeThemeTrialExpiry', () {
+      test('should cap at midnight when trial end is past midnight', () async {
         setUpDefault();
 
         final notifier = container.read(monetizationNotifierProvider.notifier);
@@ -255,25 +255,55 @@ void main() {
 
         // 23:00 → 자정까지 1시간, 4시간보다 짧음
         final lateNight = DateTime(2026, 3, 4, 23, 0, 0);
-        final expiry = notifier.computeUnlockExpiry(now: lateNight);
+        final expiry = notifier.computeThemeTrialExpiry(now: lateNight);
 
         final nextMidnight = DateTime(2026, 3, 5);
         expect(expiry, nextMidnight.millisecondsSinceEpoch);
       });
 
-      test('should use 4h when midnight is further away', () async {
+      test('should use trial duration when midnight is further away', () async {
+        // 24h 기본 기간에서는 자정이 항상 먼저 오므로,
+        // 짧은 기간(2h)으로 override하여 duration < 자정까지 경로 테스트.
+        mockStorage = MockFlutterSecureStorage();
+        when(() => mockStorage.read(key: any(named: 'key')))
+            .thenAnswer((_) async => null);
+        when(() => mockStorage.write(
+            key: any(named: 'key'),
+            value: any(named: 'value'))).thenAnswer((_) async {});
+
+        container = ProviderContainer(
+          overrides: [
+            monetizationStorageProvider.overrideWithValue(mockStorage),
+            remoteConfigValuesProvider.overrideWithValue(
+              const RemoteConfigValues(unlockDurationHours: 2),
+            ),
+          ],
+        );
+
+        final notifier = container.read(monetizationNotifierProvider.notifier);
+        await container.read(monetizationNotifierProvider.future);
+
+        // 10:00 → 자정까지 14시간, 2시간보다 김 → duration 사용
+        final morning = DateTime(2026, 3, 4, 10, 0, 0);
+        final expiry = notifier.computeThemeTrialExpiry(now: morning);
+
+        final expectedMs =
+            morning.millisecondsSinceEpoch + (2 * 60 * 60 * 1000);
+        expect(expiry, expectedMs);
+      });
+
+      test('should always cap at midnight with default 24h duration', () async {
         setUpDefault();
 
         final notifier = container.read(monetizationNotifierProvider.notifier);
         await container.read(monetizationNotifierProvider.future);
 
-        // 10:00 → 자정까지 14시간, 4시간보다 김
-        final morning = DateTime(2026, 3, 4, 10, 0, 0);
-        final expiry = notifier.computeUnlockExpiry(now: morning);
+        // 어떤 시각이든 24h 기간은 항상 자정을 넘기므로 자정 캡 적용
+        final afternoon = DateTime(2026, 3, 4, 14, 0, 0);
+        final expiry = notifier.computeThemeTrialExpiry(now: afternoon);
 
-        final expectedMs = morning.millisecondsSinceEpoch +
-            MonetizationNotifier.unlockDurationMs;
-        expect(expiry, expectedMs);
+        final nextMidnight = DateTime(2026, 3, 5);
+        expect(expiry, nextMidnight.millisecondsSinceEpoch);
       });
     });
 
@@ -425,7 +455,7 @@ void main() {
         expect(result, true);
         final state = await container.read(monetizationNotifierProvider.future);
         expect(state.ddayUnlockedDates, contains('2026-03-04_bts_debut'));
-        expect(state.unlockExpiresAt, greaterThan(0));
+        expect(state.themeTrialExpiresAt, greaterThan(0));
       });
 
       test('should prevent duplicate event', () async {
@@ -594,29 +624,29 @@ void main() {
         expect(notifier.isTtsLimitReached, false);
       });
 
-      test('isUnlockActive should return true when not expired', () async {
+      test('isThemeTrialActive should return true when not expired', () async {
         final futureExpiry =
             DateTime.now().millisecondsSinceEpoch + (2 * 60 * 60 * 1000);
         setUpWithState(MonetizationState(
-          unlockExpiresAt: futureExpiry,
+          themeTrialExpiresAt: futureExpiry,
         ));
 
         final notifier = container.read(monetizationNotifierProvider.notifier);
         await container.read(monetizationNotifierProvider.future);
 
-        expect(notifier.isUnlockActive, true);
+        expect(notifier.isThemeTrialActive, true);
       });
 
-      test('isUnlockActive should return false when expired', () async {
+      test('isThemeTrialActive should return false when expired', () async {
         final pastExpiry = DateTime.now().millisecondsSinceEpoch - (1000);
         setUpWithState(MonetizationState(
-          unlockExpiresAt: pastExpiry,
+          themeTrialExpiresAt: pastExpiry,
         ));
 
         final notifier = container.read(monetizationNotifierProvider.notifier);
         await container.read(monetizationNotifierProvider.future);
 
-        expect(notifier.isUnlockActive, false);
+        expect(notifier.isThemeTrialActive, false);
       });
     });
   });
@@ -675,7 +705,7 @@ void main() {
       expect(container.read(isHoneymoonProvider), false);
     });
 
-    test('isRewardedUnlockActive should reflect unlock state', () async {
+    test('isThemeTrialActive should reflect trial state', () async {
       mockStorage = MockFlutterSecureStorage();
       when(() => mockStorage.read(key: any(named: 'key')))
           .thenAnswer((_) async => null);
@@ -695,14 +725,14 @@ void main() {
       await container.read(monetizationNotifierProvider.future);
 
       // 초기: 해금 없음
-      final sub = container.listen(isRewardedUnlockActiveProvider, (_, __) {});
+      final sub = container.listen(isThemeTrialActiveProvider, (_, __) {});
       addTearDown(sub.close);
 
-      expect(container.read(isRewardedUnlockActiveProvider), false);
+      expect(container.read(isThemeTrialActiveProvider), false);
 
-      await notifier.activateRewardedUnlock();
+      await notifier.activateThemeTrial();
 
-      expect(container.read(isRewardedUnlockActiveProvider), true);
+      expect(container.read(isThemeTrialActiveProvider), true);
     });
 
     test('isThemeUnlocked should reflect unlockThemePalettes', () async {

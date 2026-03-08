@@ -10,7 +10,7 @@ void main() {
       expect(values.defaultSlotLimit, 5);
       expect(values.dailyAdLimit, 3);
       expect(values.adCooldownMinutes, 5);
-      expect(values.unlockDurationHours, 4);
+      expect(values.unlockDurationHours, 24);
       expect(values.dailyTtsLimit, 5);
       expect(values.conversionTriggerAdCount, 3);
     });

@@ -45,8 +45,8 @@ class MonetizationNotifier extends _$MonetizationNotifier {
   /// 광고 시청 간 쿨다운 기본값 (5분, 밀리초, 외부 참조용).
   static const int cooldownMs = 5 * 60 * 1000;
 
-  /// 보상형 해금 지속 시간 기본값 (4시간, 밀리초, 외부 참조용).
-  static const int unlockDurationMs = 4 * 60 * 60 * 1000;
+  /// 테마 체험 지속 시간 기본값 (24시간, 밀리초, 외부 참조용).
+  static const int themeTrialDurationMs = 24 * 60 * 60 * 1000;
 
   /// 허니문 종료 후 기본 즐겨찾기 슬롯 제한 (기본값, 외부 참조용).
   static const int defaultSlotLimit = 5;
@@ -60,8 +60,8 @@ class MonetizationNotifier extends _$MonetizationNotifier {
   /// Remote Config에서 읽은 쿨다운 (밀리초).
   late int _cooldownMs;
 
-  /// Remote Config에서 읽은 해금 지속 시간 (밀리초).
-  late int _unlockDurationMs;
+  /// Remote Config에서 읽은 테마 체험 지속 시간 (밀리초).
+  late int _themeTrialDurationMs;
 
   /// Remote Config에서 읽은 기본 슬롯 제한.
   late int _defaultSlotLimit;
@@ -83,7 +83,7 @@ class MonetizationNotifier extends _$MonetizationNotifier {
     final config = ref.read(remoteConfigValuesProvider);
     _dailyAdLimit = config.dailyAdLimit;
     _cooldownMs = config.adCooldownMinutes * 60 * 1000;
-    _unlockDurationMs = config.unlockDurationHours * 60 * 60 * 1000;
+    _themeTrialDurationMs = config.unlockDurationHours * 60 * 60 * 1000;
     _defaultSlotLimit = config.defaultSlotLimit;
     _dailyTtsLimit = config.dailyTtsLimit;
 
@@ -184,10 +184,11 @@ class MonetizationNotifier extends _$MonetizationNotifier {
     return true;
   }
 
-  /// 보상형 해금을 활성화한다.
+  /// 프리미엄 테마 체험을 활성화한다.
   ///
-  /// 만료 시각은 현재 + 4시간 또는 자정 중 빠른 쪽으로 설정.
-  Future<void> activateRewardedUnlock() async {
+  /// 만료 시각은 현재 + 24시간 또는 자정 중 빠른 쪽으로 설정.
+  /// 보상형 광고 시청 후 호출. 체험 중 프리미엄 테마를 사용할 수 있다.
+  Future<void> activateThemeTrial() async {
     try {
       await future;
     } catch (_) {}
@@ -195,19 +196,19 @@ class MonetizationNotifier extends _$MonetizationNotifier {
     if (current == null) return;
 
     final now = DateTime.now();
-    final expiry = computeUnlockExpiry(now: now);
-    await _updateState(current.copyWith(unlockExpiresAt: expiry));
+    final expiry = computeThemeTrialExpiry(now: now);
+    await _updateState(current.copyWith(themeTrialExpiresAt: expiry));
   }
 
-  /// 해금 만료 타임스탬프를 계산한다.
+  /// 테마 체험 만료 타임스탬프를 계산한다.
   ///
-  /// min(현재 + 4시간, 다음 자정) 밀리초 반환.
+  /// min(현재 + 체험 시간, 다음 자정) 밀리초 반환.
   @visibleForTesting
-  int computeUnlockExpiry({required DateTime now}) {
-    final fourHoursLater = now.millisecondsSinceEpoch + _unlockDurationMs;
+  int computeThemeTrialExpiry({required DateTime now}) {
+    final trialEnd = now.millisecondsSinceEpoch + _themeTrialDurationMs;
     final nextMidnight = DateTime(now.year, now.month, now.day + 1);
     final midnightMs = nextMidnight.millisecondsSinceEpoch;
-    return fourHoursLater < midnightMs ? fourHoursLater : midnightMs;
+    return trialEnd < midnightMs ? trialEnd : midnightMs;
   }
 
   /// 구매 완료된 팩을 추가한다 (중복 무시).
@@ -367,7 +368,7 @@ class MonetizationNotifier extends _$MonetizationNotifier {
         twentyFourHoursLater < midnightMs ? twentyFourHoursLater : midnightMs;
     await _updateState(current.copyWith(
       ddayUnlockedDates: [...current.ddayUnlockedDates, key],
-      unlockExpiresAt: expiryMs,
+      themeTrialExpiresAt: expiryMs,
     ));
     return true;
   }
@@ -450,11 +451,11 @@ class MonetizationNotifier extends _$MonetizationNotifier {
     return current.ttsPlayCount >= _dailyTtsLimit;
   }
 
-  /// 보상형 해금이 현재 활성 상태인지 확인한다.
-  bool get isUnlockActive {
+  /// 테마 체험이 현재 활성 상태인지 확인한다.
+  bool get isThemeTrialActive {
     final current = state.valueOrNull;
     if (current == null) return false;
-    return current.unlockExpiresAt > DateTime.now().millisecondsSinceEpoch;
+    return current.themeTrialExpiresAt > DateTime.now().millisecondsSinceEpoch;
   }
 }
 
@@ -465,17 +466,17 @@ bool isHoneymoon(IsHoneymoonRef ref) {
   return asyncState.valueOrNull?.honeymoonActive ?? true;
 }
 
-/// 보상형 해금 활성 여부 편의 Provider.
+/// 테마 체험 활성 여부 편의 Provider.
 ///
-/// 해금 만료 시각에 자동 invalidation하여 배너 표시를 즉시 갱신한다.
+/// 체험 만료 시각에 자동 invalidation하여 배너 표시를 즉시 갱신한다.
 @riverpod
-bool isRewardedUnlockActive(IsRewardedUnlockActiveRef ref) {
+bool isThemeTrialActive(IsThemeTrialActiveRef ref) {
   final asyncState = ref.watch(monetizationNotifierProvider);
   final monetizationState = asyncState.valueOrNull;
   if (monetizationState == null) return false;
 
   final now = DateTime.now().millisecondsSinceEpoch;
-  final expiresAt = monetizationState.unlockExpiresAt;
+  final expiresAt = monetizationState.themeTrialExpiresAt;
   final remainingMs = expiresAt - now;
 
   if (remainingMs <= 0) return false;

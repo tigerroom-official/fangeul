@@ -139,7 +139,7 @@ class FanPassButtonState extends ConsumerState<FanPassButton> {
     final success = await notifier.recordAdWatch();
     if (!success) return;
 
-    await notifier.activateRewardedUnlock();
+    await notifier.activateThemeTrial();
     ref.read(sessionBannerHiddenProvider.notifier).hide();
 
     if (!mounted) return;

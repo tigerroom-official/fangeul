@@ -70,28 +70,28 @@ final isHoneymoonProvider = AutoDisposeProvider<bool>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef IsHoneymoonRef = AutoDisposeProviderRef<bool>;
-String _$isRewardedUnlockActiveHash() =>
-    r'6b86218aa55ecb1872b5892c8221ac0cfbb36ed4';
+String _$isThemeTrialActiveHash() =>
+    r'7f0c2040e4fd5cb9779dcbf1f0e70184cd7d6f7b';
 
-/// 보상형 해금 활성 여부 편의 Provider.
+/// 테마 체험 활성 여부 편의 Provider.
 ///
-/// 해금 만료 시각에 자동 invalidation하여 배너 표시를 즉시 갱신한다.
+/// 체험 만료 시각에 자동 invalidation하여 배너 표시를 즉시 갱신한다.
 ///
-/// Copied from [isRewardedUnlockActive].
-@ProviderFor(isRewardedUnlockActive)
-final isRewardedUnlockActiveProvider = AutoDisposeProvider<bool>.internal(
-  isRewardedUnlockActive,
-  name: r'isRewardedUnlockActiveProvider',
+/// Copied from [isThemeTrialActive].
+@ProviderFor(isThemeTrialActive)
+final isThemeTrialActiveProvider = AutoDisposeProvider<bool>.internal(
+  isThemeTrialActive,
+  name: r'isThemeTrialActiveProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$isRewardedUnlockActiveHash,
+      : _$isThemeTrialActiveHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef IsRewardedUnlockActiveRef = AutoDisposeProviderRef<bool>;
+typedef IsThemeTrialActiveRef = AutoDisposeProviderRef<bool>;
 String _$isThemeUnlockedHash() => r'facc28554d8f0e800f48fff8c8680a8fa0476f35';
 
 /// 보상형 광고로 테마 팔레트가 영구 해금되었는지 여부.
@@ -169,7 +169,7 @@ final favoriteSlotLimitProvider = AutoDisposeProvider<int>.internal(
 // ignore: unused_element
 typedef FavoriteSlotLimitRef = AutoDisposeProviderRef<int>;
 String _$monetizationNotifierHash() =>
-    r'1acff7d3244e92d0dba9d0f543ce0c2e84b5b327';
+    r'5d12c75ddd2751cecde1f47d89687fd1539fd076';
 
 /// 수익화 상태를 관리하는 중앙 Notifier.
 ///

@@ -100,13 +100,15 @@ void main() {
       expect(container.read(canPlayTtsProvider), true);
     });
 
-    test('should return true when rewarded unlock is active', () async {
+    test('should respect TTS limit even during theme trial', () async {
       final futureExpiry =
           DateTime.now().millisecondsSinceEpoch + (2 * 60 * 60 * 1000);
       setUpWithState(MonetizationState(
         installDate: todayStr(),
         honeymoonActive: false,
-        unlockExpiresAt: futureExpiry,
+        themeTrialExpiresAt: futureExpiry,
+        ttsPlayCount: 5,
+        ttsLastResetDate: todayStr(),
       ));
 
       await container.read(monetizationNotifierProvider.future);
@@ -114,7 +116,8 @@ void main() {
       final sub = container.listen(canPlayTtsProvider, (_, __) {});
       addTearDown(sub.close);
 
-      expect(container.read(canPlayTtsProvider), true);
+      // 테마 체험이 활성이어도 TTS 제한은 적용됨 (IAP만 해금)
+      expect(container.read(canPlayTtsProvider), false);
     });
 
     test('should return true when TTS limit not reached', () async {
@@ -184,13 +187,13 @@ void main() {
       expect(state.ttsPlayCount, 0);
     });
 
-    test('should play without counting when rewarded unlock active', () async {
+    test('should count TTS plays during theme trial (not unlimited)', () async {
       final futureExpiry =
           DateTime.now().millisecondsSinceEpoch + (2 * 60 * 60 * 1000);
       setUpWithState(MonetizationState(
         installDate: todayStr(),
         honeymoonActive: false,
-        unlockExpiresAt: futureExpiry,
+        themeTrialExpiresAt: futureExpiry,
       ));
 
       await container.read(monetizationNotifierProvider.future);
@@ -201,8 +204,9 @@ void main() {
       expect(result, true);
       verify(() => mockTts.play('https://example.com/audio.mp3')).called(1);
 
+      // 테마 체험 중에도 TTS 카운트 소모됨 (해금 경로 = IAP만)
       final state = await container.read(monetizationNotifierProvider.future);
-      expect(state.ttsPlayCount, 0);
+      expect(state.ttsPlayCount, 1);
     });
 
     test('should increment count when not honeymoon and not unlocked',

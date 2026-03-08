@@ -21,12 +21,11 @@ TtsService ttsService(TtsServiceRef ref) {
 
 /// TTS 재생 가능 여부 편의 Provider.
 ///
-/// 허니문 중이거나 보상형 해금 활성 시 무제한.
-/// 그 외에는 일일 5회 제한 ([MonetizationNotifier.dailyTtsLimit]).
+/// 허니문 중이면 무제한. 그 외에는 일일 5회 제한
+/// ([MonetizationNotifier.dailyTtsLimit]). 해금 경로는 IAP만.
 @riverpod
 bool canPlayTts(CanPlayTtsRef ref) {
   if (ref.watch(isHoneymoonProvider)) return true;
-  if (ref.watch(isRewardedUnlockActiveProvider)) return true;
 
   final state = ref.watch(monetizationNotifierProvider).valueOrNull;
   if (state == null) return false;
@@ -50,11 +49,10 @@ bool canPlayTts(CanPlayTtsRef ref) {
 @riverpod
 Future<bool> playTts(PlayTtsRef ref, String source) async {
   final honeymoon = ref.read(isHoneymoonProvider);
-  final isUnlocked = ref.read(isRewardedUnlockActiveProvider);
   final tts = ref.read(ttsServiceProvider);
 
-  // 허니문 또는 보상형 해금 시 카운트 소모 없이 재생
-  if (honeymoon || isUnlocked) {
+  // 허니문 시 카운트 소모 없이 재생
+  if (honeymoon) {
     try {
       await tts.play(source);
       return true;

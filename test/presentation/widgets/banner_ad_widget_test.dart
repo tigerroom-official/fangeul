@@ -22,7 +22,7 @@ void main() {
   /// BannerAd는 네이티브 SDK가 필요하므로 테스트 환경에서 로드 불가.
   /// Provider override로 조건부 표시 로직만 검증한다.
   Widget buildTestWidget({
-    bool isRewardedUnlockActive = false,
+    bool isThemeTrialActive = false,
     bool sessionBannerHidden = false,
     MonetizationState? monetizationState,
   }) {
@@ -35,8 +35,8 @@ void main() {
 
     return ProviderScope(
       overrides: [
-        isRewardedUnlockActiveProvider
-            .overrideWithValue(isRewardedUnlockActive),
+        isThemeTrialActiveProvider
+            .overrideWithValue(isThemeTrialActive),
         sessionBannerHiddenProvider.overrideWith(() {
           final notifier = _TestSessionBannerHidden(sessionBannerHidden);
           return notifier;
@@ -95,7 +95,7 @@ void main() {
       'should render SizedBox.shrink when rewarded unlock is active',
       (tester) async {
         await tester.pumpWidget(
-          buildTestWidget(isRewardedUnlockActive: true),
+          buildTestWidget(isThemeTrialActive: true),
         );
         await tester.pump();
 

@@ -62,7 +62,7 @@ class BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
 
     final monState = ref.read(monetizationNotifierProvider).valueOrNull;
     final daysSince = _daysSinceInstall(monState);
-    final isUnlocked = ref.read(isRewardedUnlockActiveProvider);
+    final isUnlocked = ref.read(isThemeTrialActiveProvider);
     final sessionHidden = ref.read(sessionBannerHiddenProvider);
     final hasPurchase = monState?.purchasedPackIds.isNotEmpty ?? false;
 
@@ -98,7 +98,7 @@ class BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
   @override
   Widget build(BuildContext context) {
     final monState = ref.watch(monetizationNotifierProvider).valueOrNull;
-    final isUnlocked = ref.watch(isRewardedUnlockActiveProvider);
+    final isUnlocked = ref.watch(isThemeTrialActiveProvider);
     final sessionHidden = ref.watch(sessionBannerHiddenProvider);
     final hasPurchase = monState?.purchasedPackIds.isNotEmpty ?? false;
 

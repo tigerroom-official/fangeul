@@ -17,7 +17,7 @@ void main() {
       expect(state.adWatchCount, 0);
       expect(state.adLastResetDate, isNull);
       expect(state.lastAdWatchTimestamp, 0);
-      expect(state.unlockExpiresAt, 0);
+      expect(state.themeTrialExpiresAt, 0);
       expect(state.purchasedPackIds, isEmpty);
       expect(state.ddayUnlockedDates, isEmpty);
       expect(state.lastTimestamp, 0);
@@ -33,7 +33,7 @@ void main() {
         adWatchCount: 2,
         adLastResetDate: '2026-03-04',
         lastAdWatchTimestamp: 1709500000000,
-        unlockExpiresAt: 1709514400000,
+        themeTrialExpiresAt: 1709514400000,
         purchasedPackIds: ['color_purple_dream', 'color_golden_hour'],
         ddayUnlockedDates: ['2026-03-09_evt001', '2026-06-13_evt002'],
         lastTimestamp: 1709500001000,
