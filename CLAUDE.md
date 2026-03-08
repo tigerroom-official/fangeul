@@ -53,6 +53,6 @@ dart format --set-exit-if-changed .  # 포맷 검증
 | `docs/HANDOFF.md` | 세션 핸드오프 (최신 작업 상태) |
 
 ## 현재 작업 상태
-> 마지막 핸드오프: 2026-03-07 23:48
+> 마지막 핸드오프: 2026-03-08 18:08
 > 상세: `docs/HANDOFF.md` 참조
-> 요약: 최애색 UX 오버홀 + HSL→HCT 엔진 교체 P0 완료 (741 tests). 다음: P1(자유 글자색 피커, 팔레트 확장) 또는 Phase 7 릴리즈 BLOCK.
+> 요약: 테마 커스터마이징 전면 업그레이드 완료 (2D HCT 피커, 슬롯, 3-SKU IAP, brightnessOverride, chroma 85%). 804 tests. 다음: 브랜치 머지 + IAP subtitle + Phase 7 릴리즈 BLOCK.

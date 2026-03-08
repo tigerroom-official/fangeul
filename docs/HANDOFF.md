@@ -1,8 +1,8 @@
 # Fangeul — Session Handoff
 
-BASE_COMMIT: 1cbf9b6 (이전 핸드오프)
-HANDOFF_COMMIT: 389beee
-BRANCH: main
+BASE_COMMIT: 389beee (이전 핸드오프)
+HANDOFF_COMMIT: 6b6e33b
+BRANCH: fix/custom-theme-seed-anchored
 
 ---
 
@@ -24,19 +24,20 @@ BRANCH: main
 - 설정 화면: 언어 변경 + 리뷰/문의 메뉴 + overflow 수정 + 스플래시 깜빡임 수정 + AGP 업그레이드 (2026-03-06)
 - 로케일별 번역 표시 수정 + 컨버터 힌트 탭별 전환 + 스마트 기본 필터 + v1.0.0 (2026-03-06)
 - AdMob 광고 배치 + 팬 컬러 테마 커스터마이징 13 tasks (2026-03-07)
-- **최애색(Choeae Color) UX 오버홀 — 15 tasks + 5 review fixes (2026-03-07)**
-  - `FangeulColors` 삭제, 모든 위젯 → `colorScheme` 토큰 사용
-  - `CustomSchemeBuilder` HSL→HCT 엔진 교체 + `PaletteRegistry` 10개 수동 팔레트
-  - `ChoeaeColorConfig` sealed class: `.palette(packId)` | `.custom(seedColor, textColorOverride?)`
-  - 4 UX 이슈: 즐겨찾기 SnackBar, Undo 인라인, 자동 스크롤, 색상 체감 강화
-- **HSL→HCT 엔진 교체 (P0 완료) (2026-03-07)**
-  - `_SchemeVividTint extends DynamicScheme` — neutral chroma 24 (M3 기본 6의 4배)
-  - Hue-only 슬라이더 간소화 (Sat/Light 슬라이더 ~130줄 삭제)
-  - 4-domain Codex 병렬 리뷰 + 5개 수정 (누락 슬롯, stale assertion, edge case)
-  - 741 tests pass, flutter analyze clean
+- 최애색(Choeae Color) UX 오버홀 — 15 tasks + 5 review fixes (2026-03-07)
+- HSL→HCT 엔진 교체 P0 완료 (2026-03-07)
+- **테마 커스터마이징 전면 업그레이드 (2026-03-08)**
+  - 2D HCT 사각형 피커 (hue 바 + chroma×tone 2D 영역)
+  - 테마 슬롯 시스템 (4슬롯: 1 기본 + 3 IAP)
+  - 3-SKU IAP 구조 (custom_color ₩990 + slots ₩990 + bundle ₩1,500)
+  - TextColorPickerDialog: hex 입력 + WCAG 3단계 + chroma 슬라이더
+  - brightnessOverride: 커스텀 테마 밝기 토글 (시스템 모드 독립)
+  - Surface tone parallel shift + chroma 85% preservation
+  - Codex 전체 브랜치 리뷰 + P0/P1/P2 수정
+  - 804 tests pass
 
 ### 활성 작업
-없음. P0 완료, main 머지됨.
+없음. 브랜치 `fix/custom-theme-seed-anchored`에 전체 작업 완료, main 머지 대기.
 
 ### 보류/백로그 — MVP 출시 후
 - **v1.1 기능**: 한글 퍼즐(Wordle 스타일), 한글 카드 컬렉션(가챠)
@@ -50,57 +51,68 @@ BRANCH: main
 - AdMob SSV (Server-Side Verification)
 - converter_screen 배너 = 리텐션 데이터로 결정 (v1.1)
 - 즐겨찾기 포화/TTS 한도 FanPassButton 트리거 (v1.1)
-- 비영어/비한국어 arb에 테마 피커 l10n 키 번역 추가
+- IAP 구매 UI subtitle 추가 (패널 합의 P0 — 미구현)
+- IAP 번들 "추천" 라벨 추가 (패널 합의 P0 — 미구현)
+- IAP "테마 슬롯 3개" → "최애 테마 3개 저장" 문구 리프레이밍 (P2)
 
 ---
 
 ## 작업 요약
 
-최애색 UX 오버홀 P0 완료: HSL→HCT 엔진 교체(`_SchemeVividTint` neutral chroma 24), hue-only 슬라이더 간소화(Sat/Light 제거), 4-domain Codex 병렬 리뷰. P1(자유 글자색 피커, 팔레트 20-25개 확장)은 미구현 — 논의 범위 대비 구현은 P0 엔진 레벨에 한정.
+테마 커스터마이징 전면 업그레이드: 2D HCT 피커, 테마 슬롯(4개), 3-SKU IAP, TextColorPickerDialog(hex+WCAG+chroma), brightnessOverride(시스템 모드 독립), surface chroma 85% preservation + hex 입력 키보드 크래시 수정 + 팔레트 그리드 간격 축소 + 슬롯 ⋮ 힌트 아이콘. Codex 전체 브랜치 리뷰 완료.
 
 ## 완료된 작업
 
-- [x] 최애색 UX 오버홀 15 tasks + 5 review fixes (이전 세션 전반부)
-- [x] HSL→HCT `CustomSchemeBuilder` 리라이트 — `_SchemeVividTint extends DynamicScheme` (4cb5d43)
-- [x] Hue-only 슬라이더 간소화 — `_SaturationSlider`, `_LightnessSlider` 삭제 (4cb5d43)
-- [x] `fangeul_theme_test.dart` HCT 기반 assertion 갱신 (4cb5d43)
-- [x] `custom_scheme_builder_test.dart` 전체 리라이트 — 36 tests (HCT hue fidelity, chroma, WCAG) (4cb5d43)
-- [x] Codex 4-domain 병렬 리뷰 → Major 4건 수정 (누락 14 ColorScheme 슬롯, textColorOverride 3개 추가, stale HSL assertion, pubspec `any`) (4cb5d43)
-- [x] white/black seed edge case 테스트 추가 (4cb5d43)
-- [x] `pubspec.yaml` — `material_color_utilities: any` 추가 (4cb5d43)
+- [x] 2D HCT 사각형 피커 (`hct_color_picker.dart` 신규) — chroma×tone 2D 영역 + hue 바 (d53f6cd)
+- [x] 테마 슬롯 시스템 (`theme_slot.dart`, `theme_slot_provider.dart` 신규) — 4슬롯, SharedPrefs JSON 직렬화 (d53f6cd)
+- [x] 3-SKU IAP (`iap_products.dart`) — themeCustomColor/themeSlots/themeBundle SKU (d53f6cd)
+- [x] MonetizationState `hasThemeSlots` 필드 + provider (d53f6cd)
+- [x] `theme_picker_sheet.dart` 대규모 리팩터 — 슬롯 UI, IAP 섹션, 2D 피커 통합 (d53f6cd)
+- [x] TextColorPickerDialog — hex 입력 + WCAG 3단계 표시 + chroma 슬라이더 (8566e07)
+- [x] brightnessOverride — `ChoeaeColorConfig.custom(brightnessOverride:)` 필드 + 시스템 ThemeMode 분리 (b3bbaec, 7e70bb7)
+- [x] Brightness 토글 UI + ThemeMode 비활성화 로직 (1059356)
+- [x] Surface tone parallel shift — 밝기 토글 시 tone 범위 전환 (c6049b6)
+- [x] Codex 전체 브랜치 리뷰 → P0 3건/P1 3건/P2 1건 수정 (d96a89b)
+- [x] Surface chroma 85% preservation — `seedChroma * 0.85` (기존 0.4 capped 28) (fa91675)
+- [x] Hex 입력 키보드 크래시 수정 — `TextInputType.visiblePassword` (fa91675)
+- [x] 슬롯 rename 다이얼로그 크래시 수정 — `addPostFrameCallback` 타이밍 (fa91675)
+- [x] 팔레트 그리드 간격 축소 — `aspectRatio 1.0`, `mainAxisSpacing 2` (fa91675)
+- [x] 슬롯 ⋮ 아이콘 힌트 — 롱프레스 발견성 향상 (fa91675)
+- [x] l10n 키 추가 — 7개 언어 (테마 슬롯, 밝기 토글, IAP, WCAG 등)
+- [x] 테스트 804개 전체 통과 + flutter analyze clean
 
 ## 진행 중인 작업
 없음.
 
 ## 핵심 교훈
 
-- ★ DynamicScheme 서브클래스에서 `sourceColorHct`를 `super.sourceColorHct`로 변환 불가 — initializer에서 참조하므로 명시적 파라미터 필수 (`use_super_parameters` lint 무시)
-- ★ `Color(s.primary)` 패턴으로 DynamicScheme getter→Color 변환 — `MaterialDynamicColors.primary.getArgb(scheme)` 대신 간결
-- ★ HCT 엔진 교체는 내부 품질 개선 (지각균일, hue 보존) — 시각적 드라마틱 변화는 P1(자유 피커, 팔레트 확장)에서 발생
-- ★ `Variant.vibrant` 선택: `isFidelity`/`isMonochrome` 분기와 무관하여 커스텀 팔레트 오버라이드 안전
-- ★ pubspec에 Flutter SDK 전이 의존성은 `any` 사용 — 버전 고정 시 SDK 업그레이드에서 충돌
-- ★ 4-domain 병렬 Codex 리뷰: 누락된 14개 ColorScheme 슬롯(surfaceDim, shadow, scrim 등) 독립 발견 — 단일 리뷰로는 놓칠 수 있는 완성도 이슈
+- ★ `seedChroma * 0.4` capped at 28은 고채도 seed(금색 chroma~82)를 무채색화 → `seedChroma * 0.85` (min 8.0)로 "내가 고른 색 = 앱 색" 실현
+- ★ Uniform chroma (tone-only hierarchy): surface 컨테이너 간 chroma 차이 제거 → 카드 경계는 outlineVariant로 구분
+- ★ Flutter `KeyDownEvent` assertion crash: IME composition 모드에서 중복 키 이벤트 → `TextInputType.visiblePassword`로 IME 비활성화
+- ★ Bottom sheet pop → dialog show 타이밍 충돌: `WidgetsBinding.instance.addPostFrameCallback`으로 한 프레임 지연
+- ★ `double.clamp(lower, upper)` — lower > upper 시 `Invalid argument(s)` → 조건분기 `raw < 8.0 ? 8.0 : raw` 사용
+- ★ brightnessOverride 라우팅: 커스텀 테마는 seed tone에서 밝기 자동 유도, `themeMode: ThemeMode.light/dark` 강제 + 동일 테마를 light/dark 양 슬롯에 할당
 
 ## 다음 단계
 
-### 1순위: 최애색 P1 — 시각적 체감 개선 (논의 문서의 미구현 부분)
-1. **자유 글자색 피커 + 자동 추천** — 배경 HCT 기반 WCAG 4.5:1 필터 3-5색 자동 제안, "+" 버튼 → hue wheel + tone slider
-2. **PaletteRegistry 20-25개 확장** — 웜톤/쿨톤 균형, K-pop 감성 네이밍 (라벤더 무드, 선셋 바이브, 민트 서머 등)
-3. **프리뷰 UI** — 실제 화면 미리보기 (키보드 레이아웃 등)
-4. 참조: `docs/discussions/2026-03-07-picker-ux-redesign.md`, `docs/discussions/2026-03-07-theme-ux-supplementary.md`
+### 1순위: 브랜치 머지 + IAP UI 마무리
+1. **`fix/custom-theme-seed-anchored` → main 머지** — 804 tests pass, review 완료
+2. **IAP subtitle 추가** — 각 구매 버튼에 기능 설명 한 줄 (패널 합의 P0 미구현)
+3. **번들 "추천" 라벨** — `themePickerRecommended` l10n 키 활용
 
 ### 2순위: Phase 7 릴리즈 BLOCK 항목 (출시 필수)
-1. **릴리즈 서명 설정** — keystore 생성 + `android/app/build.gradle` signingConfigs.release 구성
-2. **프로덕션 AdMob ID** — `lib/services/ad_ids.dart`의 placeholder(`ca-app-pub-XXXX`) 교체
-3. **ProGuard/R8 활성화** — `minifyEnabled true` + `shrinkResources true` + `proguard-rules.pro`
-4. **Google Play Console** — 앱 등록 + IAP 상품 가격 설정 + 스크린샷/리스팅
+1. **릴리즈 서명 설정** — keystore 생성 + signingConfigs.release
+2. **프로덕션 AdMob ID** — placeholder 교체
+3. **ProGuard/R8 활성화** — minifyEnabled + shrinkResources
+4. **Google Play Console** — 앱 등록 + IAP 상품 가격 설정
 
 ### 3순위: 출시 후 빠른 개선
-- 비영어 arb에 테마 피커 l10n 키 번역 (es/id/pt/th/vi)
+- PaletteRegistry 20-25개 확장 (웜톤/쿨톤 균형)
+- 프리뷰 UI — 실제 화면 미리보기
+- IAP "테마 슬롯 3개" → "최애 테마 3개 저장" 리프레이밍 (P2)
 - P1: 핸들 좌측 멤버 이름 노출
 - share_card_painter.dart UiStrings → l10n
 - Firebase Analytics 이벤트 대시보드 구성
-- 테마 피커에 보상형 광고 팔레트 해금 연동 (FanPassButton)
 
 ### 4순위: v1.1 로드맵
 - 한글 퍼즐 (Wordle 스타일)
@@ -112,96 +124,61 @@ BRANCH: main
 
 | 결정 | 이유 |
 |------|------|
-| `_SchemeVividTint` neutral chroma 24 | M3 기본 6의 4배 — surface에 seed hue를 강하게 반영하여 색 체감 |
-| `Variant.vibrant` 베이스 | `isFidelity`/`isMonochrome` 분기와 무관, 커스텀 팔레트 오버라이드 안전 |
-| `material_color_utilities: any` | Flutter SDK 전이 의존성 — 버전 고정 시 SDK 업그레이드 충돌 |
-| Hue-only 슬라이더 (Sat/Light 제거) | HSL 극단값으로 검정/흰색/회색 생성 문제 제거 + 진입장벽 낮춤 |
-| P0/P1 분리 실행 | 엔진 교체(P0)를 먼저 안정화 후 시각적 UX(P1) 진행 |
+| Surface chroma 85% (기존 40%) | 고채도 seed에서 "내가 고른 색 = 앱 색" 체감 불가 → 85%로 상향 |
+| Uniform chroma (tone-only) | 컨테이너 간 chroma 차이는 시각적 혼란 → tone만으로 계층 분리 |
+| `visiblePassword` 키보드 타입 | IME composition이 Flutter KeyEvent 시스템과 충돌 → composition 비활성화 |
+| brightnessOverride 독립 라우팅 | 커스텀 seed tone에서 자동 유도된 밝기를 유저가 반전 가능 (시스템 모드와 독립) |
+| 3-SKU IAP 분리 | 피커+슬롯 독립 구매 + 번들 24% 할인 → ARPU 극대화 |
+| 슬롯 ⋮ 아이콘만 (텍스트 힌트 없음) | 10대~20대 타겟은 구구절절한 설명보다 직관적 아이콘 선호 |
 
 ## 참고 컨텍스트
 
-- 전문가 패널 토론 (HSL→HCT 결정): `docs/discussions/2026-03-07-picker-ux-redesign.md`
+- 테마 커스터마이징 오버홀 계획: `docs/plans/2026-03-07-choeae-color-ux-overhaul.md`
+- Surface 계층 + 슬롯 패널 합의: `docs/discussions/2026-03-08-theme-surface-hierarchy-slots.md`
+- IAP 3-SKU 구조 패널: `docs/discussions/2026-03-08-theme-iap-structure-panel.md`
+- 밝기 독립 패널: `docs/discussions/2026-03-08-theme-brightness-independence-panel.md`
+- 글자색 hex+WCAG 패널: `docs/discussions/2026-03-08-text-color-hex-2d-picker-wcag-panel.md`
+- HCT 피커 UX 재설계: `docs/discussions/2026-03-07-picker-ux-redesign.md`
 - 최애색 시스템 근본 재설계: `docs/discussions/2026-03-07-theme-ux-supplementary.md`
-- 표면 틴팅 + IAP 차별화: `docs/discussions/2026-03-07-theme-ux-differentiation.md`
-- 구현 계획서: `docs/plans/2026-03-07-choeae-color-ux-overhaul.md`
 
 ## 커밋 히스토리 (이번 세션)
 
 ```
-4cb5d43 feat: replace HSL theme engine with HCT (material_color_utilities)
-6f1fccb fix: app_test nav bar assertion matches real wiring (surfaceContainerLowest)
-4b638ba fix: Color.fromARGB float misuse + preview restore undo pollution
-75b17a9 fix: ref.watch in build() + surfaceContainerLowest for nav bar (Claude review)
-d5ddd28 fix: validate palette ID in selectPalette (Codex review)
-5421b18 chore: fix unused import warnings in test files
-3bcc193 refactor: remove legacy theme code (ThemeColorNotifier, ThemePalettes, FangeulColors)
-2c67bd3 feat: add choeae color palette l10n keys for 7 languages
-72d67f8 refactor: replace keyboard_key hardcoded colors with theme tokens
-c7cd2fb refactor: migrate theme_picker_sheet to ChoeaeColorNotifier + PaletteRegistry
-198bbd3 refactor: migrate settings_screen to ChoeaeColorNotifier
-7190408 refactor: migrate app.dart to FangeulTheme.build() + ChoeaeColorNotifier
-0a07e5d fix: Codex review — auto-contrast on* colors, threshold, scroll guard
-ee50461 feat: add ChoeaeColorNotifier — palette/custom state management with undo
-84bd248 refactor: FangeulTheme.build() single entry point
-841922d feat: add ChoeaeColorConfig freezed sealed class
-a6cdaf8 feat: add PalettePack + PaletteRegistry — 10 manual ColorScheme palettes
-0da472c feat: add CustomSchemeBuilder — fromSeed() bypass for choeae color
-3fb40fa feat: auto-scroll to custom picker on expand
-6a0c555 fix: inline undo icon in title row — zero layout shift
-623163f fix: show snackbar when favorite slot limit reached
-d5865b1 feat: theme UX overhaul — component themes, permanent unlock, preview, undo
-a6e3664 feat: add debug monetization panel in settings (kDebugMode only)
-e3abc80 fix: Codex review fixes + l10n translations + FanPass palette wiring
-89ef7a0 docs: update HANDOFF.md — AdMob wiring + fan color theme customization complete
+fa91675 fix: chroma 85% preservation + hex input keyboard crash + palette spacing + slot hints
+d96a89b fix: cross-review P0/P1/P2 — dartdoc, contrast guard, write serialization
+1059356 feat: brightness toggle in picker + disable ThemeMode when override active
+8566e07 feat: TextColorPickerDialog hex input + WCAG 3-level + chroma slider
+7e70bb7 feat: brightness override routing in FangeulApp
+b3bbaec feat: brightnessOverride — custom theme mode independence
+c6049b6 feat: surface tone parallel shift + narrow textColorOverride scope
+bbdef5d fix: add theme slots debug toggle + reduce palette grid spacing
+d53f6cd feat: theme customization overhaul — 2D HCT picker, slots, 3-SKU IAP
+b048ed7 chore: session handoff — HSL→HCT P0 완료, P1 미구현 정리
 ```
 
 ## 수정한 파일
 
 ```
-docs/HANDOFF.md
-docs/discussions/2026-03-07-theme-ux-differentiation.md (NEW)
-lib/app.dart
-lib/core/entities/monetization_state.dart
-lib/core/entities/monetization_state.freezed.dart
-lib/core/entities/monetization_state.g.dart
-lib/l10n/app_en.arb, app_es.arb, app_id.arb, app_ko.arb, app_pt.arb, app_th.arb, app_vi.arb
-lib/l10n/app_localizations*.dart (7개 언어)
-lib/main.dart
-lib/presentation/providers/choeae_color_provider.dart (NEW)
-lib/presentation/providers/choeae_color_provider.g.dart (NEW)
-lib/presentation/providers/monetization_provider.dart
-lib/presentation/providers/theme_providers.dart
-lib/presentation/screens/home_screen.dart
-lib/presentation/screens/mini_converter_screen.dart
-lib/presentation/screens/settings_screen.dart
-lib/presentation/theme/choeae_color_config.dart (NEW)
-lib/presentation/theme/choeae_color_config.freezed.dart (NEW)
-lib/presentation/theme/custom_scheme_builder.dart (NEW — HCT engine)
-lib/presentation/theme/fangeul_colors.dart (DELETED)
-lib/presentation/theme/fangeul_theme.dart (simplified)
-lib/presentation/theme/palette_pack.dart (NEW)
-lib/presentation/theme/palette_registry.dart (NEW)
-lib/presentation/theme/theme_palettes.dart (DELETED)
-lib/presentation/widgets/banner_ad_widget.dart
-lib/presentation/widgets/compact_phrase_list.dart
-lib/presentation/widgets/compact_phrase_tile.dart
-lib/presentation/widgets/keyboard_key.dart
-lib/presentation/widgets/korean_keyboard.dart
-lib/presentation/widgets/multi_mode_keyboard.dart
-lib/presentation/widgets/phrase_card.dart
-lib/presentation/widgets/share_card_painter.dart
-lib/presentation/widgets/theme_picker_sheet.dart
-pubspec.lock, pubspec.yaml
-test/app_test.dart (NEW)
-test/core/entities/monetization_state_test.dart
-test/presentation/providers/choeae_color_provider_test.dart (NEW)
-test/presentation/providers/monetization_provider_test.dart
-test/presentation/providers/theme_providers_test.dart
-test/presentation/theme/choeae_color_config_test.dart (NEW)
-test/presentation/theme/custom_scheme_builder_test.dart (NEW)
-test/presentation/theme/fangeul_theme_dynamic_test.dart (DELETED)
-test/presentation/theme/fangeul_theme_test.dart (NEW)
-test/presentation/theme/palette_registry_test.dart (NEW)
+ 56 files changed, 4162 insertions(+), 617 deletions(-)
+
+주요 신규:
+ lib/presentation/widgets/hct_color_picker.dart (NEW — 2D HCT 피커)
+ lib/presentation/widgets/text_color_picker_dialog.dart (NEW — hex+WCAG 글자색 피커)
+ lib/presentation/models/theme_slot.dart (NEW — 슬롯 모델)
+ lib/presentation/providers/theme_slot_provider.dart (NEW — 슬롯 상태관리)
+ test/presentation/models/theme_slot_test.dart (NEW — 278줄)
+ test/presentation/providers/theme_slot_provider_test.dart (NEW — 189줄)
+ test/presentation/widgets/text_color_picker_test.dart (NEW — 117줄)
+ test/presentation/widgets/iap_purchase_section_test.dart (NEW — 54줄)
+
+주요 수정:
+ lib/presentation/widgets/theme_picker_sheet.dart (1074줄 대규모 리팩터)
+ lib/presentation/theme/custom_scheme_builder.dart (chroma 85% + tone shift)
+ lib/presentation/theme/choeae_color_config.dart (brightnessOverride 필드)
+ lib/presentation/providers/choeae_color_provider.dart (brightness 라우팅)
+ lib/app.dart (ThemeMode 분기)
+ lib/services/iap_products.dart (3-SKU)
+ lib/l10n/app_*.arb (7개 언어 × 18+ 키)
 ```
 
 ## 세션 히스토리
@@ -228,4 +205,5 @@ test/presentation/theme/palette_registry_test.dart (NEW)
 | 설정+UX수정 | 언어 변경/리뷰/문의 메뉴 + overflow 수정 + 스플래시 깜빡임 수정 + AGP 업그레이드 → 627 tests |
 | 번역+필터+실기기 | 로케일별 번역 수정 + 스마트 필터 + 간편모드 번역 + 실기기 테스트 → 624 tests |
 | AdMob+테마 | AdMob 배치 + 팬 컬러 테마 커스터마이징 13 tasks → 641 tests |
-| **최애색+HCT** | 최애색 UX 오버홀 15 tasks + HSL→HCT P0 엔진 교체 + Codex 4-domain 리뷰 → 741 tests |
+| 최애색+HCT | 최애색 UX 오버홀 15 tasks + HSL→HCT P0 엔진 교체 + Codex 4-domain 리뷰 → 741 tests |
+| **테마 오버홀** | 2D HCT 피커 + 슬롯 + 3-SKU IAP + brightnessOverride + chroma 85% + hex 크래시 수정 → 804 tests |
