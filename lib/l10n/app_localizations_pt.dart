@@ -624,7 +624,13 @@ class LPt extends L {
   String get iapThemeCustomColor => 'Fundo e texto personalizados';
 
   @override
-  String get iapThemeSlots => '3 Slots de tema';
+  String get iapThemeCustomColorSub => 'Crie seu próprio tema com qualquer cor';
+
+  @override
+  String get iapThemeSlots => 'Salvar 3 temas favoritos';
+
+  @override
+  String get iapThemeSlotsSub => 'Alterne entre temas de show, diário e grupo';
 
   @override
   String get iapThemeBundle => 'Pacote completo (24% desc.)';

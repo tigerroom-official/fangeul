@@ -609,7 +609,13 @@ class LKo extends L {
   String get iapThemeCustomColor => '배경·글자색 자유선택';
 
   @override
-  String get iapThemeSlots => '테마 슬롯 3개';
+  String get iapThemeCustomColorSub => '원하는 색으로 나만의 테마를 만들어요';
+
+  @override
+  String get iapThemeSlots => '최애 테마 3개 저장';
+
+  @override
+  String get iapThemeSlotsSub => '콘서트용·일상용·그룹별 테마 전환';
 
   @override
   String get iapThemeBundle => '전체 번들 (24% 할인)';

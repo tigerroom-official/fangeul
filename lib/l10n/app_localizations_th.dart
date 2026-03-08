@@ -617,7 +617,13 @@ class LTh extends L {
   String get iapThemeCustomColor => 'พื้นหลังและตัวอักษรกำหนดเอง';
 
   @override
-  String get iapThemeSlots => 'สล็อตธีม 3 ช่อง';
+  String get iapThemeCustomColorSub => 'สร้างธีมของคุณเองด้วยสีอะไรก็ได้';
+
+  @override
+  String get iapThemeSlots => 'บันทึก 3 ธีมโปรด';
+
+  @override
+  String get iapThemeSlotsSub => 'สลับระหว่างธีมคอนเสิร์ต ประจำวัน และกลุ่ม';
 
   @override
   String get iapThemeBundle => 'แพ็กเกจเต็ม (ลด 24%)';

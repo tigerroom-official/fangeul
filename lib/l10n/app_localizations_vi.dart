@@ -621,7 +621,14 @@ class LVi extends L {
   String get iapThemeCustomColor => 'Nền & chữ tùy chỉnh';
 
   @override
-  String get iapThemeSlots => '3 Slot chủ đề';
+  String get iapThemeCustomColorSub => 'Tạo chủ đề riêng với bất kỳ màu nào';
+
+  @override
+  String get iapThemeSlots => 'Lưu 3 chủ đề yêu thích';
+
+  @override
+  String get iapThemeSlotsSub =>
+      'Chuyển đổi giữa chủ đề biểu diễn, hàng ngày & nhóm';
 
   @override
   String get iapThemeBundle => 'Gói đầy đủ (giảm 24%)';

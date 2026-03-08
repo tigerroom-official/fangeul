@@ -621,7 +621,13 @@ class LEn extends L {
   String get iapThemeCustomColor => 'Custom background & text';
 
   @override
-  String get iapThemeSlots => '3 Theme Slots';
+  String get iapThemeCustomColorSub => 'Create your own theme with any color';
+
+  @override
+  String get iapThemeSlots => 'Save 3 favorite themes';
+
+  @override
+  String get iapThemeSlotsSub => 'Switch between concert, daily & group themes';
 
   @override
   String get iapThemeBundle => 'Full Bundle (24% off)';

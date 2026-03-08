@@ -1241,11 +1241,23 @@ abstract class L {
   /// **'배경·글자색 자유선택'**
   String get iapThemeCustomColor;
 
+  /// No description provided for @iapThemeCustomColorSub.
+  ///
+  /// In ko, this message translates to:
+  /// **'원하는 색으로 나만의 테마를 만들어요'**
+  String get iapThemeCustomColorSub;
+
   /// No description provided for @iapThemeSlots.
   ///
   /// In ko, this message translates to:
-  /// **'테마 슬롯 3개'**
+  /// **'최애 테마 3개 저장'**
   String get iapThemeSlots;
+
+  /// No description provided for @iapThemeSlotsSub.
+  ///
+  /// In ko, this message translates to:
+  /// **'콘서트용·일상용·그룹별 테마 전환'**
+  String get iapThemeSlotsSub;
 
   /// No description provided for @iapThemeBundle.
   ///

@@ -625,7 +625,15 @@ class LEs extends L {
   String get iapThemeCustomColor => 'Fondo y texto personalizados';
 
   @override
-  String get iapThemeSlots => '3 Slots de tema';
+  String get iapThemeCustomColorSub =>
+      'Crea tu propio tema con cualquier color';
+
+  @override
+  String get iapThemeSlots => 'Guardar 3 temas favoritos';
+
+  @override
+  String get iapThemeSlotsSub =>
+      'Cambia entre temas de concierto, diario y grupo';
 
   @override
   String get iapThemeBundle => 'Paquete completo (24% desc.)';

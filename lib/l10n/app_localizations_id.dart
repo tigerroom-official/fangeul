@@ -624,7 +624,14 @@ class LId extends L {
   String get iapThemeCustomColor => 'Latar & teks kustom';
 
   @override
-  String get iapThemeSlots => '3 Slot Tema';
+  String get iapThemeCustomColorSub =>
+      'Buat tema sendiri dengan warna apa saja';
+
+  @override
+  String get iapThemeSlots => 'Simpan 3 tema favorit';
+
+  @override
+  String get iapThemeSlotsSub => 'Ganti antara tema konser, harian & grup';
 
   @override
   String get iapThemeBundle => 'Paket lengkap (diskon 24%)';
