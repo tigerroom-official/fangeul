@@ -320,7 +320,9 @@
   "themePickerRecommended": "추천",
   "themePickerFreePickerTitle": "자유 글자색 선택",
   "iapThemeCustomColor": "배경·글자색 자유선택",
-  "iapThemeSlots": "테마 슬롯 3개",
+  "iapThemeCustomColorSub": "원하는 색으로 나만의 테마를 만들어요",
+  "iapThemeSlots": "최애 테마 3개 저장",
+  "iapThemeSlotsSub": "콘서트용·일상용·그룹별 테마 전환",
   "iapThemeBundle": "전체 번들 (24% 할인)",
   "iapThemeBundleSave": "₩480 절약"
 }

@@ -239,7 +239,9 @@
   "themePickerRecommended": "Rekomendasi",
   "themePickerFreePickerTitle": "Warna teks kustom",
   "iapThemeCustomColor": "Latar & teks kustom",
-  "iapThemeSlots": "3 Slot Tema",
+  "iapThemeCustomColorSub": "Buat tema sendiri dengan warna apa saja",
+  "iapThemeSlots": "Simpan 3 tema favorit",
+  "iapThemeSlotsSub": "Ganti antara tema konser, harian & grup",
   "iapThemeBundle": "Paket lengkap (diskon 24%)",
   "iapThemeBundleSave": "Hemat ₩480"
 }

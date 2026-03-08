@@ -1525,6 +1525,7 @@ class _IapPurchaseSection extends ConsumerWidget {
             _IapButton(
               icon: Icons.palette_outlined,
               label: l.iapThemeCustomColor,
+              subtitle: l.iapThemeCustomColorSub,
               price: iapSvc.getProduct(IapProducts.themeCustomColor)?.price,
               onTap: () => iapSvc.buyPack(IapProducts.themeCustomColor),
               theme: theme,
@@ -1535,6 +1536,7 @@ class _IapPurchaseSection extends ConsumerWidget {
             _IapButton(
               icon: Icons.grid_view_rounded,
               label: l.iapThemeSlots,
+              subtitle: l.iapThemeSlotsSub,
               price: iapSvc.getProduct(IapProducts.themeSlots)?.price,
               onTap: () => iapSvc.buyPack(IapProducts.themeSlots),
               theme: theme,
@@ -1546,9 +1548,10 @@ class _IapPurchaseSection extends ConsumerWidget {
             _IapButton(
               icon: Icons.auto_awesome,
               label: l.iapThemeBundle,
-              price: iapSvc.getProduct(IapProducts.themeBundle)?.price,
               subtitle: l.iapThemeBundleSave,
+              badge: l.themePickerRecommended,
               isHighlighted: true,
+              price: iapSvc.getProduct(IapProducts.themeBundle)?.price,
               onTap: () => iapSvc.buyPack(IapProducts.themeBundle),
               theme: theme,
             ),
@@ -1568,6 +1571,7 @@ class _IapButton extends StatelessWidget {
     required this.theme,
     this.price,
     this.subtitle,
+    this.badge,
     this.isHighlighted = false,
   });
 
@@ -1575,6 +1579,7 @@ class _IapButton extends StatelessWidget {
   final String label;
   final String? price;
   final String? subtitle;
+  final String? badge;
   final bool isHighlighted;
   final VoidCallback onTap;
   final ThemeData theme;
@@ -1611,17 +1616,46 @@ class _IapButton extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    label,
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      color: theme.colorScheme.onSurface,
-                    ),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          label,
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            color: theme.colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                      if (badge != null) ...[
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primary,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            badge!,
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: theme.colorScheme.onPrimary,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                   if (subtitle != null)
                     Text(
                       subtitle!,
                       style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.primary,
+                        color: isHighlighted
+                            ? theme.colorScheme.primary
+                            : theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
                 ],

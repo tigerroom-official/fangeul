@@ -239,7 +239,9 @@
   "themePickerRecommended": "Recommended",
   "themePickerFreePickerTitle": "Custom text color",
   "iapThemeCustomColor": "Custom background & text",
-  "iapThemeSlots": "3 Theme Slots",
+  "iapThemeCustomColorSub": "Create your own theme with any color",
+  "iapThemeSlots": "Save 3 favorite themes",
+  "iapThemeSlotsSub": "Switch between concert, daily & group themes",
   "iapThemeBundle": "Full Bundle (24% off)",
   "iapThemeBundleSave": "Save ₩480"
 }

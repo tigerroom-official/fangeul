@@ -239,7 +239,9 @@
   "themePickerRecommended": "แนะนำ",
   "themePickerFreePickerTitle": "เลือกสีตัวอักษร",
   "iapThemeCustomColor": "พื้นหลังและตัวอักษรกำหนดเอง",
-  "iapThemeSlots": "สล็อตธีม 3 ช่อง",
+  "iapThemeCustomColorSub": "สร้างธีมของคุณเองด้วยสีอะไรก็ได้",
+  "iapThemeSlots": "บันทึก 3 ธีมโปรด",
+  "iapThemeSlotsSub": "สลับระหว่างธีมคอนเสิร์ต ประจำวัน และกลุ่ม",
   "iapThemeBundle": "แพ็กเกจเต็ม (ลด 24%)",
   "iapThemeBundleSave": "ประหยัด ₩480"
 }
