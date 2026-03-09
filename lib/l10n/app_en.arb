@@ -161,9 +161,10 @@
   "conversionTriggerDismiss": "Later",
 
   "favLimitTitle": "You really love a lot of phrases!",
-  "favLimitMessage": "Save more phrases with a Fan Pass\nor keep unlimited with a Color Vibe Pack",
-  "favLimitAdButton": "Get Fan Pass",
-  "favLimitIapButton": "Browse Color Vibe Packs",
+  "favLimitMessage": "Buy any theme product to unlock\nunlimited favorites! From ₩990",
+  "favLimitButton": "Unlock Unlimited Favorites",
+  "favLimitOpenApp": "Unlock in App",
+  "favLimitDismiss": "Later",
 
   "shopPurchaseSuccess": "Purchase complete! Content unlocked",
   "shopPurchaseFailed": "Purchase failed. Please try again",
@@ -239,9 +240,9 @@
   "themePickerRecommended": "Recommended",
   "themePickerFreePickerTitle": "Custom text color",
   "iapThemeCustomColor": "Custom background & text",
-  "iapThemeCustomColorSub": "Create your own theme with any color",
+  "iapThemeCustomColorSub": "Custom color theme · Unlimited favorites",
   "iapThemeSlots": "Save 3 favorite themes",
-  "iapThemeSlotsSub": "Switch between concert, daily & group themes",
+  "iapThemeSlotsSub": "Theme slot switching · Unlimited favorites",
   "iapThemeBundle": "Full Bundle (24% off)",
-  "iapThemeBundleSave": "Save ₩480"
+  "iapThemeBundleSave": "Save ₩480 · Unlimited favorites"
 }

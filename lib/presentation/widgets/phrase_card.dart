@@ -8,6 +8,7 @@ import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/analytics_providers.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
+import 'package:fangeul/presentation/widgets/favorite_limit_feedback.dart';
 import 'package:fangeul/services/analytics_events.dart';
 
 /// 문구 카드 -- 한글 원문 + 발음 + 번역.
@@ -85,14 +86,7 @@ class PhraseCard extends ConsumerWidget {
                       .read(favoritePhrasesNotifierProvider.notifier)
                       .toggle(phrase.ko);
                   if (!added && context.mounted) {
-                    ScaffoldMessenger.of(context)
-                      ..clearSnackBars()
-                      ..showSnackBar(
-                        SnackBar(
-                          content: Text(L.of(context).favoriteLimitReached),
-                          duration: const Duration(seconds: 2),
-                        ),
-                      );
+                    showFavoriteLimitFeedback(context);
                   }
                 },
                 tooltip: L.of(context).favoriteTooltip,

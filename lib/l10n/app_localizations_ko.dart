@@ -403,13 +403,16 @@ class LKo extends L {
   String get favLimitTitle => '좋아하는 문구가 정말 많네요!';
 
   @override
-  String get favLimitMessage => '팬 패스로 더 많은 문구를 저장해보세요\n감성 컬러 팩으로 무제한 보관도 가능해요';
+  String get favLimitMessage => '아무 테마 상품 하나만 구매하면\n즐겨찾기 무제한! ₩990부터';
 
   @override
-  String get favLimitAdButton => '팬 패스 받기';
+  String get favLimitButton => '즐겨찾기 무제한 해금';
 
   @override
-  String get favLimitIapButton => '컬러 팩 구경하기';
+  String get favLimitOpenApp => '앱에서 해금';
+
+  @override
+  String get favLimitDismiss => '나중에';
 
   @override
   String get shopPurchaseSuccess => '구매 완료! 콘텐츠가 해금되었어요';
@@ -609,17 +612,17 @@ class LKo extends L {
   String get iapThemeCustomColor => '배경·글자색 자유선택';
 
   @override
-  String get iapThemeCustomColorSub => '원하는 색으로 나만의 테마를 만들어요';
+  String get iapThemeCustomColorSub => '나만의 색 테마 · 즐겨찾기 무제한';
 
   @override
   String get iapThemeSlots => '최애 테마 3개 저장';
 
   @override
-  String get iapThemeSlotsSub => '콘서트용·일상용·그룹별 테마 전환';
+  String get iapThemeSlotsSub => '테마 슬롯 전환 · 즐겨찾기 무제한';
 
   @override
   String get iapThemeBundle => '전체 번들 (24% 할인)';
 
   @override
-  String get iapThemeBundleSave => '₩480 절약';
+  String get iapThemeBundleSave => '₩480 절약 · 즐겨찾기 무제한';
 }

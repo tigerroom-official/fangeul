@@ -161,9 +161,10 @@
   "conversionTriggerDismiss": "Depois",
 
   "favLimitTitle": "Você tem muitas frases favoritas!",
-  "favLimitMessage": "Salve mais frases com o Fan Pass\nOu desbloqueie armazenamento ilimitado com um Pacote Color Vibe",
-  "favLimitAdButton": "Obter Fan Pass",
-  "favLimitIapButton": "Ver Pacotes Color Vibe",
+  "favLimitMessage": "Compre qualquer produto de tema\ne desbloqueie favoritos ilimitados! A partir de ₩990",
+  "favLimitButton": "Desbloquear favoritos ilimitados",
+  "favLimitOpenApp": "Desbloquear no app",
+  "favLimitDismiss": "Depois",
 
   "shopPurchaseSuccess": "Compra concluída! Conteúdo desbloqueado",
   "shopPurchaseFailed": "A compra falhou. Tente novamente",
@@ -239,9 +240,9 @@
   "themePickerRecommended": "Recomendado",
   "themePickerFreePickerTitle": "Cor de texto livre",
   "iapThemeCustomColor": "Fundo e texto personalizados",
-  "iapThemeCustomColorSub": "Crie seu próprio tema com qualquer cor",
+  "iapThemeCustomColorSub": "Tema de cor personalizado · Favoritos ilimitados",
   "iapThemeSlots": "Salvar 3 temas favoritos",
-  "iapThemeSlotsSub": "Alterne entre temas de show, diário e grupo",
+  "iapThemeSlotsSub": "Alternância de slots de tema · Favoritos ilimitados",
   "iapThemeBundle": "Pacote completo (24% desc.)",
-  "iapThemeBundleSave": "Economize ₩480"
+  "iapThemeBundleSave": "Economize ₩480 · Favoritos ilimitados"
 }

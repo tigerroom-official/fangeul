@@ -408,13 +408,16 @@ class LTh extends L {
 
   @override
   String get favLimitMessage =>
-      'บันทึกวลีเพิ่มด้วย Fan Pass\nหรือเก็บไม่จำกัดด้วยแพ็คสีอารมณ์';
+      'ซื้อสินค้าธีมใดก็ได้\nเพื่อปลดล็อกรายการโปรดไม่จำกัด! เริ่ม ₩990';
 
   @override
-  String get favLimitAdButton => 'รับ Fan Pass';
+  String get favLimitButton => 'ปลดล็อกรายการโปรดไม่จำกัด';
 
   @override
-  String get favLimitIapButton => 'ดูแพ็คสี';
+  String get favLimitOpenApp => 'ปลดล็อกในแอป';
+
+  @override
+  String get favLimitDismiss => 'ไว้ทีหลัง';
 
   @override
   String get shopPurchaseSuccess => 'ซื้อสำเร็จ! ปลดล็อกคอนเทนต์แล้ว';
@@ -617,17 +620,17 @@ class LTh extends L {
   String get iapThemeCustomColor => 'พื้นหลังและตัวอักษรกำหนดเอง';
 
   @override
-  String get iapThemeCustomColorSub => 'สร้างธีมของคุณเองด้วยสีอะไรก็ได้';
+  String get iapThemeCustomColorSub => 'ธีมสีกำหนดเอง · รายการโปรดไม่จำกัด';
 
   @override
   String get iapThemeSlots => 'บันทึก 3 ธีมโปรด';
 
   @override
-  String get iapThemeSlotsSub => 'สลับระหว่างธีมคอนเสิร์ต ประจำวัน และกลุ่ม';
+  String get iapThemeSlotsSub => 'สลับสล็อตธีม · รายการโปรดไม่จำกัด';
 
   @override
   String get iapThemeBundle => 'แพ็กเกจเต็ม (ลด 24%)';
 
   @override
-  String get iapThemeBundleSave => 'ประหยัด ₩480';
+  String get iapThemeBundleSave => 'ประหยัด ₩480 · รายการโปรดไม่จำกัด';
 }

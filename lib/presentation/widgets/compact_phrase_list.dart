@@ -13,6 +13,7 @@ import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/phrase_providers.dart';
 
 import 'package:fangeul/presentation/widgets/compact_phrase_tile.dart';
+import 'package:fangeul/presentation/widgets/favorite_limit_feedback.dart';
 import 'package:fangeul/presentation/widgets/copy_feedback_overlay.dart';
 import 'package:fangeul/presentation/widgets/pack_filter_chips.dart';
 import 'package:fangeul/presentation/widgets/recent_copy_tile.dart';
@@ -151,63 +152,75 @@ class _PhrasesTabState extends ConsumerState<_PhrasesTab>
     final todayAsync = ref.watch(todaySuggestedPhrasesProvider);
     final hasToday = (todayAsync.valueOrNull ?? []).isNotEmpty;
 
-    return Column(
-      children: [
-        // 팩 필터 칩 바
-        packsAsync.when(
-          data: (packs) => PackFilterChips(
-            // 템플릿 전용 팩 제외 — 마이 아이돌 칩에서만 사용
-            packs: packs
-                .where((p) => p.phrases.any((phrase) => !phrase.isTemplate))
-                .toList(),
-            isFavoritesSelected: isFavoritesSelected,
-            selectedPackId: selectedPackId,
-            onFavoritesSelected: () {
-              ref
-                  .read(compactPhraseFilterNotifierProvider.notifier)
-                  .selectFavorites();
-            },
-            onPackSelected: (packId) {
-              ref
-                  .read(compactPhraseFilterNotifierProvider.notifier)
-                  .selectPack(packId);
-            },
-            showMyIdolChip: hasIdol,
-            myIdolLabel: myIdolLabel,
-            isMyIdolSelected: isMyIdolSelected,
-            onMyIdolSelected: () {
-              ref
-                  .read(compactPhraseFilterNotifierProvider.notifier)
-                  .selectMyIdol();
-            },
-            showTodayChip: hasToday,
-            isTodaySelected: isTodaySelected,
-            onTodaySelected: () {
-              ref
-                  .read(compactPhraseFilterNotifierProvider.notifier)
-                  .selectToday();
-            },
-          ),
-          loading: () => const SizedBox(height: 36),
-          error: (_, __) => const SizedBox(height: 36),
-        ),
-        // 문구 콘텐츠
-        Expanded(
-          child: _buildPhraseContent(
-            context,
-            phrasesAsync,
-            lockedAsync,
-            useList: isFavoritesSelected || isMyIdolSelected || isTodaySelected,
-            emptyMessage: isMyIdolSelected
-                ? l.miniMyIdolEmpty
-                : isTodaySelected
-                    ? l.miniTodayEmpty
-                    : isFavoritesSelected
-                        ? l.miniFavoritesEmpty
-                        : l.miniPackEmpty,
-          ),
-        ),
-      ],
+    // 캐시 FlutterEngine 첫 프레임: MediaQuery.size가 0이라
+    // AnimatedContainer=120px → 헤더+TabBar 후 여기 높이가 ~20px.
+    // 칩(36px)이 넘치므로 높이 부족 시 빈 위젯 반환.
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxHeight < 80) {
+          return const SizedBox.shrink();
+        }
+        return Column(
+          children: [
+            // 팩 필터 칩 바
+            packsAsync.when(
+              data: (packs) => PackFilterChips(
+                // 템플릿 전용 팩 제외 — 마이 아이돌 칩에서만 사용
+                packs: packs
+                    .where(
+                        (p) => p.phrases.any((phrase) => !phrase.isTemplate))
+                    .toList(),
+                isFavoritesSelected: isFavoritesSelected,
+                selectedPackId: selectedPackId,
+                onFavoritesSelected: () {
+                  ref
+                      .read(compactPhraseFilterNotifierProvider.notifier)
+                      .selectFavorites();
+                },
+                onPackSelected: (packId) {
+                  ref
+                      .read(compactPhraseFilterNotifierProvider.notifier)
+                      .selectPack(packId);
+                },
+                showMyIdolChip: hasIdol,
+                myIdolLabel: myIdolLabel,
+                isMyIdolSelected: isMyIdolSelected,
+                onMyIdolSelected: () {
+                  ref
+                      .read(compactPhraseFilterNotifierProvider.notifier)
+                      .selectMyIdol();
+                },
+                showTodayChip: hasToday,
+                isTodaySelected: isTodaySelected,
+                onTodaySelected: () {
+                  ref
+                      .read(compactPhraseFilterNotifierProvider.notifier)
+                      .selectToday();
+                },
+              ),
+              loading: () => const SizedBox(height: 36),
+              error: (_, __) => const SizedBox(height: 36),
+            ),
+            // 문구 콘텐츠
+            Expanded(
+              child: _buildPhraseContent(
+                context,
+                phrasesAsync,
+                lockedAsync,
+                useList:
+                    isFavoritesSelected || isMyIdolSelected || isTodaySelected,
+                emptyMessage: isMyIdolSelected
+                    ? l.miniMyIdolEmpty
+                    : isTodaySelected
+                        ? l.miniTodayEmpty
+                        : isFavoritesSelected
+                            ? l.miniFavoritesEmpty
+                            : l.miniPackEmpty,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -386,14 +399,7 @@ class _PhraseCard extends ConsumerWidget {
                       .read(favoritePhrasesNotifierProvider.notifier)
                       .toggle(phrase.ko);
                   if (!added && context.mounted) {
-                    ScaffoldMessenger.of(context)
-                      ..clearSnackBars()
-                      ..showSnackBar(
-                        SnackBar(
-                          content: Text(L.of(context).favoriteLimitReached),
-                          duration: const Duration(seconds: 2),
-                        ),
-                      );
+                    showFavoriteLimitFeedback(context);
                   }
                 },
               ),

@@ -411,13 +411,16 @@ class LVi extends L {
 
   @override
   String get favLimitMessage =>
-      'Lưu thêm câu nói với Fan Pass\nHoặc mở khóa lưu trữ không giới hạn với gói màu sắc cảm xúc';
+      'Mua bất kỳ sản phẩm giao diện nào\nđể mở khóa yêu thích không giới hạn! Từ ₩990';
 
   @override
-  String get favLimitAdButton => 'Nhận Fan Pass';
+  String get favLimitButton => 'Mở khóa yêu thích không giới hạn';
 
   @override
-  String get favLimitIapButton => 'Xem gói màu sắc cảm xúc';
+  String get favLimitOpenApp => 'Mở khóa trong ứng dụng';
+
+  @override
+  String get favLimitDismiss => 'Để sau';
 
   @override
   String get shopPurchaseSuccess => 'Mua thành công! Nội dung đã được mở khóa';
@@ -621,18 +624,19 @@ class LVi extends L {
   String get iapThemeCustomColor => 'Nền & chữ tùy chỉnh';
 
   @override
-  String get iapThemeCustomColorSub => 'Tạo chủ đề riêng với bất kỳ màu nào';
+  String get iapThemeCustomColorSub =>
+      'Chủ đề màu tùy chỉnh · Yêu thích không giới hạn';
 
   @override
   String get iapThemeSlots => 'Lưu 3 chủ đề yêu thích';
 
   @override
   String get iapThemeSlotsSub =>
-      'Chuyển đổi giữa chủ đề biểu diễn, hàng ngày & nhóm';
+      'Chuyển slot chủ đề · Yêu thích không giới hạn';
 
   @override
   String get iapThemeBundle => 'Gói đầy đủ (giảm 24%)';
 
   @override
-  String get iapThemeBundleSave => 'Tiết kiệm ₩480';
+  String get iapThemeBundleSave => 'Tiết kiệm ₩480 · Yêu thích không giới hạn';
 }

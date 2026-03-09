@@ -244,6 +244,74 @@ void main() {
         expect(favorites, contains('행복해요'));
       });
 
+      test('should allow unlimited when hasThemePicker is true', () async {
+        // hasThemePicker=true → hasAnyIap=true → 무제한
+        final mockStorage = mockStorageWithState(const MonetizationState(
+          honeymoonActive: false,
+          favoriteSlotLimit: 5,
+          hasThemePicker: true,
+        ));
+
+        SharedPreferences.setMockInitialValues({
+          'favorite_phrases':
+              jsonEncode(['사랑해요', '화이팅', '보고싶어', '잘 자요', '응원해요']),
+        });
+
+        final c = ProviderContainer(
+          overrides: [
+            monetizationStorageProvider.overrideWithValue(mockStorage),
+            remoteConfigValuesProvider
+                .overrideWithValue(const RemoteConfigValues()),
+          ],
+        );
+        addTearDown(c.dispose);
+
+        c.listen(favoritePhrasesNotifierProvider, (_, __) {});
+        await c.read(monetizationNotifierProvider.future);
+        await c.read(favoritePhrasesNotifierProvider.future);
+
+        final notifier = c.read(favoritePhrasesNotifierProvider.notifier);
+        final result = await notifier.toggle('행복해요');
+        expect(result, isTrue);
+
+        final favorites = c.read(favoritePhrasesNotifierProvider).valueOrNull;
+        expect(favorites, hasLength(6));
+      });
+
+      test('should allow unlimited when hasThemeSlots is true', () async {
+        // hasThemeSlots=true → hasAnyIap=true → 무제한
+        final mockStorage = mockStorageWithState(const MonetizationState(
+          honeymoonActive: false,
+          favoriteSlotLimit: 5,
+          hasThemeSlots: true,
+        ));
+
+        SharedPreferences.setMockInitialValues({
+          'favorite_phrases':
+              jsonEncode(['사랑해요', '화이팅', '보고싶어', '잘 자요', '응원해요']),
+        });
+
+        final c = ProviderContainer(
+          overrides: [
+            monetizationStorageProvider.overrideWithValue(mockStorage),
+            remoteConfigValuesProvider
+                .overrideWithValue(const RemoteConfigValues()),
+          ],
+        );
+        addTearDown(c.dispose);
+
+        c.listen(favoritePhrasesNotifierProvider, (_, __) {});
+        await c.read(monetizationNotifierProvider.future);
+        await c.read(favoritePhrasesNotifierProvider.future);
+
+        final notifier = c.read(favoritePhrasesNotifierProvider.notifier);
+        final result = await notifier.toggle('행복해요');
+        expect(result, isTrue);
+
+        final favorites = c.read(favoritePhrasesNotifierProvider).valueOrNull;
+        expect(favorites, hasLength(6));
+      });
+
       test('should return true for toggle result on normal add', () async {
         // 제한 미도달 시 추가 성공 반환값 확인
         final mockStorage = mockStorageWithState(const MonetizationState(

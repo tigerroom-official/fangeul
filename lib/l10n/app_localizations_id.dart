@@ -412,13 +412,16 @@ class LId extends L {
 
   @override
   String get favLimitMessage =>
-      'Simpan lebih banyak frasa dengan Fan Pass\natau simpan tanpa batas dengan Paket Warna Emosi';
+      'Beli produk tema apa saja untuk\nmembuka favorit tak terbatas! Mulai ₩990';
 
   @override
-  String get favLimitAdButton => 'Dapatkan Fan Pass';
+  String get favLimitButton => 'Buka favorit tak terbatas';
 
   @override
-  String get favLimitIapButton => 'Lihat Paket Warna Emosi';
+  String get favLimitOpenApp => 'Buka di aplikasi';
+
+  @override
+  String get favLimitDismiss => 'Nanti';
 
   @override
   String get shopPurchaseSuccess => 'Pembelian berhasil! Konten terbuka';
@@ -625,17 +628,17 @@ class LId extends L {
 
   @override
   String get iapThemeCustomColorSub =>
-      'Buat tema sendiri dengan warna apa saja';
+      'Tema warna kustom · Favorit tak terbatas';
 
   @override
   String get iapThemeSlots => 'Simpan 3 tema favorit';
 
   @override
-  String get iapThemeSlotsSub => 'Ganti antara tema konser, harian & grup';
+  String get iapThemeSlotsSub => 'Ganti slot tema · Favorit tak terbatas';
 
   @override
   String get iapThemeBundle => 'Paket lengkap (diskon 24%)';
 
   @override
-  String get iapThemeBundleSave => 'Hemat ₩480';
+  String get iapThemeBundleSave => 'Hemat ₩480 · Favorit tak terbatas';
 }

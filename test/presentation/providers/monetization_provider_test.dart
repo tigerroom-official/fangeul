@@ -852,4 +852,76 @@ void main() {
       expect(container.read(favoriteSlotLimitProvider), 5);
     });
   });
+
+  group('hasAnyIap provider', () {
+    test('should return false when no IAP purchased', () async {
+      setUpDefault();
+      addTearDown(() => container.dispose());
+
+      container.listen(monetizationNotifierProvider, (_, __) {});
+      await container.read(monetizationNotifierProvider.future);
+
+      final sub = container.listen(hasAnyIapProvider, (_, __) {});
+      addTearDown(sub.close);
+
+      expect(container.read(hasAnyIapProvider), isFalse);
+    });
+
+    test('should return true when hasThemePicker is true', () async {
+      setUpWithState(const MonetizationState(hasThemePicker: true));
+      addTearDown(() => container.dispose());
+
+      container.listen(monetizationNotifierProvider, (_, __) {});
+      await container.read(monetizationNotifierProvider.future);
+
+      final sub = container.listen(hasAnyIapProvider, (_, __) {});
+      addTearDown(sub.close);
+
+      expect(container.read(hasAnyIapProvider), isTrue);
+    });
+
+    test('should return true when hasThemeSlots is true', () async {
+      setUpWithState(const MonetizationState(hasThemeSlots: true));
+      addTearDown(() => container.dispose());
+
+      container.listen(monetizationNotifierProvider, (_, __) {});
+      await container.read(monetizationNotifierProvider.future);
+
+      final sub = container.listen(hasAnyIapProvider, (_, __) {});
+      addTearDown(sub.close);
+
+      expect(container.read(hasAnyIapProvider), isTrue);
+    });
+
+    test('should return true when purchasedPackIds is not empty', () async {
+      setUpWithState(const MonetizationState(
+        purchasedPackIds: ['fangeul_color_starter'],
+      ));
+      addTearDown(() => container.dispose());
+
+      container.listen(monetizationNotifierProvider, (_, __) {});
+      await container.read(monetizationNotifierProvider.future);
+
+      final sub = container.listen(hasAnyIapProvider, (_, __) {});
+      addTearDown(sub.close);
+
+      expect(container.read(hasAnyIapProvider), isTrue);
+    });
+
+    test('should return true when both picker and slots purchased', () async {
+      setUpWithState(const MonetizationState(
+        hasThemePicker: true,
+        hasThemeSlots: true,
+      ));
+      addTearDown(() => container.dispose());
+
+      container.listen(monetizationNotifierProvider, (_, __) {});
+      await container.read(monetizationNotifierProvider.future);
+
+      final sub = container.listen(hasAnyIapProvider, (_, __) {});
+      addTearDown(sub.close);
+
+      expect(container.read(hasAnyIapProvider), isTrue);
+    });
+  });
 }

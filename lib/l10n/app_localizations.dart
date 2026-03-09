@@ -836,20 +836,26 @@ abstract class L {
   /// No description provided for @favLimitMessage.
   ///
   /// In ko, this message translates to:
-  /// **'팬 패스로 더 많은 문구를 저장해보세요\n감성 컬러 팩으로 무제한 보관도 가능해요'**
+  /// **'아무 테마 상품 하나만 구매하면\n즐겨찾기 무제한! ₩990부터'**
   String get favLimitMessage;
 
-  /// No description provided for @favLimitAdButton.
+  /// No description provided for @favLimitButton.
   ///
   /// In ko, this message translates to:
-  /// **'팬 패스 받기'**
-  String get favLimitAdButton;
+  /// **'즐겨찾기 무제한 해금'**
+  String get favLimitButton;
 
-  /// No description provided for @favLimitIapButton.
+  /// No description provided for @favLimitOpenApp.
   ///
   /// In ko, this message translates to:
-  /// **'컬러 팩 구경하기'**
-  String get favLimitIapButton;
+  /// **'앱에서 해금'**
+  String get favLimitOpenApp;
+
+  /// No description provided for @favLimitDismiss.
+  ///
+  /// In ko, this message translates to:
+  /// **'나중에'**
+  String get favLimitDismiss;
 
   /// No description provided for @shopPurchaseSuccess.
   ///
@@ -1244,7 +1250,7 @@ abstract class L {
   /// No description provided for @iapThemeCustomColorSub.
   ///
   /// In ko, this message translates to:
-  /// **'원하는 색으로 나만의 테마를 만들어요'**
+  /// **'나만의 색 테마 · 즐겨찾기 무제한'**
   String get iapThemeCustomColorSub;
 
   /// No description provided for @iapThemeSlots.
@@ -1256,7 +1262,7 @@ abstract class L {
   /// No description provided for @iapThemeSlotsSub.
   ///
   /// In ko, this message translates to:
-  /// **'콘서트용·일상용·그룹별 테마 전환'**
+  /// **'테마 슬롯 전환 · 즐겨찾기 무제한'**
   String get iapThemeSlotsSub;
 
   /// No description provided for @iapThemeBundle.
@@ -1268,7 +1274,7 @@ abstract class L {
   /// No description provided for @iapThemeBundleSave.
   ///
   /// In ko, this message translates to:
-  /// **'₩480 절약'**
+  /// **'₩480 절약 · 즐겨찾기 무제한'**
   String get iapThemeBundleSave;
 }
 

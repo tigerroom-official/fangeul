@@ -10,6 +10,7 @@ import 'package:fangeul/presentation/providers/copy_history_provider.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/widgets/copy_feedback_overlay.dart';
+import 'package:fangeul/presentation/widgets/favorite_limit_feedback.dart';
 import 'package:fangeul/services/analytics_events.dart';
 
 /// 간편모드 문구 타일 — ko + roman + 번역 + ★토글 + 복사.
@@ -73,14 +74,7 @@ class CompactPhraseTile extends ConsumerWidget {
                   .read(favoritePhrasesNotifierProvider.notifier)
                   .toggle(phrase.ko);
               if (!added && context.mounted) {
-                ScaffoldMessenger.of(context)
-                  ..clearSnackBars()
-                  ..showSnackBar(
-                    SnackBar(
-                      content: Text(L.of(context).favoriteLimitReached),
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
+                showFavoriteLimitFeedback(context);
               }
             },
           ),

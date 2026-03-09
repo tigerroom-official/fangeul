@@ -511,6 +511,19 @@ bool hasThemePicker(HasThemePickerRef ref) {
   return asyncState.valueOrNull?.hasThemePicker ?? false;
 }
 
+/// 아무 IAP든 구매했는지 여부 편의 Provider.
+///
+/// 테마 피커, 테마 슬롯, 컬러 팩 중 하나라도 구매하면 true.
+/// 즐겨찾기 무제한 해금 조건으로 사용한다.
+@riverpod
+bool hasAnyIap(HasAnyIapRef ref) {
+  final state = ref.watch(monetizationNotifierProvider).valueOrNull;
+  if (state == null) return false;
+  return state.hasThemePicker ||
+      state.hasThemeSlots ||
+      state.purchasedPackIds.isNotEmpty;
+}
+
 /// 즐겨찾기 슬롯 제한 편의 Provider.
 @riverpod
 int favoriteSlotLimit(FavoriteSlotLimitRef ref) {

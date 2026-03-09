@@ -412,13 +412,16 @@ class LEs extends L {
 
   @override
   String get favLimitMessage =>
-      'Guarda más frases con el Fan Pass\nO desbloquea almacenamiento ilimitado con un Paquete Color Vibe';
+      'Compra cualquier producto de tema\n¡y desbloquea favoritos ilimitados! Desde ₩990';
 
   @override
-  String get favLimitAdButton => 'Obtener Fan Pass';
+  String get favLimitButton => 'Desbloquear favoritos ilimitados';
 
   @override
-  String get favLimitIapButton => 'Ver Paquetes Color Vibe';
+  String get favLimitOpenApp => 'Desbloquear en la app';
+
+  @override
+  String get favLimitDismiss => 'Después';
 
   @override
   String get shopPurchaseSuccess =>
@@ -626,18 +629,18 @@ class LEs extends L {
 
   @override
   String get iapThemeCustomColorSub =>
-      'Crea tu propio tema con cualquier color';
+      'Tema de color propio · Favoritos ilimitados';
 
   @override
   String get iapThemeSlots => 'Guardar 3 temas favoritos';
 
   @override
   String get iapThemeSlotsSub =>
-      'Cambia entre temas de concierto, diario y grupo';
+      'Cambio de slots de tema · Favoritos ilimitados';
 
   @override
   String get iapThemeBundle => 'Paquete completo (24% desc.)';
 
   @override
-  String get iapThemeBundleSave => 'Ahorra ₩480';
+  String get iapThemeBundleSave => 'Ahorra ₩480 · Favoritos ilimitados';
 }

@@ -237,9 +237,10 @@
   "conversionTriggerDismiss": "나중에",
 
   "favLimitTitle": "좋아하는 문구가 정말 많네요!",
-  "favLimitMessage": "팬 패스로 더 많은 문구를 저장해보세요\n감성 컬러 팩으로 무제한 보관도 가능해요",
-  "favLimitAdButton": "팬 패스 받기",
-  "favLimitIapButton": "컬러 팩 구경하기",
+  "favLimitMessage": "아무 테마 상품 하나만 구매하면\n즐겨찾기 무제한! ₩990부터",
+  "favLimitButton": "즐겨찾기 무제한 해금",
+  "favLimitOpenApp": "앱에서 해금",
+  "favLimitDismiss": "나중에",
 
   "shopPurchaseSuccess": "구매 완료! 콘텐츠가 해금되었어요",
   "shopPurchaseFailed": "구매에 실패했어요. 다시 시도해주세요",
@@ -320,9 +321,9 @@
   "themePickerRecommended": "추천",
   "themePickerFreePickerTitle": "자유 글자색 선택",
   "iapThemeCustomColor": "배경·글자색 자유선택",
-  "iapThemeCustomColorSub": "원하는 색으로 나만의 테마를 만들어요",
+  "iapThemeCustomColorSub": "나만의 색 테마 · 즐겨찾기 무제한",
   "iapThemeSlots": "최애 테마 3개 저장",
-  "iapThemeSlotsSub": "콘서트용·일상용·그룹별 테마 전환",
+  "iapThemeSlotsSub": "테마 슬롯 전환 · 즐겨찾기 무제한",
   "iapThemeBundle": "전체 번들 (24% 할인)",
-  "iapThemeBundleSave": "₩480 절약"
+  "iapThemeBundleSave": "₩480 절약 · 즐겨찾기 무제한"
 }

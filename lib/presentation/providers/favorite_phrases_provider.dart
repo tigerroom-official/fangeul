@@ -44,15 +44,11 @@ class FavoritePhrasesNotifier extends _$FavoritePhrasesNotifier {
     // 추가 시에만 슬롯 제한 확인 (제거는 항상 허용)
     if (!isRemoving) {
       final limit = ref.read(favoriteSlotLimitProvider);
-      // limit=0 → 무제한 (허니문 또는 Pro)
+      // limit=0 → 무제한 (허니문)
       if (limit > 0) {
-        final hasPurchase = ref
-                .read(monetizationNotifierProvider)
-                .value
-                ?.purchasedPackIds
-                .isNotEmpty ??
-            false;
-        if (!hasPurchase && current.length >= limit) {
+        // 아무 IAP든 구매하면 즐겨찾기 무제한
+        final hasIap = ref.read(hasAnyIapProvider);
+        if (!hasIap && current.length >= limit) {
           return false; // 슬롯 제한 도달
         }
       }

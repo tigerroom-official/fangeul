@@ -149,6 +149,27 @@ final hasThemePickerProvider = AutoDisposeProvider<bool>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef HasThemePickerRef = AutoDisposeProviderRef<bool>;
+String _$hasAnyIapHash() => r'a6e5caeb2f19430b125b638bf2a9096cfa7dac6a';
+
+/// 아무 IAP든 구매했는지 여부 편의 Provider.
+///
+/// 테마 피커, 테마 슬롯, 컬러 팩 중 하나라도 구매하면 true.
+/// 즐겨찾기 무제한 해금 조건으로 사용한다.
+///
+/// Copied from [hasAnyIap].
+@ProviderFor(hasAnyIap)
+final hasAnyIapProvider = AutoDisposeProvider<bool>.internal(
+  hasAnyIap,
+  name: r'hasAnyIapProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$hasAnyIapHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef HasAnyIapRef = AutoDisposeProviderRef<bool>;
 String _$favoriteSlotLimitHash() => r'bb13de5baada37945b2a84f21a6ba1420284c437';
 
 /// 즐겨찾기 슬롯 제한 편의 Provider.

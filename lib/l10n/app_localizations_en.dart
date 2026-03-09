@@ -411,13 +411,16 @@ class LEn extends L {
 
   @override
   String get favLimitMessage =>
-      'Save more phrases with a Fan Pass\nor keep unlimited with a Color Vibe Pack';
+      'Buy any theme product to unlock\nunlimited favorites! From ₩990';
 
   @override
-  String get favLimitAdButton => 'Get Fan Pass';
+  String get favLimitButton => 'Unlock Unlimited Favorites';
 
   @override
-  String get favLimitIapButton => 'Browse Color Vibe Packs';
+  String get favLimitOpenApp => 'Unlock in App';
+
+  @override
+  String get favLimitDismiss => 'Later';
 
   @override
   String get shopPurchaseSuccess => 'Purchase complete! Content unlocked';
@@ -621,17 +624,18 @@ class LEn extends L {
   String get iapThemeCustomColor => 'Custom background & text';
 
   @override
-  String get iapThemeCustomColorSub => 'Create your own theme with any color';
+  String get iapThemeCustomColorSub =>
+      'Custom color theme · Unlimited favorites';
 
   @override
   String get iapThemeSlots => 'Save 3 favorite themes';
 
   @override
-  String get iapThemeSlotsSub => 'Switch between concert, daily & group themes';
+  String get iapThemeSlotsSub => 'Theme slot switching · Unlimited favorites';
 
   @override
   String get iapThemeBundle => 'Full Bundle (24% off)';
 
   @override
-  String get iapThemeBundleSave => 'Save ₩480';
+  String get iapThemeBundleSave => 'Save ₩480 · Unlimited favorites';
 }

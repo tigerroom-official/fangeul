@@ -161,9 +161,10 @@
   "conversionTriggerDismiss": "ไว้ทีหลัง",
 
   "favLimitTitle": "คุณชอบวลีเยอะมากเลย!",
-  "favLimitMessage": "บันทึกวลีเพิ่มด้วย Fan Pass\nหรือเก็บไม่จำกัดด้วยแพ็คสีอารมณ์",
-  "favLimitAdButton": "รับ Fan Pass",
-  "favLimitIapButton": "ดูแพ็คสี",
+  "favLimitMessage": "ซื้อสินค้าธีมใดก็ได้\nเพื่อปลดล็อกรายการโปรดไม่จำกัด! เริ่ม ₩990",
+  "favLimitButton": "ปลดล็อกรายการโปรดไม่จำกัด",
+  "favLimitOpenApp": "ปลดล็อกในแอป",
+  "favLimitDismiss": "ไว้ทีหลัง",
 
   "shopPurchaseSuccess": "ซื้อสำเร็จ! ปลดล็อกคอนเทนต์แล้ว",
   "shopPurchaseFailed": "การซื้อล้มเหลว กรุณาลองใหม่",
@@ -239,9 +240,9 @@
   "themePickerRecommended": "แนะนำ",
   "themePickerFreePickerTitle": "เลือกสีตัวอักษร",
   "iapThemeCustomColor": "พื้นหลังและตัวอักษรกำหนดเอง",
-  "iapThemeCustomColorSub": "สร้างธีมของคุณเองด้วยสีอะไรก็ได้",
+  "iapThemeCustomColorSub": "ธีมสีกำหนดเอง · รายการโปรดไม่จำกัด",
   "iapThemeSlots": "บันทึก 3 ธีมโปรด",
-  "iapThemeSlotsSub": "สลับระหว่างธีมคอนเสิร์ต ประจำวัน และกลุ่ม",
+  "iapThemeSlotsSub": "สลับสล็อตธีม · รายการโปรดไม่จำกัด",
   "iapThemeBundle": "แพ็กเกจเต็ม (ลด 24%)",
-  "iapThemeBundleSave": "ประหยัด ₩480"
+  "iapThemeBundleSave": "ประหยัด ₩480 · รายการโปรดไม่จำกัด"
 }
