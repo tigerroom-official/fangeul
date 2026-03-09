@@ -48,13 +48,14 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
   final _sheetController = DraggableScrollableController();
   final _customPickerKey = GlobalKey();
 
-  // HCT 피커 ephemeral state
-  double _hue = 180;
-  double _chroma = 48.0;
-  double _tone = 50.0;
+  // 피커 ephemeral state — 현재 피커에 표시 중인 색상.
+  Color _pickerColor = const Color(0xFF009688); // Teal default
 
   bool _slidersInitialized = false;
   int _pickerResetCount = 0;
+
+  /// 인라인 슬롯 이름 변경 중인 인덱스. null이면 비활성.
+  int? _editingSlotIndex;
 
   // 프리뷰 모드 (미구매자): 시트 닫힘 시 복원용 백업.
   ChoeaeColorConfig? _savedConfigBeforePreview;
@@ -87,15 +88,11 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
     if (_slidersInitialized) return;
     _slidersInitialized = true;
 
-    final color = switch (config) {
+    _pickerColor = switch (config) {
       ChoeaeColorCustom(:final seedColor) => seedColor,
       ChoeaeColorPalette(:final packId) =>
         PaletteRegistry.get(packId).previewColor,
     };
-    final hct = Hct.fromInt(color.toARGB32());
-    _hue = hct.hue;
-    _chroma = hct.chroma.clamp(12.0, 130.0);
-    _tone = hct.tone.clamp(15.0, 85.0);
   }
 
   /// 커스텀 피커 IAP 해금 여부.
@@ -154,7 +151,11 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
             ),
             child: ListView(
               controller: scrollController,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
               children: [
                 const _HandleBar(),
                 const SizedBox(height: 12),
@@ -182,6 +183,7 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                     setState(() {
                       _slidersInitialized = false;
                       _pickerResetCount++;
+                      _editingSlotIndex = null;
                     });
                   },
                   onSlotSave: (index) {
@@ -194,10 +196,31 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                     slotNotifier.saveToSlot(index, slot);
                     _showSlotSaveHint(context);
                   },
-                  onSlotRename: (index, name) {
-                    slotNotifier.renameSlot(index, name);
+                  onRenameRequested: (index) {
+                    setState(() => _editingSlotIndex = index);
+                    // 시트를 최대로 펼쳐 키보드+카드 공간 확보.
+                    _sheetController.animateTo(
+                      0.85,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeOut,
+                    );
                   },
                 ),
+                if (_editingSlotIndex != null &&
+                    _editingSlotIndex! < slotList.length)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: _InlineRenameCard(
+                      initialName: slotList[_editingSlotIndex!].name,
+                      onSubmit: (name) {
+                        slotNotifier.renameSlot(_editingSlotIndex!, name);
+                        setState(() => _editingSlotIndex = null);
+                      },
+                      onCancel: () {
+                        setState(() => _editingSlotIndex = null);
+                      },
+                    ),
+                  ),
                 const SizedBox(height: 16),
                 _DefaultThemeChip(
                   isSelected: choeaeColor is ChoeaeColorPalette &&
@@ -266,16 +289,9 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                   SizedBox(key: _customPickerKey, height: 16),
                   HctColorPicker(
                     key: ValueKey(_pickerResetCount),
-                    initialHue: _hue,
-                    initialChroma: _chroma,
-                    initialTone: _tone,
+                    initialColor: _pickerColor,
                     onColorChanged: (color) {
-                      final hct = Hct.fromInt(color.toARGB32());
-                      setState(() {
-                        _hue = hct.hue;
-                        _chroma = hct.chroma;
-                        _tone = hct.tone;
-                      });
+                      setState(() => _pickerColor = color);
                       final existing = choeaeColor is ChoeaeColorCustom
                           ? choeaeColor.textColorOverride
                           : null;
@@ -773,7 +789,7 @@ class _ThemeSlotRow extends StatelessWidget {
     required this.hasSlotIap,
     required this.onSlotTap,
     required this.onSlotSave,
-    required this.onSlotRename,
+    required this.onRenameRequested,
   });
 
   final List<ThemeSlot> slots;
@@ -782,7 +798,7 @@ class _ThemeSlotRow extends StatelessWidget {
   final bool hasSlotIap;
   final void Function(int) onSlotTap;
   final void Function(int) onSlotSave;
-  final void Function(int, String) onSlotRename;
+  final void Function(int) onRenameRequested;
 
   @override
   Widget build(BuildContext context) {
@@ -845,9 +861,14 @@ class _ThemeSlotRow extends StatelessWidget {
                     onSlotSave(index);
                   }
                 },
-                onLongPress: isLocked || !hasSlot
+                onLongPressStart: isLocked || !hasSlot
                     ? null
-                    : () => _showSlotMenu(context, index, slot!),
+                    : (details) => _showSlotMenu(
+                          context,
+                          index,
+                          slot!,
+                          details.globalPosition,
+                        ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -943,82 +964,57 @@ class _ThemeSlotRow extends StatelessWidget {
     );
   }
 
-  void _showSlotMenu(BuildContext context, int index, ThemeSlot slot) {
-    final l = L.of(context);
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (ctx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.save_rounded),
-              title: Text(l.themePickerSlotSave),
-              onTap: () {
-                Navigator.of(ctx).pop();
-                onSlotSave(index);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.edit_rounded),
-              title: Text(l.themePickerSlotName),
-              onTap: () {
-                Navigator.of(ctx).pop();
-                // 바텀시트 pop 완료 후 다이얼로그 표시 — 타이밍 충돌 방지
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (context.mounted) {
-                    _showRenameDialog(context, index, slot);
-                  }
-                });
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showRenameDialog(BuildContext context, int index, ThemeSlot slot) {
-    final controller = TextEditingController(text: slot.name);
+  /// 슬롯 액션 팝업 메뉴 — 저장/이름변경.
+  ///
+  /// 모달 중첩(showModalBottomSheet 안에서 showDialog/showModalBottomSheet)은
+  /// GoRouter root Navigator Overlay에서 _dependents.isEmpty assertion을
+  /// 유발하므로, PopupMenu + 인라인 rename 카드로 대체한다.
+  void _showSlotMenu(
+    BuildContext context,
+    int index,
+    ThemeSlot slot,
+    Offset globalPosition,
+  ) {
     final l = L.of(context);
 
-    showDialog<void>(
+    showMenu<String>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(l.themePickerSlotName),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          maxLength: 20,
-          // visiblePassword: IME 합성 모드 비활성화 → 키 이벤트 충돌 방지
-          keyboardType: TextInputType.visiblePassword,
-          autocorrect: false,
-          enableSuggestions: false,
-          onTap: () {
-            controller.selection = TextSelection(
-              baseOffset: 0,
-              extentOffset: controller.text.length,
-            );
-          },
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(MaterialLocalizations.of(ctx).cancelButtonLabel),
-          ),
-          FilledButton(
-            onPressed: () {
-              final name = controller.text.trim();
-              if (name.isNotEmpty) {
-                onSlotRename(index, name);
-              }
-              Navigator.of(ctx).pop();
-            },
-            child: Text(l.complete),
-          ),
-        ],
+      position: RelativeRect.fromLTRB(
+        globalPosition.dx,
+        globalPosition.dy,
+        globalPosition.dx,
+        globalPosition.dy,
       ),
-    ).then((_) => controller.dispose());
+      items: [
+        PopupMenuItem(
+          value: 'save',
+          child: Row(
+            children: [
+              const Icon(Icons.save_rounded, size: 20),
+              const SizedBox(width: 12),
+              Text(l.themePickerSlotSave),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: 'rename',
+          child: Row(
+            children: [
+              const Icon(Icons.edit_rounded, size: 20),
+              const SizedBox(width: 12),
+              Text(l.themePickerSlotName),
+            ],
+          ),
+        ),
+      ],
+    ).then((action) {
+      if (!context.mounted || action == null) return;
+      if (action == 'save') {
+        onSlotSave(index);
+      } else if (action == 'rename') {
+        onRenameRequested(index);
+      }
+    });
   }
 }
 
@@ -1716,4 +1712,111 @@ String _paletteName(L l, String nameKey) {
     'paletteSunsetCafe' => l.paletteSunsetCafe,
     _ => nameKey,
   };
+}
+
+/// 인라인 슬롯 이름 변경 카드.
+///
+/// StatefulWidget으로 TextEditingController 생명주기를 자체 관리한다.
+/// 모달 중첩 없이 부모 시트 안에서 직접 표시.
+class _InlineRenameCard extends StatefulWidget {
+  const _InlineRenameCard({
+    required this.initialName,
+    required this.onSubmit,
+    required this.onCancel,
+  });
+
+  final String initialName;
+  final ValueChanged<String> onSubmit;
+  final VoidCallback onCancel;
+
+  @override
+  State<_InlineRenameCard> createState() => _InlineRenameCardState();
+}
+
+class _InlineRenameCardState extends State<_InlineRenameCard> {
+  late final TextEditingController _controller;
+  final _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialName);
+    // 포커스 요청 후 키보드가 올라오면 카드가 보이도록 자동 스크롤.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _focusNode.requestFocus();
+      _controller.selection = TextSelection(
+        baseOffset: 0,
+        extentOffset: _controller.text.length,
+      );
+      // 시트 확장 + 키보드 애니메이션 완료 후 ensureVisible 호출.
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (!mounted) return;
+        Scrollable.ensureVisible(
+          context,
+          alignment: 0.3,
+          duration: const Duration(milliseconds: 250),
+        );
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    final name = _controller.text.trim();
+    if (name.isEmpty) return;
+    widget.onSubmit(name);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l = L.of(context);
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _controller,
+                focusNode: _focusNode,
+                textInputAction: TextInputAction.done,
+                maxLength: 20,
+                keyboardType: TextInputType.visiblePassword,
+                autocorrect: false,
+                enableSuggestions: false,
+                decoration: InputDecoration(
+                  labelText: l.themePickerSlotName,
+                  counterText: '',
+                  isDense: true,
+                ),
+                onSubmitted: (_) => _submit(),
+              ),
+            ),
+            const SizedBox(width: 8),
+            IconButton(
+              onPressed: widget.onCancel,
+              icon: const Icon(Icons.close, size: 20),
+              tooltip: MaterialLocalizations.of(context).cancelButtonLabel,
+              style: IconButton.styleFrom(
+                foregroundColor: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            FilledButton(
+              onPressed: _submit,
+              child: Text(l.complete),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

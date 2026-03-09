@@ -37,7 +37,6 @@ List<Color> suggestTextColors(Color background) {
   for (final hct in rawCandidates) {
     final color = Color(hct.toInt());
     if (contrastRatio(color, background) >= 4.5) {
-      // 중복 방지 (비슷한 색상)
       final isDuplicate = candidates.any(
         (c) => _colorDistance(c, color) < 20,
       );
@@ -54,9 +53,9 @@ double _colorDistance(Color a, Color b) {
   return math.sqrt(dr * dr + dg * dg + db * db);
 }
 
-/// HCT 기반 경량 글자색 피커 다이얼로그.
+/// HSV 기반 글자색 피커 다이얼로그.
 ///
-/// hue 바 + tone 슬라이더 + 실시간 프리뷰 + WCAG 대비율 표시.
+/// 2D HSV 영역(saturation×value) + hue 바 + hex 입력 + WCAG 대비율 표시.
 class TextColorPickerDialog extends StatefulWidget {
   const TextColorPickerDialog({
     super.key,
@@ -64,13 +63,9 @@ class TextColorPickerDialog extends StatefulWidget {
     this.initialColor,
   });
 
-  /// 대비율 계산용 배경색.
   final Color backgroundColor;
-
-  /// 초기 글자색 (null이면 흰색으로 시작).
   final Color? initialColor;
 
-  /// 다이얼로그를 표시하고 선택된 색상을 반환한다.
   static Future<Color?> show(
     BuildContext context, {
     required Color backgroundColor,
@@ -90,26 +85,26 @@ class TextColorPickerDialog extends StatefulWidget {
 }
 
 class _TextColorPickerDialogState extends State<TextColorPickerDialog> {
-  late double _hue;
-  late double _tone;
-  late double _chroma;
+  late double _hue; // 0-360
+  late double _saturation; // 0-1
+  late double _value; // 0-1
 
   late final TextEditingController _hexController;
   late final FocusNode _hexFocusNode;
-  bool _hexEditing = false; // hex→slider 동기화 루프 방지
+  bool _hexEditing = false;
 
   @override
   void initState() {
     super.initState();
     if (widget.initialColor != null) {
-      final hct = Hct.fromInt(widget.initialColor!.toARGB32());
-      _hue = hct.hue;
-      _tone = hct.tone.clamp(0.0, 100.0);
-      _chroma = hct.chroma.clamp(10.0, 100.0);
+      final hsv = HSVColor.fromColor(widget.initialColor!);
+      _hue = hsv.hue;
+      _saturation = hsv.saturation;
+      _value = hsv.value;
     } else {
       _hue = 0;
-      _tone = 90;
-      _chroma = 20.0;
+      _saturation = 0;
+      _value = 0.9;
     }
     _hexController = TextEditingController(
       text: _colorToHex6(_currentColor),
@@ -124,31 +119,28 @@ class _TextColorPickerDialogState extends State<TextColorPickerDialog> {
     super.dispose();
   }
 
-  Color get _currentColor => Color(Hct.from(_hue, _chroma, _tone).toInt());
+  Color get _currentColor =>
+      HSVColor.fromAHSV(1.0, _hue, _saturation, _value).toColor();
 
-  /// Hex 입력 → 2D 피커 동기화.
-  ///
-  /// postFrameCallback으로 defer하여 키보드 이벤트 처리 중 setState 충돌 방지.
   void _onHexChanged(String value) {
     if (value.length != 6) return;
     final parsed = int.tryParse(value, radix: 16);
     if (parsed == null) return;
     final color = Color(0xFF000000 | parsed);
-    final hct = Hct.fromInt(color.toARGB32());
+    final hsv = HSVColor.fromColor(color);
     _hexEditing = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       setState(() {
-        _hue = hct.hue;
-        _chroma = hct.chroma.clamp(10.0, 100.0);
-        _tone = hct.tone.clamp(0.0, 100.0);
+        _hue = hsv.hue;
+        _saturation = hsv.saturation;
+        _value = hsv.value;
       });
       _hexEditing = false;
     });
   }
 
-  /// 2D 피커 → hex 입력 동기화.
-  void _syncHexFromSliders() {
+  void _syncHexFromPicker() {
     if (_hexEditing) return;
     final newText = _colorToHex6(_currentColor);
     if (_hexController.text != newText) {
@@ -170,7 +162,6 @@ class _TextColorPickerDialogState extends State<TextColorPickerDialog> {
     final color = _currentColor;
     final ratio = contrastRatio(color, widget.backgroundColor);
 
-    // WCAG 3-level: AA (>=4.5), AA18 (>=3.0), fail (<3.0)
     final Color wcagColor;
     final IconData wcagIcon;
     final String wcagLabel;
@@ -196,13 +187,12 @@ class _TextColorPickerDialogState extends State<TextColorPickerDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // 타이틀
               Text(
                 l.themePickerFreePickerTitle,
                 style: theme.textTheme.titleMedium,
               ),
               const SizedBox(height: 12),
-              // 프리뷰 (대비율 <3.0이면 오버레이 표시)
+              // 프리뷰
               Stack(
                 children: [
                   Container(
@@ -239,7 +229,7 @@ class _TextColorPickerDialogState extends State<TextColorPickerDialog> {
                 ],
               ),
               const SizedBox(height: 8),
-              // WCAG 대비율 (3-level)
+              // WCAG 대비율
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -256,24 +246,24 @@ class _TextColorPickerDialogState extends State<TextColorPickerDialog> {
                 ],
               ),
               const SizedBox(height: 12),
-              // 2D HCT 영역 (chroma×tone) — 배경 피커와 동일한 시각 경험
+              // 2D HSV 영역 (saturation × value)
               SizedBox(
                 height: 120,
-                child: _TextColorHctArea(
+                child: _TextColorHsvArea(
                   hue: _hue,
-                  chroma: _chroma,
-                  tone: _tone,
-                  onChanged: (chroma, tone) {
+                  saturation: _saturation,
+                  value: _value,
+                  onChanged: (saturation, value) {
                     setState(() {
-                      _chroma = chroma;
-                      _tone = tone;
+                      _saturation = saturation;
+                      _value = value;
                     });
-                    _syncHexFromSliders();
+                    _syncHexFromPicker();
                   },
                 ),
               ),
               const SizedBox(height: 8),
-              // Hue 바 (레인보우)
+              // Hue 바
               SizedBox(
                 height: 36,
                 child: Stack(
@@ -313,7 +303,7 @@ class _TextColorPickerDialogState extends State<TextColorPickerDialog> {
                         max: 360,
                         onChanged: (v) {
                           setState(() => _hue = v);
-                          _syncHexFromSliders();
+                          _syncHexFromPicker();
                         },
                       ),
                     ),
@@ -336,7 +326,6 @@ class _TextColorPickerDialogState extends State<TextColorPickerDialog> {
                       controller: _hexController,
                       focusNode: _hexFocusNode,
                       maxLength: 6,
-                      // visiblePassword: IME 합성 모드 비활성화 → 키 이벤트 충돌 방지
                       keyboardType: TextInputType.visiblePassword,
                       autocorrect: false,
                       enableSuggestions: false,
@@ -357,7 +346,6 @@ class _TextColorPickerDialogState extends State<TextColorPickerDialog> {
                       ],
                       onChanged: _onHexChanged,
                       onTap: () {
-                        // 탭 시 전체 선택 → 백스페이스 없이 바로 덮어쓰기
                         _hexController.selection = TextSelection(
                           baseOffset: 0,
                           extentOffset: _hexController.text.length,
@@ -403,38 +391,30 @@ class _TextColorPickerDialogState extends State<TextColorPickerDialog> {
   }
 }
 
-/// 2D HCT 영역 (chroma×tone) — 글자색 피커용.
-///
-/// 배경 피커의 [_HctAreaPainter]와 동일한 패턴이나,
-/// 글자색 특성상 tone 범위를 0~100으로 넓혀 고대비 색상도 선택 가능.
-class _TextColorHctArea extends StatefulWidget {
-  const _TextColorHctArea({
+/// 2D HSV 영역 (saturation × value) — 글자색 피커용.
+class _TextColorHsvArea extends StatefulWidget {
+  const _TextColorHsvArea({
     required this.hue,
-    required this.chroma,
-    required this.tone,
+    required this.saturation,
+    required this.value,
     required this.onChanged,
   });
 
   final double hue;
-  final double chroma;
-  final double tone;
-  final void Function(double chroma, double tone) onChanged;
+  final double saturation;
+  final double value;
+  final void Function(double saturation, double value) onChanged;
 
   @override
-  State<_TextColorHctArea> createState() => _TextColorHctAreaState();
+  State<_TextColorHsvArea> createState() => _TextColorHsvAreaState();
 }
 
-class _TextColorHctAreaState extends State<_TextColorHctArea> {
+class _TextColorHsvAreaState extends State<_TextColorHsvArea> {
   ui.Image? _cachedImage;
   double? _cachedHue;
 
   static const _imgWidth = 96;
   static const _imgHeight = 64;
-  static const _minTone = 0.0;
-  static const _maxTone = 100.0;
-  static const _toneRange = _maxTone - _minTone;
-  static const _minChroma = 0.0;
-  static const _maxChroma = 100.0;
 
   @override
   void initState() {
@@ -443,7 +423,7 @@ class _TextColorHctAreaState extends State<_TextColorHctArea> {
   }
 
   @override
-  void didUpdateWidget(_TextColorHctArea old) {
+  void didUpdateWidget(_TextColorHsvArea old) {
     super.didUpdateWidget(old);
     if (old.hue != widget.hue) _regenerateImage();
   }
@@ -475,16 +455,16 @@ class _TextColorHctAreaState extends State<_TextColorHctArea> {
   ) {
     final pixels = Uint8List(width * height * 4);
     for (int y = 0; y < height; y++) {
-      final tone = _maxTone - (y / (height - 1)) * _toneRange;
+      final v = 1.0 - y / (height - 1); // 상단=밝음, 하단=어두움
       for (int x = 0; x < width; x++) {
-        final chroma =
-            _minChroma + (x / (width - 1)) * (_maxChroma - _minChroma);
-        final argb = Hct.from(hue, chroma, tone).toInt();
+        final s = x / (width - 1); // 좌=무채색, 우=포화
+        final argb =
+            HSVColor.fromAHSV(1.0, hue, s, v).toColor().toARGB32();
         final offset = (y * width + x) * 4;
-        pixels[offset] = (argb >> 16) & 0xFF; // R
-        pixels[offset + 1] = (argb >> 8) & 0xFF; // G
-        pixels[offset + 2] = argb & 0xFF; // B
-        pixels[offset + 3] = 0xFF; // A
+        pixels[offset] = (argb >> 16) & 0xFF;
+        pixels[offset + 1] = (argb >> 8) & 0xFF;
+        pixels[offset + 2] = argb & 0xFF;
+        pixels[offset + 3] = 0xFF;
       }
     }
 
@@ -503,13 +483,10 @@ class _TextColorHctAreaState extends State<_TextColorHctArea> {
     final x = localPosition.dx.clamp(0.0, areaSize.width);
     final y = localPosition.dy.clamp(0.0, areaSize.height);
 
-    final chroma =
-        (_minChroma + (x / areaSize.width) * (_maxChroma - _minChroma))
-            .clamp(_minChroma, _maxChroma);
-    final tone = (_maxTone - (y / areaSize.height) * _toneRange)
-        .clamp(_minTone, _maxTone);
+    final saturation = (x / areaSize.width).clamp(0.0, 1.0);
+    final value = (1.0 - y / areaSize.height).clamp(0.0, 1.0);
 
-    widget.onChanged(chroma, tone);
+    widget.onChanged(saturation, value);
   }
 
   @override
@@ -518,10 +495,14 @@ class _TextColorHctAreaState extends State<_TextColorHctArea> {
       final areaWidth = constraints.maxWidth;
       final areaHeight = constraints.maxHeight;
 
-      final markerX =
-          ((widget.chroma - _minChroma) / (_maxChroma - _minChroma)) *
-              areaWidth;
-      final markerY = ((_maxTone - widget.tone) / _toneRange) * areaHeight;
+      final markerX = widget.saturation * areaWidth;
+      final markerY = (1.0 - widget.value) * areaHeight;
+      final markerColor = HSVColor.fromAHSV(
+        1.0,
+        widget.hue,
+        widget.saturation,
+        widget.value,
+      ).toColor();
 
       return GestureDetector(
         onPanDown: (d) =>
@@ -538,7 +519,7 @@ class _TextColorHctAreaState extends State<_TextColorHctArea> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: CustomPaint(
-                    painter: _TextColorAreaPainter(cachedImage: _cachedImage),
+                    painter: _HsvAreaPainter(cachedImage: _cachedImage),
                   ),
                 ),
               ),
@@ -551,9 +532,7 @@ class _TextColorHctAreaState extends State<_TextColorHctArea> {
                     height: 16,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Color(
-                          Hct.from(widget.hue, widget.chroma, widget.tone)
-                              .toInt()),
+                      color: markerColor,
                       border: Border.all(color: Colors.white, width: 2),
                       boxShadow: const [
                         BoxShadow(color: Colors.black26, blurRadius: 4),
@@ -570,9 +549,8 @@ class _TextColorHctAreaState extends State<_TextColorHctArea> {
   }
 }
 
-/// 2D HCT 영역 CustomPainter — 캐시된 이미지를 그린다.
-class _TextColorAreaPainter extends CustomPainter {
-  const _TextColorAreaPainter({required this.cachedImage});
+class _HsvAreaPainter extends CustomPainter {
+  const _HsvAreaPainter({required this.cachedImage});
 
   final ui.Image? cachedImage;
 
@@ -601,6 +579,5 @@ class _TextColorAreaPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_TextColorAreaPainter old) =>
-      old.cachedImage != cachedImage;
+  bool shouldRepaint(_HsvAreaPainter old) => old.cachedImage != cachedImage;
 }

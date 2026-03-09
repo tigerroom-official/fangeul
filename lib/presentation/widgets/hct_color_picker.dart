@@ -3,26 +3,21 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:material_color_utilities/material_color_utilities.dart';
 
 import 'package:fangeul/l10n/app_localizations.dart';
 
-/// 2D HCT 색상 피커 — X=chroma, Y=tone, 하단 hue 바.
+/// 2D HSV 색상 피커 — X=채도, Y=명도, 하단 hue 바 + hex 입력.
 ///
-/// IntelliJ/Photoshop 스타일 2D 영역에서 chroma×tone을 선택하고,
-/// 하단 hue 바에서 색조를 변경한다. gamut 외 영역은 HCT 자동 클램핑.
+/// Photoshop/Figma 스타일 2D 영역에서 saturation×value를 선택하고,
+/// 하단 hue 바에서 색조를 변경한다. sRGB 전체 색역을 커버한다.
 class HctColorPicker extends StatefulWidget {
   const HctColorPicker({
     super.key,
-    required this.initialHue,
-    required this.initialChroma,
-    required this.initialTone,
+    required this.initialColor,
     required this.onColorChanged,
   });
 
-  final double initialHue;
-  final double initialChroma;
-  final double initialTone;
+  final Color initialColor;
   final ValueChanged<Color> onColorChanged;
 
   @override
@@ -30,44 +25,65 @@ class HctColorPicker extends StatefulWidget {
 }
 
 class _HctColorPickerState extends State<HctColorPicker> {
-  late double _hue;
-  late double _chroma;
-  late double _tone;
+  late double _hue; // 0-360
+  late double _saturation; // 0-1
+  late double _value; // 0-1
   ui.Image? _cachedImage;
   double? _cachedHue;
 
-  /// 2D 영역 해상도 — 성능과 품질의 균형.
+  late final TextEditingController _hexController;
+  bool _hexEditing = false;
+
   static const _imgWidth = 128;
   static const _imgHeight = 96;
-
-  /// tone 범위: 15(어두움) ~ 85(밝음).
-  static const _minTone = 15.0;
-  static const _maxTone = 85.0;
-  static const _toneRange = _maxTone - _minTone;
-
-  /// chroma 범위: 12(최소) ~ 130(최대).
-  static const _minChroma = 12.0;
-  static const _maxChroma = 130.0;
 
   @override
   void initState() {
     super.initState();
-    _hue = widget.initialHue;
-    _chroma = widget.initialChroma.clamp(_minChroma, _maxChroma);
-    _tone = widget.initialTone.clamp(_minTone, _maxTone);
+    final hsv = HSVColor.fromColor(widget.initialColor);
+    _hue = hsv.hue;
+    _saturation = hsv.saturation;
+    _value = hsv.value;
+    _hexController = TextEditingController(text: _currentHex);
     _regenerateImage();
   }
 
   @override
   void dispose() {
+    _hexController.dispose();
     _cachedImage?.dispose();
     super.dispose();
+  }
+
+  Color get _currentColor =>
+      HSVColor.fromAHSV(1.0, _hue, _saturation, _value).toColor();
+
+  String get _currentHex {
+    final argb = _currentColor.toARGB32();
+    return (argb & 0xFFFFFF).toRadixString(16).padLeft(6, '0').toUpperCase();
+  }
+
+  void _onHexChanged(String value) {
+    if (value.length != 6) return;
+    final parsed = int.tryParse(value, radix: 16);
+    if (parsed == null) return;
+    final color = Color(0xFF000000 | parsed);
+    final hsv = HSVColor.fromColor(color);
+    _hexEditing = true;
+    setState(() {
+      _hue = hsv.hue;
+      _saturation = hsv.saturation;
+      _value = hsv.value;
+    });
+    _regenerateImage();
+    widget.onColorChanged(color);
+    _hexEditing = false;
   }
 
   void _regenerateImage() {
     if (_cachedHue == _hue && _cachedImage != null) return;
     _cachedHue = _hue;
-    _generateHctImage(_hue, _imgWidth, _imgHeight).then((image) {
+    _generateHsvImage(_hue, _imgWidth, _imgHeight).then((image) {
       if (!mounted) {
         image.dispose();
         return;
@@ -78,19 +94,19 @@ class _HctColorPickerState extends State<HctColorPicker> {
     });
   }
 
-  /// 픽셀 버퍼로 2D HCT 이미지를 생성한다.
-  static Future<ui.Image> _generateHctImage(
+  /// HSV 2D 이미지: X=saturation(0→1), Y=value(1→0, 상단밝음).
+  static Future<ui.Image> _generateHsvImage(
     double hue,
     int width,
     int height,
   ) {
     final pixels = Uint8List(width * height * 4);
     for (int y = 0; y < height; y++) {
-      final tone = _maxTone - (y / (height - 1)) * _toneRange;
+      final v = 1.0 - y / (height - 1); // 상단=밝음, 하단=어두움
       for (int x = 0; x < width; x++) {
-        final chroma =
-            _minChroma + (x / (width - 1)) * (_maxChroma - _minChroma);
-        final argb = Hct.from(hue, chroma, tone).toInt();
+        final s = x / (width - 1); // 좌=무채색, 우=포화
+        final color = HSVColor.fromAHSV(1.0, hue, s, v).toColor();
+        final argb = color.toARGB32();
         final offset = (y * width + x) * 4;
         pixels[offset] = (argb >> 16) & 0xFF; // R
         pixels[offset + 1] = (argb >> 8) & 0xFF; // G
@@ -114,15 +130,12 @@ class _HctColorPickerState extends State<HctColorPicker> {
     final x = localPosition.dx.clamp(0.0, areaSize.width);
     final y = localPosition.dy.clamp(0.0, areaSize.height);
 
-    final chroma =
-        (_minChroma + (x / areaSize.width) * (_maxChroma - _minChroma))
-            .clamp(_minChroma, _maxChroma);
-    final tone = (_maxTone - (y / areaSize.height) * _toneRange)
-        .clamp(_minTone, _maxTone);
+    final saturation = (x / areaSize.width).clamp(0.0, 1.0);
+    final value = (1.0 - y / areaSize.height).clamp(0.0, 1.0);
 
     setState(() {
-      _chroma = chroma;
-      _tone = tone;
+      _saturation = saturation;
+      _value = value;
     });
     _emitColor();
   }
@@ -134,8 +147,10 @@ class _HctColorPickerState extends State<HctColorPicker> {
   }
 
   void _emitColor() {
-    final color = Color(Hct.from(_hue, _chroma, _tone).toInt());
-    widget.onColorChanged(color);
+    widget.onColorChanged(_currentColor);
+    if (!_hexEditing) {
+      _hexController.text = _currentHex;
+    }
   }
 
   @override
@@ -146,15 +161,13 @@ class _HctColorPickerState extends State<HctColorPicker> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 2D chroma×tone 영역
+        // 2D saturation×value 영역
         LayoutBuilder(builder: (context, constraints) {
           final areaWidth = constraints.maxWidth;
           const areaHeight = 160.0;
 
-          // 마커 위치 계산
-          final markerX =
-              ((_chroma - _minChroma) / (_maxChroma - _minChroma)) * areaWidth;
-          final markerY = ((_maxTone - _tone) / _toneRange) * areaHeight;
+          final markerX = _saturation * areaWidth;
+          final markerY = (1.0 - _value) * areaHeight;
 
           return GestureDetector(
             onPanDown: (d) =>
@@ -167,16 +180,15 @@ class _HctColorPickerState extends State<HctColorPicker> {
               child: Stack(
                 clipBehavior: Clip.hardEdge,
                 children: [
-                  // 2D 그래디언트 이미지
                   Positioned.fill(
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: CustomPaint(
-                        painter: _HctAreaPainter(cachedImage: _cachedImage),
+                        painter: _HsvAreaPainter(cachedImage: _cachedImage),
                       ),
                     ),
                   ),
-                  // 십자 마커
+                  // 마커
                   Positioned(
                     left: markerX - 10,
                     top: markerY - 10,
@@ -186,7 +198,7 @@ class _HctColorPickerState extends State<HctColorPicker> {
                         height: 20,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Color(Hct.from(_hue, _chroma, _tone).toInt()),
+                          color: _currentColor,
                           border: Border.all(color: Colors.white, width: 2),
                           boxShadow: const [
                             BoxShadow(
@@ -204,18 +216,17 @@ class _HctColorPickerState extends State<HctColorPicker> {
           );
         }),
         const SizedBox(height: 4),
-        // 축 라벨
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              l.themePickerChroma,
+              l.themePickerSaturation,
               style: theme.textTheme.labelSmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
             Text(
-              l.themePickerTone,
+              l.themePickerBrightness,
               style: theme.textTheme.labelSmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -228,14 +239,78 @@ class _HctColorPickerState extends State<HctColorPicker> {
           value: _hue,
           onChanged: _onHueChanged,
         ),
+        const SizedBox(height: 10),
+        // Hex 입력 + 색상 프리뷰
+        Row(
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: _currentColor,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: theme.colorScheme.outlineVariant,
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              '#',
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(width: 4),
+            SizedBox(
+              width: 100,
+              child: TextField(
+                controller: _hexController,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontFamily: 'monospace',
+                ),
+                decoration: InputDecoration(
+                  isDense: true,
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  hintText: 'FF0000',
+                  counterText: '',
+                ),
+                maxLength: 6,
+                keyboardType: TextInputType.visiblePassword,
+                autocorrect: false,
+                enableSuggestions: false,
+                textCapitalization: TextCapitalization.characters,
+                onChanged: _onHexChanged,
+                onTap: () {
+                  _hexController.selection = TextSelection(
+                    baseOffset: 0,
+                    extentOffset: _hexController.text.length,
+                  );
+                },
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              l.themePickerHexInput,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }
 }
 
-/// 2D HCT 영역 CustomPainter — 캐시된 이미지를 그린다.
-class _HctAreaPainter extends CustomPainter {
-  const _HctAreaPainter({required this.cachedImage});
+/// 2D HSV 영역 CustomPainter.
+class _HsvAreaPainter extends CustomPainter {
+  const _HsvAreaPainter({required this.cachedImage});
 
   final ui.Image? cachedImage;
 
@@ -265,7 +340,7 @@ class _HctAreaPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_HctAreaPainter old) => old.cachedImage != cachedImage;
+  bool shouldRepaint(_HsvAreaPainter old) => old.cachedImage != cachedImage;
 }
 
 /// Hue 바 — 레인보우 그래디언트 + 슬라이더.
@@ -336,7 +411,6 @@ class _HueBar extends StatelessWidget {
   }
 }
 
-/// hue 슬라이더 테마 — 투명 트랙 + 컬러 Thumb.
 SliderThemeData _hueSliderTheme(BuildContext context, Color thumbColor) {
   return SliderThemeData(
     trackHeight: 0,
@@ -348,7 +422,6 @@ SliderThemeData _hueSliderTheme(BuildContext context, Color thumbColor) {
   );
 }
 
-/// 커스텀 원형 Thumb (흰 테두리 + 색상 채움).
 class _CircleThumb extends SliderComponentShape {
   const _CircleThumb({required this.radius});
 
@@ -397,7 +470,6 @@ class _CircleThumb extends SliderComponentShape {
   }
 }
 
-/// decodeImageFromPixels 콜백을 Future로 변환하는 헬퍼.
 class _ImageCompleter {
   final _completer = Completer<ui.Image>();
 
