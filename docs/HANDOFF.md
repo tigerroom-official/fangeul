@@ -1,8 +1,8 @@
 # Fangeul — Session Handoff
 
-BASE_COMMIT: 389beee (이전 핸드오프)
-HANDOFF_COMMIT: 6b6e33b
-BRANCH: fix/custom-theme-seed-anchored
+BASE_COMMIT: 6b6e33b (이전 핸드오프)
+HANDOFF_COMMIT: 09c8cae
+BRANCH: main
 
 ---
 
@@ -26,18 +26,13 @@ BRANCH: fix/custom-theme-seed-anchored
 - AdMob 광고 배치 + 팬 컬러 테마 커스터마이징 13 tasks (2026-03-07)
 - 최애색(Choeae Color) UX 오버홀 — 15 tasks + 5 review fixes (2026-03-07)
 - HSL→HCT 엔진 교체 P0 완료 (2026-03-07)
-- **테마 커스터마이징 전면 업그레이드 (2026-03-08)**
-  - 2D HCT 사각형 피커 (hue 바 + chroma×tone 2D 영역)
-  - 테마 슬롯 시스템 (4슬롯: 1 기본 + 3 IAP)
-  - 3-SKU IAP 구조 (custom_color ₩990 + slots ₩990 + bundle ₩1,500)
-  - TextColorPickerDialog: hex 입력 + WCAG 3단계 + chroma 슬라이더
-  - brightnessOverride: 커스텀 테마 밝기 토글 (시스템 모드 독립)
-  - Surface tone parallel shift + chroma 85% preservation
-  - Codex 전체 브랜치 리뷰 + P0/P1/P2 수정
-  - 804 tests pass
+- 테마 커스터마이징 전면 업그레이드 (2026-03-08): 2D HCT 피커, 슬롯, 3-SKU IAP, brightnessOverride, chroma 85%, 804 tests
+- **보상형 광고 피벗 (2026-03-09)**: TTS/즐겨찾기 시간제 해금 폐지 → 프리미엄 테마 24h 체험 전용
+- **IAP UI 마무리 (2026-03-09)**: subtitle 설명 추가, 번들 "추천" 뱃지, Codex 리뷰 수정
+- **즐겨찾기 제한 UX 개선 (2026-03-09)**: 다이얼로그 직접적 메시지, SnackBar CTA 개선, 버블 해결 경로 추가, Codex 리뷰 반영, 812 tests
 
 ### 활성 작업
-없음. 브랜치 `fix/custom-theme-seed-anchored`에 전체 작업 완료, main 머지 대기.
+없음. main 브랜치에 전체 작업 머지 완료.
 
 ### 보류/백로그 — MVP 출시 후
 - **v1.1 기능**: 한글 퍼즐(Wordle 스타일), 한글 카드 컬렉션(가챠)
@@ -47,74 +42,66 @@ BRANCH: fix/custom-theme-seed-anchored
 - todaySuggestedPhrases에 memberName 미전달 (멤버 템플릿 "오늘" 추천 미포함)
 - share_card_painter.dart + Provider 내 UiStrings 잔류 (BuildContext 없음)
 - P1: 핸들 좌측 멤버 이름 노출 (버블 UX)
+- **P1: 버블 딥링크** — openMainApp 시 ThemePickerSheet 자동 오픈 (intent extra `open_theme_picker`)
 - Play Integrity API (서버사이드 검증)
 - AdMob SSV (Server-Side Verification)
 - converter_screen 배너 = 리텐션 데이터로 결정 (v1.1)
 - 즐겨찾기 포화/TTS 한도 FanPassButton 트리거 (v1.1)
-- IAP 구매 UI subtitle 추가 (패널 합의 P0 — 미구현)
-- IAP 번들 "추천" 라벨 추가 (패널 합의 P0 — 미구현)
 - IAP "테마 슬롯 3개" → "최애 테마 3개 저장" 문구 리프레이밍 (P2)
+- P2: "팬글 서포터" 리프레이밍 — IAP를 "응원" 프레이밍으로 (Phase 7.1)
 
 ---
 
 ## 작업 요약
 
-테마 커스터마이징 전면 업그레이드: 2D HCT 피커, 테마 슬롯(4개), 3-SKU IAP, TextColorPickerDialog(hex+WCAG+chroma), brightnessOverride(시스템 모드 독립), surface chroma 85% preservation + hex 입력 키보드 크래시 수정 + 팔레트 그리드 간격 축소 + 슬롯 ⋮ 힌트 아이콘. Codex 전체 브랜치 리뷰 완료.
+보상형 광고 피벗(테마 24h 체험 전용) + IAP UI subtitle/추천 뱃지 + Codex 리뷰 수정 + 즐겨찾기 제한 UX 전면 개선(다이얼로그 메시지 직접화, SnackBar CTA "무제한 해금", 버블 "앱에서 해금" + openMainApp, IAP subtitle에 "즐겨찾기 무제한" 명시) + 7개 언어 l10n 업데이트 + Codex 리뷰 3건 수정. 812 tests pass.
 
 ## 완료된 작업
 
-- [x] 2D HCT 사각형 피커 (`hct_color_picker.dart` 신규) — chroma×tone 2D 영역 + hue 바 (d53f6cd)
-- [x] 테마 슬롯 시스템 (`theme_slot.dart`, `theme_slot_provider.dart` 신규) — 4슬롯, SharedPrefs JSON 직렬화 (d53f6cd)
-- [x] 3-SKU IAP (`iap_products.dart`) — themeCustomColor/themeSlots/themeBundle SKU (d53f6cd)
-- [x] MonetizationState `hasThemeSlots` 필드 + provider (d53f6cd)
-- [x] `theme_picker_sheet.dart` 대규모 리팩터 — 슬롯 UI, IAP 섹션, 2D 피커 통합 (d53f6cd)
-- [x] TextColorPickerDialog — hex 입력 + WCAG 3단계 표시 + chroma 슬라이더 (8566e07)
-- [x] brightnessOverride — `ChoeaeColorConfig.custom(brightnessOverride:)` 필드 + 시스템 ThemeMode 분리 (b3bbaec, 7e70bb7)
-- [x] Brightness 토글 UI + ThemeMode 비활성화 로직 (1059356)
-- [x] Surface tone parallel shift — 밝기 토글 시 tone 범위 전환 (c6049b6)
-- [x] Codex 전체 브랜치 리뷰 → P0 3건/P1 3건/P2 1건 수정 (d96a89b)
-- [x] Surface chroma 85% preservation — `seedChroma * 0.85` (기존 0.4 capped 28) (fa91675)
-- [x] Hex 입력 키보드 크래시 수정 — `TextInputType.visiblePassword` (fa91675)
-- [x] 슬롯 rename 다이얼로그 크래시 수정 — `addPostFrameCallback` 타이밍 (fa91675)
-- [x] 팔레트 그리드 간격 축소 — `aspectRatio 1.0`, `mainAxisSpacing 2` (fa91675)
-- [x] 슬롯 ⋮ 아이콘 힌트 — 롱프레스 발견성 향상 (fa91675)
-- [x] l10n 키 추가 — 7개 언어 (테마 슬롯, 밝기 토글, IAP, WCAG 등)
-- [x] 테스트 804개 전체 통과 + flutter analyze clean
+- [x] 보상형 광고 피벗: TTS/즐겨찾기 시간제 해금 폐지 → 테마 24h 체험 전용 (8efe944)
+- [x] Codex 리뷰 수정: trial palette 접근 가드, RC TTS limit, debug 패널 rename (8c764b6)
+- [x] IAP subtitle 추가 + 번들 "추천" 뱃지 (7ad8604)
+- [x] l10n 생성 파일 포함 + VI "concert" 미번역 수정 (a1ec520)
+- [x] 즐겨찾기 제한 다이얼로그 메시지 직접화: "아무 테마 상품 하나만 구매하면 즐겨찾기 무제한! ₩990부터" (e3d717f)
+- [x] 즐겨찾기 제한 SnackBar CTA: "테마 커스터마이징 보기" → "즐겨찾기 무제한 해금" (e3d717f)
+- [x] 버블 즐겨찾기 제한: SnackBar에 "앱에서 해금" 버튼 + MethodChannel openMainApp (e3d717f)
+- [x] IAP subtitle에 "즐겨찾기 무제한" 명시 — 구매→혜택 연결 (e3d717f)
+- [x] `barrierDismissible: false` — 첫 다이얼로그 실수 닫힘 방지 (e3d717f, Codex 지적)
+- [x] ID/TH/VI 번역 품질: 구매→해금 인과 연결 동사 추가 (e3d717f, Codex 지적)
+- [x] 7개 언어 l10n 업데이트 (ko/en/es/id/pt/th/vi)
+- [x] 테마 오버홀 잔여 커밋 정리 (ff5177c)
+- [x] 812 tests pass + flutter analyze clean
 
 ## 진행 중인 작업
 없음.
 
 ## 핵심 교훈
 
-- ★ `seedChroma * 0.4` capped at 28은 고채도 seed(금색 chroma~82)를 무채색화 → `seedChroma * 0.85` (min 8.0)로 "내가 고른 색 = 앱 색" 실현
-- ★ Uniform chroma (tone-only hierarchy): surface 컨테이너 간 chroma 차이 제거 → 카드 경계는 outlineVariant로 구분
-- ★ Flutter `KeyDownEvent` assertion crash: IME composition 모드에서 중복 키 이벤트 → `TextInputType.visiblePassword`로 IME 비활성화
-- ★ Bottom sheet pop → dialog show 타이밍 충돌: `WidgetsBinding.instance.addPostFrameCallback`으로 한 프레임 지연
-- ★ `double.clamp(lower, upper)` — lower > upper 시 `Invalid argument(s)` → 조건분기 `raw < 8.0 ? 8.0 : raw` 사용
-- ★ brightnessOverride 라우팅: 커스텀 테마는 seed tone에서 밝기 자동 유도, `themeMode: ThemeMode.light/dark` 강제 + 동일 테마를 light/dark 양 슬롯에 할당
+- ★ 즐겨찾기 제한 UX: "왜 테마를 사야 즐겨찾기가 풀리는지" 명시적으로 전달해야 함 — CTA "테마 보기"는 무관하게 느껴짐. "즐겨찾기 무제한 해금"이 직접적
+- ★ IAP subtitle에 부가 혜택(즐겨찾기 무제한) 명시 → 구매 동기와 혜택을 한눈에 연결
+- ★ `barrierDismissible: false`: 설명형 첫 다이얼로그는 바깥 터치로 닫히면 안 됨 — seen 플래그가 영구 저장되어 재표시 불가
+- ★ 동남아 번역(ID/TH/VI)에서 구매→해금 인과관계 동사 누락 쉬움 — 각 언어별 "~하면 ~된다" 구조 확인 필수
+- ★ 보상형 광고 피벗: 기능 해금(즐겨찾기/TTS)에 시간제 해금 적용 → 사용자 혼란+가치 희석. IAP 직행이 명확
 
 ## 다음 단계
 
-### 1순위: 브랜치 머지 + IAP UI 마무리
-1. **`fix/custom-theme-seed-anchored` → main 머지** — 804 tests pass, review 완료
-2. **IAP subtitle 추가** — 각 구매 버튼에 기능 설명 한 줄 (패널 합의 P0 미구현)
-3. **번들 "추천" 라벨** — `themePickerRecommended` l10n 키 활용
-
-### 2순위: Phase 7 릴리즈 BLOCK 항목 (출시 필수)
+### 1순위: Phase 7 릴리즈 BLOCK 항목 (출시 필수)
 1. **릴리즈 서명 설정** — keystore 생성 + signingConfigs.release
 2. **프로덕션 AdMob ID** — placeholder 교체
 3. **ProGuard/R8 활성화** — minifyEnabled + shrinkResources
 4. **Google Play Console** — 앱 등록 + IAP 상품 가격 설정
 
-### 3순위: 출시 후 빠른 개선
+### 2순위: 출시 후 빠른 개선
+- P1: 버블 딥링크 — openMainApp → ThemePickerSheet 자동 오픈 (intent extra)
+- P1: 핸들 좌측 멤버 이름 노출
 - PaletteRegistry 20-25개 확장 (웜톤/쿨톤 균형)
 - 프리뷰 UI — 실제 화면 미리보기
-- IAP "테마 슬롯 3개" → "최애 테마 3개 저장" 리프레이밍 (P2)
-- P1: 핸들 좌측 멤버 이름 노출
 - share_card_painter.dart UiStrings → l10n
 - Firebase Analytics 이벤트 대시보드 구성
 
-### 4순위: v1.1 로드맵
+### 3순위: v1.1 로드맵
+- IAP "테마 슬롯 3개" → "최애 테마 3개 저장" 리프레이밍 (P2)
+- P2: "팬글 서포터" 리프레이밍
 - 한글 퍼즐 (Wordle 스타일)
 - 한글 카드 컬렉션 (가챠)
 - 푸시 알림 (firebase_messaging)
@@ -124,17 +111,17 @@ BRANCH: fix/custom-theme-seed-anchored
 
 | 결정 | 이유 |
 |------|------|
-| Surface chroma 85% (기존 40%) | 고채도 seed에서 "내가 고른 색 = 앱 색" 체감 불가 → 85%로 상향 |
-| Uniform chroma (tone-only) | 컨테이너 간 chroma 차이는 시각적 혼란 → tone만으로 계층 분리 |
-| `visiblePassword` 키보드 타입 | IME composition이 Flutter KeyEvent 시스템과 충돌 → composition 비활성화 |
-| brightnessOverride 독립 라우팅 | 커스텀 seed tone에서 자동 유도된 밝기를 유저가 반전 가능 (시스템 모드와 독립) |
-| 3-SKU IAP 분리 | 피커+슬롯 독립 구매 + 번들 24% 할인 → ARPU 극대화 |
-| 슬롯 ⋮ 아이콘만 (텍스트 힌트 없음) | 10대~20대 타겟은 구구절절한 설명보다 직관적 아이콘 선호 |
+| 보상형 → 테마 24h 체험 전용 | TTS/즐겨찾기 시간제 해금은 사용자 혼란+가치 희석 → IAP 직행이 명확 |
+| CTA "즐겨찾기 무제한 해금" | "테마 보기"는 구매→혜택 연결 불명확 → 혜택 직접 언급 |
+| `barrierDismissible: false` | seen 플래그 영구 저장 → 실수 닫힘 시 재표시 불가 |
+| IAP subtitle에 "즐겨찾기 무제한" | 테마에 관심 없는 유저도 구매 동기 획득 |
+| 버블 → "앱에서 해금" | 소형 윈도우에서 ThemePickerSheet 부적절 → 메인앱 전환이 현실적 |
 
 ## 참고 컨텍스트
 
+- 보상형 광고 피벗: `docs/discussions/2026-03-08-rewarded-ad-strategy-pivot.md`
 - 테마 커스터마이징 오버홀 계획: `docs/plans/2026-03-07-choeae-color-ux-overhaul.md`
-- Surface 계층 + 슬롯 패널 합의: `docs/discussions/2026-03-08-theme-surface-hierarchy-slots.md`
+- Surface 계층 + 슬롯 패널: `docs/discussions/2026-03-08-theme-surface-hierarchy-slots.md`
 - IAP 3-SKU 구조 패널: `docs/discussions/2026-03-08-theme-iap-structure-panel.md`
 - 밝기 독립 패널: `docs/discussions/2026-03-08-theme-brightness-independence-panel.md`
 - 글자색 hex+WCAG 패널: `docs/discussions/2026-03-08-text-color-hex-2d-picker-wcag-panel.md`
@@ -144,41 +131,35 @@ BRANCH: fix/custom-theme-seed-anchored
 ## 커밋 히스토리 (이번 세션)
 
 ```
-fa91675 fix: chroma 85% preservation + hex input keyboard crash + palette spacing + slot hints
-d96a89b fix: cross-review P0/P1/P2 — dartdoc, contrast guard, write serialization
-1059356 feat: brightness toggle in picker + disable ThemeMode when override active
-8566e07 feat: TextColorPickerDialog hex input + WCAG 3-level + chroma slider
-7e70bb7 feat: brightness override routing in FangeulApp
-b3bbaec feat: brightnessOverride — custom theme mode independence
-c6049b6 feat: surface tone parallel shift + narrow textColorOverride scope
-bbdef5d fix: add theme slots debug toggle + reduce palette grid spacing
-d53f6cd feat: theme customization overhaul — 2D HCT picker, slots, 3-SKU IAP
-b048ed7 chore: session handoff — HSL→HCT P0 완료, P1 미구현 정리
+ff5177c feat: theme overhaul — 2D HCT picker, slots, brightness override, IAP section
+e3d717f feat: favorite limit UX — dialog, SnackBar CTA, bubble action, Codex fixes
+a1ec520 fix: include generated l10n files + fix VI untranslated "concert"
+7ad8604 feat: IAP UI polish — subtitle descriptions + "추천" badge for bundle
+8c764b6 fix: apply Codex review — trial palette access, RC TTS limit, debug panel rename
+8efe944 feat: pivot rewarded ads to 24h theme trial only (TTS/favorites = IAP-only unlock)
+8838e1b docs: add panel discussions and plans from theme overhaul sessions
+fca759d chore: session handoff — 테마 오버홀 완료 (2D HCT 피커, 슬롯, 3-SKU, chroma 85%)
 ```
 
 ## 수정한 파일
 
 ```
- 56 files changed, 4162 insertions(+), 617 deletions(-)
+63 files changed, 5434 insertions(+), 599 deletions(-)
 
 주요 신규:
- lib/presentation/widgets/hct_color_picker.dart (NEW — 2D HCT 피커)
- lib/presentation/widgets/text_color_picker_dialog.dart (NEW — hex+WCAG 글자색 피커)
- lib/presentation/models/theme_slot.dart (NEW — 슬롯 모델)
- lib/presentation/providers/theme_slot_provider.dart (NEW — 슬롯 상태관리)
- test/presentation/models/theme_slot_test.dart (NEW — 278줄)
- test/presentation/providers/theme_slot_provider_test.dart (NEW — 189줄)
- test/presentation/widgets/text_color_picker_test.dart (NEW — 117줄)
- test/presentation/widgets/iap_purchase_section_test.dart (NEW — 54줄)
+ lib/presentation/widgets/favorite_limit_dialog.dart (NEW — 즐겨찾기 제한 다이얼로그)
+ lib/presentation/widgets/favorite_limit_feedback.dart (NEW — 즐겨찾기 제한 피드백 유틸)
 
 주요 수정:
- lib/presentation/widgets/theme_picker_sheet.dart (1074줄 대규모 리팩터)
- lib/presentation/theme/custom_scheme_builder.dart (chroma 85% + tone shift)
- lib/presentation/theme/choeae_color_config.dart (brightnessOverride 필드)
- lib/presentation/providers/choeae_color_provider.dart (brightness 라우팅)
- lib/app.dart (ThemeMode 분기)
- lib/services/iap_products.dart (3-SKU)
- lib/l10n/app_*.arb (7개 언어 × 18+ 키)
+ lib/presentation/widgets/theme_picker_sheet.dart (IAP subtitle + 추천 뱃지)
+ lib/presentation/widgets/compact_phrase_list.dart (즐겨찾기 제한 피드백 연동)
+ lib/presentation/widgets/compact_phrase_tile.dart (즐겨찾기 제한 피드백 연동)
+ lib/presentation/widgets/phrase_card.dart (즐겨찾기 제한 피드백 연동)
+ lib/presentation/providers/monetization_provider.dart (hasAnyIap + 보상형 피벗)
+ lib/presentation/providers/favorite_phrases_provider.dart (IAP 무제한 연동)
+ lib/presentation/providers/tts_provider.dart (보상형 피벗)
+ lib/l10n/app_*.arb (7개 언어 × favLimit/IAP subtitle 키)
+ .claude/rules/00-project.md (수익화 규칙 업데이트)
 ```
 
 ## 세션 히스토리
@@ -206,4 +187,5 @@ b048ed7 chore: session handoff — HSL→HCT P0 완료, P1 미구현 정리
 | 번역+필터+실기기 | 로케일별 번역 수정 + 스마트 필터 + 간편모드 번역 + 실기기 테스트 → 624 tests |
 | AdMob+테마 | AdMob 배치 + 팬 컬러 테마 커스터마이징 13 tasks → 641 tests |
 | 최애색+HCT | 최애색 UX 오버홀 15 tasks + HSL→HCT P0 엔진 교체 + Codex 4-domain 리뷰 → 741 tests |
-| **테마 오버홀** | 2D HCT 피커 + 슬롯 + 3-SKU IAP + brightnessOverride + chroma 85% + hex 크래시 수정 → 804 tests |
+| 테마 오버홀 | 2D HCT 피커 + 슬롯 + 3-SKU IAP + brightnessOverride + chroma 85% + hex 크래시 수정 → 804 tests |
+| **보상형피벗+즐겨찾기UX** | 보상형→테마 체험 전용 + IAP subtitle/추천 + 즐겨찾기 UX 개선 + Codex 리뷰 → 812 tests |

@@ -53,6 +53,6 @@ dart format --set-exit-if-changed .  # 포맷 검증
 | `docs/HANDOFF.md` | 세션 핸드오프 (최신 작업 상태) |
 
 ## 현재 작업 상태
-> 마지막 핸드오프: 2026-03-08 18:08
+> 마지막 핸드오프: 2026-03-09 23:04
 > 상세: `docs/HANDOFF.md` 참조
-> 요약: 테마 커스터마이징 전면 업그레이드 완료 (2D HCT 피커, 슬롯, 3-SKU IAP, brightnessOverride, chroma 85%). 804 tests. 다음: 브랜치 머지 + IAP subtitle + Phase 7 릴리즈 BLOCK.
+> 요약: 보상형 피벗(테마 24h 체험 전용) + IAP UI 마무리 + 즐겨찾기 제한 UX 개선 완료. 812 tests. 다음: Phase 7 릴리즈 BLOCK (서명/ProGuard/AdMob ID/Play Store).
