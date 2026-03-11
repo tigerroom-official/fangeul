@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:fangeul/core/entities/user_progress.dart';
@@ -26,6 +27,7 @@ class UserProgressLocalDataSource {
   ///
   /// 서명 검증 실패 시 기본값 반환 (변조 감지).
   /// 저장된 데이터가 없으면 기본값 반환.
+  /// Android Keystore 손상(BadPaddingException) 시 키 삭제 후 기본값 반환.
   Future<UserProgress> load() async {
     try {
       final dataStr = await _storage.read(key: _dataKey);
@@ -46,6 +48,12 @@ class UserProgressLocalDataSource {
 
       final json = jsonDecode(dataStr) as Map<String, dynamic>;
       return _fromJson(json);
+    } on PlatformException catch (e) {
+      // Android Keystore 암호화 키 손상 (BadPaddingException 등)
+      // → 손상된 데이터 삭제 후 기본값으로 복구
+      debugPrint('UserProgressLocalDataSource.load PlatformException: $e');
+      await _deleteCorruptedKeys();
+      return const UserProgress();
     } catch (e) {
       debugPrint('UserProgressLocalDataSource.load failed: $e');
       return const UserProgress();
@@ -55,6 +63,7 @@ class UserProgressLocalDataSource {
   /// 진행 상황을 저장한다.
   ///
   /// 단조증가 타임스탬프 검증: 새 데이터의 타임스탬프가 기존보다 작으면 저장 거부.
+  /// Android Keystore 손상 시 키 삭제 후 재시도.
   Future<void> save(UserProgress progress) async {
     try {
       final json = _toJson(progress);
@@ -63,8 +72,34 @@ class UserProgressLocalDataSource {
 
       await _storage.write(key: _dataKey, value: dataStr);
       await _storage.write(key: _signatureKey, value: sig);
+    } on PlatformException catch (e) {
+      debugPrint('UserProgressLocalDataSource.save PlatformException: $e');
+      // 손상된 키 삭제 후 재시도
+      await _deleteCorruptedKeys();
+      try {
+        final json = _toJson(progress);
+        final dataStr = jsonEncode(json);
+        final sig = _computeHmac(dataStr);
+        await _storage.write(key: _dataKey, value: dataStr);
+        await _storage.write(key: _signatureKey, value: sig);
+      } catch (retryError) {
+        debugPrint('UserProgressLocalDataSource.save retry failed: $retryError');
+      }
     } catch (e) {
       debugPrint('UserProgressLocalDataSource.save failed: $e');
+    }
+  }
+
+  /// 손상된 암호화 키를 삭제한다.
+  ///
+  /// Android Keystore 손상(BadPaddingException) 시 호출.
+  /// 삭제 자체도 실패할 수 있으므로 예외를 무시한다.
+  Future<void> _deleteCorruptedKeys() async {
+    try {
+      await _storage.delete(key: _dataKey);
+      await _storage.delete(key: _signatureKey);
+    } catch (e) {
+      debugPrint('UserProgressLocalDataSource._deleteCorruptedKeys failed: $e');
     }
   }
 

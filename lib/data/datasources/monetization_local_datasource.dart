@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:fangeul/core/entities/monetization_state.dart';
@@ -30,30 +31,35 @@ class MonetizationLocalDataSource {
   /// - 저장된 데이터가 없으면 기본 [MonetizationState] 반환.
   /// - HMAC 서명 불일치 시 변조로 간주하여 데이터 삭제 후 기본값 반환.
   /// - JSON 파싱 오류 시 데이터 삭제 후 기본값 반환.
+  /// - Android Keystore 손상(BadPaddingException) 시 키 삭제 후 기본값 반환.
   Future<MonetizationState> load() async {
-    final dataStr = await _storage.read(key: dataKey);
-    final sigStr = await _storage.read(key: sigKey);
-
-    if (dataStr == null || sigStr == null) {
-      return const MonetizationState();
-    }
-
-    // HMAC 검증
-    final expectedSig = computeHmac(dataStr);
-    if (sigStr != expectedSig) {
-      debugPrint('[MonetizationLocalDataSource] HMAC mismatch — resetting');
-      await _storage.delete(key: dataKey);
-      await _storage.delete(key: sigKey);
-      return const MonetizationState();
-    }
-
     try {
+      final dataStr = await _storage.read(key: dataKey);
+      final sigStr = await _storage.read(key: sigKey);
+
+      if (dataStr == null || sigStr == null) {
+        return const MonetizationState();
+      }
+
+      // HMAC 검증
+      final expectedSig = computeHmac(dataStr);
+      if (sigStr != expectedSig) {
+        debugPrint('[MonetizationLocalDataSource] HMAC mismatch — resetting');
+        await _storage.delete(key: dataKey);
+        await _storage.delete(key: sigKey);
+        return const MonetizationState();
+      }
+
       final json = jsonDecode(dataStr) as Map<String, dynamic>;
       return MonetizationState.fromJson(json);
+    } on PlatformException catch (e) {
+      // Android Keystore 암호화 키 손상 (BadPaddingException 등)
+      debugPrint('[MonetizationLocalDataSource] PlatformException: $e');
+      await _deleteCorruptedKeys();
+      return const MonetizationState();
     } catch (e) {
-      debugPrint('[MonetizationLocalDataSource] JSON parse error — resetting');
-      await _storage.delete(key: dataKey);
-      await _storage.delete(key: sigKey);
+      debugPrint('[MonetizationLocalDataSource] load failed: $e');
+      await _deleteCorruptedKeys();
       return const MonetizationState();
     }
   }
@@ -61,12 +67,38 @@ class MonetizationLocalDataSource {
   /// 수익화 상태를 저장한다.
   ///
   /// JSON 직렬화 후 HMAC 서명과 함께 SecureStorage에 기록.
+  /// Android Keystore 손상 시 키 삭제 후 재시도.
   Future<void> save(MonetizationState state) async {
-    final dataStr = jsonEncode(state.toJson());
-    final sig = computeHmac(dataStr);
+    try {
+      final dataStr = jsonEncode(state.toJson());
+      final sig = computeHmac(dataStr);
 
-    await _storage.write(key: dataKey, value: dataStr);
-    await _storage.write(key: sigKey, value: sig);
+      await _storage.write(key: dataKey, value: dataStr);
+      await _storage.write(key: sigKey, value: sig);
+    } on PlatformException catch (e) {
+      debugPrint('[MonetizationLocalDataSource] save PlatformException: $e');
+      await _deleteCorruptedKeys();
+      try {
+        final dataStr = jsonEncode(state.toJson());
+        final sig = computeHmac(dataStr);
+        await _storage.write(key: dataKey, value: dataStr);
+        await _storage.write(key: sigKey, value: sig);
+      } catch (retryError) {
+        debugPrint('[MonetizationLocalDataSource] save retry failed: $retryError');
+      }
+    } catch (e) {
+      debugPrint('[MonetizationLocalDataSource] save failed: $e');
+    }
+  }
+
+  /// 손상된 암호화 키를 삭제한다.
+  Future<void> _deleteCorruptedKeys() async {
+    try {
+      await _storage.delete(key: dataKey);
+      await _storage.delete(key: sigKey);
+    } catch (e) {
+      debugPrint('[MonetizationLocalDataSource] _deleteCorruptedKeys failed: $e');
+    }
   }
 
   /// HMAC-SHA256 서명을 계산한다.
