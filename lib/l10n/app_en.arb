@@ -15,12 +15,12 @@
   "streakDays": "{streak}-day streak",
 
   "navHome": "Home",
-  "navConverter": "Converter",
+  "navConverter": "Key Swap",
   "navPhrases": "Phrases",
 
   "dailyCardLoadError": "Couldn't load today's card",
 
-  "converterTitle": "Converter",
+  "converterTitle": "Key Swap",
   "converterTabEngToKor": "Eng→Kor",
   "converterTabKorToEng": "Kor→Eng",
   "converterTabRomanize": "Romanize",

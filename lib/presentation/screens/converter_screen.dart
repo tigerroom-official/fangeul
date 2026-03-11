@@ -11,6 +11,7 @@ import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/converter_providers.dart';
 import 'package:fangeul/presentation/widgets/converter_input.dart';
 import 'package:fangeul/presentation/widgets/korean_keyboard.dart';
+import 'package:fangeul/presentation/widgets/shell_scaffold.dart';
 
 /// 변환기 화면 -- 커스텀 한글 키보드 통합.
 ///
@@ -78,9 +79,6 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
     _tabController = TabController(length: _modes.length, vsync: this);
     _tabController.addListener(_onTabChanged);
     _restoreSavedTab();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _focusNode.requestFocus();
-    });
   }
 
   /// SharedPreferences에서 저장된 탭 인덱스를 복원한다.
@@ -266,8 +264,21 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
 
   // ── 빌드 ──
 
+  /// 하단 네비게이션에서 Key Swap 탭(인덱스 1)으로 전환 시 텍스트 필드에 포커스.
+  static const _converterTabIndex = 1;
+
   @override
   Widget build(BuildContext context) {
+    // IndexedStack은 탭 전환 시 initState를 재호출하지 않으므로
+    // provider 변경을 listen하여 탭 진입 시 포커스를 부여한다.
+    ref.listen(activeShellTabProvider, (prev, next) {
+      if (next == _converterTabIndex) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted && !_focusNode.hasFocus) _focusNode.requestFocus();
+        });
+      }
+    });
+
     final l = L.of(context);
     final state = ref.watch(converterNotifierProvider);
 

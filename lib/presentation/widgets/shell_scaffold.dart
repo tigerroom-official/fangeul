@@ -7,6 +7,12 @@ import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
 
+/// 현재 활성 하단 네비게이션 탭 인덱스.
+///
+/// [ShellScaffold]에서 갱신하며, 자식 화면(ConverterScreen 등)이
+/// 탭 전환을 감지하는 데 사용한다.
+final activeShellTabProvider = StateProvider<int>((ref) => 0);
+
 /// 3탭 BottomNavigationBar 쉘.
 ///
 /// [StatefulShellRoute.indexedStack]의 builder에서 사용.
@@ -68,10 +74,13 @@ class _ShellScaffoldState extends ConsumerState<ShellScaffold>
       body: widget.navigationShell,
       bottomNavigationBar: NavigationBar(
         selectedIndex: widget.navigationShell.currentIndex,
-        onDestinationSelected: (index) => widget.navigationShell.goBranch(
-          index,
-          initialLocation: index == widget.navigationShell.currentIndex,
-        ),
+        onDestinationSelected: (index) {
+          ref.read(activeShellTabProvider.notifier).state = index;
+          widget.navigationShell.goBranch(
+            index,
+            initialLocation: index == widget.navigationShell.currentIndex,
+          );
+        },
         destinations: [
           NavigationDestination(
             icon: const Icon(Icons.home_outlined),

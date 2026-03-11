@@ -69,30 +69,32 @@ class ConverterInput extends StatelessWidget {
           style: theme.textTheme.bodyLarge,
           decoration: InputDecoration(
             hintText: hintText,
-            suffixIcon: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (onPaste != null)
-                  IconButton(
-                    icon: const Icon(Icons.content_paste, size: 18),
-                    onPressed: onPaste,
-                    tooltip: l.converterPaste,
-                    visualDensity: VisualDensity.compact,
-                    padding: EdgeInsets.zero,
-                    constraints:
-                        const BoxConstraints(minWidth: 36, minHeight: 36),
-                  ),
-                if (controller.text.isNotEmpty)
-                  IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: onClear,
-                    visualDensity: VisualDensity.compact,
-                    padding: EdgeInsets.zero,
-                    constraints:
-                        const BoxConstraints(minWidth: 36, minHeight: 36),
-                  ),
-              ],
-            ),
+            suffixIcon: (onPaste != null || controller.text.isNotEmpty)
+                ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (onPaste != null)
+                        IconButton(
+                          icon: const Icon(Icons.content_paste, size: 18),
+                          onPressed: onPaste,
+                          tooltip: l.converterPaste,
+                          visualDensity: VisualDensity.compact,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(
+                              minWidth: 36, minHeight: 36),
+                        ),
+                      if (controller.text.isNotEmpty)
+                        IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: onClear,
+                          visualDensity: VisualDensity.compact,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(
+                              minWidth: 36, minHeight: 36),
+                        ),
+                    ],
+                  )
+                : null,
           ),
         ),
         const SizedBox(height: 24),

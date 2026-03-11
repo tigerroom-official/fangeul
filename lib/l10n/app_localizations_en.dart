@@ -44,7 +44,7 @@ class LEn extends L {
   String get navHome => 'Home';
 
   @override
-  String get navConverter => 'Converter';
+  String get navConverter => 'Key Swap';
 
   @override
   String get navPhrases => 'Phrases';
@@ -53,7 +53,7 @@ class LEn extends L {
   String get dailyCardLoadError => 'Couldn\'t load today\'s card';
 
   @override
-  String get converterTitle => 'Converter';
+  String get converterTitle => 'Key Swap';
 
   @override
   String get converterTabEngToKor => 'Eng→Kor';
