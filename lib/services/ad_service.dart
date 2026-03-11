@@ -17,6 +17,12 @@ class AdService {
     if (_isInitialized) return;
     try {
       await MobileAds.instance.initialize();
+      // 광고 콘텐츠 등급 제한: T(Teen) — 성인 광고 차단.
+      MobileAds.instance.updateRequestConfiguration(
+        RequestConfiguration(
+          maxAdContentRating: MaxAdContentRating.t,
+        ),
+      );
       _isInitialized = true;
     } catch (e) {
       debugPrint('AdService: init failed: $e');

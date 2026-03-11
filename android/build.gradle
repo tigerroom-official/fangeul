@@ -17,6 +17,12 @@ subprojects {
                 }
             }
         }
+        // Force all Kotlin subprojects to JVM 17 (fixes in_app_review etc.)
+        tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+            kotlinOptions {
+                jvmTarget = "17"
+            }
+        }
     }
 }
 subprojects {

@@ -17,6 +17,12 @@ import 'package:fangeul/presentation/theme/choeae_color_config.dart';
 import 'package:fangeul/presentation/theme/palette_registry.dart';
 import 'package:fangeul/presentation/widgets/theme_picker_sheet.dart';
 
+/// 개인정보처리방침 URL — 호스팅 후 실제 URL로 교체.
+const _privacyPolicyUrl = 'https://tigerroom-official.github.io/fangeul/privacy-policy.html';
+
+/// 이용약관 URL — 호스팅 후 실제 URL로 교체.
+const _termsUrl = 'https://tigerroom-official.github.io/fangeul/terms.html';
+
 /// 지원 언어 목록 — null은 시스템 기본.
 const _supportedLocaleOptions = <Locale?>[
   null,
@@ -180,7 +186,33 @@ class SettingsScreen extends ConsumerWidget {
             },
           ),
           const Divider(),
-          // 8. 앱 정보
+          // 8. 개인정보처리방침
+          ListTile(
+            leading: const Icon(Icons.privacy_tip_outlined),
+            title: Text(l.privacyPolicyLabel),
+            subtitle: Text(l.privacyPolicySubtitle),
+            onTap: () {
+              launchUrl(
+                Uri.parse(_privacyPolicyUrl),
+                mode: LaunchMode.externalApplication,
+              );
+            },
+          ),
+          const Divider(),
+          // 9. 이용약관
+          ListTile(
+            leading: const Icon(Icons.description_outlined),
+            title: Text(l.termsLabel),
+            subtitle: Text(l.termsSubtitle),
+            onTap: () {
+              launchUrl(
+                Uri.parse(_termsUrl),
+                mode: LaunchMode.externalApplication,
+              );
+            },
+          ),
+          const Divider(),
+          // 10. 앱 정보
           ListTile(
             leading: const Icon(Icons.info_outline),
             title: Text(l.appInfoTitle),
