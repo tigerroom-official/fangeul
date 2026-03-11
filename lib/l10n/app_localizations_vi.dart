@@ -74,6 +74,9 @@ class LVi extends L {
   String get converterHintRomanize => 'Nhập tiếng Hàn (VD: 사랑해요)';
 
   @override
+  String get converterPaste => '붙여넣기';
+
+  @override
   String get phrasesTitle => 'Câu nói';
 
   @override
@@ -639,4 +642,17 @@ class LVi extends L {
 
   @override
   String get iapThemeBundleSave => 'Tiết kiệm ₩480 · Yêu thích không giới hạn';
+
+  @override
+  String get privacyPolicyLabel => 'Chính sách Bảo mật';
+
+  @override
+  String get privacyPolicySubtitle =>
+      'Thông tin chúng tôi thu thập và cách sử dụng';
+
+  @override
+  String get termsLabel => 'Điều khoản Dịch vụ';
+
+  @override
+  String get termsSubtitle => 'Điều kiện sử dụng dịch vụ';
 }

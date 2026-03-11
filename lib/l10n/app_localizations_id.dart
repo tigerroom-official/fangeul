@@ -75,6 +75,9 @@ class LId extends L {
   String get converterHintRomanize => 'Ketik dalam bahasa Korea (cth: 사랑해요)';
 
   @override
+  String get converterPaste => '붙여넣기';
+
+  @override
   String get phrasesTitle => 'Frasa';
 
   @override
@@ -641,4 +644,17 @@ class LId extends L {
 
   @override
   String get iapThemeBundleSave => 'Hemat ₩480 · Favorit tak terbatas';
+
+  @override
+  String get privacyPolicyLabel => 'Kebijakan Privasi';
+
+  @override
+  String get privacyPolicySubtitle =>
+      'Informasi yang kami kumpulkan dan cara penggunaannya';
+
+  @override
+  String get termsLabel => 'Ketentuan Layanan';
+
+  @override
+  String get termsSubtitle => 'Syarat penggunaan layanan';
 }

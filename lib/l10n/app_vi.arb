@@ -244,5 +244,10 @@
   "iapThemeSlots": "Lưu 3 chủ đề yêu thích",
   "iapThemeSlotsSub": "Chuyển slot chủ đề · Yêu thích không giới hạn",
   "iapThemeBundle": "Gói đầy đủ (giảm 24%)",
-  "iapThemeBundleSave": "Tiết kiệm ₩480 · Yêu thích không giới hạn"
+  "iapThemeBundleSave": "Tiết kiệm ₩480 · Yêu thích không giới hạn",
+
+  "privacyPolicyLabel": "Chính sách Bảo mật",
+  "privacyPolicySubtitle": "Thông tin chúng tôi thu thập và cách sử dụng",
+  "termsLabel": "Điều khoản Dịch vụ",
+  "termsSubtitle": "Điều kiện sử dụng dịch vụ"
 }

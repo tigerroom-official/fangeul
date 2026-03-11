@@ -32,6 +32,7 @@
   "converterHintEngToKor": "영문을 입력하세요 (예: gksrmf)",
   "converterHintKorToEng": "한글을 입력하세요 (예: 한글)",
   "converterHintRomanize": "한글을 입력하세요 (예: 사랑해요)",
+  "converterPaste": "붙여넣기",
 
   "phrasesTitle": "문구",
   "phrasesEmpty": "문구가 없습니다",
@@ -325,5 +326,10 @@
   "iapThemeSlots": "최애 테마 3개 저장",
   "iapThemeSlotsSub": "테마 슬롯 전환 · 즐겨찾기 무제한",
   "iapThemeBundle": "전체 번들 (24% 할인)",
-  "iapThemeBundleSave": "₩480 절약 · 즐겨찾기 무제한"
+  "iapThemeBundleSave": "₩480 절약 · 즐겨찾기 무제한",
+
+  "privacyPolicyLabel": "개인정보처리방침",
+  "privacyPolicySubtitle": "수집 정보 및 이용 목적 안내",
+  "termsLabel": "이용약관",
+  "termsSubtitle": "서비스 이용 조건 안내"
 }

@@ -178,6 +178,8 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
           _buildRow2(kbState),
           const SizedBox(height: 4),
           _buildRow3(kbState),
+          const SizedBox(height: 4),
+          _buildRow4(),
         ],
       ),
     );
@@ -204,12 +206,14 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
     );
   }
 
-  /// Row 2: 9개 문자 키 + DEL 키.
+  /// Row 2: 9개 문자 키 (중앙 정렬, 반 키 너비 인덴트).
   Widget _buildRow2(KeyboardState kbState) {
     return Row(
       children: [
+        const Spacer(),
         ..._row2.map(
           (data) => Expanded(
+            flex: 2,
             child: KeyboardKey(
               keyType: KeyType.character,
               keyData: data,
@@ -219,24 +223,17 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
             ),
           ),
         ),
-        Expanded(
-          child: KeyboardKey(
-            keyType: KeyType.backspace,
-            onTap: widget.onBackspace,
-            onLongPressStart: _onDeleteLongPressStart,
-            onLongPressEnd: _onDeleteLongPressEnd,
-          ),
-        ),
+        const Spacer(),
       ],
     );
   }
 
-  /// Row 3: CAPS (flex 13) + 7개 문자 키 (flex 10) + SPACE (flex 20).
+  /// Row 3: CAPS (flex 15) + 7개 문자 키 (flex 10) + DEL (flex 15).
   Widget _buildRow3(KeyboardState kbState) {
     return Row(
       children: [
         Expanded(
-          flex: 13,
+          flex: 15,
           child: KeyboardKey(
             keyType: KeyType.caps,
             isShifted: kbState.isShifted,
@@ -258,12 +255,31 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
           ),
         ),
         Expanded(
-          flex: 20,
+          flex: 15,
+          child: KeyboardKey(
+            keyType: KeyType.backspace,
+            onTap: widget.onBackspace,
+            onLongPressStart: _onDeleteLongPressStart,
+            onLongPressEnd: _onDeleteLongPressEnd,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Row 4: 중앙 정렬 스페이스바.
+  Widget _buildRow4() {
+    return Row(
+      children: [
+        const Spacer(flex: 2),
+        Expanded(
+          flex: 6,
           child: KeyboardKey(
             keyType: KeyType.space,
             onTap: widget.onSpace,
           ),
         ),
+        const Spacer(flex: 2),
       ],
     );
   }

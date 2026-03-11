@@ -74,6 +74,9 @@ class LEn extends L {
   String get converterHintRomanize => 'Type in Korean (e.g. 사랑해요)';
 
   @override
+  String get converterPaste => 'Paste';
+
+  @override
   String get phrasesTitle => 'Phrases';
 
   @override
@@ -638,4 +641,17 @@ class LEn extends L {
 
   @override
   String get iapThemeBundleSave => 'Save ₩480 · Unlimited favorites';
+
+  @override
+  String get privacyPolicyLabel => 'Privacy Policy';
+
+  @override
+  String get privacyPolicySubtitle =>
+      'Information we collect and how we use it';
+
+  @override
+  String get termsLabel => 'Terms of Service';
+
+  @override
+  String get termsSubtitle => 'Conditions for using the service';
 }

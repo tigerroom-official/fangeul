@@ -244,5 +244,10 @@
   "iapThemeSlots": "บันทึก 3 ธีมโปรด",
   "iapThemeSlotsSub": "สลับสล็อตธีม · รายการโปรดไม่จำกัด",
   "iapThemeBundle": "แพ็กเกจเต็ม (ลด 24%)",
-  "iapThemeBundleSave": "ประหยัด ₩480 · รายการโปรดไม่จำกัด"
+  "iapThemeBundleSave": "ประหยัด ₩480 · รายการโปรดไม่จำกัด",
+
+  "privacyPolicyLabel": "นโยบายความเป็นส่วนตัว",
+  "privacyPolicySubtitle": "ข้อมูลที่เราเก็บรวบรวมและวิธีการใช้งาน",
+  "termsLabel": "เงื่อนไขการให้บริการ",
+  "termsSubtitle": "เงื่อนไขการใช้บริการ"
 }

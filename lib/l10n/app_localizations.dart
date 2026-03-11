@@ -233,6 +233,12 @@ abstract class L {
   /// **'한글을 입력하세요 (예: 사랑해요)'**
   String get converterHintRomanize;
 
+  /// No description provided for @converterPaste.
+  ///
+  /// In ko, this message translates to:
+  /// **'붙여넣기'**
+  String get converterPaste;
+
   /// No description provided for @phrasesTitle.
   ///
   /// In ko, this message translates to:
@@ -1276,6 +1282,30 @@ abstract class L {
   /// In ko, this message translates to:
   /// **'₩480 절약 · 즐겨찾기 무제한'**
   String get iapThemeBundleSave;
+
+  /// No description provided for @privacyPolicyLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'개인정보처리방침'**
+  String get privacyPolicyLabel;
+
+  /// No description provided for @privacyPolicySubtitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'수집 정보 및 이용 목적 안내'**
+  String get privacyPolicySubtitle;
+
+  /// No description provided for @termsLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'이용약관'**
+  String get termsLabel;
+
+  /// No description provided for @termsSubtitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'서비스 이용 조건 안내'**
+  String get termsSubtitle;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

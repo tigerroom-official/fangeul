@@ -74,6 +74,9 @@ class LTh extends L {
   String get converterHintRomanize => 'พิมพ์ภาษาเกาหลี (เช่น 사랑해요)';
 
   @override
+  String get converterPaste => '붙여넣기';
+
+  @override
   String get phrasesTitle => 'วลี';
 
   @override
@@ -633,4 +636,16 @@ class LTh extends L {
 
   @override
   String get iapThemeBundleSave => 'ประหยัด ₩480 · รายการโปรดไม่จำกัด';
+
+  @override
+  String get privacyPolicyLabel => 'นโยบายความเป็นส่วนตัว';
+
+  @override
+  String get privacyPolicySubtitle => 'ข้อมูลที่เราเก็บรวบรวมและวิธีการใช้งาน';
+
+  @override
+  String get termsLabel => 'เงื่อนไขการให้บริการ';
+
+  @override
+  String get termsSubtitle => 'เงื่อนไขการใช้บริการ';
 }

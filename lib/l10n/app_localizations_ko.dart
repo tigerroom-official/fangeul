@@ -74,6 +74,9 @@ class LKo extends L {
   String get converterHintRomanize => '한글을 입력하세요 (예: 사랑해요)';
 
   @override
+  String get converterPaste => '붙여넣기';
+
+  @override
   String get phrasesTitle => '문구';
 
   @override
@@ -625,4 +628,16 @@ class LKo extends L {
 
   @override
   String get iapThemeBundleSave => '₩480 절약 · 즐겨찾기 무제한';
+
+  @override
+  String get privacyPolicyLabel => '개인정보처리방침';
+
+  @override
+  String get privacyPolicySubtitle => '수집 정보 및 이용 목적 안내';
+
+  @override
+  String get termsLabel => '이용약관';
+
+  @override
+  String get termsSubtitle => '서비스 이용 조건 안내';
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:fangeul/core/engines/hangul_engine.dart';
 import 'package:fangeul/core/engines/keyboard_converter.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/converter_providers.dart';
@@ -29,6 +31,7 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
 
   late final TabController _tabController;
   final _textController = TextEditingController();
+  final _focusNode = FocusNode();
 
   /// 영->한 모드에서 누적된 영문 입력.
   String _engBuffer = '';
@@ -37,6 +40,13 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
   List<String> _jamoList = [];
 
   static const _modes = ConvertMode.values;
+
+  /// 각 변환 모드의 예시 입력/출력.
+  static const _examples = [
+    ('gksrmf', '한글'),
+    ('한글', 'gksrmf'),
+    ('사랑해요', 'saranghaeyo'),
+  ];
 
   /// 변환 모드별 탭 레이블 목록 (context 기반 i18n).
   List<String> _labels(L l) => [
@@ -67,6 +77,9 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
     _tabController = TabController(length: _modes.length, vsync: this);
     _tabController.addListener(_onTabChanged);
     _restoreSavedTab();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _focusNode.requestFocus();
+    });
   }
 
   /// SharedPreferences에서 저장된 탭 인덱스를 복원한다.
@@ -100,6 +113,7 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
   void dispose() {
     _tabController.removeListener(_onTabChanged);
     _tabController.dispose();
+    _focusNode.dispose();
     _textController.dispose();
     super.dispose();
   }
@@ -171,6 +185,43 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
     _convert();
   }
 
+  // ── 붙여넣기 ──
+
+  /// 클립보드 텍스트를 현재 모드의 버퍼에 붙여넣는다.
+  Future<void> _onPaste() async {
+    final data = await Clipboard.getData(Clipboard.kTextPlain);
+    final text = data?.text;
+    if (text == null || text.isEmpty) return;
+
+    if (_isEngToKor) {
+      _engBuffer = text;
+      _updateText(_engBuffer);
+    } else {
+      _jamoList = _decomposeToJamoList(text);
+      _updateText(KeyboardConverter.assembleJamos(_jamoList));
+    }
+    _convert();
+  }
+
+  /// 한글 텍스트를 자모 리스트로 분해한다 (붙여넣기용).
+  static List<String> _decomposeToJamoList(String text) {
+    final result = <String>[];
+    for (final rune in text.runes) {
+      final char = String.fromCharCode(rune);
+      if (HangulEngine.isSyllable(rune)) {
+        final jamos = HangulEngine.decompose(char);
+        for (final jamo in jamos) {
+          result.add(jamo.initial);
+          result.add(jamo.medial);
+          if (jamo.final_.isNotEmpty) result.add(jamo.final_);
+        }
+      } else {
+        result.add(char);
+      }
+    }
+    return result;
+  }
+
   // ── 변환 & 초기화 ──
 
   /// 현재 입력을 변환기에 전달한다.
@@ -222,9 +273,13 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
                 padding: const EdgeInsets.all(16),
                 child: ConverterInput(
                   controller: _textController,
+                  focusNode: _focusNode,
                   output: output,
                   hintText: _hints(l)[_tabController.index],
                   onClear: _clear,
+                  onPaste: _onPaste,
+                  exampleInput: _examples[_tabController.index].$1,
+                  exampleOutput: _examples[_tabController.index].$2,
                 ),
               ),
             ),

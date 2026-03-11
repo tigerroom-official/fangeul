@@ -244,5 +244,10 @@
   "iapThemeSlots": "Simpan 3 tema favorit",
   "iapThemeSlotsSub": "Ganti slot tema · Favorit tak terbatas",
   "iapThemeBundle": "Paket lengkap (diskon 24%)",
-  "iapThemeBundleSave": "Hemat ₩480 · Favorit tak terbatas"
+  "iapThemeBundleSave": "Hemat ₩480 · Favorit tak terbatas",
+
+  "privacyPolicyLabel": "Kebijakan Privasi",
+  "privacyPolicySubtitle": "Informasi yang kami kumpulkan dan cara penggunaannya",
+  "termsLabel": "Ketentuan Layanan",
+  "termsSubtitle": "Syarat penggunaan layanan"
 }

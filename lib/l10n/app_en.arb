@@ -27,6 +27,7 @@
   "converterHintEngToKor": "Type in English (e.g. gksrmf)",
   "converterHintKorToEng": "Type in Korean (e.g. 한글)",
   "converterHintRomanize": "Type in Korean (e.g. 사랑해요)",
+  "converterPaste": "Paste",
 
   "phrasesTitle": "Phrases",
   "phrasesEmpty": "No phrases available",
@@ -244,5 +245,10 @@
   "iapThemeSlots": "Save 3 favorite themes",
   "iapThemeSlotsSub": "Theme slot switching · Unlimited favorites",
   "iapThemeBundle": "Full Bundle (24% off)",
-  "iapThemeBundleSave": "Save ₩480 · Unlimited favorites"
+  "iapThemeBundleSave": "Save ₩480 · Unlimited favorites",
+
+  "privacyPolicyLabel": "Privacy Policy",
+  "privacyPolicySubtitle": "Information we collect and how we use it",
+  "termsLabel": "Terms of Service",
+  "termsSubtitle": "Conditions for using the service"
 }

@@ -244,5 +244,10 @@
   "iapThemeSlots": "Salvar 3 temas favoritos",
   "iapThemeSlotsSub": "Alternância de slots de tema · Favoritos ilimitados",
   "iapThemeBundle": "Pacote completo (24% desc.)",
-  "iapThemeBundleSave": "Economize ₩480 · Favoritos ilimitados"
+  "iapThemeBundleSave": "Economize ₩480 · Favoritos ilimitados",
+
+  "privacyPolicyLabel": "Política de Privacidade",
+  "privacyPolicySubtitle": "Informações que coletamos e como as usamos",
+  "termsLabel": "Termos de Serviço",
+  "termsSubtitle": "Condições de uso do serviço"
 }

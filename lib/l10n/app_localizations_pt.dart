@@ -74,6 +74,9 @@ class LPt extends L {
   String get converterHintRomanize => 'Digite em coreano (ex: 사랑해요)';
 
   @override
+  String get converterPaste => '붙여넣기';
+
+  @override
   String get phrasesTitle => 'Frases';
 
   @override
@@ -642,4 +645,17 @@ class LPt extends L {
 
   @override
   String get iapThemeBundleSave => 'Economize ₩480 · Favoritos ilimitados';
+
+  @override
+  String get privacyPolicyLabel => 'Política de Privacidade';
+
+  @override
+  String get privacyPolicySubtitle =>
+      'Informações que coletamos e como as usamos';
+
+  @override
+  String get termsLabel => 'Termos de Serviço';
+
+  @override
+  String get termsSubtitle => 'Condições de uso do serviço';
 }
