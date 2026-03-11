@@ -74,7 +74,7 @@ class LEs extends L {
   String get converterHintRomanize => 'Escribe en coreano (ej: 사랑해요)';
 
   @override
-  String get converterPaste => '붙여넣기';
+  String get converterPaste => 'Pegar';
 
   @override
   String get phrasesTitle => 'Frases';

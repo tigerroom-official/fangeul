@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:fangeul/core/engines/hangul_engine.dart';
+import 'package:fangeul/core/engines/hangul_tables.dart';
 import 'package:fangeul/core/engines/keyboard_converter.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/converter_providers.dart';
@@ -192,6 +193,7 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
     final data = await Clipboard.getData(Clipboard.kTextPlain);
     final text = data?.text;
     if (text == null || text.isEmpty) return;
+    if (!mounted) return;
 
     if (_isEngToKor) {
       _engBuffer = text;
@@ -203,7 +205,10 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
     _convert();
   }
 
-  /// 한글 텍스트를 자모 리스트로 분해한다 (붙여넣기용).
+  /// 한글 텍스트를 키보드 단위 자모 리스트로 분해한다 (붙여넣기용).
+  ///
+  /// 복합모음(ㅘ→ㅗ+ㅏ)과 겹받침(ㄳ→ㄱ+ㅅ)을 키보드 입력 단위로
+  /// 분리하여, 붙여넣기 후 backspace가 키 단위로 동작하도록 한다.
   static List<String> _decomposeToJamoList(String text) {
     final result = <String>[];
     for (final rune in text.runes) {
@@ -211,9 +216,26 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
       if (HangulEngine.isSyllable(rune)) {
         final jamos = HangulEngine.decompose(char);
         for (final jamo in jamos) {
+          // 초성: 단일 자음이므로 그대로
           result.add(jamo.initial);
-          result.add(jamo.medial);
-          if (jamo.final_.isNotEmpty) result.add(jamo.final_);
+          // 중성: 복합모음이면 분리
+          final vowelSplit =
+              HangulTables.compoundVowelSplit[jamo.medial];
+          if (vowelSplit != null) {
+            result.addAll(vowelSplit);
+          } else {
+            result.add(jamo.medial);
+          }
+          // 종성: 겹받침이면 분리
+          if (jamo.final_.isNotEmpty) {
+            final finalSplit =
+                HangulTables.doubleFinalSplit[jamo.final_];
+            if (finalSplit != null) {
+              result.addAll(finalSplit);
+            } else {
+              result.add(jamo.final_);
+            }
+          }
         }
       } else {
         result.add(char);

@@ -27,6 +27,7 @@
   "converterHintEngToKor": "พิมพ์ภาษาอังกฤษ (เช่น gksrmf)",
   "converterHintKorToEng": "พิมพ์ภาษาเกาหลี (เช่น 한글)",
   "converterHintRomanize": "พิมพ์ภาษาเกาหลี (เช่น 사랑해요)",
+  "converterPaste": "วาง",
 
   "phrasesTitle": "วลี",
   "phrasesEmpty": "ไม่มีวลี",

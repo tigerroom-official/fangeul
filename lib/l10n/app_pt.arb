@@ -27,6 +27,7 @@
   "converterHintEngToKor": "Digite em inglês (ex: gksrmf)",
   "converterHintKorToEng": "Digite em coreano (ex: 한글)",
   "converterHintRomanize": "Digite em coreano (ex: 사랑해요)",
+  "converterPaste": "Colar",
 
   "phrasesTitle": "Frases",
   "phrasesEmpty": "Nenhuma frase encontrada",

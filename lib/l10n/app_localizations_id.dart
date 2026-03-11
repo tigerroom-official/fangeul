@@ -75,7 +75,7 @@ class LId extends L {
   String get converterHintRomanize => 'Ketik dalam bahasa Korea (cth: 사랑해요)';
 
   @override
-  String get converterPaste => '붙여넣기';
+  String get converterPaste => 'Tempel';
 
   @override
   String get phrasesTitle => 'Frasa';

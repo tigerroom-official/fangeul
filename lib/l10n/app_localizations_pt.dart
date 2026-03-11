@@ -74,7 +74,7 @@ class LPt extends L {
   String get converterHintRomanize => 'Digite em coreano (ex: 사랑해요)';
 
   @override
-  String get converterPaste => '붙여넣기';
+  String get converterPaste => 'Colar';
 
   @override
   String get phrasesTitle => 'Frases';

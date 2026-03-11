@@ -74,7 +74,7 @@ class LVi extends L {
   String get converterHintRomanize => 'Nhập tiếng Hàn (VD: 사랑해요)';
 
   @override
-  String get converterPaste => '붙여넣기';
+  String get converterPaste => 'Dán';
 
   @override
   String get phrasesTitle => 'Câu nói';

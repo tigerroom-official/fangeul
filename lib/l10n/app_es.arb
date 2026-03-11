@@ -27,6 +27,7 @@
   "converterHintEngToKor": "Escribe en inglés (ej: gksrmf)",
   "converterHintKorToEng": "Escribe en coreano (ej: 한글)",
   "converterHintRomanize": "Escribe en coreano (ej: 사랑해요)",
+  "converterPaste": "Pegar",
 
   "phrasesTitle": "Frases",
   "phrasesEmpty": "No hay frases",

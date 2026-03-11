@@ -74,7 +74,7 @@ class LTh extends L {
   String get converterHintRomanize => 'พิมพ์ภาษาเกาหลี (เช่น 사랑해요)';
 
   @override
-  String get converterPaste => '붙여넣기';
+  String get converterPaste => 'วาง';
 
   @override
   String get phrasesTitle => 'วลี';
