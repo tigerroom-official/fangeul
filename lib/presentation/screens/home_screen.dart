@@ -104,12 +104,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       onComplete: isCompleted
                           ? null
                           : () async {
-                              final useCase =
-                                  ref.read(updateStreakUseCaseProvider);
-                              await useCase.execute(now: DateTime.now());
-                              ref.invalidate(userProgressProvider);
-                              ref.read(showCelebrationProvider.notifier).state =
-                                  true;
+                              try {
+                                final useCase =
+                                    ref.read(updateStreakUseCaseProvider);
+                                await useCase.execute(now: DateTime.now());
+                                ref.invalidate(userProgressProvider);
+                                ref.read(showCelebrationProvider.notifier)
+                                    .state = true;
+                              } catch (e) {
+                                debugPrint('onComplete failed: $e');
+                                if (!context.mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          '${L.of(context).errorPrefix} $e')),
+                                );
+                              }
                             },
                       onShare: () => shareCard(
                         card: card,

@@ -6,12 +6,14 @@ import 'package:in_app_review/in_app_review.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:fangeul/core/entities/monetization_state.dart';
+import 'package:fangeul/core/entities/user_progress.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/platform/bubble_state.dart';
 import 'package:fangeul/presentation/providers/bubble_providers.dart';
 import 'package:fangeul/presentation/providers/choeae_color_provider.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
+import 'package:fangeul/presentation/providers/progress_providers.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
 import 'package:fangeul/presentation/theme/choeae_color_config.dart';
 import 'package:fangeul/presentation/theme/palette_registry.dart';
@@ -235,9 +237,11 @@ class SettingsScreen extends ConsumerWidget {
               );
             },
           ),
-          // 디버그 전용 수익화 테스트 패널
+          // 디버그 전용 테스트 패널
           if (kDebugMode) ...[
             const Divider(thickness: 3),
+            const _DebugProgressPanel(),
+            const Divider(thickness: 2),
             const _DebugMonetizationPanel(),
           ],
         ],
@@ -376,6 +380,112 @@ class _BubbleToggleTile extends ConsumerWidget {
     if (shouldOpen == true) {
       await notifier.requestIgnoreBatteryOptimization();
     }
+  }
+}
+
+/// 디버그 전용 — 스트릭/진행상황 조작 패널.
+///
+/// kDebugMode에서만 표시. 데일리 카드 Done 버튼 테스트 등에 사용.
+class _DebugProgressPanel extends ConsumerWidget {
+  const _DebugProgressPanel();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final progressAsync = ref.watch(userProgressProvider);
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+          child: Text(
+            'DEBUG: Progress / Streak',
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: Colors.redAccent,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: progressAsync.when(
+            data: (p) => Text(
+              'streak: ${p.streak} | total: ${p.totalStreakDays}\n'
+              'lastCompleted: ${p.lastCompletedDate ?? "never"}\n'
+              'lastTimestamp: ${p.lastTimestamp}\n'
+              'freezeCount: ${p.freezeCount}',
+              style: theme.textTheme.bodySmall?.copyWith(
+                fontFamily: 'monospace',
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            loading: () => const Text('Loading...'),
+            error: (e, _) => Text('Error: $e',
+                style: const TextStyle(color: Colors.red)),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              _DebugChip(
+                label: 'Reset Today',
+                onTap: () => _resetToday(ref),
+              ),
+              _DebugChip(
+                label: 'Set Streak 5',
+                onTap: () => _setStreak(ref, 5),
+              ),
+              _DebugChip(
+                label: 'Set Streak 0',
+                onTap: () => _setStreak(ref, 0),
+              ),
+              _DebugChip(
+                label: 'Clear All Progress',
+                color: Colors.red,
+                onTap: () => _clearAll(ref),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+      ],
+    );
+  }
+
+  /// 오늘 완료 기록만 제거 — Done 버튼을 다시 보이게 한다.
+  Future<void> _resetToday(WidgetRef ref) async {
+    final repo = ref.read(userProgressRepositoryProvider);
+    final progress = await repo.getProgress();
+    final yesterday = DateTime.now().subtract(const Duration(days: 1));
+    final y = yesterday.year.toString();
+    final m = yesterday.month.toString().padLeft(2, '0');
+    final d = yesterday.day.toString().padLeft(2, '0');
+    await repo.saveProgress(progress.copyWith(
+      lastCompletedDate: '$y-$m-$d',
+    ));
+    ref.invalidate(userProgressProvider);
+  }
+
+  /// 스트릭을 특정 값으로 설정.
+  Future<void> _setStreak(WidgetRef ref, int streak) async {
+    final repo = ref.read(userProgressRepositoryProvider);
+    final progress = await repo.getProgress();
+    await repo.saveProgress(progress.copyWith(
+      streak: streak,
+      totalStreakDays: streak,
+    ));
+    ref.invalidate(userProgressProvider);
+  }
+
+  /// 전체 진행 상황 초기화.
+  Future<void> _clearAll(WidgetRef ref) async {
+    final repo = ref.read(userProgressRepositoryProvider);
+    await repo.saveProgress(const UserProgress());
+    ref.invalidate(userProgressProvider);
   }
 }
 

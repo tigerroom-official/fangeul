@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:fangeul/core/entities/user_progress.dart';
@@ -26,26 +27,27 @@ class UserProgressLocalDataSource {
   /// 서명 검증 실패 시 기본값 반환 (변조 감지).
   /// 저장된 데이터가 없으면 기본값 반환.
   Future<UserProgress> load() async {
-    final dataStr = await _storage.read(key: _dataKey);
-    final sigStr = await _storage.read(key: _signatureKey);
-
-    if (dataStr == null || sigStr == null) {
-      return const UserProgress();
-    }
-
-    // HMAC 검증
-    final expectedSig = _computeHmac(dataStr);
-    if (sigStr != expectedSig) {
-      // 변조 감지 — 초기화
-      await _storage.delete(key: _dataKey);
-      await _storage.delete(key: _signatureKey);
-      return const UserProgress();
-    }
-
     try {
+      final dataStr = await _storage.read(key: _dataKey);
+      final sigStr = await _storage.read(key: _signatureKey);
+
+      if (dataStr == null || sigStr == null) {
+        return const UserProgress();
+      }
+
+      // HMAC 검증
+      final expectedSig = _computeHmac(dataStr);
+      if (sigStr != expectedSig) {
+        // 변조 감지 — 초기화
+        await _storage.delete(key: _dataKey);
+        await _storage.delete(key: _signatureKey);
+        return const UserProgress();
+      }
+
       final json = jsonDecode(dataStr) as Map<String, dynamic>;
       return _fromJson(json);
     } catch (e) {
+      debugPrint('UserProgressLocalDataSource.load failed: $e');
       return const UserProgress();
     }
   }
@@ -54,12 +56,16 @@ class UserProgressLocalDataSource {
   ///
   /// 단조증가 타임스탬프 검증: 새 데이터의 타임스탬프가 기존보다 작으면 저장 거부.
   Future<void> save(UserProgress progress) async {
-    final json = _toJson(progress);
-    final dataStr = jsonEncode(json);
-    final sig = _computeHmac(dataStr);
+    try {
+      final json = _toJson(progress);
+      final dataStr = jsonEncode(json);
+      final sig = _computeHmac(dataStr);
 
-    await _storage.write(key: _dataKey, value: dataStr);
-    await _storage.write(key: _signatureKey, value: sig);
+      await _storage.write(key: _dataKey, value: dataStr);
+      await _storage.write(key: _signatureKey, value: sig);
+    } catch (e) {
+      debugPrint('UserProgressLocalDataSource.save failed: $e');
+    }
   }
 
   String _computeHmac(String data) {
