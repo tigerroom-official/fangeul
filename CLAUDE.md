@@ -53,6 +53,6 @@ dart format --set-exit-if-changed .  # 포맷 검증
 | `docs/HANDOFF.md` | 세션 핸드오프 (최신 작업 상태) |
 
 ## 현재 작업 상태
-> 마지막 핸드오프: 2026-03-09 23:04
+> 마지막 핸드오프: 2026-03-11
 > 상세: `docs/HANDOFF.md` 참조
-> 요약: 보상형 피벗(테마 24h 체험 전용) + IAP UI 마무리 + 즐겨찾기 제한 UX 개선 완료. 812 tests. 다음: Phase 7 릴리즈 BLOCK (서명/ProGuard/AdMob ID/Play Store).
+> 요약: 릴리즈 준비(AdMob prod/ProGuard/서명) + Key Swap UX + Done 버튼 수정 완료. v1.0.0+4 AAB 빌드됨. 812 tests. 다음: Play Console 등록 + 내부 테스트 배포.
