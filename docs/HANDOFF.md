@@ -1,7 +1,7 @@
 # Fangeul — Session Handoff
 
-BASE_COMMIT: 09c8cae (이전 핸드오프)
-HANDOFF_COMMIT: b421e53
+BASE_COMMIT: b421e53 (이전 핸드오프)
+HANDOFF_COMMIT: 1f711e8
 BRANCH: main
 
 ---
@@ -30,13 +30,19 @@ BRANCH: main
 - 보상형 광고 피벗 (2026-03-09): TTS/즐겨찾기 시간제 해금 폐지 → 프리미엄 테마 24h 체험 전용
 - IAP UI 마무리 (2026-03-09): subtitle 설명 추가, 번들 "추천" 뱃지, Codex 리뷰 수정
 - 즐겨찾기 제한 UX 개선 (2026-03-09): 다이얼로그 직접적 메시지, SnackBar CTA 개선, 버블 해결 경로 추가
-- **릴리즈 준비 (2026-03-11)**: AdMob 프로덕션 ID + T-rating + targetSdk 35 + ProGuard + privacy/terms + 서명 설정
-- **변환기 UX 개선 (2026-03-11)**: autofocus + paste + 중앙 space bar + empty state 예시 + "Key Swap" 영문 리네이밍
-- **릴리즈 버그 수정 (2026-03-11)**: Done 버튼 silent failure (FlutterSecureStorage try-catch) + debug progress panel
-- **v1.0.0+4 AAB 빌드 완료** (2026-03-11): 내부 테스트용 릴리즈 번들
+- 릴리즈 준비 (2026-03-11): AdMob 프로덕션 ID + T-rating + targetSdk 35 + ProGuard + privacy/terms + 서명 설정
+- 변환기 UX 개선 (2026-03-11): autofocus + paste + 중앙 space bar + empty state 예시 + "Key Swap" 영문 리네이밍
+- 릴리즈 버그 수정 (2026-03-11): Done 버튼 silent failure (FlutterSecureStorage try-catch) + debug progress panel
+- v1.0.0+4 AAB 빌드 완료 (2026-03-11)
+- **FlutterSecureStorage BadPaddingException 크래시 수정** (2026-03-12): UserProgress + Monetization 양쪽 방어 + 8 테스트
+- **전문가 패널 토론** (2026-03-12): 일일카드 TTS + 스트릭 BM + 카드 컬렉션 설계 합의
+- **v1.0.0+5 내부 테스트 빌드** (2026-03-12): AAB 빌드 + Play Console 업로드
+- **Play Store 에셋** (2026-03-12): 아이콘 512x512 + 그래픽 이미지 1024x500 제작
+- **app-ads.txt 배포** (2026-03-12): `tigerroom-official.github.io` 별도 레포 생성 + GitHub Pages 활성화
 
 ### 활성 작업
-없음. main 브랜치에 전체 작업 머지 완료.
+- Play Console 스토어 등록정보 완성 (아이콘/그래픽 업로드됨, 스크린샷 미등록)
+- 다국어 스토어 등록 (ja/zh/id/th/vi) — 다음 세션 즉시 작업
 
 ### 보류/백로그 — MVP 출시 후
 - **v1.1 기능**: 한글 퍼즐(Wordle 스타일), 한글 카드 컬렉션(가챠)
@@ -53,107 +59,106 @@ BRANCH: main
 - 즐겨찾기 포화/TTS 한도 FanPassButton 트리거 (v1.1)
 - IAP "테마 슬롯 3개" → "최애 테마 3개 저장" 문구 리프레이밍 (P2)
 - P2: "팬글 서포터" 리프레이밍 — IAP를 "응원" 프레이밍으로 (Phase 7.1)
+- 일일카드 TTS 번들 통합 ₩1,900 (전문가 패널 합의, v1.1)
+- 스트릭 "축하" 감성 보상 + 마일스톤 시스템 (v1.1)
 
 ---
 
 ## 작업 요약
 
-릴리즈 준비(AdMob prod ID, T-rating, ProGuard, privacy/terms, 서명) + 변환기 UX 개선(autofocus, paste, Key Swap 리네이밍) + 릴리즈 빌드 Done 버튼 silent failure 수정 + debug progress panel 추가 + Codex 리뷰 수정. v1.0.0+4 AAB 빌드 완료. 812 tests pass.
+Crashlytics 크래시(FlutterSecureStorage BadPaddingException) 양쪽 DataSource 수정 + 전문가 패널 토론(TTS/스트릭 BM) + v1.0.0+5 AAB 빌드 + Play Store 에셋 제작 + app-ads.txt 배포. 812 tests pass.
 
 ## 완료된 작업
 
-- [x] 릴리즈 준비: AdMob 프로덕션 ID 교체 + T-rating + targetSdk 35 + ProGuard rules + privacy/terms HTML (fec087b)
-- [x] 변환기 UX: autofocus + paste 버튼 + 중앙 space bar + empty state 예시 (3594385)
-- [x] Codex 리뷰 수정: compound jamo decomposition + mounted guard + l10n (1618e8d)
-- [x] "Converter" → "Key Swap" 영문 리네이밍 + 탭 진입 시 autofocus + empty suffixIcon cleanup (84a05de)
-- [x] Done 버튼 silent failure 수정: FlutterSecureStorage try-catch + home_screen onComplete try-catch (a839781)
-- [x] Debug progress panel: settings_screen에 streak/progress 제어 패널 추가 (a839781)
-- [x] v1.0.0+4 AAB 빌드 → Play Console 내부 테스트 업로드 준비 완료
+- [x] FlutterSecureStorage BadPaddingException crash recovery — UserProgress + Monetization 양쪽 `PlatformException` 방어 + `_deleteCorruptedKeys()` + save 재시도 + 8 테스트 (b297225)
+- [x] 전문가 패널 토론 기록 — 일일카드 TTS + 스트릭 BM + 카드 컬렉션 (b874957)
+- [x] IAP 테스트 가이드 + Firebase Analytics 가이드 작성 (b874957)
+- [x] v1.0.0+5 AAB 빌드 — 내부 테스트용 (d46f235)
+- [x] app-ads.txt 배포 — `tigerroom-official.github.io` 별도 레포 + GitHub Pages
+- [x] Play Store 에셋 제작 — 아이콘 512x512 + 그래픽 이미지 1024x500 (b0ee999)
 - [x] 812 tests pass + flutter analyze clean
 
 ## 진행 중인 작업
-없음.
+없음. 다음 세션에서 스토어 등록 계속.
 
 ## 핵심 교훈
 
-- ★ `StatefulShellRoute.indexedStack`는 전체 탭을 alive 유지 — `initState`는 앱 시작 시 1회 실행, 탭 전환 시 미실행. 탭 진입 감지 → `StateProvider<int>` + `ref.listen` 패턴 사용
-- ★ `FlutterSecureStorage`는 릴리즈 빌드에서 `PlatformException` throw 가능 (keystore 초기화, 기기별 이슈) — `read()`/`write()` try-catch + 안전 기본값 반환 필수
-- ★ async 콜백에 error handling 없으면 릴리즈 빌드에서 예외 무음 삼킴 — 항상 try-catch 추가
-- ★ `kDebugMode` 가드로 debug 패널 보호 — 릴리즈에서 tree-shaken, 프로덕션 오버헤드 0
-- ★ suffixIcon에 빈 Row(children 없음) 렌더링 → null 반환으로 공간 낭비 방지
+- ★ `MonetizationLocalDataSource.load()`는 원래 `_storage.read()` 호출에 try-catch 없었음 → PlatformException이 직접 전파되어 크래시
+- ★ BadPaddingException 수정: catch만으론 부족 → `_deleteCorruptedKeys()` + 재시도까지 해야 반복 크래시 방지
+- ★ app-ads.txt는 도메인 루트 필수 — `domain.github.io/app-ads.txt` (하위 경로 불가)
+- ★ Play Console IAP 메뉴: 스토어 등록정보 완성 + 내부 테스트 배포 후 노출
+- ★ 앱 아이콘: 단순한 디자인이 48px 작은 사이즈에서 가독성 좋음 — 장식(반짝이 등) 지양
+- 스크린샷 IP 주의: 특정 그룹/팬덤명 노출 금지 → "Fangeul"을 기타 설정으로 사용
 
 ## 다음 단계
 
-### 1순위: Phase 7 릴리즈 남은 항목
-1. **Google Play Console** — 앱 등록 + IAP 상품 가격 설정 (₩990/₩990/₩1,500 + 동남아 현지가)
-2. **v1.0.0+4 내부 테스트 배포** — AAB 이미 빌드됨, Play Console 업로드
-3. **실기기 QA** — 내부 테스트 빌드로 전체 기능 검증
-4. **프로덕션 트랙 출시** — 내부 테스트 통과 후
+### 1순위: Play Console 다국어 스토어 등록
+1. **번역 관리** — ko/en 외 5개 언어(ja, zh, id, th, vi) 스토어 소개 등록
+2. **스크린샷 촬영** — 영어 시스템 언어 + 기본 테마 + "Fangeul" 그룹명 + device frame, 최소 4장 (홈/Key Swap/문구/테마)
+3. **스토어 등록정보 완성** — 아이콘+그래픽 업로드 + 스크린샷 + 설명 → 임시저장 해제
 
-### 2순위: 출시 후 빠른 개선
-- P1: 버블 딥링크 — openMainApp → ThemePickerSheet 자동 오픈 (intent extra)
+### 2순위: IAP + QA + 출시
+4. **IAP 상품 등록** — 3 SKU (₩990/₩990/₩1,500) + 동남아 현지가
+5. **내부 테스트 QA** — 전체 기능 + IAP 플로우 검증
+6. **프로덕션 출시**
+
+### 3순위: 출시 후 빠른 개선
+- P1: 버블 딥링크 — openMainApp → ThemePickerSheet 자동 오픈
 - P1: 핸들 좌측 멤버 이름 노출
-- PaletteRegistry 20-25개 확장 (웜톤/쿨톤 균형)
-- 프리뷰 UI — 실제 화면 미리보기
-- share_card_painter.dart UiStrings → l10n
-- Firebase Analytics 이벤트 대시보드 구성
+- PaletteRegistry 20-25개 확장
+- Firebase Analytics 대시보드 구성
 
-### 3순위: v1.1 로드맵
-- IAP "테마 슬롯 3개" → "최애 테마 3개 저장" 리프레이밍 (P2)
-- P2: "팬글 서포터" 리프레이밍
+### 4순위: v1.1 로드맵
+- 일일카드 TTS 번들 ₩1,900 (패널 합의)
+- 스트릭 "축하" 감성 보상 + 마일스톤 시스템
+- 한글 카드 컬렉션 (가챠) — Phase 2로 연기 (패널 합의)
 - 한글 퍼즐 (Wordle 스타일)
-- 한글 카드 컬렉션 (가챠)
-- 푸시 알림 (firebase_messaging)
-- 구독 모델 (Phase 7+)
+- 구독 모델
 
 ## 핵심 결정사항
 
 | 결정 | 이유 |
 |------|------|
-| "Key Swap" 영문 리네이밍 | "Converter"는 일반적, K-pop 팬 타겟에 직관적인 "Key Swap"으로 |
-| 탭 진입 autofocus에 StateProvider | IndexedStack에서 initState는 1회 — 탭 전환 감지에 provider가 유일한 해법 |
-| FlutterSecureStorage 방어적 try-catch | 릴리즈 빌드에서 PlatformException silent failure → 사용자에게 Done 버튼 먹통 |
-| Debug progress panel 추가 | 일일카드/스트릭 테스트에 매번 `pm clear` 불필요 — 장기 개발 효율 |
-| suffixIcon null 조건부 | Codex 리뷰: 빈 Row 렌더링은 불필요한 공간 차지 |
+| BadPaddingException 양쪽 DataSource 방어 | Crashlytics에서 실제 크래시 발생 — Monetization은 catch 자체가 없었음 |
+| app-ads.txt 별도 레포 | GitHub Pages는 루트 도메인 레포에서만 루트 경로 제공 |
+| 아이콘 hu.png 선택 (반짝이 없는 심플 버전) | 48px 앱 서랍에서 가독성 우선 |
+| TTS 번들 ₩1,900 (패널 합의) | TTS 단독 SKU는 가치 불명확 → 기존 IAP에 통합이 전환율 유리 |
+| 카드 컬렉션 v1.1 연기 | IP 제약 하 차별화 어려움 + 개발 비용 큼 → v1.0 출시 우선 |
 
 ## 참고 컨텍스트
 
-- 보상형 광고 피벗: `docs/discussions/2026-03-08-rewarded-ad-strategy-pivot.md`
-- 테마 커스터마이징 오버홀 계획: `docs/plans/2026-03-07-choeae-color-ux-overhaul.md`
-- Surface 계층 + 슬롯 패널: `docs/discussions/2026-03-08-theme-surface-hierarchy-slots.md`
-- IAP 3-SKU 구조 패널: `docs/discussions/2026-03-08-theme-iap-structure-panel.md`
+- 크래시 원본: `~/Develop/com_tigerroom_fangeul_issue_46b28dba04ac686b4183b6e3fded0c69_crash.txt`
+- 전문가 패널 토론: `docs/discussions/2026-03-12-daily-tts-streak-bm.md`
+- IAP 테스트 가이드: `docs/guides/iap-testing-guide.md`
+- Firebase Analytics 가이드: `docs/guides/firebase-analytics-guide.md`
+- 스토어 에셋: `docs/assets/store/` (app-icon-512.png, feature-graphic.png)
+- app-ads.txt: `tigerroom-official.github.io` 레포
 
 ## 커밋 히스토리 (이번 세션)
 
 ```
-a839781 fix: Done button silent failure + debug progress panel
-84a05de fix: Key Swap rename, tab autofocus, empty suffixIcon cleanup (v1.0.0+4)
-1618e8d fix: Codex review — compound jamo decomposition, mounted guard, l10n
-3594385 feat: converter UX — autofocus, paste, centered space bar, empty state examples
-fec087b feat: release prep — AdMob prod IDs, T-rating, targetSdk 35, privacy/terms
+b0ee999 chore: add Play Store assets (icon 512x512 + feature graphic 1024x500)
+d46f235 chore: bump version to 1.0.0+5 for internal test
+b874957 docs: 일일카드 TTS+스트릭 토론 기록, IAP/Analytics 가이드 추가
+b297225 fix: FlutterSecureStorage BadPaddingException crash recovery
 ```
 
 ## 수정한 파일
 
 ```
-32 files changed, 1043 insertions(+), 78 deletions(-)
+11 files changed, 2081 insertions(+), 23 deletions(-)
 
 주요 수정:
- android/app/build.gradle (서명, targetSdk 35, ProGuard)
- android/app/proguard-rules.pro (NEW)
- android/app/src/main/AndroidManifest.xml (AdMob ID)
- docs/privacy-policy.html (NEW)
- docs/terms.html (NEW)
- lib/data/datasources/user_progress_local_datasource.dart (try-catch 방어)
- lib/l10n/app_*.arb (7개 언어 — Key Swap, converter 관련 키)
- lib/presentation/screens/converter_screen.dart (autofocus, paste, UX)
- lib/presentation/screens/home_screen.dart (onComplete try-catch)
- lib/presentation/screens/settings_screen.dart (debug progress panel)
- lib/presentation/widgets/converter_input.dart (suffixIcon, paste)
- lib/presentation/widgets/korean_keyboard.dart (centered space bar)
- lib/presentation/widgets/shell_scaffold.dart (activeShellTabProvider)
- lib/services/ad_ids.dart (프로덕션 AdMob ID)
- pubspec.yaml (v1.0.0+4)
+ lib/data/datasources/monetization_local_datasource.dart (PlatformException 방어 + deleteCorruptedKeys)
+ lib/data/datasources/user_progress_local_datasource.dart (PlatformException 방어 + deleteCorruptedKeys + save 재시도)
+ test/data/datasources/monetization_local_datasource_test.dart (+69 lines 테스트)
+ test/data/datasources/user_progress_local_datasource_test.dart (NEW, 151 lines)
+ docs/discussions/2026-03-12-daily-tts-streak-bm.md (NEW, 패널 토론 기록)
+ docs/guides/iap-testing-guide.md (NEW, 583 lines)
+ docs/guides/firebase-analytics-guide.md (NEW, 937 lines)
+ docs/assets/store/app-icon-512.png (NEW, 512x512)
+ docs/assets/store/feature-graphic.png (NEW, 1024x500)
+ pubspec.yaml (v1.0.0+5)
 ```
 
 ## 세션 히스토리
@@ -183,4 +188,5 @@ fec087b feat: release prep — AdMob prod IDs, T-rating, targetSdk 35, privacy/t
 | 최애색+HCT | 최애색 UX 오버홀 15 tasks + HSL→HCT P0 엔진 교체 + Codex 4-domain 리뷰 → 741 tests |
 | 테마 오버홀 | 2D HCT 피커 + 슬롯 + 3-SKU IAP + brightnessOverride + chroma 85% + hex 크래시 수정 → 804 tests |
 | 보상형피벗+즐겨찾기UX | 보상형→테마 체험 전용 + IAP subtitle/추천 + 즐겨찾기 UX 개선 + Codex 리뷰 → 812 tests |
-| **릴리즈준비+UX수정** | AdMob prod + ProGuard + Key Swap + autofocus + Done 버튼 수정 + debug panel → 812 tests, v1.0.0+4 |
+| 릴리즈준비+UX수정 | AdMob prod + ProGuard + Key Swap + autofocus + Done 버튼 수정 + debug panel → 812 tests, v1.0.0+4 |
+| **크래시수정+스토어** | BadPaddingException 방어 + 패널 토론 + v1.0.0+5 + Play Store 에셋 + app-ads.txt → 812 tests |
