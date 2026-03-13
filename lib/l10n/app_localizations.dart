@@ -8,6 +8,7 @@ import 'package:intl/intl.dart' as intl;
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
 import 'app_localizations_id.dart';
+import 'app_localizations_ja.dart';
 import 'app_localizations_ko.dart';
 import 'app_localizations_pt.dart';
 import 'app_localizations_th.dart';
@@ -102,6 +103,7 @@ abstract class L {
     Locale('ko'),
     Locale('es'),
     Locale('id'),
+    Locale('ja'),
     Locale('pt'),
     Locale('th'),
     Locale('vi')
@@ -725,42 +727,6 @@ abstract class L {
   /// **'{time} 남음 (자정에 만료)'**
   String unlockMidnightExpiry(String time);
 
-  /// No description provided for @shopTitle.
-  ///
-  /// In ko, this message translates to:
-  /// **'감성 컬러 팩'**
-  String get shopTitle;
-
-  /// No description provided for @shopRestore.
-  ///
-  /// In ko, this message translates to:
-  /// **'구매 복원'**
-  String get shopRestore;
-
-  /// No description provided for @shopBuyButton.
-  ///
-  /// In ko, this message translates to:
-  /// **'구매하기'**
-  String get shopBuyButton;
-
-  /// No description provided for @shopPurchased.
-  ///
-  /// In ko, this message translates to:
-  /// **'구매 완료'**
-  String get shopPurchased;
-
-  /// No description provided for @shopPhraseCount.
-  ///
-  /// In ko, this message translates to:
-  /// **'문구 {count}개'**
-  String shopPhraseCount(int count);
-
-  /// No description provided for @shopPronunciationCount.
-  ///
-  /// In ko, this message translates to:
-  /// **'발음 {count}개'**
-  String shopPronunciationCount(int count);
-
   /// No description provided for @shopRestoreSuccess.
   ///
   /// In ko, this message translates to:
@@ -818,13 +784,13 @@ abstract class L {
   /// No description provided for @conversionTriggerMessage.
   ///
   /// In ko, this message translates to:
-  /// **'감성 컬러 팩으로\n무제한 해금하고 특별한 경험을 시작하세요'**
+  /// **'나만의 테마를 꾸미고\n즐겨찾기도 무제한으로 사용하세요'**
   String get conversionTriggerMessage;
 
   /// No description provided for @conversionTriggerButton.
   ///
   /// In ko, this message translates to:
-  /// **'감성 컬러 팩 보기'**
+  /// **'테마 옵션 보기'**
   String get conversionTriggerButton;
 
   /// No description provided for @conversionTriggerDismiss.
@@ -842,8 +808,8 @@ abstract class L {
   /// No description provided for @favLimitMessage.
   ///
   /// In ko, this message translates to:
-  /// **'아무 테마 상품 하나만 구매하면\n즐겨찾기 무제한! ₩990부터'**
-  String get favLimitMessage;
+  /// **'아무 테마 상품 하나만 구매하면\n즐겨찾기 무제한! {price}부터'**
+  String favLimitMessage(String price);
 
   /// No description provided for @favLimitButton.
   ///
@@ -862,24 +828,6 @@ abstract class L {
   /// In ko, this message translates to:
   /// **'나중에'**
   String get favLimitDismiss;
-
-  /// No description provided for @shopPurchaseSuccess.
-  ///
-  /// In ko, this message translates to:
-  /// **'구매 완료! 콘텐츠가 해금되었어요'**
-  String get shopPurchaseSuccess;
-
-  /// No description provided for @shopPurchaseFailed.
-  ///
-  /// In ko, this message translates to:
-  /// **'구매에 실패했어요. 다시 시도해주세요'**
-  String get shopPurchaseFailed;
-
-  /// No description provided for @shopPurchasePending.
-  ///
-  /// In ko, this message translates to:
-  /// **'결제 처리 중...'**
-  String get shopPurchasePending;
 
   /// No description provided for @honeymoonDaysLeft.
   ///
@@ -1064,8 +1012,8 @@ abstract class L {
   /// No description provided for @themePickerPickerLocked.
   ///
   /// In ko, this message translates to:
-  /// **'₩990으로 영구 해금'**
-  String get themePickerPickerLocked;
+  /// **'{price}으로 영구 해금'**
+  String themePickerPickerLocked(String price);
 
   /// No description provided for @themePickerUnlockAll.
   ///
@@ -1280,7 +1228,7 @@ abstract class L {
   /// No description provided for @iapThemeBundleSave.
   ///
   /// In ko, this message translates to:
-  /// **'₩480 절약 · 즐겨찾기 무제한'**
+  /// **'즐겨찾기 무제한'**
   String get iapThemeBundleSave;
 
   /// No description provided for @privacyPolicyLabel.
@@ -1321,6 +1269,7 @@ class _LDelegate extends LocalizationsDelegate<L> {
         'en',
         'es',
         'id',
+        'ja',
         'ko',
         'pt',
         'th',
@@ -1340,6 +1289,8 @@ L lookupL(Locale locale) {
       return LEs();
     case 'id':
       return LId();
+    case 'ja':
+      return LJa();
     case 'ko':
       return LKo();
     case 'pt':

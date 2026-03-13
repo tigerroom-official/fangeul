@@ -124,13 +124,13 @@ void main() {
     );
 
     testWidgets(
-      'should render SizedBox.shrink when user has purchased a pack',
+      'should render SizedBox.shrink when user has purchased theme IAP',
       (tester) async {
         await tester.pumpWidget(buildTestWidget(
           monetizationState: MonetizationState(
             honeymoonActive: false,
             installDate: _installDateDaysAgo(10),
-            purchasedPackIds: const ['color_pack_01'],
+            hasThemePicker: true,
           ),
         ));
         await tester.pump();
@@ -151,7 +151,7 @@ void main() {
           monetizationState: MonetizationState(
             honeymoonActive: true,
             installDate: _installDateDaysAgo(2),
-            purchasedPackIds: const ['pack_01'],
+            hasThemeSlots: true,
           ),
         ));
         await tester.pump();
@@ -187,7 +187,6 @@ void main() {
           monetizationState: MonetizationState(
             honeymoonActive: false,
             installDate: _installDateDaysAgo(7),
-            purchasedPackIds: const [],
           ),
         ));
         await tester.pump();

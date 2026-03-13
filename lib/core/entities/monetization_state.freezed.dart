@@ -51,9 +51,6 @@ mixin _$MonetizationState {
   @JsonKey(name: 'unlockExpiresAt')
   int get themeTrialExpiresAt => throw _privateConstructorUsedError;
 
-  /// 구매 완료된 팩 ID 목록.
-  List<String> get purchasedPackIds => throw _privateConstructorUsedError;
-
   /// D-day 해금 날짜 목록 ('{date}_{artist}_{type}' 형식).
   List<String> get ddayUnlockedDates => throw _privateConstructorUsedError;
 
@@ -95,7 +92,6 @@ abstract class $MonetizationStateCopyWith<$Res> {
       String? adLastResetDate,
       int lastAdWatchTimestamp,
       @JsonKey(name: 'unlockExpiresAt') int themeTrialExpiresAt,
-      List<String> purchasedPackIds,
       List<String> ddayUnlockedDates,
       bool hasThemePicker,
       bool hasThemeSlots,
@@ -127,7 +123,6 @@ class _$MonetizationStateCopyWithImpl<$Res, $Val extends MonetizationState>
     Object? adLastResetDate = freezed,
     Object? lastAdWatchTimestamp = null,
     Object? themeTrialExpiresAt = null,
-    Object? purchasedPackIds = null,
     Object? ddayUnlockedDates = null,
     Object? hasThemePicker = null,
     Object? hasThemeSlots = null,
@@ -171,10 +166,6 @@ class _$MonetizationStateCopyWithImpl<$Res, $Val extends MonetizationState>
           ? _value.themeTrialExpiresAt
           : themeTrialExpiresAt // ignore: cast_nullable_to_non_nullable
               as int,
-      purchasedPackIds: null == purchasedPackIds
-          ? _value.purchasedPackIds
-          : purchasedPackIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
       ddayUnlockedDates: null == ddayUnlockedDates
           ? _value.ddayUnlockedDates
           : ddayUnlockedDates // ignore: cast_nullable_to_non_nullable
@@ -217,7 +208,6 @@ abstract class _$$MonetizationStateImplCopyWith<$Res>
       String? adLastResetDate,
       int lastAdWatchTimestamp,
       @JsonKey(name: 'unlockExpiresAt') int themeTrialExpiresAt,
-      List<String> purchasedPackIds,
       List<String> ddayUnlockedDates,
       bool hasThemePicker,
       bool hasThemeSlots,
@@ -247,7 +237,6 @@ class __$$MonetizationStateImplCopyWithImpl<$Res>
     Object? adLastResetDate = freezed,
     Object? lastAdWatchTimestamp = null,
     Object? themeTrialExpiresAt = null,
-    Object? purchasedPackIds = null,
     Object? ddayUnlockedDates = null,
     Object? hasThemePicker = null,
     Object? hasThemeSlots = null,
@@ -291,10 +280,6 @@ class __$$MonetizationStateImplCopyWithImpl<$Res>
           ? _value.themeTrialExpiresAt
           : themeTrialExpiresAt // ignore: cast_nullable_to_non_nullable
               as int,
-      purchasedPackIds: null == purchasedPackIds
-          ? _value._purchasedPackIds
-          : purchasedPackIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
       ddayUnlockedDates: null == ddayUnlockedDates
           ? _value._ddayUnlockedDates
           : ddayUnlockedDates // ignore: cast_nullable_to_non_nullable
@@ -332,14 +317,12 @@ class _$MonetizationStateImpl implements _MonetizationState {
       this.adLastResetDate,
       this.lastAdWatchTimestamp = 0,
       @JsonKey(name: 'unlockExpiresAt') this.themeTrialExpiresAt = 0,
-      final List<String> purchasedPackIds = const [],
       final List<String> ddayUnlockedDates = const [],
       this.hasThemePicker = false,
       this.hasThemeSlots = false,
       this.themeUnlocked = false,
       this.lastTimestamp = 0})
-      : _purchasedPackIds = purchasedPackIds,
-        _ddayUnlockedDates = ddayUnlockedDates;
+      : _ddayUnlockedDates = ddayUnlockedDates;
 
   factory _$MonetizationStateImpl.fromJson(Map<String, dynamic> json) =>
       _$$MonetizationStateImplFromJson(json);
@@ -389,19 +372,6 @@ class _$MonetizationStateImpl implements _MonetizationState {
   @JsonKey(name: 'unlockExpiresAt')
   final int themeTrialExpiresAt;
 
-  /// 구매 완료된 팩 ID 목록.
-  final List<String> _purchasedPackIds;
-
-  /// 구매 완료된 팩 ID 목록.
-  @override
-  @JsonKey()
-  List<String> get purchasedPackIds {
-    if (_purchasedPackIds is EqualUnmodifiableListView)
-      return _purchasedPackIds;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_purchasedPackIds);
-  }
-
   /// D-day 해금 날짜 목록 ('{date}_{artist}_{type}' 형식).
   final List<String> _ddayUnlockedDates;
 
@@ -437,7 +407,7 @@ class _$MonetizationStateImpl implements _MonetizationState {
 
   @override
   String toString() {
-    return 'MonetizationState(installDate: $installDate, honeymoonActive: $honeymoonActive, favoriteSlotLimit: $favoriteSlotLimit, ttsPlayCount: $ttsPlayCount, ttsLastResetDate: $ttsLastResetDate, adWatchCount: $adWatchCount, adLastResetDate: $adLastResetDate, lastAdWatchTimestamp: $lastAdWatchTimestamp, themeTrialExpiresAt: $themeTrialExpiresAt, purchasedPackIds: $purchasedPackIds, ddayUnlockedDates: $ddayUnlockedDates, hasThemePicker: $hasThemePicker, hasThemeSlots: $hasThemeSlots, themeUnlocked: $themeUnlocked, lastTimestamp: $lastTimestamp)';
+    return 'MonetizationState(installDate: $installDate, honeymoonActive: $honeymoonActive, favoriteSlotLimit: $favoriteSlotLimit, ttsPlayCount: $ttsPlayCount, ttsLastResetDate: $ttsLastResetDate, adWatchCount: $adWatchCount, adLastResetDate: $adLastResetDate, lastAdWatchTimestamp: $lastAdWatchTimestamp, themeTrialExpiresAt: $themeTrialExpiresAt, ddayUnlockedDates: $ddayUnlockedDates, hasThemePicker: $hasThemePicker, hasThemeSlots: $hasThemeSlots, themeUnlocked: $themeUnlocked, lastTimestamp: $lastTimestamp)';
   }
 
   @override
@@ -464,8 +434,6 @@ class _$MonetizationStateImpl implements _MonetizationState {
             (identical(other.themeTrialExpiresAt, themeTrialExpiresAt) ||
                 other.themeTrialExpiresAt == themeTrialExpiresAt) &&
             const DeepCollectionEquality()
-                .equals(other._purchasedPackIds, _purchasedPackIds) &&
-            const DeepCollectionEquality()
                 .equals(other._ddayUnlockedDates, _ddayUnlockedDates) &&
             (identical(other.hasThemePicker, hasThemePicker) ||
                 other.hasThemePicker == hasThemePicker) &&
@@ -490,7 +458,6 @@ class _$MonetizationStateImpl implements _MonetizationState {
       adLastResetDate,
       lastAdWatchTimestamp,
       themeTrialExpiresAt,
-      const DeepCollectionEquality().hash(_purchasedPackIds),
       const DeepCollectionEquality().hash(_ddayUnlockedDates),
       hasThemePicker,
       hasThemeSlots,
@@ -525,7 +492,6 @@ abstract class _MonetizationState implements MonetizationState {
       final String? adLastResetDate,
       final int lastAdWatchTimestamp,
       @JsonKey(name: 'unlockExpiresAt') final int themeTrialExpiresAt,
-      final List<String> purchasedPackIds,
       final List<String> ddayUnlockedDates,
       final bool hasThemePicker,
       final bool hasThemeSlots,
@@ -574,10 +540,6 @@ abstract class _MonetizationState implements MonetizationState {
   @override
   @JsonKey(name: 'unlockExpiresAt')
   int get themeTrialExpiresAt;
-
-  /// 구매 완료된 팩 ID 목록.
-  @override
-  List<String> get purchasedPackIds;
 
   /// D-day 해금 날짜 목록 ('{date}_{artist}_{type}' 형식).
   @override

@@ -19,10 +19,6 @@ _$MonetizationStateImpl _$$MonetizationStateImplFromJson(
       lastAdWatchTimestamp:
           (json['last_ad_watch_timestamp'] as num?)?.toInt() ?? 0,
       themeTrialExpiresAt: (json['unlockExpiresAt'] as num?)?.toInt() ?? 0,
-      purchasedPackIds: (json['purchased_pack_ids'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
       ddayUnlockedDates: (json['dday_unlocked_dates'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -45,7 +41,6 @@ Map<String, dynamic> _$$MonetizationStateImplToJson(
       'ad_last_reset_date': instance.adLastResetDate,
       'last_ad_watch_timestamp': instance.lastAdWatchTimestamp,
       'unlockExpiresAt': instance.themeTrialExpiresAt,
-      'purchased_pack_ids': instance.purchasedPackIds,
       'dday_unlocked_dates': instance.ddayUnlockedDates,
       'has_theme_picker': instance.hasThemePicker,
       'has_theme_slots': instance.hasThemeSlots,

@@ -18,7 +18,6 @@ void main() {
       expect(state.adLastResetDate, isNull);
       expect(state.lastAdWatchTimestamp, 0);
       expect(state.themeTrialExpiresAt, 0);
-      expect(state.purchasedPackIds, isEmpty);
       expect(state.ddayUnlockedDates, isEmpty);
       expect(state.lastTimestamp, 0);
     });
@@ -34,7 +33,6 @@ void main() {
         adLastResetDate: '2026-03-04',
         lastAdWatchTimestamp: 1709500000000,
         themeTrialExpiresAt: 1709514400000,
-        purchasedPackIds: ['color_purple_dream', 'color_golden_hour'],
         ddayUnlockedDates: ['2026-03-09_evt001', '2026-06-13_evt002'],
         lastTimestamp: 1709500001000,
       );
@@ -72,18 +70,6 @@ void main() {
       expect(updated.favoriteSlotLimit, 5);
       expect(updated.adWatchCount, 1);
       expect(updated.adLastResetDate, '2026-03-04');
-    });
-
-    test('should serialize List<String> purchasedPackIds correctly', () {
-      const state = MonetizationState(
-        purchasedPackIds: ['pack_a', 'pack_b', 'pack_c'],
-      );
-
-      final json = state.toJson();
-      expect(json['purchased_pack_ids'], ['pack_a', 'pack_b', 'pack_c']);
-
-      final restored = MonetizationState.fromJson(json);
-      expect(restored.purchasedPackIds, ['pack_a', 'pack_b', 'pack_c']);
     });
 
     test('should serialize List<String> ddayUnlockedDates correctly', () {
@@ -153,11 +139,9 @@ void main() {
       const state = MonetizationState();
       final json = state.toJson();
 
-      expect(json['purchased_pack_ids'], isEmpty);
       expect(json['dday_unlocked_dates'], isEmpty);
 
       final restored = MonetizationState.fromJson(json);
-      expect(restored.purchasedPackIds, isEmpty);
       expect(restored.ddayUnlockedDates, isEmpty);
       expect(restored, state);
     });

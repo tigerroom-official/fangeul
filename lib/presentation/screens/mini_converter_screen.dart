@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:fangeul/core/engines/hangul_engine.dart';
+import 'package:fangeul/core/engines/hangul_tables.dart';
 import 'package:fangeul/core/engines/keyboard_converter.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/compact_phrase_filter_provider.dart';
@@ -49,6 +51,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
   late final TabController _compactTabController;
   late final TabController _converterTabController;
   final _textController = TextEditingController();
+  final _focusNode = FocusNode();
   String _engBuffer = '';
   List<String> _jamoList = [];
   double _dragDelta = 0;
@@ -89,6 +92,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
     _converterTabController.removeListener(_onConverterTabChanged);
     _converterTabController.dispose();
     _textController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -135,6 +139,10 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
 
   void _expandToConverter() {
     ref.read(miniConverterCompactProvider.notifier).state = false;
+    // 상세모드 전환 후 텍스트 입력 포커스 자동 부여
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
   }
 
   void _collapseToCompact() {
@@ -196,6 +204,53 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
     _jamoList = [];
     _textController.clear();
     ref.read(converterNotifierProvider.notifier).clear();
+  }
+
+  Future<void> _onPaste() async {
+    final data = await Clipboard.getData(Clipboard.kTextPlain);
+    final text = data?.text;
+    if (text == null || text.isEmpty) return;
+    if (!mounted) return;
+
+    if (_isEngToKor) {
+      _engBuffer = text;
+      _updateText(_engBuffer);
+    } else {
+      _jamoList = _decomposeToJamoList(text);
+      _updateText(KeyboardConverter.assembleJamos(_jamoList));
+    }
+    _convert();
+  }
+
+  /// 한글 텍스트를 키보드 단위 자모 리스트로 분해한다 (붙여넣기용).
+  static List<String> _decomposeToJamoList(String text) {
+    final result = <String>[];
+    for (final rune in text.runes) {
+      final char = String.fromCharCode(rune);
+      if (HangulEngine.isSyllable(rune)) {
+        final jamos = HangulEngine.decompose(char);
+        for (final jamo in jamos) {
+          result.add(jamo.initial);
+          final vowelSplit = HangulTables.compoundVowelSplit[jamo.medial];
+          if (vowelSplit != null) {
+            result.addAll(vowelSplit);
+          } else {
+            result.add(jamo.medial);
+          }
+          if (jamo.final_.isNotEmpty) {
+            final finalSplit = HangulTables.doubleFinalSplit[jamo.final_];
+            if (finalSplit != null) {
+              result.addAll(finalSplit);
+            } else {
+              result.add(jamo.final_);
+            }
+          }
+        }
+      } else {
+        result.add(char);
+      }
+    }
+    return result;
   }
 
   void _dismiss() => SystemNavigator.pop();
@@ -345,9 +400,11 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
               padding: const EdgeInsets.all(12),
               child: ConverterInput(
                 controller: _textController,
+                focusNode: _focusNode,
                 output: output,
                 hintText: _modeHints(l)[_converterTabController.index],
                 onClear: _clearConverter,
+                onPaste: _onPaste,
                 onCopied: (text) {
                   ref.read(copyHistoryNotifierProvider.notifier).addEntry(text);
                 },

@@ -189,25 +189,6 @@
     }
   },
 
-  "shopTitle": "감성 컬러 팩",
-  "shopRestore": "구매 복원",
-  "shopBuyButton": "구매하기",
-  "shopPurchased": "구매 완료",
-
-  "shopPhraseCount": "문구 {count}개",
-  "@shopPhraseCount": {
-    "placeholders": {
-      "count": {"type": "int"}
-    }
-  },
-
-  "shopPronunciationCount": "발음 {count}개",
-  "@shopPronunciationCount": {
-    "placeholders": {
-      "count": {"type": "int"}
-    }
-  },
-
   "shopRestoreSuccess": "구매가 복원되었습니다",
   "shopRestoreFailed": "복원할 구매가 없습니다",
 
@@ -233,19 +214,20 @@
   "ttsLimitAdButton": "팬 패스로 더 듣기",
 
   "conversionTriggerTitle": "더 많은 콘텐츠를 즐기세요",
-  "conversionTriggerMessage": "감성 컬러 팩으로\n무제한 해금하고 특별한 경험을 시작하세요",
-  "conversionTriggerButton": "감성 컬러 팩 보기",
+  "conversionTriggerMessage": "나만의 테마를 꾸미고\n즐겨찾기도 무제한으로 사용하세요",
+  "conversionTriggerButton": "테마 옵션 보기",
   "conversionTriggerDismiss": "나중에",
 
   "favLimitTitle": "좋아하는 문구가 정말 많네요!",
-  "favLimitMessage": "아무 테마 상품 하나만 구매하면\n즐겨찾기 무제한! ₩990부터",
+  "favLimitMessage": "아무 테마 상품 하나만 구매하면\n즐겨찾기 무제한! {price}부터",
+  "@favLimitMessage": {
+    "placeholders": {
+      "price": {"type": "String"}
+    }
+  },
   "favLimitButton": "즐겨찾기 무제한 해금",
   "favLimitOpenApp": "앱에서 해금",
   "favLimitDismiss": "나중에",
-
-  "shopPurchaseSuccess": "구매 완료! 콘텐츠가 해금되었어요",
-  "shopPurchaseFailed": "구매에 실패했어요. 다시 시도해주세요",
-  "shopPurchasePending": "결제 처리 중...",
 
   "honeymoonDaysLeft": "무료 체험 {days}일 남음",
   "@honeymoonDaysLeft": {
@@ -285,7 +267,12 @@
   "themePickerTextColorAuto": "자동 대비",
   "themePickerPreview": "미리보기",
   "themePickerLocked": "팬 패스로 해금",
-  "themePickerPickerLocked": "₩990으로 영구 해금",
+  "themePickerPickerLocked": "{price}으로 영구 해금",
+  "@themePickerPickerLocked": {
+    "placeholders": {
+      "price": {"type": "String"}
+    }
+  },
 
   "themePickerUnlockAll": "전체 테마 해금",
   "themePickerUnlockAllDesc": "광고 시청으로 모든 테마 팔레트를 영구 해금하세요",
@@ -326,7 +313,7 @@
   "iapThemeSlots": "최애 테마 3개 저장",
   "iapThemeSlotsSub": "테마 슬롯 전환 · 즐겨찾기 무제한",
   "iapThemeBundle": "전체 번들 (24% 할인)",
-  "iapThemeBundleSave": "₩480 절약 · 즐겨찾기 무제한",
+  "iapThemeBundleSave": "즐겨찾기 무제한",
 
   "privacyPolicyLabel": "개인정보처리방침",
   "privacyPolicySubtitle": "수집 정보 및 이용 목적 안내",

@@ -8,8 +8,8 @@ import 'package:fangeul/services/iap_products.dart';
 /// IAP 구매 플로우 관리 서비스.
 ///
 /// Google Play 일회성 구매(non-consumable)를 처리한다.
-/// 구매 성공 시 [onPurchased] 콜백으로 팩 ID를 전달하고,
-/// MonetizationNotifier.addPurchasedPack()과 연동한다.
+/// 구매 성공 시 [onPurchased] 콜백으로 SKU ID를 전달하고,
+/// MonetizationNotifier의 해금 메서드와 연동한다.
 class IapService {
   IapService({InAppPurchase? iap}) : _iap = iap ?? InAppPurchase.instance;
 
@@ -24,13 +24,16 @@ class IapService {
   ///
   /// [onPurchased] 구매 성공 시 팩 ID 콜백 (await하여 상태 저장 보장).
   /// [onError] 구매 실패 시 에러 메시지 콜백.
+  /// [onProductsLoaded] 상품 정보 로드 완료 시 콜백.
   Future<void> initialize({
     required Future<void> Function(String packId) onPurchased,
     required void Function(String error) onError,
+    void Function()? onProductsLoaded,
   }) async {
     _isAvailable = await _iap.isAvailable();
     if (!_isAvailable) {
       debugPrint('[IapService] IAP not available');
+      onProductsLoaded?.call();
       return;
     }
 
@@ -50,6 +53,7 @@ class IapService {
     );
 
     await _loadProducts();
+    onProductsLoaded?.call();
   }
 
   /// 상품 정보 로드.
@@ -125,7 +129,7 @@ class IapService {
         if (purchase.pendingCompletePurchase) {
           await _iap.completePurchase(purchase);
         }
-        onError(purchase.error?.message ?? '구매에 실패했어요');
+        onError(purchase.error?.message ?? 'purchase_failed');
 
       case PurchaseStatus.pending:
         debugPrint('[IapService] purchase pending: ${purchase.productID}');

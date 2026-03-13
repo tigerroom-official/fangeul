@@ -211,29 +211,6 @@ class MonetizationNotifier extends _$MonetizationNotifier {
     return trialEnd < midnightMs ? trialEnd : midnightMs;
   }
 
-  /// 구매 완료된 팩을 추가한다 (중복 무시).
-  ///
-  /// IAP 구매 상태는 손실 시 복구 불가하므로, save 실패 시 예외를 전파한다.
-  /// 호출부에서 catch하여 사용자에게 안내해야 한다.
-  Future<void> addPurchasedPack(String packId) async {
-    try {
-      await future;
-    } catch (_) {}
-    final current = state.valueOrNull;
-    if (current == null) return;
-
-    if (current.purchasedPackIds.contains(packId)) return;
-
-    final now = DateTime.now().millisecondsSinceEpoch;
-    final updated = current.copyWith(
-      purchasedPackIds: [...current.purchasedPackIds, packId],
-      lastTimestamp: now > current.lastTimestamp ? now : current.lastTimestamp,
-    );
-    state = AsyncData(updated);
-    // IAP 상태는 silent swallow 없이 예외 전파
-    await _repository.save(updated);
-  }
-
   /// 자유 컬러 피커를 해금한다 (IAP 구매 후).
   Future<void> unlockThemePicker() async {
     try {
@@ -513,15 +490,13 @@ bool hasThemePicker(HasThemePickerRef ref) {
 
 /// 아무 IAP든 구매했는지 여부 편의 Provider.
 ///
-/// 테마 피커, 테마 슬롯, 컬러 팩 중 하나라도 구매하면 true.
+/// 테마 피커 또는 테마 슬롯 중 하나라도 구매하면 true.
 /// 즐겨찾기 무제한 해금 조건으로 사용한다.
 @riverpod
 bool hasAnyIap(HasAnyIapRef ref) {
   final state = ref.watch(monetizationNotifierProvider).valueOrNull;
   if (state == null) return false;
-  return state.hasThemePicker ||
-      state.hasThemeSlots ||
-      state.purchasedPackIds.isNotEmpty;
+  return state.hasThemePicker || state.hasThemeSlots;
 }
 
 /// 즐겨찾기 슬롯 제한 편의 Provider.

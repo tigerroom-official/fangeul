@@ -9,6 +9,7 @@ import 'package:fangeul/presentation/providers/compact_phrase_filter_provider.da
 import 'package:fangeul/presentation/providers/calendar_providers.dart';
 import 'package:fangeul/presentation/providers/copy_history_provider.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
+import 'package:fangeul/presentation/providers/iap_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/phrase_providers.dart';
 
@@ -399,7 +400,12 @@ class _PhraseCard extends ConsumerWidget {
                       .read(favoritePhrasesNotifierProvider.notifier)
                       .toggle(phrase.ko);
                   if (!added && context.mounted) {
-                    showFavoriteLimitFeedback(context);
+                    final price =
+                        ref.read(iapStartingPriceProvider) ?? '';
+                    showFavoriteLimitFeedback(
+                      context,
+                      startingPrice: price,
+                    );
                   }
                 },
               ),

@@ -15,7 +15,8 @@
         "th": "รัก {{group_name}}!",
         "pt": "Eu amo {{group_name}}!",
         "es": "¡Amo a {{group_name}}!",
-        "vi": "Yêu {{group_name}}!"
+        "vi": "Yêu {{group_name}}!",
+        "ja": "{{group_name}}大好きです！"
       },
       "situation": "daily",
       "is_template": true
@@ -31,7 +32,8 @@
         "th": "สู้ๆ {{group_name}}!",
         "pt": "Força {{group_name}}!",
         "es": "¡Ánimo {{group_name}}!",
-        "vi": "Cố lên {{group_name}}!"
+        "vi": "Cố lên {{group_name}}!",
+        "ja": "{{group_name}}ファイティン！"
       },
       "situation": "support",
       "is_template": true
@@ -47,7 +49,8 @@
         "th": "ยินดีกับคัมแบ็ค {{group_name}}!",
         "pt": "Parabéns pelo comeback, {{group_name}}!",
         "es": "¡Felicidades por el comeback, {{group_name}}!",
-        "vi": "Chúc mừng comeback {{group_name}}!"
+        "vi": "Chúc mừng comeback {{group_name}}!",
+        "ja": "{{group_name}}カムバおめでとう！"
       },
       "situation": "comeback",
       "is_template": true
@@ -63,7 +66,8 @@
         "th": "สุขสันต์วันเกิด {{group_name}}!",
         "pt": "Feliz aniversário, {{group_name}}!",
         "es": "¡Feliz cumpleaños, {{group_name}}!",
-        "vi": "Chúc mừng sinh nhật {{group_name}}!"
+        "vi": "Chúc mừng sinh nhật {{group_name}}!",
+        "ja": "{{group_name}}センイルおめでとう！"
       },
       "situation": "birthday",
       "is_template": true
@@ -79,7 +83,8 @@
         "th": "ยินดีที่ได้อันดับ 1 {{group_name}}!",
         "pt": "Parabéns pelo 1º lugar, {{group_name}}!",
         "es": "¡Felicidades por el #1, {{group_name}}!",
-        "vi": "Chúc mừng hạng 1 {{group_name}}!"
+        "vi": "Chúc mừng hạng 1 {{group_name}}!",
+        "ja": "{{group_name}}1位おめでとう！"
       },
       "situation": "comeback",
       "is_template": true
@@ -95,7 +100,8 @@
         "th": "{{group_name}} เก่งที่สุด!",
         "pt": "{{group_name}} é o melhor!",
         "es": "¡{{group_name}} es lo mejor!",
-        "vi": "{{group_name}} là nhất!"
+        "vi": "{{group_name}} là nhất!",
+        "ja": "{{group_name}}最高！"
       },
       "situation": "daily",
       "is_template": true
@@ -111,7 +117,8 @@
         "th": "มีความสุขเพราะ {{group_name}}",
         "pt": "Sou feliz por causa de {{group_name}}",
         "es": "Soy feliz gracias a {{group_name}}",
-        "vi": "Hạnh phúc nhờ có {{group_name}}"
+        "vi": "Hạnh phúc nhờ có {{group_name}}",
+        "ja": "{{group_name}}のおかげで幸せです"
       },
       "situation": "daily",
       "is_template": true
@@ -127,7 +134,8 @@
         "th": "อยู่ด้วยกันตลอดไปนะ {{group_name}}",
         "pt": "Vamos ficar juntos para sempre, {{group_name}}",
         "es": "Estemos juntos para siempre, {{group_name}}",
-        "vi": "Hãy bên nhau mãi nhé {{group_name}}"
+        "vi": "Hãy bên nhau mãi nhé {{group_name}}",
+        "ja": "{{group_name}}とずっと一緒にいようね"
       },
       "situation": "daily",
       "is_template": true
@@ -143,7 +151,8 @@
         "th": "อยากไปคอนเสิร์ต {{group_name}}!",
         "pt": "Quero ir ao show do {{group_name}}!",
         "es": "¡Quiero ir al concierto de {{group_name}}!",
-        "vi": "Muốn đi concert {{group_name}} quá!"
+        "vi": "Muốn đi concert {{group_name}} quá!",
+        "ja": "{{group_name}}のコンサート行きたい！"
       },
       "situation": "daily",
       "is_template": true
@@ -159,7 +168,8 @@
         "th": "ฟังเพลง {{group_name}} อีกแล้ว",
         "pt": "Estou ouvindo {{group_name}} de novo",
         "es": "Estoy escuchando a {{group_name}} otra vez",
-        "vi": "Lại nghe nhạc {{group_name}} rồi"
+        "vi": "Lại nghe nhạc {{group_name}} rồi",
+        "ja": "また{{group_name}}の曲聴いてる"
       },
       "situation": "daily",
       "is_template": true
@@ -175,7 +185,8 @@
         "th": "รัก {{member_name}}!",
         "pt": "Te amo, {{member_name}}!",
         "es": "¡Te amo, {{member_name}}!",
-        "vi": "Yêu {{member_name}}!"
+        "vi": "Yêu {{member_name}}!",
+        "ja": "{{member_name}}大好き！"
       },
       "situation": "daily",
       "is_template": true
@@ -191,7 +202,8 @@
         "th": "สุขสันต์วันเกิด {{member_name}}!",
         "pt": "Feliz aniversário, {{member_name}}!",
         "es": "¡Feliz cumpleaños, {{member_name}}!",
-        "vi": "Chúc mừng sinh nhật {{member_name}}!"
+        "vi": "Chúc mừng sinh nhật {{member_name}}!",
+        "ja": "{{member_name}}センイルおめでとう！"
       },
       "situation": "birthday",
       "is_template": true
@@ -207,7 +219,8 @@
         "th": "ขอบคุณเสมอนะ {{member_name}}",
         "pt": "Obrigado como sempre, {{member_name}}",
         "es": "Gracias como siempre, {{member_name}}",
-        "vi": "Cảm ơn như mọi ngày, {{member_name}}"
+        "vi": "Cảm ơn như mọi ngày, {{member_name}}",
+        "ja": "{{member_name}}今日もありがとう"
       },
       "situation": "daily",
       "is_template": true
@@ -223,7 +236,8 @@
         "th": "สู้ๆ {{member_name}}!",
         "pt": "Força {{member_name}}!",
         "es": "¡Ánimo {{member_name}}!",
-        "vi": "Cố lên {{member_name}}!"
+        "vi": "Cố lên {{member_name}}!",
+        "ja": "{{member_name}}ファイティン！"
       },
       "situation": "support",
       "is_template": true
@@ -239,7 +253,8 @@
         "th": "{{member_name}} แห่ง {{group_name}} เก่งที่สุด!",
         "pt": "{{member_name}} do {{group_name}} é o melhor!",
         "es": "¡{{member_name}} de {{group_name}} es lo mejor!",
-        "vi": "{{member_name}} của {{group_name}} là nhất!"
+        "vi": "{{member_name}} của {{group_name}} là nhất!",
+        "ja": "{{group_name}}の{{member_name}}が最高！"
       },
       "situation": "daily",
       "is_template": true
@@ -255,7 +270,8 @@
         "th": "คิดถึง {{member_name}}!",
         "pt": "Sinto sua falta, {{member_name}}!",
         "es": "¡Te extraño, {{member_name}}!",
-        "vi": "Nhớ {{member_name}} quá!"
+        "vi": "Nhớ {{member_name}} quá!",
+        "ja": "{{member_name}}に会いたい！"
       },
       "situation": "daily",
       "is_template": true

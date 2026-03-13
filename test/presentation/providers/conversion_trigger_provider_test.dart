@@ -33,7 +33,6 @@ void main() {
         honeymoonActive: false,
         adWatchCount: 3,
         favoriteSlotLimit: favSlotLimit,
-        purchasedPackIds: const [],
       );
 
   /// 즐겨찾기를 JSON 문자열로 초기화.
@@ -135,8 +134,7 @@ void main() {
 
     test('should return false when user already purchased', () async {
       setUpWithState(
-        triggerReadyState()
-            .copyWith(purchasedPackIds: ['fangeul_color_starter']),
+        triggerReadyState().copyWith(hasThemePicker: true),
         favCount: 3,
       );
 
@@ -162,7 +160,6 @@ void main() {
           honeymoonActive: true,
           adWatchCount: 3,
           favoriteSlotLimit: 0,
-          purchasedPackIds: const [],
         ),
         favCount: 5,
       );

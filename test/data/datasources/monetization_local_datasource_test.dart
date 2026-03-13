@@ -52,7 +52,7 @@ void main() {
           ttsPlayCount: 5,
           adWatchCount: 2,
           lastTimestamp: 1000,
-          purchasedPackIds: ['pack_purple_dream'],
+          hasThemePicker: true,
         );
         final dataStr = jsonEncode(state.toJson());
         final validSig = dataSource.computeHmac(dataStr);
@@ -70,7 +70,7 @@ void main() {
         expect(result.ttsPlayCount, 5);
         expect(result.adWatchCount, 2);
         expect(result.lastTimestamp, 1000);
-        expect(result.purchasedPackIds, ['pack_purple_dream']);
+        expect(result.hasThemePicker, isTrue);
       });
 
       test('should reset when HMAC mismatch (tampering detected)', () async {

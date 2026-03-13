@@ -133,15 +133,6 @@
 
   "unlockMidnightExpiry": "Còn {time} (hết hạn lúc nửa đêm)",
 
-  "shopTitle": "Gói màu sắc cảm xúc",
-  "shopRestore": "Khôi phục mua hàng",
-  "shopBuyButton": "Mua",
-  "shopPurchased": "Đã mua",
-
-  "shopPhraseCount": "{count} câu nói",
-
-  "shopPronunciationCount": "{count} phát âm",
-
   "shopRestoreSuccess": "Đã khôi phục mua hàng thành công",
   "shopRestoreFailed": "Không có giao dịch nào để khôi phục",
 
@@ -157,19 +148,15 @@
   "ttsLimitAdButton": "Nghe thêm với Fan Pass",
 
   "conversionTriggerTitle": "Khám phá thêm nội dung",
-  "conversionTriggerMessage": "Mở khóa tất cả với gói màu sắc cảm xúc\nvà bắt đầu trải nghiệm đặc biệt",
-  "conversionTriggerButton": "Xem gói màu sắc cảm xúc",
+  "conversionTriggerMessage": "Tùy chỉnh giao diện của bạn\nvà mở khóa yêu thích không giới hạn",
+  "conversionTriggerButton": "Xem tùy chọn giao diện",
   "conversionTriggerDismiss": "Để sau",
 
   "favLimitTitle": "Bạn có rất nhiều câu nói yêu thích!",
-  "favLimitMessage": "Mua bất kỳ sản phẩm giao diện nào\nđể mở khóa yêu thích không giới hạn! Từ ₩990",
+  "favLimitMessage": "Mua bất kỳ sản phẩm giao diện nào\nđể mở khóa yêu thích không giới hạn! Từ {price}",
   "favLimitButton": "Mở khóa yêu thích không giới hạn",
   "favLimitOpenApp": "Mở khóa trong ứng dụng",
   "favLimitDismiss": "Để sau",
-
-  "shopPurchaseSuccess": "Mua thành công! Nội dung đã được mở khóa",
-  "shopPurchaseFailed": "Mua thất bại. Vui lòng thử lại",
-  "shopPurchasePending": "Đang xử lý thanh toán...",
 
   "honeymoonDaysLeft": "Còn {days} ngày dùng thử miễn phí",
 
@@ -204,7 +191,7 @@
   "themePickerTextColorAuto": "Tương phản tự động",
   "themePickerPreview": "Xem trước",
   "themePickerLocked": "Mở khóa bằng Fan Pass",
-  "themePickerPickerLocked": "Mở khóa vĩnh viễn ₩990",
+  "themePickerPickerLocked": "Mở khóa vĩnh viễn {price}",
 
   "themePickerUnlockAll": "Mở khóa tất cả chủ đề",
   "themePickerUnlockAllDesc": "Xem quảng cáo để mở khóa tất cả bảng màu chủ đề vĩnh viễn",
@@ -245,7 +232,7 @@
   "iapThemeSlots": "Lưu 3 chủ đề yêu thích",
   "iapThemeSlotsSub": "Chuyển slot chủ đề · Yêu thích không giới hạn",
   "iapThemeBundle": "Gói đầy đủ (giảm 24%)",
-  "iapThemeBundleSave": "Tiết kiệm ₩480 · Yêu thích không giới hạn",
+  "iapThemeBundleSave": "Yêu thích không giới hạn",
 
   "privacyPolicyLabel": "Chính sách Bảo mật",
   "privacyPolicySubtitle": "Thông tin chúng tôi thu thập và cách sử dụng",

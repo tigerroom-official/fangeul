@@ -9,12 +9,14 @@ import 'package:fangeul/l10n/app_localizations.dart';
 Future<void> showFavoriteLimitDialog(
   BuildContext context, {
   required VoidCallback onViewThemeOptions,
+  required String startingPrice,
 }) {
   return showDialog<void>(
     context: context,
     barrierDismissible: false,
     builder: (dialogContext) => FavoriteLimitDialog(
       onViewThemeOptions: onViewThemeOptions,
+      startingPrice: startingPrice,
     ),
   );
 }
@@ -24,11 +26,15 @@ class FavoriteLimitDialog extends StatelessWidget {
   /// Creates a [FavoriteLimitDialog].
   const FavoriteLimitDialog({
     required this.onViewThemeOptions,
+    required this.startingPrice,
     super.key,
   });
 
   /// 테마 커스터마이징 시트를 여는 콜백.
   final VoidCallback onViewThemeOptions;
+
+  /// 최저 IAP 가격 (로컬라이즈된 문자열, 예: "₩990", "¥150").
+  final String startingPrice;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +63,9 @@ class FavoriteLimitDialog extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            l.favLimitMessage,
+            startingPrice.isNotEmpty
+                ? l.favLimitMessage(startingPrice)
+                : l.favoriteLimitReached,
             style: theme.textTheme.bodyLarge?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),

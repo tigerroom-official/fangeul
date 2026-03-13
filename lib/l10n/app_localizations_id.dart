@@ -348,28 +348,6 @@ class LId extends L {
   }
 
   @override
-  String get shopTitle => 'Paket Warna Emosi';
-
-  @override
-  String get shopRestore => 'Pulihkan Pembelian';
-
-  @override
-  String get shopBuyButton => 'Beli';
-
-  @override
-  String get shopPurchased => 'Sudah Dibeli';
-
-  @override
-  String shopPhraseCount(int count) {
-    return '$count frasa';
-  }
-
-  @override
-  String shopPronunciationCount(int count) {
-    return '$count pelafalan';
-  }
-
-  @override
   String get shopRestoreSuccess => 'Pembelian berhasil dipulihkan';
 
   @override
@@ -402,10 +380,10 @@ class LId extends L {
 
   @override
   String get conversionTriggerMessage =>
-      'Buka semuanya dengan Paket Warna Emosi\ndan mulai pengalaman spesial';
+      'Sesuaikan tema kamu dan buka\nfavorit tak terbatas';
 
   @override
-  String get conversionTriggerButton => 'Lihat Paket Warna Emosi';
+  String get conversionTriggerButton => 'Lihat opsi tema';
 
   @override
   String get conversionTriggerDismiss => 'Nanti';
@@ -414,8 +392,9 @@ class LId extends L {
   String get favLimitTitle => 'Wah, kamu suka banyak frasa banget!';
 
   @override
-  String get favLimitMessage =>
-      'Beli produk tema apa saja untuk\nmembuka favorit tak terbatas! Mulai ₩990';
+  String favLimitMessage(String price) {
+    return 'Beli produk tema apa saja untuk\nmembuka favorit tak terbatas! Mulai $price';
+  }
 
   @override
   String get favLimitButton => 'Buka favorit tak terbatas';
@@ -425,15 +404,6 @@ class LId extends L {
 
   @override
   String get favLimitDismiss => 'Nanti';
-
-  @override
-  String get shopPurchaseSuccess => 'Pembelian berhasil! Konten terbuka';
-
-  @override
-  String get shopPurchaseFailed => 'Pembelian gagal. Silakan coba lagi';
-
-  @override
-  String get shopPurchasePending => 'Memproses pembayaran...';
 
   @override
   String honeymoonDaysLeft(int days) {
@@ -531,7 +501,9 @@ class LId extends L {
   String get themePickerLocked => 'Buka dengan Fan Pass';
 
   @override
-  String get themePickerPickerLocked => 'Buka selamanya seharga ₩990';
+  String themePickerPickerLocked(String price) {
+    return 'Buka selamanya seharga $price';
+  }
 
   @override
   String get themePickerUnlockAll => 'Buka semua tema';
@@ -643,7 +615,7 @@ class LId extends L {
   String get iapThemeBundle => 'Paket lengkap (diskon 24%)';
 
   @override
-  String get iapThemeBundleSave => 'Hemat ₩480 · Favorit tak terbatas';
+  String get iapThemeBundleSave => 'Favorit tak terbatas';
 
   @override
   String get privacyPolicyLabel => 'Kebijakan Privasi';

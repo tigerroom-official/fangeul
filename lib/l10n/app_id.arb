@@ -133,15 +133,6 @@
 
   "unlockMidnightExpiry": "{time} tersisa (berakhir tengah malam)",
 
-  "shopTitle": "Paket Warna Emosi",
-  "shopRestore": "Pulihkan Pembelian",
-  "shopBuyButton": "Beli",
-  "shopPurchased": "Sudah Dibeli",
-
-  "shopPhraseCount": "{count} frasa",
-
-  "shopPronunciationCount": "{count} pelafalan",
-
   "shopRestoreSuccess": "Pembelian berhasil dipulihkan",
   "shopRestoreFailed": "Tidak ada pembelian yang bisa dipulihkan",
 
@@ -157,19 +148,15 @@
   "ttsLimitAdButton": "Dengar lebih banyak dengan Fan Pass",
 
   "conversionTriggerTitle": "Nikmati lebih banyak konten",
-  "conversionTriggerMessage": "Buka semuanya dengan Paket Warna Emosi\ndan mulai pengalaman spesial",
-  "conversionTriggerButton": "Lihat Paket Warna Emosi",
+  "conversionTriggerMessage": "Sesuaikan tema kamu dan buka\nfavorit tak terbatas",
+  "conversionTriggerButton": "Lihat opsi tema",
   "conversionTriggerDismiss": "Nanti",
 
   "favLimitTitle": "Wah, kamu suka banyak frasa banget!",
-  "favLimitMessage": "Beli produk tema apa saja untuk\nmembuka favorit tak terbatas! Mulai ₩990",
+  "favLimitMessage": "Beli produk tema apa saja untuk\nmembuka favorit tak terbatas! Mulai {price}",
   "favLimitButton": "Buka favorit tak terbatas",
   "favLimitOpenApp": "Buka di aplikasi",
   "favLimitDismiss": "Nanti",
-
-  "shopPurchaseSuccess": "Pembelian berhasil! Konten terbuka",
-  "shopPurchaseFailed": "Pembelian gagal. Silakan coba lagi",
-  "shopPurchasePending": "Memproses pembayaran...",
 
   "honeymoonDaysLeft": "{days} hari uji coba gratis tersisa",
 
@@ -204,7 +191,7 @@
   "themePickerTextColorAuto": "Kontras otomatis",
   "themePickerPreview": "Pratinjau",
   "themePickerLocked": "Buka dengan Fan Pass",
-  "themePickerPickerLocked": "Buka selamanya seharga ₩990",
+  "themePickerPickerLocked": "Buka selamanya seharga {price}",
 
   "themePickerUnlockAll": "Buka semua tema",
   "themePickerUnlockAllDesc": "Tonton iklan untuk membuka semua palet tema selamanya",
@@ -245,7 +232,7 @@
   "iapThemeSlots": "Simpan 3 tema favorit",
   "iapThemeSlotsSub": "Ganti slot tema · Favorit tak terbatas",
   "iapThemeBundle": "Paket lengkap (diskon 24%)",
-  "iapThemeBundleSave": "Hemat ₩480 · Favorit tak terbatas",
+  "iapThemeBundleSave": "Favorit tak terbatas",
 
   "privacyPolicyLabel": "Kebijakan Privasi",
   "privacyPolicySubtitle": "Informasi yang kami kumpulkan dan cara penggunaannya",

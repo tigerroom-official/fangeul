@@ -56,18 +56,28 @@ class BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
   }
 
   /// 조건 충족 시 배너 광고를 로드한다. Day 7 미만/해금/구매 시 로드 생략.
+  ///
+  /// 조건 변경(디버그 패널, 허니문 종료 등) 후 재시도 가능하도록
+  /// 조건 미충족 시 플래그를 세팅하지 않는다.
   void _tryLoadAdIfNeeded() {
     if (_adLoadAttempted) return;
-    _adLoadAttempted = true;
 
     final monState = ref.read(monetizationNotifierProvider).valueOrNull;
     final daysSince = _daysSinceInstall(monState);
     final isUnlocked = ref.read(isThemeTrialActiveProvider);
     final sessionHidden = ref.read(sessionBannerHiddenProvider);
-    final hasPurchase = monState?.purchasedPackIds.isNotEmpty ?? false;
+    final hasPurchase =
+        (monState?.hasThemePicker ?? false) || (monState?.hasThemeSlots ?? false);
+
+    debugPrint(
+      'BannerAd: tryLoad — day=$daysSince, trial=$isUnlocked, '
+      'sessionHide=$sessionHidden, hasPurchase=$hasPurchase, '
+      'picker=${monState?.hasThemePicker}, slots=${monState?.hasThemeSlots}',
+    );
 
     if (daysSince < 7 || isUnlocked || sessionHidden || hasPurchase) return;
 
+    _adLoadAttempted = true;
     _loadAd();
   }
 
@@ -78,6 +88,7 @@ class BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (ad) {
+          debugPrint('BannerAd: loaded successfully');
           if (mounted) setState(() => isLoaded = true);
         },
         onAdFailedToLoad: (ad, error) {
@@ -100,17 +111,30 @@ class BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
     final monState = ref.watch(monetizationNotifierProvider).valueOrNull;
     final isUnlocked = ref.watch(isThemeTrialActiveProvider);
     final sessionHidden = ref.watch(sessionBannerHiddenProvider);
-    final hasPurchase = monState?.purchasedPackIds.isNotEmpty ?? false;
+    final hasPurchase =
+        (monState?.hasThemePicker ?? false) || (monState?.hasThemeSlots ?? false);
 
     // Day 7 미만이면 배너 숨김 (허니문 중 배너 미노출)
     final daysSince = _daysSinceInstall(monState);
     if (daysSince < 7) {
+      debugPrint('BannerAd: hidden — daysSince=$daysSince < 7');
       return const SizedBox.shrink();
     }
 
     // 보상형 해금 / 세션 숨김 / IAP 구매 시 배너 숨김
     if (isUnlocked || sessionHidden || hasPurchase) {
+      debugPrint(
+        'BannerAd: hidden — trial=$isUnlocked, '
+        'sessionHide=$sessionHidden, hasPurchase=$hasPurchase',
+      );
       return const SizedBox.shrink();
+    }
+
+    // 조건 충족 상태에서 아직 광고 로드 안 했으면 로드 시도
+    if (!_adLoadAttempted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _tryLoadAdIfNeeded();
+      });
     }
 
     if (!isLoaded || bannerAd == null) {

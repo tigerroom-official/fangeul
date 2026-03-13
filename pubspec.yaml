@@ -1,7 +1,7 @@
 name: fangeul
 description: "Korean utility app for K-pop fans — Hangul keypad, keyboard converter, romanizer, fan phrases."
 publish_to: 'none'
-version: 1.0.0+5
+version: 1.0.0+6
 
 environment:
   sdk: ^3.6.0
@@ -99,7 +99,6 @@ flutter:
     - assets/lottie/
     - assets/calendar/
     - assets/groups/
-    - assets/color_packs/
 
   fonts:
     - family: NotoSansKR

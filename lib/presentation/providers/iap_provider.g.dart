@@ -6,7 +6,29 @@ part of 'iap_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$iapServiceHash() => r'8d628a351b9af77d158528d92ae876239f8c2442';
+String _$iapStartingPriceHash() => r'353e5f9903701ab233f45461e2bb97529337541d';
+
+/// 최저 테마 IAP 가격 (로컬라이즈된 문자열).
+///
+/// 즐겨찾기 제한 메시지에서 "₩990부터" 대신 `ProductDetails.price` 사용.
+/// 상품 미로딩 시 null 반환.
+///
+/// Copied from [iapStartingPrice].
+@ProviderFor(iapStartingPrice)
+final iapStartingPriceProvider = AutoDisposeProvider<String?>.internal(
+  iapStartingPrice,
+  name: r'iapStartingPriceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$iapStartingPriceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef IapStartingPriceRef = AutoDisposeProviderRef<String?>;
+String _$iapServiceHash() => r'e2e0d64d565669f9449e8eb7dea6b79666ff7b02';
 
 /// IapService 인스턴스 Provider.
 ///

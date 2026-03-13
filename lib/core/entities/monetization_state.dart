@@ -41,9 +41,6 @@ class MonetizationState with _$MonetizationState {
     /// 구: unlockExpiresAt (4시간 기능 해금) → 피벗 후 테마 체험 전용.
     @Default(0) @JsonKey(name: 'unlockExpiresAt') int themeTrialExpiresAt,
 
-    /// 구매 완료된 팩 ID 목록.
-    @Default([]) List<String> purchasedPackIds,
-
     /// D-day 해금 날짜 목록 ('{date}_{artist}_{type}' 형식).
     @Default([]) List<String> ddayUnlockedDates,
 

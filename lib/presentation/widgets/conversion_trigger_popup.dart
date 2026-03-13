@@ -6,7 +6,7 @@ import 'package:fangeul/l10n/app_localizations.dart';
 ///
 /// Day 14+, 보상형 3회 소진, 즐겨찾기 슬롯 포화 조건 충족 시
 /// 세션당 1회 표시한다.
-/// [onViewShop] 콜백으로 ShopScreen 이동을, 닫기로 거절을 처리한다.
+/// [onViewShop] 콜백으로 테마 구매 화면 이동을, 닫기로 거절을 처리한다.
 Future<void> showConversionTriggerPopup(
   BuildContext context, {
   required VoidCallback onViewShop,
@@ -27,7 +27,7 @@ class ConversionTriggerPopup extends StatelessWidget {
     super.key,
   });
 
-  /// ShopScreen으로 이동하는 콜백.
+  /// 테마 구매 화면으로 이동하는 콜백.
   final VoidCallback onViewShop;
 
   @override

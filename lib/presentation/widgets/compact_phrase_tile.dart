@@ -8,6 +8,7 @@ import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/analytics_providers.dart';
 import 'package:fangeul/presentation/providers/copy_history_provider.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
+import 'package:fangeul/presentation/providers/iap_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/widgets/copy_feedback_overlay.dart';
 import 'package:fangeul/presentation/widgets/favorite_limit_feedback.dart';
@@ -74,7 +75,12 @@ class CompactPhraseTile extends ConsumerWidget {
                   .read(favoritePhrasesNotifierProvider.notifier)
                   .toggle(phrase.ko);
               if (!added && context.mounted) {
-                showFavoriteLimitFeedback(context);
+                final price =
+                    ref.read(iapStartingPriceProvider) ?? '';
+                showFavoriteLimitFeedback(
+                  context,
+                  startingPrice: price,
+                );
               }
             },
           ),

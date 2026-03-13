@@ -133,15 +133,6 @@
 
   "unlockMidnightExpiry": "เหลืออีก {time} (หมดอายุตอนเที่ยงคืน)",
 
-  "shopTitle": "แพ็คสีอารมณ์",
-  "shopRestore": "กู้คืนการซื้อ",
-  "shopBuyButton": "ซื้อ",
-  "shopPurchased": "ซื้อแล้ว",
-
-  "shopPhraseCount": "{count} วลี",
-
-  "shopPronunciationCount": "{count} คำอ่าน",
-
   "shopRestoreSuccess": "กู้คืนการซื้อสำเร็จ",
   "shopRestoreFailed": "ไม่พบรายการซื้อที่จะกู้คืน",
 
@@ -157,19 +148,15 @@
   "ttsLimitAdButton": "ฟังเพิ่มด้วย Fan Pass",
 
   "conversionTriggerTitle": "เพลิดเพลินกับคอนเทนต์มากขึ้น",
-  "conversionTriggerMessage": "ปลดล็อกทั้งหมดด้วยแพ็คสีอารมณ์\nเริ่มต้นประสบการณ์พิเศษ",
-  "conversionTriggerButton": "ดูแพ็คสีอารมณ์",
+  "conversionTriggerMessage": "ปรับแต่งธีมของคุณ\nและปลดล็อกรายการโปรดไม่จำกัด",
+  "conversionTriggerButton": "ดูตัวเลือกธีม",
   "conversionTriggerDismiss": "ไว้ทีหลัง",
 
   "favLimitTitle": "คุณชอบวลีเยอะมากเลย!",
-  "favLimitMessage": "ซื้อสินค้าธีมใดก็ได้\nเพื่อปลดล็อกรายการโปรดไม่จำกัด! เริ่ม ₩990",
+  "favLimitMessage": "ซื้อสินค้าธีมใดก็ได้\nเพื่อปลดล็อกรายการโปรดไม่จำกัด! เริ่ม {price}",
   "favLimitButton": "ปลดล็อกรายการโปรดไม่จำกัด",
   "favLimitOpenApp": "ปลดล็อกในแอป",
   "favLimitDismiss": "ไว้ทีหลัง",
-
-  "shopPurchaseSuccess": "ซื้อสำเร็จ! ปลดล็อกคอนเทนต์แล้ว",
-  "shopPurchaseFailed": "การซื้อล้มเหลว กรุณาลองใหม่",
-  "shopPurchasePending": "กำลังดำเนินการชำระเงิน...",
 
   "honeymoonDaysLeft": "ทดลองใช้ฟรีเหลืออีก {days} วัน",
 
@@ -204,7 +191,7 @@
   "themePickerTextColorAuto": "คอนทราสต์อัตโนมัติ",
   "themePickerPreview": "ตัวอย่าง",
   "themePickerLocked": "ปลดล็อกด้วย Fan Pass",
-  "themePickerPickerLocked": "ปลดล็อกตลอดกาล ₩990",
+  "themePickerPickerLocked": "ปลดล็อกตลอดกาล {price}",
 
   "themePickerUnlockAll": "ปลดล็อกธีมทั้งหมด",
   "themePickerUnlockAllDesc": "ดูโฆษณาเพื่อปลดล็อกพาเลทธีมทั้งหมดตลอดกาล",
@@ -245,7 +232,7 @@
   "iapThemeSlots": "บันทึก 3 ธีมโปรด",
   "iapThemeSlotsSub": "สลับสล็อตธีม · รายการโปรดไม่จำกัด",
   "iapThemeBundle": "แพ็กเกจเต็ม (ลด 24%)",
-  "iapThemeBundleSave": "ประหยัด ₩480 · รายการโปรดไม่จำกัด",
+  "iapThemeBundleSave": "รายการโปรดไม่จำกัด",
 
   "privacyPolicyLabel": "นโยบายความเป็นส่วนตัว",
   "privacyPolicySubtitle": "ข้อมูลที่เราเก็บรวบรวมและวิธีการใช้งาน",

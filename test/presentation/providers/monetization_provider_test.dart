@@ -76,7 +76,6 @@ void main() {
         // build()에서 CheckHoneymoonUseCase가 설치일을 자동 설정
         expect(state.installDate, isNotNull);
         expect(state.installDate, matches(RegExp(r'^\d{4}-\d{2}-\d{2}$')));
-        expect(state.purchasedPackIds, isEmpty);
         expect(state.ddayUnlockedDates, isEmpty);
         expect(state.themeTrialExpiresAt, 0);
       });
@@ -304,23 +303,6 @@ void main() {
 
         final nextMidnight = DateTime(2026, 3, 5);
         expect(expiry, nextMidnight.millisecondsSinceEpoch);
-      });
-    });
-
-    group('addPurchasedPack', () {
-      test('should add pack idempotently', () async {
-        setUpDefault();
-
-        final notifier = container.read(monetizationNotifierProvider.notifier);
-        await container.read(monetizationNotifierProvider.future);
-
-        await notifier.addPurchasedPack('pack_purple_dream');
-        await notifier.addPurchasedPack('pack_purple_dream');
-        await notifier.addPurchasedPack('pack_golden_hour');
-
-        final state = await container.read(monetizationNotifierProvider.future);
-        expect(
-            state.purchasedPackIds, ['pack_purple_dream', 'pack_golden_hour']);
       });
     });
 
@@ -882,21 +864,6 @@ void main() {
 
     test('should return true when hasThemeSlots is true', () async {
       setUpWithState(const MonetizationState(hasThemeSlots: true));
-      addTearDown(() => container.dispose());
-
-      container.listen(monetizationNotifierProvider, (_, __) {});
-      await container.read(monetizationNotifierProvider.future);
-
-      final sub = container.listen(hasAnyIapProvider, (_, __) {});
-      addTearDown(sub.close);
-
-      expect(container.read(hasAnyIapProvider), isTrue);
-    });
-
-    test('should return true when purchasedPackIds is not empty', () async {
-      setUpWithState(const MonetizationState(
-        purchasedPackIds: ['fangeul_color_starter'],
-      ));
       addTearDown(() => container.dispose());
 
       container.listen(monetizationNotifierProvider, (_, __) {});

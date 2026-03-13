@@ -1,0 +1,312 @@
+{
+  "@@locale": "ja",
+
+  "appName": "Fangeul",
+  "appVersion": "0.1.0",
+  "appLegalese": "\u00a9 2026 Tiger Room",
+
+  "copied": "コピーしました",
+  "errorPrefix": "エラー:",
+  "copyTooltip": "コピー",
+  "favoriteTooltip": "お気に入り",
+  "complete": "完了",
+  "share": "共有",
+
+  "streakDays": "連続{streak}日",
+  "@streakDays": {
+    "placeholders": {
+      "streak": {"type": "int"}
+    }
+  },
+
+  "navHome": "ホーム",
+  "navConverter": "キー変換",
+  "navPhrases": "フレーズ",
+
+  "dailyCardLoadError": "今日のカードを読み込めませんでした",
+
+  "converterTitle": "キー変換",
+  "converterTabEngToKor": "英→韓",
+  "converterTabKorToEng": "韓→英",
+  "converterTabRomanize": "発音",
+  "converterHintEngToKor": "英語を入力してください（例: gksrmf）",
+  "converterHintKorToEng": "韓国語を入力してください（例: 한글）",
+  "converterHintRomanize": "韓国語を入力してください（例: 사랑해요）",
+  "converterPaste": "ペースト",
+
+  "phrasesTitle": "フレーズ",
+  "phrasesEmpty": "フレーズがありません",
+  "phrasesMyIdolEmpty": "設定で推しを選択すると\nあなた向けのフレーズが表示されます",
+
+  "phrasesMyIdolChip": "♡ {name}",
+  "@phrasesMyIdolChip": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+
+  "settingsTitle": "設定",
+  "themeLabel": "テーマ",
+  "themeDark": "ダーク",
+  "themeLight": "ライト",
+  "themeSystem": "システム",
+  "appInfoTitle": "アプリ情報",
+  "appInfoSubtitle": "Fangeul v{version}",
+  "@appInfoSubtitle": {
+    "placeholders": {
+      "version": {"type": "String"}
+    }
+  },
+
+  "tagAll": "すべて",
+  "tagLove": "愛",
+  "tagCheer": "応援",
+  "tagDaily": "日常",
+  "tagGreeting": "あいさつ",
+  "tagEmotional": "感情",
+  "tagPraise": "称賛",
+  "tagFandom": "ファンダム",
+  "tagBirthday": "誕生日",
+  "tagComeback": "カムバ",
+
+  "keyboardSpace": "Space",
+  "keyboardModeKorean": "韓国語",
+  "keyboardModeAbc": "ABC",
+  "keyboardModeNumbers": "123",
+  "keyboardDone": "完了",
+
+  "defaultTranslationLang": "ja",
+
+  "bubbleLabel": "フローティングバブル",
+  "bubbleDescription": "アプリの外でも変換機能を使えます",
+  "bubblePermissionTitle": "オーバーレイ権限が必要です",
+  "bubblePermissionMessage": "フローティングバブルを表示するには、他のアプリの上に表示する権限が必要です。",
+  "bubblePermissionAllow": "許可する",
+  "bubblePermissionDeny": "キャンセル",
+  "bubblePermissionDenied": "アプリ内ですべての機能をご利用いただけます",
+  "bubbleBatteryTitle": "バッテリー最適化の無効化",
+  "bubbleBatteryMessage": "バブルを安定して動作させるため、バッテリー最適化を無効にしてください。\n一部の端末ではバッテリー最適化によりバブルが自動終了する場合があります。",
+  "bubbleBatteryAllow": "設定を開く",
+  "bubbleBatteryDeny": "あとで",
+
+  "miniConverterTitle": "Fangeul",
+  "miniTabPhrases": "フレーズ",
+  "miniTabFavorites": "お気に入り",
+  "miniTabRecent": "最近",
+  "miniChipFavorites": "★お気に入り",
+  "miniChipToday": "今日",
+  "miniPackLocked": "このパックはロックされています\nまもなく解除できるようになります！",
+  "miniPackEmpty": "フレーズがありません",
+  "miniOpenConverter": "変換機能を開く",
+  "miniBackToCompact": "コンパクトモード",
+  "miniMenuOpenApp": "Fangeulアプリを開く",
+  "miniMenuCloseBubble": "ポップアップを閉じる",
+  "miniFavoritesEmpty": "フレーズ画面で ⭐ をタップして\nお気に入りに追加しましょう",
+  "miniMyIdolEmpty": "設定で推しを選択すると\nあなた向けのフレーズが表示されます",
+  "miniTodayEmpty": "今日に関連するイベントはありません",
+  "miniRecentEmpty": "まだコピーしたテキストはありません",
+
+  "idolSelectTitle": "推しのグループを選んでください",
+  "idolSelectSubtitle": "設定からいつでも変更できます",
+  "idolSelectSkip": "あとで設定する",
+  "idolSelectOther": "その他（直接入力）",
+  "idolSelectOtherHint": "グループ名を入力してください",
+  "idolSelectConfirm": "決定",
+  "idolSettingLabel": "推しグループ",
+  "idolSettingEmpty": "まだ選択されていません",
+
+  "idolSettingCurrent": "現在: {name}",
+  "@idolSettingCurrent": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+
+  "homeGreeting": "こんにちは、{name}ペンさん！",
+  "@homeGreeting": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+
+  "idolSettingChange": "変更",
+
+  "idolMemberHint": "メンバー名（任意）",
+  "idolMemberLabel": "推しメンバー",
+
+  "phrasesMemberChip": "♡ {name}",
+  "@phrasesMemberChip": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+
+  "phrasesGroupChip": "{name}",
+  "@phrasesGroupChip": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+
+  "phrasesMemberEmpty": "メンバー専用フレーズがありません",
+
+  "fanPassButton": "ファンパス",
+
+  "fanPassRemaining": "({current}/{max})",
+  "@fanPassRemaining": {
+    "placeholders": {
+      "current": {"type": "int"},
+      "max": {"type": "int"}
+    }
+  },
+
+  "fanPassCooldown": "しばらくしてからお試しください",
+  "fanPassAdLoading": "広告を準備中...",
+  "fanPassLimitReached": "今日はこれで終了です",
+  "fanPassPopupTitle": "ファンパス獲得！",
+  "fanPassPopupConfirm": "OK",
+
+  "fanPassUnlockRemaining": "残り{time}",
+  "@fanPassUnlockRemaining": {
+    "placeholders": {
+      "time": {"type": "String"}
+    }
+  },
+
+  "unlockRemaining": "残り{time}",
+  "@unlockRemaining": {
+    "placeholders": {
+      "time": {"type": "String"}
+    }
+  },
+
+  "unlockMidnightLabel": "深夜0時に終了",
+
+  "unlockMidnightExpiry": "残り{time}（深夜0時に終了）",
+  "@unlockMidnightExpiry": {
+    "placeholders": {
+      "time": {"type": "String"}
+    }
+  },
+
+  "shopRestoreSuccess": "購入が復元されました",
+  "shopRestoreFailed": "復元する購入がありません",
+
+  "ddayGiftTitle": "{eventName}おめでとう！",
+  "@ddayGiftTitle": {
+    "placeholders": {
+      "eventName": {"type": "String"}
+    }
+  },
+
+  "ddayGiftMessage": "今日はすべてのコンテンツが無料です",
+  "ddayGiftButton": "ギフトを受け取る",
+
+  "ttsLimitTitle": "今日の発音リスニングはここまで！",
+
+  "ttsLimitMessage": "明日また{limit}回聴けます",
+  "@ttsLimitMessage": {
+    "placeholders": {
+      "limit": {"type": "int"}
+    }
+  },
+
+  "ttsLimitAdButton": "ファンパスでもっと聴く",
+
+  "conversionTriggerTitle": "もっとコンテンツを楽しもう",
+  "conversionTriggerMessage": "自分だけのテーマをカスタマイズして\nお気に入りも無制限に",
+  "conversionTriggerButton": "テーマオプションを見る",
+  "conversionTriggerDismiss": "あとで",
+
+  "favLimitTitle": "お気に入りのフレーズがたくさんですね！",
+  "favLimitMessage": "テーマパックをひとつ購入するだけで\nお気に入り無制限に！ {price}から",
+  "favLimitButton": "お気に入り無制限を解除",
+  "favLimitOpenApp": "アプリで解除",
+  "favLimitDismiss": "あとで",
+
+  "honeymoonDaysLeft": "無料体験 残り{days}日",
+  "@honeymoonDaysLeft": {
+    "placeholders": {
+      "days": {"type": "int"}
+    }
+  },
+
+  "languageLabel": "言語",
+  "languageSystem": "システムデフォルト",
+  "reviewLabel": "アプリを評価する",
+  "reviewSubtitle": "レビューは他のペンがFangeulを見つける助けになります",
+  "contactLabel": "お問い合わせ",
+  "contactSubtitle": "バグ報告や機能のご提案",
+
+  "settingsThemeColor": "テーマカラー",
+  "settingsThemeColorDesc": "アプリの色をカスタマイズ",
+
+  "themePickerTitle": "テーマカラー",
+  "themePickerSubtitle": "自分だけの色でアプリを彩りましょう",
+  "paletteDefault": "デフォルト（ティール）",
+  "paletteCherryBlossom": "桜",
+  "paletteOcean": "海",
+  "paletteForest": "森",
+  "paletteSunset": "夕焼け",
+  "paletteStarryNight": "星空",
+  "paletteDawn": "夜明け",
+  "paletteDusk": "黄昏",
+  "paletteJewel": "宝石",
+  "themePickerCustom": "自分で選ぶ",
+  "themePickerThemeColor": "テーマカラー",
+  "themePickerHue": "色相",
+  "themePickerSaturation": "彩度",
+  "themePickerLightness": "明度",
+  "themePickerTextColor": "文字色",
+  "themePickerTextColorDesc": "文字色を選択できます（カスタムピッカー限定）",
+  "themePickerTextColorAuto": "自動コントラスト",
+  "themePickerPreview": "プレビュー",
+  "themePickerLocked": "ファンパスで解除",
+  "themePickerPickerLocked": "{price}で永久解除",
+
+  "themePickerUnlockAll": "全テーマを解除",
+  "themePickerUnlockAllDesc": "広告を視聴してすべてのテーマパレットを永久解除",
+  "themePickerPreviewHint": "プレビューのみ — 購入後に適用できます",
+  "themePickerApplyLocked": "購入後に適用できます",
+  "themePickerUndo": "元に戻す",
+  "themePickerLowContrast": "低コントラスト",
+
+  "favoriteLimitReached": "お気に入り上限に達しました（最大5件）",
+
+  "choeaeColorTitle": "推し色",
+  "choeaeColorSubtitle": "自分だけの色でアプリを彩りましょう",
+
+  "paletteMidnight": "ミッドナイト",
+  "palettePurpleDream": "パープルドリーム",
+  "paletteOceanBlue": "オーシャンブルー",
+  "paletteRoseGold": "ローズゴールド",
+  "paletteConcertEncore": "コンサートアンコール",
+  "paletteGoldenHour": "ゴールデンアワー",
+  "paletteNeonNight": "ネオンナイト",
+  "paletteMintBreeze": "ミントブリーズ",
+  "paletteSunsetCafe": "サンセットカフェ",
+
+  "themePickerChroma": "彩度",
+  "themePickerTone": "トーン",
+  "themePickerHexInput": "カラーコード",
+  "themePickerBrightness": "明るさ",
+  "themeModeLocked": "カスタムテーマが明るさを個別に管理しています",
+  "themePickerSlots": "テーマスロット",
+  "themePickerSlotSave": "現在のテーマを保存",
+  "themePickerSlotLocked": "スロットを解除",
+  "themePickerSlotLongPressHint": "長押しで名前変更・上書きができます",
+  "themePickerSlotName": "スロット名",
+  "themePickerRecommended": "おすすめ",
+  "themePickerFreePickerTitle": "カスタム文字色",
+  "iapThemeCustomColor": "背景・文字色カスタム",
+  "iapThemeCustomColorSub": "オリジナル色テーマ · お気に入り無制限",
+  "iapThemeSlots": "推しテーマ3つを保存",
+  "iapThemeSlotsSub": "テーマスロット切替 · お気に入り無制限",
+  "iapThemeBundle": "フルバンドル（24%オフ）",
+  "iapThemeBundleSave": "お気に入り無制限",
+
+  "privacyPolicyLabel": "プライバシーポリシー",
+  "privacyPolicySubtitle": "収集する情報と利用目的について",
+  "termsLabel": "利用規約",
+  "termsSubtitle": "サービスのご利用条件"
+}

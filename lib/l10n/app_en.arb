@@ -133,15 +133,6 @@
 
   "unlockMidnightExpiry": "{time} remaining (expires at midnight)",
 
-  "shopTitle": "Color Vibe Packs",
-  "shopRestore": "Restore Purchases",
-  "shopBuyButton": "Buy",
-  "shopPurchased": "Purchased",
-
-  "shopPhraseCount": "{count} phrases",
-
-  "shopPronunciationCount": "{count} pronunciations",
-
   "shopRestoreSuccess": "Purchases restored",
   "shopRestoreFailed": "No purchases to restore",
 
@@ -157,19 +148,15 @@
   "ttsLimitAdButton": "Listen more with Fan Pass",
 
   "conversionTriggerTitle": "Enjoy even more content",
-  "conversionTriggerMessage": "Unlock everything with a Color Vibe Pack\nand start a special experience",
-  "conversionTriggerButton": "View Color Vibe Packs",
+  "conversionTriggerMessage": "Customize your theme and unlock\nunlimited favorites",
+  "conversionTriggerButton": "View Theme Options",
   "conversionTriggerDismiss": "Later",
 
   "favLimitTitle": "You really love a lot of phrases!",
-  "favLimitMessage": "Buy any theme product to unlock\nunlimited favorites! From ₩990",
+  "favLimitMessage": "Buy any theme product to unlock\nunlimited favorites! From {price}",
   "favLimitButton": "Unlock Unlimited Favorites",
   "favLimitOpenApp": "Unlock in App",
   "favLimitDismiss": "Later",
-
-  "shopPurchaseSuccess": "Purchase complete! Content unlocked",
-  "shopPurchaseFailed": "Purchase failed. Please try again",
-  "shopPurchasePending": "Processing payment...",
 
   "honeymoonDaysLeft": "{days} days of free trial left",
 
@@ -204,7 +191,7 @@
   "themePickerTextColorAuto": "Auto contrast",
   "themePickerPreview": "Preview",
   "themePickerLocked": "Unlock with Fan Pass",
-  "themePickerPickerLocked": "Unlock forever for ₩990",
+  "themePickerPickerLocked": "Unlock forever for {price}",
 
   "themePickerUnlockAll": "Unlock all themes",
   "themePickerUnlockAllDesc": "Watch an ad to unlock all theme palettes forever",
@@ -245,7 +232,7 @@
   "iapThemeSlots": "Save 3 favorite themes",
   "iapThemeSlotsSub": "Theme slot switching · Unlimited favorites",
   "iapThemeBundle": "Full Bundle (24% off)",
-  "iapThemeBundleSave": "Save ₩480 · Unlimited favorites",
+  "iapThemeBundleSave": "Unlimited favorites",
 
   "privacyPolicyLabel": "Privacy Policy",
   "privacyPolicySubtitle": "Information we collect and how we use it",

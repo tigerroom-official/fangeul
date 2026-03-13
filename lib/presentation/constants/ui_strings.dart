@@ -161,31 +161,6 @@ abstract final class UiStrings {
   static String unlockMidnightExpiry(String time) =>
       '$time 남음 ($unlockMidnightLabel)';
 
-  // 샵
-  /// 샵 화면 타이틀.
-  static const shopTitle = '감성 컬러 팩';
-
-  /// 구매 복원 버튼 레이블.
-  static const shopRestore = '구매 복원';
-
-  /// 구매하기 버튼 레이블.
-  static const shopBuyButton = '구매하기';
-
-  /// 구매 완료 배지 텍스트.
-  static const shopPurchased = '구매 완료';
-
-  /// 문구 개수 표시. 예: '문구 50개'.
-  static String shopPhraseCount(int count) => '문구 $count개';
-
-  /// 발음 개수 표시. 예: '발음 30개'.
-  static String shopPronunciationCount(int count) => '발음 $count개';
-
-  /// 구매 복원 성공 메시지.
-  static const shopRestoreSuccess = '구매가 복원되었습니다';
-
-  /// 구매 복원 실패 메시지.
-  static const shopRestoreFailed = '복원할 구매가 없습니다';
-
   // D-day 선물 팝업
 
   /// D-day 선물 팝업 제목. 예: '슈가 생일 축하해요!'.
@@ -212,10 +187,10 @@ abstract final class UiStrings {
   static const conversionTriggerTitle = '더 많은 콘텐츠를 즐기세요';
 
   /// 전환 트리거 팝업 메시지.
-  static const conversionTriggerMessage = '감성 컬러 팩으로\n무제한 해금하고 특별한 경험을 시작하세요';
+  static const conversionTriggerMessage = '나만의 테마를 꾸미고\n즐겨찾기도 무제한으로 사용하세요';
 
   /// 전환 트리거 팝업 CTA 버튼.
-  static const conversionTriggerButton = '감성 컬러 팩 보기';
+  static const conversionTriggerButton = '테마 옵션 보기';
 
   /// 전환 트리거 팝업 닫기 버튼.
   static const conversionTriggerDismiss = '나중에';
@@ -226,23 +201,13 @@ abstract final class UiStrings {
 
   /// 즐겨찾기 슬롯 포화 메시지.
   static const favLimitMessage =
-      '팬 패스로 더 많은 문구를 저장해보세요\n감성 컬러 팩으로 무제한 보관도 가능해요';
+      '테마 상품 하나만 구매하면\n즐겨찾기 무제한으로 사용 가능해요';
 
   /// 즐겨찾기 제한 — 팬 패스 버튼.
   static const favLimitAdButton = '팬 패스 받기';
 
   /// 즐겨찾기 제한 — IAP 버튼.
-  static const favLimitIapButton = '컬러 팩 구경하기';
-
-  // 구매 결과
-  /// 구매 성공.
-  static const shopPurchaseSuccess = '구매 완료! 콘텐츠가 해금되었어요';
-
-  /// 구매 실패.
-  static const shopPurchaseFailed = '구매에 실패했어요. 다시 시도해주세요';
-
-  /// 구매 처리 중.
-  static const shopPurchasePending = '결제 처리 중...';
+  static const favLimitIapButton = '테마 옵션 보기';
 
   // 허니문
   /// 허니문 남은 일수 표시. 예: '무료 체험 3일 남음'.

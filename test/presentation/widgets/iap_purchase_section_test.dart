@@ -44,11 +44,9 @@ void main() {
       expect(IapProducts.themeSkuIds.length, 3);
     });
 
-    test('allIds should include both colorPack and theme SKUs', () {
-      expect(
-        IapProducts.allIds,
-        containsAll([...IapProducts.colorPackIds, ...IapProducts.themeSkuIds]),
-      );
+    test('allIds should equal themeSkuIds', () {
+      expect(IapProducts.allIds, IapProducts.themeSkuIds);
+      expect(IapProducts.allIds.length, 3);
     });
   });
 }

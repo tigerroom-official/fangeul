@@ -347,28 +347,6 @@ class LEn extends L {
   }
 
   @override
-  String get shopTitle => 'Color Vibe Packs';
-
-  @override
-  String get shopRestore => 'Restore Purchases';
-
-  @override
-  String get shopBuyButton => 'Buy';
-
-  @override
-  String get shopPurchased => 'Purchased';
-
-  @override
-  String shopPhraseCount(int count) {
-    return '$count phrases';
-  }
-
-  @override
-  String shopPronunciationCount(int count) {
-    return '$count pronunciations';
-  }
-
-  @override
   String get shopRestoreSuccess => 'Purchases restored';
 
   @override
@@ -401,10 +379,10 @@ class LEn extends L {
 
   @override
   String get conversionTriggerMessage =>
-      'Unlock everything with a Color Vibe Pack\nand start a special experience';
+      'Customize your theme and unlock\nunlimited favorites';
 
   @override
-  String get conversionTriggerButton => 'View Color Vibe Packs';
+  String get conversionTriggerButton => 'View Theme Options';
 
   @override
   String get conversionTriggerDismiss => 'Later';
@@ -413,8 +391,9 @@ class LEn extends L {
   String get favLimitTitle => 'You really love a lot of phrases!';
 
   @override
-  String get favLimitMessage =>
-      'Buy any theme product to unlock\nunlimited favorites! From ₩990';
+  String favLimitMessage(String price) {
+    return 'Buy any theme product to unlock\nunlimited favorites! From $price';
+  }
 
   @override
   String get favLimitButton => 'Unlock Unlimited Favorites';
@@ -424,15 +403,6 @@ class LEn extends L {
 
   @override
   String get favLimitDismiss => 'Later';
-
-  @override
-  String get shopPurchaseSuccess => 'Purchase complete! Content unlocked';
-
-  @override
-  String get shopPurchaseFailed => 'Purchase failed. Please try again';
-
-  @override
-  String get shopPurchasePending => 'Processing payment...';
 
   @override
   String honeymoonDaysLeft(int days) {
@@ -528,7 +498,9 @@ class LEn extends L {
   String get themePickerLocked => 'Unlock with Fan Pass';
 
   @override
-  String get themePickerPickerLocked => 'Unlock forever for ₩990';
+  String themePickerPickerLocked(String price) {
+    return 'Unlock forever for $price';
+  }
 
   @override
   String get themePickerUnlockAll => 'Unlock all themes';
@@ -640,7 +612,7 @@ class LEn extends L {
   String get iapThemeBundle => 'Full Bundle (24% off)';
 
   @override
-  String get iapThemeBundleSave => 'Save ₩480 · Unlimited favorites';
+  String get iapThemeBundleSave => 'Unlimited favorites';
 
   @override
   String get privacyPolicyLabel => 'Privacy Policy';

@@ -26,7 +26,7 @@ void main() {
       const state = MonetizationState(
         honeymoonActive: false,
         adWatchCount: 2,
-        purchasedPackIds: ['color_purple_dream'],
+        hasThemePicker: true,
       );
       when(() => mockDataSource.load()).thenAnswer((_) async => state);
 

@@ -149,11 +149,11 @@ final hasThemePickerProvider = AutoDisposeProvider<bool>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef HasThemePickerRef = AutoDisposeProviderRef<bool>;
-String _$hasAnyIapHash() => r'a6e5caeb2f19430b125b638bf2a9096cfa7dac6a';
+String _$hasAnyIapHash() => r'0394076291d7b4f1db0ecdb4fe0ae0a6b30ffc61';
 
 /// 아무 IAP든 구매했는지 여부 편의 Provider.
 ///
-/// 테마 피커, 테마 슬롯, 컬러 팩 중 하나라도 구매하면 true.
+/// 테마 피커 또는 테마 슬롯 중 하나라도 구매하면 true.
 /// 즐겨찾기 무제한 해금 조건으로 사용한다.
 ///
 /// Copied from [hasAnyIap].
@@ -190,7 +190,7 @@ final favoriteSlotLimitProvider = AutoDisposeProvider<int>.internal(
 // ignore: unused_element
 typedef FavoriteSlotLimitRef = AutoDisposeProviderRef<int>;
 String _$monetizationNotifierHash() =>
-    r'5d12c75ddd2751cecde1f47d89687fd1539fd076';
+    r'7484441a1ad8c0d0edcbe344f9b9744ac20f1022';
 
 /// 수익화 상태를 관리하는 중앙 Notifier.
 ///

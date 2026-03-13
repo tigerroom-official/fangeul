@@ -18,7 +18,8 @@
         "th": "ฉันรักคุณ",
         "pt": "Eu te amo",
         "es": "Te quiero",
-        "vi": "Tôi yêu bạn"
+        "vi": "Tôi yêu bạn",
+        "ja": "愛してます"
       },
       "situation": "daily"
     },
@@ -36,7 +37,8 @@
         "th": "สู้ๆ วันนี้ด้วยนะ!",
         "pt": "Força hoje também!",
         "es": "¡Ánimo hoy también!",
-        "vi": "Hôm nay cũng cố lên nhé!"
+        "vi": "Hôm nay cũng cố lên nhé!",
+        "ja": "今日もファイティン！"
       },
       "situation": "support"
     },
@@ -54,7 +56,8 @@
         "th": "คิดถึงนะ",
         "pt": "Sinto sua falta",
         "es": "Te extraño",
-        "vi": "Nhớ bạn lắm"
+        "vi": "Nhớ bạn lắm",
+        "ja": "会いたいです"
       },
       "situation": "daily"
     },
@@ -72,7 +75,8 @@
         "th": "เป็นกำลังใจให้เสมอ",
         "pt": "Sempre te apoio",
         "es": "Siempre te apoyo",
-        "vi": "Luôn ủng hộ bạn"
+        "vi": "Luôn ủng hộ bạn",
+        "ja": "いつも応援してます"
       },
       "situation": "support"
     },
@@ -90,7 +94,8 @@
         "th": "เยี่ยมที่สุด!",
         "pt": "Você é o melhor!",
         "es": "¡Eres el/la mejor!",
-        "vi": "Bạn là tuyệt nhất!"
+        "vi": "Bạn là tuyệt nhất!",
+        "ja": "最高です！"
       },
       "situation": "support"
     },
@@ -108,7 +113,8 @@
         "th": "เท่มากเลย",
         "pt": "Você é muito legal",
         "es": "Eres muy genial",
-        "vi": "Bạn thật tuyệt vời"
+        "vi": "Bạn thật tuyệt vời",
+        "ja": "めちゃくちゃかっこいいです"
       },
       "situation": "daily"
     },
@@ -126,7 +132,8 @@
         "th": "มีความสุขนะ",
         "pt": "Seja feliz",
         "es": "Sé feliz",
-        "vi": "Hãy hạnh phúc nhé"
+        "vi": "Hãy hạnh phúc nhé",
+        "ja": "幸せでいてください"
       },
       "situation": "daily"
     },
@@ -144,7 +151,8 @@
         "th": "รักษาสุขภาพด้วยนะ",
         "pt": "Cuide-se",
         "es": "Cuídate",
-        "vi": "Giữ gìn sức khỏe nhé"
+        "vi": "Giữ gìn sức khỏe nhé",
+        "ja": "健康でいてくださいね"
       },
       "situation": "daily"
     },
@@ -162,7 +170,8 @@
         "th": "ทำได้ดีมาก!",
         "pt": "Bom trabalho!",
         "es": "¡Buen trabajo!",
-        "vi": "Làm tốt lắm!"
+        "vi": "Làm tốt lắm!",
+        "ja": "よく頑張ったね！"
       },
       "situation": "support"
     },
@@ -180,7 +189,8 @@
         "th": "ภูมิใจในตัวเธอนะ",
         "pt": "Tenho orgulho de você",
         "es": "Estoy orgulloso/a de ti",
-        "vi": "Tự hào về bạn lắm"
+        "vi": "Tự hào về bạn lắm",
+        "ja": "誇りに思います"
       },
       "situation": "support"
     },
@@ -198,7 +208,8 @@
         "th": "สู้ๆ นะ!",
         "pt": "Força!",
         "es": "¡Ánimo!",
-        "vi": "Cố lên nhé!"
+        "vi": "Cố lên nhé!",
+        "ja": "頑張ってください！"
       },
       "situation": "support"
     },
@@ -216,7 +227,8 @@
         "th": "ขอบคุณนะ",
         "pt": "Obrigado(a)",
         "es": "Gracias",
-        "vi": "Cảm ơn bạn"
+        "vi": "Cảm ơn bạn",
+        "ja": "ありがとう"
       },
       "situation": "daily"
     },
@@ -234,7 +246,8 @@
         "th": "เหนื่อยมากเลยนะ",
         "pt": "Você se esforçou muito",
         "es": "Te has esforzado mucho",
-        "vi": "Bạn đã vất vả rồi"
+        "vi": "Bạn đã vất vả rồi",
+        "ja": "お疲れさまでした"
       },
       "situation": "support"
     },
@@ -252,7 +265,8 @@
         "th": "สวยมากเลย",
         "pt": "Você é tão linda",
         "es": "Eres muy linda",
-        "vi": "Bạn đẹp quá"
+        "vi": "Bạn đẹp quá",
+        "ja": "すごくきれいです"
       },
       "situation": "daily"
     },
@@ -270,7 +284,8 @@
         "th": "น่ารักมากเลย",
         "pt": "Você é tão fofo(a)",
         "es": "Eres muy lindo/a",
-        "vi": "Bạn dễ thương quá"
+        "vi": "Bạn dễ thương quá",
+        "ja": "めっちゃかわいいです"
       },
       "situation": "daily"
     },
@@ -288,7 +303,8 @@
         "th": "พวกเราอยู่ตรงนี้นะ",
         "pt": "Nós estamos aqui por você",
         "es": "Estamos aquí para ti",
-        "vi": "Chúng tôi ở đây vì bạn"
+        "vi": "Chúng tôi ở đây vì bạn",
+        "ja": "私たちがそばにいるよ"
       },
       "situation": "support"
     },
@@ -306,7 +322,8 @@
         "th": "อยู่ด้วยกันตลอดไปนะ",
         "pt": "Vamos ficar juntos para sempre",
         "es": "Estemos juntos para siempre",
-        "vi": "Hãy bên nhau mãi mãi nhé"
+        "vi": "Hãy bên nhau mãi mãi nhé",
+        "ja": "永遠に一緒にいようね"
       },
       "situation": "daily"
     },
@@ -324,7 +341,8 @@
         "th": "เป็นกำลังใจให้ความฝันของเธอ",
         "pt": "Apoio seus sonhos",
         "es": "Apoyo tus sueños",
-        "vi": "Ủng hộ ước mơ của bạn"
+        "vi": "Ủng hộ ước mơ của bạn",
+        "ja": "夢を応援してます"
       },
       "situation": "support"
     },
@@ -342,7 +360,8 @@
         "th": "รักมากนะ",
         "pt": "Te amo muito",
         "es": "Te quiero mucho",
-        "vi": "Yêu bạn nhiều lắm"
+        "vi": "Yêu bạn nhiều lắm",
+        "ja": "大好きです"
       },
       "situation": "daily"
     },
@@ -360,7 +379,8 @@
         "th": "รอยยิ้มของเธอสวยมาก",
         "pt": "Seu sorriso é lindo",
         "es": "Tu sonrisa es hermosa",
-        "vi": "Nụ cười của bạn thật đẹp"
+        "vi": "Nụ cười của bạn thật đẹp",
+        "ja": "笑顔がとてもきれいです"
       },
       "situation": "daily"
     },
@@ -378,7 +398,8 @@
         "th": "รักโอปป้า",
         "pt": "Eu te amo oppa",
         "es": "Te quiero oppa",
-        "vi": "Em yêu oppa"
+        "vi": "Em yêu oppa",
+        "ja": "オッパ大好きです"
       },
       "situation": "daily"
     },
@@ -396,7 +417,8 @@
         "th": "รักอันนี่",
         "pt": "Eu te amo unnie",
         "es": "Te quiero unnie",
-        "vi": "Em yêu unnie"
+        "vi": "Em yêu unnie",
+        "ja": "オンニ大好きです"
       },
       "situation": "daily"
     },
@@ -414,7 +436,8 @@
         "th": "แสดงเวทีเจ๋งมาก!",
         "pt": "Arrasou no palco!",
         "es": "¡Lo rompiste en el escenario!",
-        "vi": "Bạn quá đỉnh trên sân khấu!"
+        "vi": "Bạn quá đỉnh trên sân khấu!",
+        "ja": "ステージ最高だった！"
       },
       "situation": "support"
     },
@@ -432,7 +455,8 @@
         "th": "เสียงดีมากเลย",
         "pt": "Sua voz é muito boa",
         "es": "Tu voz es muy buena",
-        "vi": "Giọng bạn hay quá"
+        "vi": "Giọng bạn hay quá",
+        "ja": "声がすごく素敵です"
       },
       "situation": "daily"
     },
@@ -450,7 +474,8 @@
         "th": "มีความสุขเพราะเธอ",
         "pt": "Sou feliz por sua causa",
         "es": "Soy feliz gracias a ti",
-        "vi": "Hạnh phúc nhờ có bạn"
+        "vi": "Hạnh phúc nhờ có bạn",
+        "ja": "おかげで幸せです"
       },
       "situation": "daily"
     },
@@ -468,7 +493,8 @@
         "th": "รักษาสุขภาพด้วยเสมอนะ",
         "pt": "Sempre cuide da saúde",
         "es": "Siempre cuida tu salud",
-        "vi": "Luôn giữ gìn sức khỏe nhé"
+        "vi": "Luôn giữ gìn sức khỏe nhé",
+        "ja": "いつも健康でいてくださいね"
       },
       "situation": "daily"
     },
@@ -486,7 +512,8 @@
         "th": "กินให้อร่อยนอนให้สบายนะ",
         "pt": "Coma bem e durma bem",
         "es": "Come bien y duerme bien",
-        "vi": "Ăn ngon ngủ ngon nhé"
+        "vi": "Ăn ngon ngủ ngon nhé",
+        "ja": "いっぱい食べてよく寝てね"
       },
       "situation": "daily"
     },
@@ -504,7 +531,8 @@
         "th": "มีความสุขที่ได้เป็นแฟน",
         "pt": "Sou feliz por ser seu fã",
         "es": "Soy feliz de ser tu fan",
-        "vi": "Hạnh phúc vì được làm fan"
+        "vi": "Hạnh phúc vì được làm fan",
+        "ja": "ファンでいられて幸せです"
       },
       "situation": "daily"
     },
@@ -522,7 +550,8 @@
         "th": "เพลงดีมากเลย",
         "pt": "A música é muito boa",
         "es": "La canción es muy buena",
-        "vi": "Bài hát hay quá"
+        "vi": "Bài hát hay quá",
+        "ja": "曲がめちゃくちゃいいです"
       },
       "situation": "daily"
     },
@@ -540,7 +569,8 @@
         "th": "อยากเจอที่เกาหลีจังเลย",
         "pt": "Quero muito te ver na Coreia",
         "es": "Quiero verte en Corea",
-        "vi": "Muốn gặp bạn ở Hàn Quốc quá"
+        "vi": "Muốn gặp bạn ở Hàn Quốc quá",
+        "ja": "韓国で絶対会いたいです"
       },
       "situation": "daily"
     }

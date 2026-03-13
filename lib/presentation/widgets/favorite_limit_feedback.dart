@@ -22,7 +22,10 @@ bool _dialogInFlight = false;
 ///
 /// 버블 간편모드([CompactPhraseTile], [CompactPhraseList])와
 /// 메인앱 문구 카드([PhraseCard]) 모두에서 호출한다.
-Future<void> showFavoriteLimitFeedback(BuildContext context) async {
+Future<void> showFavoriteLimitFeedback(
+  BuildContext context, {
+  required String startingPrice,
+}) async {
   final prefs = await SharedPreferences.getInstance();
   // 듀얼 엔진 환경: 다른 엔진에서 기록한 값을 읽기 위해 reload
   await prefs.reload();
@@ -35,11 +38,15 @@ Future<void> showFavoriteLimitFeedback(BuildContext context) async {
 
   if (isBubble) {
     final l = L.of(context);
+    // 가격 미로딩 시 가격 없는 일반 메시지로 대체
+    final snackText = startingPrice.isNotEmpty
+        ? l.favLimitMessage(startingPrice)
+        : l.favoriteLimitReached;
     ScaffoldMessenger.of(context)
       ..clearSnackBars()
       ..showSnackBar(
         SnackBar(
-          content: Text(l.favLimitMessage),
+          content: Text(snackText),
           duration: const Duration(seconds: 6),
           action: SnackBarAction(
             label: l.favLimitOpenApp,
@@ -64,14 +71,18 @@ Future<void> showFavoriteLimitFeedback(BuildContext context) async {
     try {
       await showFavoriteLimitDialog(
         context,
+        startingPrice: startingPrice,
         onViewThemeOptions: () {
           if (context.mounted) {
             ThemePickerSheet.show(context);
           }
         },
       );
-      // 다이얼로그가 실제로 표시·닫힌 후에만 seen 플래그 저장
-      await prefs.setBool(_hasSeenFavLimitDialogKey, true);
+      // 가격 포함 메시지를 보여줬을 때만 seen 플래그 저장.
+      // 가격 미로딩 상태에서는 다음에 다시 표시하여 가격 포함 메시지 노출 보장.
+      if (startingPrice.isNotEmpty) {
+        await prefs.setBool(_hasSeenFavLimitDialogKey, true);
+      }
     } finally {
       _dialogInFlight = false;
     }

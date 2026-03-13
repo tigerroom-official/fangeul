@@ -18,7 +18,8 @@
         "th": "สวัสดีค่ะ/ครับ",
         "pt": "Olá",
         "es": "Hola",
-        "vi": "Xin chào"
+        "vi": "Xin chào",
+        "ja": "こんにちは"
       },
       "situation": "daily"
     },
@@ -36,7 +37,8 @@
         "th": "ราตรีสวัสดิ์",
         "pt": "Boa noite",
         "es": "Buenas noches",
-        "vi": "Ngủ ngon nhé"
+        "vi": "Ngủ ngon nhé",
+        "ja": "おやすみなさい"
       },
       "situation": "daily"
     },
@@ -54,7 +56,8 @@
         "th": "สวัสดีตอนเช้า",
         "pt": "Bom dia",
         "es": "Buenos días",
-        "vi": "Chào buổi sáng"
+        "vi": "Chào buổi sáng",
+        "ja": "おはようございます"
       },
       "situation": "daily"
     },
@@ -72,7 +75,8 @@
         "th": "กินข้าวหรือยัง?",
         "pt": "Já comeu?",
         "es": "¿Ya comiste?",
-        "vi": "Ăn cơm chưa?"
+        "vi": "Ăn cơm chưa?",
+        "ja": "ごはん食べた？"
       },
       "situation": "daily"
     },
@@ -89,7 +93,8 @@
         "th": "วันนี้ทำอะไรบ้าง?",
         "pt": "O que você fez hoje?",
         "es": "¿Qué hiciste hoy?",
-        "vi": "Hôm nay làm gì vậy?"
+        "vi": "Hôm nay làm gì vậy?",
+        "ja": "今日は何してたの？"
       },
       "situation": "daily"
     },
@@ -107,7 +112,8 @@
         "th": "ขอให้เป็นวันที่ดีนะ",
         "pt": "Tenha um bom dia",
         "es": "Que tengas un buen día",
-        "vi": "Chúc một ngày tốt lành"
+        "vi": "Chúc một ngày tốt lành",
+        "ja": "良い一日を過ごしてね"
       },
       "situation": "daily"
     },
@@ -125,7 +131,8 @@
         "th": "วันนี้ก็เหนื่อยมากนะ",
         "pt": "Hoje também se esforçou muito",
         "es": "Hoy también te esforzaste mucho",
-        "vi": "Hôm nay cũng vất vả rồi"
+        "vi": "Hôm nay cũng vất vả rồi",
+        "ja": "今日もお疲れさまでした"
       },
       "situation": "daily"
     },
@@ -142,7 +149,8 @@
         "th": "ทานให้อร่อยนะ",
         "pt": "Bom apetite",
         "es": "Buen provecho",
-        "vi": "Ăn ngon nhé"
+        "vi": "Ăn ngon nhé",
+        "ja": "おいしく食べてね"
       },
       "situation": "daily"
     },
@@ -160,7 +168,8 @@
         "th": "รู้สึกยังไงบ้าง?",
         "pt": "Como você está se sentindo?",
         "es": "¿Cómo te sientes?",
-        "vi": "Cảm thấy thế nào?"
+        "vi": "Cảm thấy thế nào?",
+        "ja": "気分はどうですか？"
       },
       "situation": "daily"
     },
@@ -178,7 +187,8 @@
         "th": "พักผ่อนให้เต็มที่นะ",
         "pt": "Descanse bastante",
         "es": "Descansa bien",
-        "vi": "Nghỉ ngơi cho đầy đủ nhé"
+        "vi": "Nghỉ ngơi cho đầy đủ nhé",
+        "ja": "ゆっくり休んでね"
       },
       "situation": "daily"
     },
@@ -195,7 +205,8 @@
         "th": "วันนี้อากาศดีนะ",
         "pt": "O tempo está bom hoje",
         "es": "El clima está lindo hoy",
-        "vi": "Hôm nay thời tiết đẹp quá"
+        "vi": "Hôm nay thời tiết đẹp quá",
+        "ja": "今日はいい天気ですね"
       },
       "situation": "daily"
     },
@@ -213,7 +224,8 @@
         "th": "วันนี้ดูอารมณ์ดีนะ",
         "pt": "Você parece estar de bom humor hoje",
         "es": "Pareces estar de buen humor hoy",
-        "vi": "Hôm nay trông vui quá"
+        "vi": "Hôm nay trông vui quá",
+        "ja": "今日はご機嫌ですね"
       },
       "situation": "daily"
     },
@@ -230,7 +242,8 @@
         "th": "สนุกมากเลย",
         "pt": "Foi divertido",
         "es": "Fue divertido",
-        "vi": "Vui lắm"
+        "vi": "Vui lắm",
+        "ja": "楽しかったです"
       },
       "situation": "daily"
     },
@@ -248,7 +261,8 @@
         "th": "ระวังตัวด้วยนะ",
         "pt": "Vá com cuidado",
         "es": "Ve con cuidado",
-        "vi": "Đi cẩn thận nhé"
+        "vi": "Đi cẩn thận nhé",
+        "ja": "気をつけて行ってらっしゃい"
       },
       "situation": "daily"
     },
@@ -266,7 +280,8 @@
         "th": "จะรออยู่นะ",
         "pt": "Vou estar esperando",
         "es": "Estaré esperando",
-        "vi": "Sẽ đợi bạn"
+        "vi": "Sẽ đợi bạn",
+        "ja": "待ってるからね"
       },
       "situation": "daily"
     },
@@ -284,7 +299,8 @@
         "th": "วันนี้ก็ลำบากมากนะ",
         "pt": "Hoje também foi difícil",
         "es": "Hoy también fue un día duro",
-        "vi": "Hôm nay cũng mệt rồi nhỉ"
+        "vi": "Hôm nay cũng mệt rồi nhỉ",
+        "ja": "今日も大変だったね"
       },
       "situation": "daily"
     },
@@ -302,7 +318,8 @@
         "th": "ขอให้เป็นวันที่มีความสุข",
         "pt": "Tenha um dia feliz",
         "es": "Que tengas un día feliz",
-        "vi": "Chúc một ngày vui vẻ"
+        "vi": "Chúc một ngày vui vẻ",
+        "ja": "幸せな一日になりますように"
       },
       "situation": "daily"
     },
@@ -320,7 +337,8 @@
         "th": "ขอบคุณค่ะ/ครับ",
         "pt": "Obrigado(a) (formal)",
         "es": "Gracias (formal)",
-        "vi": "Cảm ơn ạ"
+        "vi": "Cảm ơn ạ",
+        "ja": "ありがとうございます"
       },
       "situation": "daily"
     },
@@ -338,7 +356,8 @@
         "th": "แล้วเจอกันใหม่",
         "pt": "Até mais",
         "es": "Hasta la próxima",
-        "vi": "Hẹn gặp lại"
+        "vi": "Hẹn gặp lại",
+        "ja": "また会おうね"
       },
       "situation": "daily"
     },
@@ -356,7 +375,8 @@
         "th": "พรุ่งนี้เจอกัน",
         "pt": "Até amanhã",
         "es": "Hasta mañana",
-        "vi": "Mai gặp nhé"
+        "vi": "Mai gặp nhé",
+        "ja": "明日会おうね"
       },
       "situation": "daily"
     }

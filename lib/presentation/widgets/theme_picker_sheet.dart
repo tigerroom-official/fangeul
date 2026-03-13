@@ -1508,7 +1508,9 @@ class _IapPurchaseSection extends ConsumerWidget {
 
     final l = L.of(context);
     final theme = Theme.of(context);
-    final iapSvc = ref.read(iapServiceProvider);
+    // 상품 로딩 완료 시 리빌드 → 로컬라이즈 가격 반영
+    ref.watch(iapProductsLoadedProvider);
+    final iapSvc = ref.watch(iapServiceProvider);
     final showBundle = !hasThemePicker && !hasThemeSlots;
 
     return Padding(
@@ -1523,7 +1525,9 @@ class _IapPurchaseSection extends ConsumerWidget {
               label: l.iapThemeCustomColor,
               subtitle: l.iapThemeCustomColorSub,
               price: iapSvc.getProduct(IapProducts.themeCustomColor)?.price,
-              onTap: () => iapSvc.buyPack(IapProducts.themeCustomColor),
+              onTap: iapSvc.getProduct(IapProducts.themeCustomColor) != null
+                  ? () => iapSvc.buyPack(IapProducts.themeCustomColor)
+                  : null,
               theme: theme,
             ),
           // 슬롯 미구매
@@ -1534,7 +1538,9 @@ class _IapPurchaseSection extends ConsumerWidget {
               label: l.iapThemeSlots,
               subtitle: l.iapThemeSlotsSub,
               price: iapSvc.getProduct(IapProducts.themeSlots)?.price,
-              onTap: () => iapSvc.buyPack(IapProducts.themeSlots),
+              onTap: iapSvc.getProduct(IapProducts.themeSlots) != null
+                  ? () => iapSvc.buyPack(IapProducts.themeSlots)
+                  : null,
               theme: theme,
             ),
           ],
@@ -1548,7 +1554,9 @@ class _IapPurchaseSection extends ConsumerWidget {
               badge: l.themePickerRecommended,
               isHighlighted: true,
               price: iapSvc.getProduct(IapProducts.themeBundle)?.price,
-              onTap: () => iapSvc.buyPack(IapProducts.themeBundle),
+              onTap: iapSvc.getProduct(IapProducts.themeBundle) != null
+                  ? () => iapSvc.buyPack(IapProducts.themeBundle)
+                  : null,
               theme: theme,
             ),
           ],
@@ -1563,8 +1571,8 @@ class _IapButton extends StatelessWidget {
   const _IapButton({
     required this.icon,
     required this.label,
-    required this.onTap,
     required this.theme,
+    this.onTap,
     this.price,
     this.subtitle,
     this.badge,
@@ -1577,7 +1585,7 @@ class _IapButton extends StatelessWidget {
   final String? subtitle;
   final String? badge;
   final bool isHighlighted;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final ThemeData theme;
 
   @override

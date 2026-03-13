@@ -348,28 +348,6 @@ class LPt extends L {
   }
 
   @override
-  String get shopTitle => 'Pacotes Color Vibe';
-
-  @override
-  String get shopRestore => 'Restaurar compras';
-
-  @override
-  String get shopBuyButton => 'Comprar';
-
-  @override
-  String get shopPurchased => 'Comprado';
-
-  @override
-  String shopPhraseCount(int count) {
-    return '$count frases';
-  }
-
-  @override
-  String shopPronunciationCount(int count) {
-    return '$count pronúncias';
-  }
-
-  @override
   String get shopRestoreSuccess => 'Compras restauradas com sucesso';
 
   @override
@@ -402,10 +380,10 @@ class LPt extends L {
 
   @override
   String get conversionTriggerMessage =>
-      'Desbloqueie tudo com um Pacote Color Vibe\ne comece uma experiência especial';
+      'Personalize seu tema e desbloqueie\nfavoritos ilimitados';
 
   @override
-  String get conversionTriggerButton => 'Ver Pacotes Color Vibe';
+  String get conversionTriggerButton => 'Ver opções de tema';
 
   @override
   String get conversionTriggerDismiss => 'Depois';
@@ -414,8 +392,9 @@ class LPt extends L {
   String get favLimitTitle => 'Você tem muitas frases favoritas!';
 
   @override
-  String get favLimitMessage =>
-      'Compre qualquer produto de tema\ne desbloqueie favoritos ilimitados! A partir de ₩990';
+  String favLimitMessage(String price) {
+    return 'Compre qualquer produto de tema\ne desbloqueie favoritos ilimitados! A partir de $price';
+  }
 
   @override
   String get favLimitButton => 'Desbloquear favoritos ilimitados';
@@ -425,15 +404,6 @@ class LPt extends L {
 
   @override
   String get favLimitDismiss => 'Depois';
-
-  @override
-  String get shopPurchaseSuccess => 'Compra concluída! Conteúdo desbloqueado';
-
-  @override
-  String get shopPurchaseFailed => 'A compra falhou. Tente novamente';
-
-  @override
-  String get shopPurchasePending => 'Processando pagamento...';
 
   @override
   String honeymoonDaysLeft(int days) {
@@ -531,7 +501,9 @@ class LPt extends L {
   String get themePickerLocked => 'Desbloquear com Fan Pass';
 
   @override
-  String get themePickerPickerLocked => 'Desbloquear para sempre por ₩990';
+  String themePickerPickerLocked(String price) {
+    return 'Desbloquear para sempre por $price';
+  }
 
   @override
   String get themePickerUnlockAll => 'Desbloquear todos os temas';
@@ -644,7 +616,7 @@ class LPt extends L {
   String get iapThemeBundle => 'Pacote completo (24% desc.)';
 
   @override
-  String get iapThemeBundleSave => 'Economize ₩480 · Favoritos ilimitados';
+  String get iapThemeBundleSave => 'Favoritos ilimitados';
 
   @override
   String get privacyPolicyLabel => 'Política de Privacidade';

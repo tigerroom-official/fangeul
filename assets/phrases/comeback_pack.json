@@ -18,7 +18,8 @@
         "th": "ยินดีกับการคัมแบ็ก!",
         "pt": "Parabéns pelo comeback!",
         "es": "¡Felicidades por el comeback!",
-        "vi": "Chúc mừng comeback!"
+        "vi": "Chúc mừng comeback!",
+        "ja": "カムバおめでとう！"
       },
       "situation": "comeback"
     },
@@ -36,7 +37,8 @@
         "th": "เพลงใหม่ดีมากเลย!",
         "pt": "A música nova é muito boa!",
         "es": "¡La nueva canción es muy buena!",
-        "vi": "Bài hát mới hay quá!"
+        "vi": "Bài hát mới hay quá!",
+        "ja": "新曲めっちゃいい！"
       },
       "situation": "comeback"
     },
@@ -54,7 +56,8 @@
         "th": "ขึ้นอันดับ 1 กันเถอะ!",
         "pt": "Vamos chegar ao 1º lugar!",
         "es": "¡Vamos al #1 en las listas!",
-        "vi": "Cùng đạt hạng 1 nhé!"
+        "vi": "Cùng đạt hạng 1 nhé!",
+        "ja": "音源1位取ろう！"
       },
       "situation": "comeback"
     },
@@ -72,7 +75,8 @@
         "th": "มิวสิกวิดีโอเจ๋งมาก",
         "pt": "O MV é incrível",
         "es": "El MV es increíble",
-        "vi": "MV quá đỉnh luôn"
+        "vi": "MV quá đỉnh luôn",
+        "ja": "MVテバク！"
       },
       "situation": "comeback"
     },
@@ -90,7 +94,8 @@
         "th": "รอมานานแล้ว!",
         "pt": "Eu estava esperando!",
         "es": "¡Estuve esperando!",
-        "vi": "Đã đợi rồi!"
+        "vi": "Đã đợi rồi!",
+        "ja": "待ってました！"
       },
       "situation": "comeback"
     },
@@ -108,7 +113,8 @@
         "th": "คอนเซ็ปต์สมบูรณ์แบบเลย",
         "pt": "O conceito é perfeito",
         "es": "El concepto es perfecto",
-        "vi": "Concept hoàn hảo luôn"
+        "vi": "Concept hoàn hảo luôn",
+        "ja": "コンセプト完璧です"
       },
       "situation": "comeback"
     },
@@ -126,7 +132,8 @@
         "th": "พร้อมสตรีมแล้ว!",
         "pt": "Pronta para o streaming em massa!",
         "es": "¡Lista para el streaming masivo!",
-        "vi": "Sẵn sàng stream rồi!"
+        "vi": "Sẵn sàng stream rồi!",
+        "ja": "スミンの準備できた！"
       },
       "situation": "comeback"
     },
@@ -144,7 +151,8 @@
         "th": "ท่าเต้นบ้ามาก",
         "pt": "A coreografia é insana",
         "es": "La coreografía es una locura",
-        "vi": "Vũ đạo điên luôn"
+        "vi": "Vũ đạo điên luôn",
+        "ja": "振り付けやばすぎる"
       },
       "situation": "comeback"
     },
@@ -162,7 +170,8 @@
         "th": "อัลบั้มนี้ดีที่สุดเลย",
         "pt": "Este álbum é o melhor",
         "es": "Este álbum es el mejor",
-        "vi": "Album này là đỉnh nhất"
+        "vi": "Album này là đỉnh nhất",
+        "ja": "今回のアルバム最高です"
       },
       "situation": "comeback"
     },
@@ -180,7 +189,8 @@
         "th": "ไปสตรีมกันเถอะ!",
         "pt": "Vamos dar stream!",
         "es": "¡Vamos a hacer streaming!",
-        "vi": "Đi stream nhạc thôi!"
+        "vi": "Đi stream nhạc thôi!",
+        "ja": "スミン行くよ！"
       },
       "situation": "comeback"
     },
@@ -198,7 +208,8 @@
         "th": "ตั้งแต่ทีเซอร์ก็บ้าแล้ว",
         "pt": "Até o teaser é insano",
         "es": "Hasta el teaser es una locura",
-        "vi": "Từ teaser đã điên rồi"
+        "vi": "Từ teaser đã điên rồi",
+        "ja": "ティザーからもうやばい"
       },
       "situation": "comeback"
     },
@@ -216,7 +227,8 @@
         "th": "พรีออเดอร์เรียบร้อย!",
         "pt": "Pré-venda concluída!",
         "es": "¡Pre-orden completada!",
-        "vi": "Đặt trước xong rồi!"
+        "vi": "Đặt trước xong rồi!",
+        "ja": "予約完了！"
       },
       "situation": "comeback"
     },
@@ -234,7 +246,8 @@
         "th": "ตื่นเต้นรอดูเวที",
         "pt": "Ansiosa pela performance",
         "es": "Esperando la actuación",
-        "vi": "Mong chờ sân khấu quá"
+        "vi": "Mong chờ sân khấu quá",
+        "ja": "ステージが楽しみです"
       },
       "situation": "comeback"
     },
@@ -252,7 +265,8 @@
         "th": "นี่คืออัลบั้มแห่งปี",
         "pt": "Este é o álbum do ano",
         "es": "Este es el álbum del año",
-        "vi": "Đây là album của năm"
+        "vi": "Đây là album của năm",
+        "ja": "今年のベストアルバムだよ"
       },
       "situation": "comeback"
     },
@@ -270,7 +284,8 @@
         "th": "ไปคว้ารางวัลใหญ่กันเถอะ!",
         "pt": "Vamos ganhar o prêmio principal!",
         "es": "¡Vamos a ganar el gran premio!",
-        "vi": "Cùng nhận giải lớn nhé!"
+        "vi": "Cùng nhận giải lớn nhé!",
+        "ja": "大賞取ろう！"
       },
       "situation": "comeback"
     }

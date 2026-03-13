@@ -133,15 +133,6 @@
 
   "unlockMidnightExpiry": "{time} restante (expira a medianoche)",
 
-  "shopTitle": "Paquetes Color Vibe",
-  "shopRestore": "Restaurar compras",
-  "shopBuyButton": "Comprar",
-  "shopPurchased": "Comprado",
-
-  "shopPhraseCount": "{count} frases",
-
-  "shopPronunciationCount": "{count} pronunciaciones",
-
   "shopRestoreSuccess": "Compras restauradas exitosamente",
   "shopRestoreFailed": "No hay compras para restaurar",
 
@@ -157,19 +148,15 @@
   "ttsLimitAdButton": "Escuchar más con Fan Pass",
 
   "conversionTriggerTitle": "Disfruta más contenido",
-  "conversionTriggerMessage": "Desbloquea todo con un Paquete Color Vibe\ny comienza una experiencia especial",
-  "conversionTriggerButton": "Ver Paquetes Color Vibe",
+  "conversionTriggerMessage": "Personaliza tu tema y desbloquea\nfavoritos ilimitados",
+  "conversionTriggerButton": "Ver opciones de tema",
   "conversionTriggerDismiss": "Después",
 
   "favLimitTitle": "¡Tienes muchas frases favoritas!",
-  "favLimitMessage": "Compra cualquier producto de tema\n¡y desbloquea favoritos ilimitados! Desde ₩990",
+  "favLimitMessage": "Compra cualquier producto de tema\n¡y desbloquea favoritos ilimitados! Desde {price}",
   "favLimitButton": "Desbloquear favoritos ilimitados",
   "favLimitOpenApp": "Desbloquear en la app",
   "favLimitDismiss": "Después",
-
-  "shopPurchaseSuccess": "¡Compra completada! Contenido desbloqueado",
-  "shopPurchaseFailed": "La compra falló. Inténtalo de nuevo",
-  "shopPurchasePending": "Procesando pago...",
 
   "honeymoonDaysLeft": "{days} días de prueba gratis restantes",
 
@@ -204,7 +191,7 @@
   "themePickerTextColorAuto": "Contraste auto",
   "themePickerPreview": "Vista previa",
   "themePickerLocked": "Desbloquear con Fan Pass",
-  "themePickerPickerLocked": "Desbloquear para siempre por ₩990",
+  "themePickerPickerLocked": "Desbloquear para siempre por {price}",
 
   "themePickerUnlockAll": "Desbloquear todos los temas",
   "themePickerUnlockAllDesc": "Mira un anuncio para desbloquear todas las paletas para siempre",
@@ -245,7 +232,7 @@
   "iapThemeSlots": "Guardar 3 temas favoritos",
   "iapThemeSlotsSub": "Cambio de slots de tema · Favoritos ilimitados",
   "iapThemeBundle": "Paquete completo (24% desc.)",
-  "iapThemeBundleSave": "Ahorra ₩480 · Favoritos ilimitados",
+  "iapThemeBundleSave": "Favoritos ilimitados",
 
   "privacyPolicyLabel": "Política de Privacidad",
   "privacyPolicySubtitle": "Información que recopilamos y cómo la usamos",

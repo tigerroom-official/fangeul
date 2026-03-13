@@ -344,28 +344,6 @@ class LTh extends L {
   }
 
   @override
-  String get shopTitle => 'แพ็คสีอารมณ์';
-
-  @override
-  String get shopRestore => 'กู้คืนการซื้อ';
-
-  @override
-  String get shopBuyButton => 'ซื้อ';
-
-  @override
-  String get shopPurchased => 'ซื้อแล้ว';
-
-  @override
-  String shopPhraseCount(int count) {
-    return '$count วลี';
-  }
-
-  @override
-  String shopPronunciationCount(int count) {
-    return '$count คำอ่าน';
-  }
-
-  @override
   String get shopRestoreSuccess => 'กู้คืนการซื้อสำเร็จ';
 
   @override
@@ -398,10 +376,10 @@ class LTh extends L {
 
   @override
   String get conversionTriggerMessage =>
-      'ปลดล็อกทั้งหมดด้วยแพ็คสีอารมณ์\nเริ่มต้นประสบการณ์พิเศษ';
+      'ปรับแต่งธีมของคุณ\nและปลดล็อกรายการโปรดไม่จำกัด';
 
   @override
-  String get conversionTriggerButton => 'ดูแพ็คสีอารมณ์';
+  String get conversionTriggerButton => 'ดูตัวเลือกธีม';
 
   @override
   String get conversionTriggerDismiss => 'ไว้ทีหลัง';
@@ -410,8 +388,9 @@ class LTh extends L {
   String get favLimitTitle => 'คุณชอบวลีเยอะมากเลย!';
 
   @override
-  String get favLimitMessage =>
-      'ซื้อสินค้าธีมใดก็ได้\nเพื่อปลดล็อกรายการโปรดไม่จำกัด! เริ่ม ₩990';
+  String favLimitMessage(String price) {
+    return 'ซื้อสินค้าธีมใดก็ได้\nเพื่อปลดล็อกรายการโปรดไม่จำกัด! เริ่ม $price';
+  }
 
   @override
   String get favLimitButton => 'ปลดล็อกรายการโปรดไม่จำกัด';
@@ -421,15 +400,6 @@ class LTh extends L {
 
   @override
   String get favLimitDismiss => 'ไว้ทีหลัง';
-
-  @override
-  String get shopPurchaseSuccess => 'ซื้อสำเร็จ! ปลดล็อกคอนเทนต์แล้ว';
-
-  @override
-  String get shopPurchaseFailed => 'การซื้อล้มเหลว กรุณาลองใหม่';
-
-  @override
-  String get shopPurchasePending => 'กำลังดำเนินการชำระเงิน...';
 
   @override
   String honeymoonDaysLeft(int days) {
@@ -524,7 +494,9 @@ class LTh extends L {
   String get themePickerLocked => 'ปลดล็อกด้วย Fan Pass';
 
   @override
-  String get themePickerPickerLocked => 'ปลดล็อกตลอดกาล ₩990';
+  String themePickerPickerLocked(String price) {
+    return 'ปลดล็อกตลอดกาล $price';
+  }
 
   @override
   String get themePickerUnlockAll => 'ปลดล็อกธีมทั้งหมด';
@@ -635,7 +607,7 @@ class LTh extends L {
   String get iapThemeBundle => 'แพ็กเกจเต็ม (ลด 24%)';
 
   @override
-  String get iapThemeBundleSave => 'ประหยัด ₩480 · รายการโปรดไม่จำกัด';
+  String get iapThemeBundleSave => 'รายการโปรดไม่จำกัด';
 
   @override
   String get privacyPolicyLabel => 'นโยบายความเป็นส่วนตัว';

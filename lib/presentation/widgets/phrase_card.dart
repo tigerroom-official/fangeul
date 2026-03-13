@@ -7,6 +7,7 @@ import 'package:fangeul/core/entities/phrase.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/analytics_providers.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
+import 'package:fangeul/presentation/providers/iap_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/widgets/favorite_limit_feedback.dart';
 import 'package:fangeul/services/analytics_events.dart';
@@ -86,7 +87,12 @@ class PhraseCard extends ConsumerWidget {
                       .read(favoritePhrasesNotifierProvider.notifier)
                       .toggle(phrase.ko);
                   if (!added && context.mounted) {
-                    showFavoriteLimitFeedback(context);
+                    final price =
+                        ref.read(iapStartingPriceProvider) ?? '';
+                    showFavoriteLimitFeedback(
+                      context,
+                      startingPrice: price,
+                    );
                   }
                 },
                 tooltip: L.of(context).favoriteTooltip,

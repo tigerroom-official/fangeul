@@ -45,5 +45,6 @@ bool shouldShowConversionTrigger(ShouldShowConversionTriggerRef ref) {
       state.adWatchCount >= config.conversionTriggerAdCount &&
       state.favoriteSlotLimit > 0 &&
       favCount >= state.favoriteSlotLimit &&
-      state.purchasedPackIds.isEmpty;
+      !state.hasThemePicker &&
+      !state.hasThemeSlots;
 }

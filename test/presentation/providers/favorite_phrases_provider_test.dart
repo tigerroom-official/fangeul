@@ -213,7 +213,7 @@ void main() {
         final mockStorage = mockStorageWithState(const MonetizationState(
           honeymoonActive: false,
           favoriteSlotLimit: 5,
-          purchasedPackIds: ['color_pack_purple_dream'],
+          hasThemePicker: true,
         ));
 
         SharedPreferences.setMockInitialValues({

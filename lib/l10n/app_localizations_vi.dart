@@ -347,28 +347,6 @@ class LVi extends L {
   }
 
   @override
-  String get shopTitle => 'Gói màu sắc cảm xúc';
-
-  @override
-  String get shopRestore => 'Khôi phục mua hàng';
-
-  @override
-  String get shopBuyButton => 'Mua';
-
-  @override
-  String get shopPurchased => 'Đã mua';
-
-  @override
-  String shopPhraseCount(int count) {
-    return '$count câu nói';
-  }
-
-  @override
-  String shopPronunciationCount(int count) {
-    return '$count phát âm';
-  }
-
-  @override
   String get shopRestoreSuccess => 'Đã khôi phục mua hàng thành công';
 
   @override
@@ -401,10 +379,10 @@ class LVi extends L {
 
   @override
   String get conversionTriggerMessage =>
-      'Mở khóa tất cả với gói màu sắc cảm xúc\nvà bắt đầu trải nghiệm đặc biệt';
+      'Tùy chỉnh giao diện của bạn\nvà mở khóa yêu thích không giới hạn';
 
   @override
-  String get conversionTriggerButton => 'Xem gói màu sắc cảm xúc';
+  String get conversionTriggerButton => 'Xem tùy chọn giao diện';
 
   @override
   String get conversionTriggerDismiss => 'Để sau';
@@ -413,8 +391,9 @@ class LVi extends L {
   String get favLimitTitle => 'Bạn có rất nhiều câu nói yêu thích!';
 
   @override
-  String get favLimitMessage =>
-      'Mua bất kỳ sản phẩm giao diện nào\nđể mở khóa yêu thích không giới hạn! Từ ₩990';
+  String favLimitMessage(String price) {
+    return 'Mua bất kỳ sản phẩm giao diện nào\nđể mở khóa yêu thích không giới hạn! Từ $price';
+  }
 
   @override
   String get favLimitButton => 'Mở khóa yêu thích không giới hạn';
@@ -424,15 +403,6 @@ class LVi extends L {
 
   @override
   String get favLimitDismiss => 'Để sau';
-
-  @override
-  String get shopPurchaseSuccess => 'Mua thành công! Nội dung đã được mở khóa';
-
-  @override
-  String get shopPurchaseFailed => 'Mua thất bại. Vui lòng thử lại';
-
-  @override
-  String get shopPurchasePending => 'Đang xử lý thanh toán...';
 
   @override
   String honeymoonDaysLeft(int days) {
@@ -529,7 +499,9 @@ class LVi extends L {
   String get themePickerLocked => 'Mở khóa bằng Fan Pass';
 
   @override
-  String get themePickerPickerLocked => 'Mở khóa vĩnh viễn ₩990';
+  String themePickerPickerLocked(String price) {
+    return 'Mở khóa vĩnh viễn $price';
+  }
 
   @override
   String get themePickerUnlockAll => 'Mở khóa tất cả chủ đề';
@@ -641,7 +613,7 @@ class LVi extends L {
   String get iapThemeBundle => 'Gói đầy đủ (giảm 24%)';
 
   @override
-  String get iapThemeBundleSave => 'Tiết kiệm ₩480 · Yêu thích không giới hạn';
+  String get iapThemeBundleSave => 'Yêu thích không giới hạn';
 
   @override
   String get privacyPolicyLabel => 'Chính sách Bảo mật';

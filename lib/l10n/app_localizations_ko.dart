@@ -341,28 +341,6 @@ class LKo extends L {
   }
 
   @override
-  String get shopTitle => '감성 컬러 팩';
-
-  @override
-  String get shopRestore => '구매 복원';
-
-  @override
-  String get shopBuyButton => '구매하기';
-
-  @override
-  String get shopPurchased => '구매 완료';
-
-  @override
-  String shopPhraseCount(int count) {
-    return '문구 $count개';
-  }
-
-  @override
-  String shopPronunciationCount(int count) {
-    return '발음 $count개';
-  }
-
-  @override
   String get shopRestoreSuccess => '구매가 복원되었습니다';
 
   @override
@@ -394,10 +372,10 @@ class LKo extends L {
   String get conversionTriggerTitle => '더 많은 콘텐츠를 즐기세요';
 
   @override
-  String get conversionTriggerMessage => '감성 컬러 팩으로\n무제한 해금하고 특별한 경험을 시작하세요';
+  String get conversionTriggerMessage => '나만의 테마를 꾸미고\n즐겨찾기도 무제한으로 사용하세요';
 
   @override
-  String get conversionTriggerButton => '감성 컬러 팩 보기';
+  String get conversionTriggerButton => '테마 옵션 보기';
 
   @override
   String get conversionTriggerDismiss => '나중에';
@@ -406,7 +384,9 @@ class LKo extends L {
   String get favLimitTitle => '좋아하는 문구가 정말 많네요!';
 
   @override
-  String get favLimitMessage => '아무 테마 상품 하나만 구매하면\n즐겨찾기 무제한! ₩990부터';
+  String favLimitMessage(String price) {
+    return '아무 테마 상품 하나만 구매하면\n즐겨찾기 무제한! $price부터';
+  }
 
   @override
   String get favLimitButton => '즐겨찾기 무제한 해금';
@@ -416,15 +396,6 @@ class LKo extends L {
 
   @override
   String get favLimitDismiss => '나중에';
-
-  @override
-  String get shopPurchaseSuccess => '구매 완료! 콘텐츠가 해금되었어요';
-
-  @override
-  String get shopPurchaseFailed => '구매에 실패했어요. 다시 시도해주세요';
-
-  @override
-  String get shopPurchasePending => '결제 처리 중...';
 
   @override
   String honeymoonDaysLeft(int days) {
@@ -519,7 +490,9 @@ class LKo extends L {
   String get themePickerLocked => '팬 패스로 해금';
 
   @override
-  String get themePickerPickerLocked => '₩990으로 영구 해금';
+  String themePickerPickerLocked(String price) {
+    return '$price으로 영구 해금';
+  }
 
   @override
   String get themePickerUnlockAll => '전체 테마 해금';
@@ -627,7 +600,7 @@ class LKo extends L {
   String get iapThemeBundle => '전체 번들 (24% 할인)';
 
   @override
-  String get iapThemeBundleSave => '₩480 절약 · 즐겨찾기 무제한';
+  String get iapThemeBundleSave => '즐겨찾기 무제한';
 
   @override
   String get privacyPolicyLabel => '개인정보처리방침';

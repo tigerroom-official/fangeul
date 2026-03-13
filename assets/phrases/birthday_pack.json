@@ -18,7 +18,8 @@
         "th": "สุขสันต์วันเกิด!",
         "pt": "Feliz aniversário!",
         "es": "¡Feliz cumpleaños!",
-        "vi": "Chúc mừng sinh nhật!"
+        "vi": "Chúc mừng sinh nhật!",
+        "ja": "センイルおめでとう！"
       },
       "situation": "birthday"
     },
@@ -36,7 +37,8 @@
         "th": "ขอบคุณที่เกิดมานะ",
         "pt": "Obrigado(a) por ter nascido",
         "es": "Gracias por haber nacido",
-        "vi": "Cảm ơn vì đã được sinh ra"
+        "vi": "Cảm ơn vì đã được sinh ra",
+        "ja": "生まれてきてくれてありがとう"
       },
       "situation": "birthday"
     },
@@ -54,7 +56,8 @@
         "th": "ขอให้สุขภาพดีและมีความสุขปีนี้ด้วยนะ",
         "pt": "Tenha saúde e felicidade neste ano também",
         "es": "Sé saludable y feliz este año también",
-        "vi": "Năm nay cũng khỏe mạnh và hạnh phúc nhé"
+        "vi": "Năm nay cũng khỏe mạnh và hạnh phúc nhé",
+        "ja": "今年も健康で幸せでいてね"
       },
       "situation": "birthday"
     },
@@ -71,7 +74,8 @@
         "th": "สุขสันต์วันเกิดค่ะ/ครับ!",
         "pt": "Feliz aniversário! (formal)",
         "es": "¡Feliz cumpleaños! (formal)",
-        "vi": "Chúc mừng sinh nhật ạ!"
+        "vi": "Chúc mừng sinh nhật ạ!",
+        "ja": "お誕生日おめでとうございます！"
       },
       "situation": "birthday"
     },
@@ -89,7 +93,8 @@
         "th": "ขอให้มีความสุขวันนี้นะ",
         "pt": "Tenha um dia feliz hoje",
         "es": "Que tengas un día feliz hoy",
-        "vi": "Hôm nay hãy hạnh phúc nhé"
+        "vi": "Hôm nay hãy hạnh phúc nhé",
+        "ja": "今日一日幸せでいてね"
       },
       "situation": "birthday"
     },
@@ -107,7 +112,8 @@
         "th": "คนที่เปล่งประกายที่สุดในโลก",
         "pt": "A pessoa mais brilhante do mundo",
         "es": "La persona más brillante del mundo",
-        "vi": "Người tỏa sáng nhất thế giới"
+        "vi": "Người tỏa sáng nhất thế giới",
+        "ja": "世界で一番輝いている人"
       },
       "situation": "birthday"
     },
@@ -125,7 +131,8 @@
         "th": "ขอให้ทุกความปรารถนาในวันเกิดเป็นจริง",
         "pt": "Que todos os desejos de aniversário se realizem",
         "es": "Que todos tus deseos de cumpleaños se cumplan",
-        "vi": "Mong mọi điều ước sinh nhật đều thành hiện thực"
+        "vi": "Mong mọi điều ước sinh nhật đều thành hiện thực",
+        "ja": "センイルの願い事が全部叶いますように"
       },
       "situation": "birthday"
     },
@@ -143,7 +150,8 @@
         "th": "ของขวัญวันเกิดคือความรักของพวกเรา",
         "pt": "Nosso amor é o presente de aniversário",
         "es": "Nuestro amor es tu regalo de cumpleaños",
-        "vi": "Tình yêu của chúng tôi là quà sinh nhật"
+        "vi": "Tình yêu của chúng tôi là quà sinh nhật",
+        "ja": "センイルのプレゼントは私たちの愛だよ"
       },
       "situation": "birthday"
     },
@@ -161,7 +169,8 @@
         "th": "ขอให้มีแต่เรื่องดีๆ ต่อจากนี้",
         "pt": "Que só coisas boas preencham seu futuro",
         "es": "Que solo cosas felices llenen tu futuro",
-        "vi": "Mong tương lai chỉ toàn những điều hạnh phúc"
+        "vi": "Mong tương lai chỉ toàn những điều hạnh phúc",
+        "ja": "これからも幸せなことがたくさんありますように"
       },
       "situation": "birthday"
     },
@@ -178,7 +187,8 @@
         "th": "ขอแสดงความยินดีในวันพิเศษ",
         "pt": "Parabéns neste dia especial",
         "es": "Felicidades en este día especial",
-        "vi": "Chúc mừng ngày đặc biệt"
+        "vi": "Chúc mừng ngày đặc biệt",
+        "ja": "特別な日おめでとうございます"
       },
       "situation": "birthday"
     },
@@ -196,7 +206,8 @@
         "th": "ขอให้แข็งแรงไปนานๆ นะ",
         "pt": "Tenha saúde por muito, muito tempo",
         "es": "Mantente saludable por mucho tiempo",
-        "vi": "Khỏe mạnh thật lâu nhé"
+        "vi": "Khỏe mạnh thật lâu nhé",
+        "ja": "ずっとずっと健康でいてね"
       },
       "situation": "birthday"
     },
@@ -213,7 +224,8 @@
         "th": "อายุเป็นแค่ตัวเลข",
         "pt": "Idade é só um número",
         "es": "La edad es solo un número",
-        "vi": "Tuổi chỉ là con số"
+        "vi": "Tuổi chỉ là con số",
+        "ja": "年齢なんてただの数字だよ"
       },
       "situation": "birthday"
     },
@@ -231,7 +243,8 @@
         "th": "ทานเค้กให้อร่อยนะ",
         "pt": "Aproveite o bolo",
         "es": "Disfruta el pastel",
-        "vi": "Ăn bánh ngon nhé"
+        "vi": "Ăn bánh ngon nhé",
+        "ja": "ケーキおいしく食べてね"
       },
       "situation": "birthday"
     },
@@ -249,7 +262,8 @@
         "th": "ขอให้พรทุกอย่างในโลกอยู่กับเธอ",
         "pt": "Que todas as bênçãos do mundo estejam com você",
         "es": "Que todas las bendiciones del mundo te acompañen",
-        "vi": "Mong mọi phước lành trên thế giới ở bên bạn"
+        "vi": "Mong mọi phước lành trên thế giới ở bên bạn",
+        "ja": "世界中の祝福がありますように"
       },
       "situation": "birthday"
     },
@@ -267,7 +281,8 @@
         "th": "ปีหน้าก็ฉลองด้วยกันนะ",
         "pt": "Vamos comemorar juntos no ano que vem também",
         "es": "Celebremos juntos el próximo año también",
-        "vi": "Năm sau cũng cùng nhau chúc mừng nhé"
+        "vi": "Năm sau cũng cùng nhau chúc mừng nhé",
+        "ja": "来年も一緒にお祝いしようね"
       },
       "situation": "birthday"
     }
