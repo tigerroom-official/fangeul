@@ -66,6 +66,7 @@ dependencies:
   http: ^1.2.2
   confetti: ^0.8.0
   clock: ^1.1.1
+  package_info_plus: ^9.0.0
 
 dev_dependencies:
   flutter_test:

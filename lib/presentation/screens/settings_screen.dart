@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:fangeul/core/entities/monetization_state.dart';
@@ -216,26 +217,32 @@ class SettingsScreen extends ConsumerWidget {
             },
           ),
           const Divider(),
-          // 10. 앱 정보
-          ListTile(
-            leading: const Icon(Icons.info_outline),
-            title: Text(l.appInfoTitle),
-            subtitle: Text(l.appInfoSubtitle(l.appVersion)),
-            onTap: () {
-              showDialog<void>(
-                context: context,
-                builder: (ctx) => AlertDialog(
-                  title: Text(l.appName),
-                  content: Text(
-                    'v${l.appVersion}\n${l.appLegalese}',
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(ctx),
-                      child: Text(l.complete),
+          // 10. 앱 정보 — 런타임 버전 표시 (pubspec.yaml version)
+          FutureBuilder<PackageInfo>(
+            future: PackageInfo.fromPlatform(),
+            builder: (context, snapshot) {
+              final version = snapshot.data?.version ?? l.appVersion;
+              return ListTile(
+                leading: const Icon(Icons.info_outline),
+                title: Text(l.appInfoTitle),
+                subtitle: Text(l.appInfoSubtitle(version)),
+                onTap: () {
+                  showDialog<void>(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: Text(l.appName),
+                      content: Text(
+                        'v$version\n${l.appLegalese}',
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx),
+                          child: Text(l.complete),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  );
+                },
               );
             },
           ),
