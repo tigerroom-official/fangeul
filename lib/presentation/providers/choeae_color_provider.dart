@@ -114,8 +114,13 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
     }
   }
 
-  /// Undo 기록 없이 설정을 복원한다 (프리뷰 복원용).
+  /// Undo 기록 없이 설정을 복원한다 (프리뷰 복원 / 슬롯 적용용).
+  ///
+  /// undo 히스토리를 초기화하여, 복원 후 undo로 이전 프리뷰 상태가
+  /// 재적용되는 것을 방지한다.
   Future<void> restoreConfig(ChoeaeColorConfig config) async {
+    _canUndo = false;
+    _previousConfig = null;
     state = config;
     await _persistCurrentState();
   }

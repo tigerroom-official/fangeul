@@ -220,11 +220,13 @@ void main() {
       expect(prefs.getString('choeae_text_override'), isNull);
     });
 
-    test('restoreConfig should not pollute undo history', () async {
+    test('restoreConfig should clear undo history', () async {
       container.listen(choeaeColorNotifierProvider, (_, __) {});
       final notifier = container.read(choeaeColorNotifierProvider.notifier);
       await notifier.selectPalette('purple_dream');
-      // restoreConfig should NOT set canUndo
+      expect(notifier.canUndo, true);
+      // restoreConfig은 undo 히스토리를 초기화한다.
+      // 프리뷰 복원 후 undo로 이전 프리뷰 상태가 재적용되는 것을 방지.
       await notifier.restoreConfig(
         const ChoeaeColorConfig.palette('ocean_blue'),
       );
@@ -232,15 +234,8 @@ void main() {
         container.read(choeaeColorNotifierProvider),
         const ChoeaeColorConfig.palette('ocean_blue'),
       );
-      // canUndo should still reflect the selectPalette, not the restore
-      // But since restore doesn't track, undo goes back to selectPalette's previous
-      expect(notifier.canUndo, true);
-      await notifier.undo();
-      // Undo should go to midnight (before selectPalette), NOT ocean_blue
-      expect(
-        container.read(choeaeColorNotifierProvider),
-        const ChoeaeColorConfig.palette('midnight'),
-      );
+      // restoreConfig 후 canUndo는 false
+      expect(notifier.canUndo, false);
     });
 
     test('restoreConfig with custom should persist correctly', () async {
