@@ -586,6 +586,10 @@ class LPt extends L {
   String get themePickerSlotLocked => 'Desbloqueie slots';
 
   @override
+  String get themePickerCustomSaveLocked =>
+      'Compre cores personalizadas para salvar este tema';
+
+  @override
   String get themePickerSlotLongPressHint =>
       'Pressione e segure um slot para renomear ou substituir';
 

@@ -574,6 +574,9 @@ class LJa extends L {
   String get themePickerSlotLocked => 'スロットを解除';
 
   @override
+  String get themePickerCustomSaveLocked => 'このテーマを保存するにはカスタムカラーを購入してください';
+
+  @override
   String get themePickerSlotLongPressHint => '長押しで名前変更・上書きができます';
 
   @override

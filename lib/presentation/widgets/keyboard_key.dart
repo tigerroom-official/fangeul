@@ -157,13 +157,13 @@ class KeyboardKey extends StatelessWidget {
   void _triggerHaptic() {
     switch (keyType) {
       case KeyType.character:
-        HapticFeedback.selectionClick();
+        HapticFeedback.lightImpact();
       case KeyType.backspace:
         HapticFeedback.lightImpact();
       case KeyType.caps:
         HapticFeedback.mediumImpact();
       case KeyType.space:
-        HapticFeedback.selectionClick();
+        HapticFeedback.lightImpact();
     }
   }
 

@@ -412,6 +412,7 @@ class _TextColorHsvArea extends StatefulWidget {
 class _TextColorHsvAreaState extends State<_TextColorHsvArea> {
   ui.Image? _cachedImage;
   double? _cachedHue;
+  ScrollHoldController? _holdController;
 
   static const _imgWidth = 96;
   static const _imgHeight = 64;
@@ -428,8 +429,14 @@ class _TextColorHsvAreaState extends State<_TextColorHsvArea> {
     if (old.hue != widget.hue) _regenerateImage();
   }
 
+  void _releaseScrollHold() {
+    _holdController?.cancel();
+    _holdController = null;
+  }
+
   @override
   void dispose() {
+    _releaseScrollHold();
     _cachedImage?.dispose();
     super.dispose();
   }
@@ -458,8 +465,7 @@ class _TextColorHsvAreaState extends State<_TextColorHsvArea> {
       final v = 1.0 - y / (height - 1); // 상단=밝음, 하단=어두움
       for (int x = 0; x < width; x++) {
         final s = x / (width - 1); // 좌=무채색, 우=포화
-        final argb =
-            HSVColor.fromAHSV(1.0, hue, s, v).toColor().toARGB32();
+        final argb = HSVColor.fromAHSV(1.0, hue, s, v).toColor().toARGB32();
         final offset = (y * width + x) * 4;
         pixels[offset] = (argb >> 16) & 0xFF;
         pixels[offset + 1] = (argb >> 8) & 0xFF;
@@ -504,44 +510,55 @@ class _TextColorHsvAreaState extends State<_TextColorHsvArea> {
         widget.value,
       ).toColor();
 
-      return GestureDetector(
-        onPanDown: (d) =>
-            _onGesture(d.localPosition, Size(areaWidth, areaHeight)),
-        onPanUpdate: (d) =>
-            _onGesture(d.localPosition, Size(areaWidth, areaHeight)),
-        child: SizedBox(
-          width: areaWidth,
-          height: areaHeight,
-          child: Stack(
-            clipBehavior: Clip.hardEdge,
-            children: [
-              Positioned.fill(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: CustomPaint(
-                    painter: _HsvAreaPainter(cachedImage: _cachedImage),
-                  ),
-                ),
-              ),
-              Positioned(
-                left: markerX.clamp(0, areaWidth) - 8,
-                top: markerY.clamp(0, areaHeight) - 8,
-                child: IgnorePointer(
-                  child: Container(
-                    width: 16,
-                    height: 16,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: markerColor,
-                      border: Border.all(color: Colors.white, width: 2),
-                      boxShadow: const [
-                        BoxShadow(color: Colors.black26, blurRadius: 4),
-                      ],
+      return Listener(
+        onPointerDown: (_) {
+          // 터치 시작 시 부모 스크롤 차단.
+          final scrollable = Scrollable.maybeOf(context);
+          _holdController = scrollable?.position.hold(() {
+            _holdController = null;
+          });
+        },
+        onPointerUp: (_) => _releaseScrollHold(),
+        onPointerCancel: (_) => _releaseScrollHold(),
+        child: GestureDetector(
+          onPanDown: (d) =>
+              _onGesture(d.localPosition, Size(areaWidth, areaHeight)),
+          onPanUpdate: (d) =>
+              _onGesture(d.localPosition, Size(areaWidth, areaHeight)),
+          child: SizedBox(
+            width: areaWidth,
+            height: areaHeight,
+            child: Stack(
+              clipBehavior: Clip.hardEdge,
+              children: [
+                Positioned.fill(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: CustomPaint(
+                      painter: _HsvAreaPainter(cachedImage: _cachedImage),
                     ),
                   ),
                 ),
-              ),
-            ],
+                Positioned(
+                  left: markerX.clamp(0, areaWidth) - 8,
+                  top: markerY.clamp(0, areaHeight) - 8,
+                  child: IgnorePointer(
+                    child: Container(
+                      width: 16,
+                      height: 16,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: markerColor,
+                        border: Border.all(color: Colors.white, width: 2),
+                        boxShadow: const [
+                          BoxShadow(color: Colors.black26, blurRadius: 4),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );

@@ -4,7 +4,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:fangeul/presentation/models/theme_slot.dart';
 import 'package:fangeul/presentation/providers/choeae_color_provider.dart';
+import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
+import 'package:fangeul/presentation/theme/choeae_color_config.dart';
 
 part 'theme_slot_provider.g.dart';
 
@@ -41,7 +43,20 @@ class ThemeSlotNotifier extends _$ThemeSlotNotifier {
   }
 
   /// 현재 테마를 슬롯에 저장한다.
-  Future<void> saveToSlot(int index, ThemeSlot slot) async {
+  ///
+  /// custom 타입 슬롯 저장 시 IAP(자유 컬러 피커) 구매 여부를 확인한다.
+  /// 미구매 상태에서 custom 타입 저장 시도 시 거부하고 false 반환.
+  Future<bool> saveToSlot(int index, ThemeSlot slot) async {
+    // P0: custom 타입 + 피커 미구매 → 저장 거부
+    if (slot.type == 'custom') {
+      final hasThemePicker =
+          ref.read(monetizationNotifierProvider).valueOrNull?.hasThemePicker ??
+              false;
+      if (!hasThemePicker) {
+        return false;
+      }
+    }
+
     final slots = [...state];
     if (index < slots.length) {
       slots[index] = slot;
@@ -55,10 +70,11 @@ class ThemeSlotNotifier extends _$ThemeSlotNotifier {
       }
       slots[index] = slot;
     } else {
-      return;
+      return false;
     }
     state = slots;
     await _persist(slots);
+    return true;
   }
 
   /// 슬롯 이름을 변경한다.
@@ -78,10 +94,25 @@ class ThemeSlotNotifier extends _$ThemeSlotNotifier {
   }
 
   /// 슬롯을 선택하고 ChoeaeColorNotifier에 적용한다.
+  ///
+  /// custom 타입 슬롯에서 피커 IAP 미구매 시 기본 팔레트로 폴백한다.
+  /// 환불 후 기존 커스텀 슬롯 데이터는 유지하되 기능만 차단 (소프트 락).
   Future<void> applySlot(int index) async {
     if (index >= state.length) return;
     final slot = state[index];
-    final config = slot.toConfig();
+
+    // P0: custom 타입 + 피커 미구매 → 기본 팔레트 폴백
+    final ChoeaeColorConfig config;
+    if (slot.type == 'custom') {
+      final hasThemePicker =
+          ref.read(monetizationNotifierProvider).valueOrNull?.hasThemePicker ??
+              false;
+      config = hasThemePicker
+          ? slot.toConfig()
+          : const ChoeaeColorConfig.palette('midnight');
+    } else {
+      config = slot.toConfig();
+    }
 
     await ref.read(choeaeColorNotifierProvider.notifier).restoreConfig(config);
 

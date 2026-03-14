@@ -165,7 +165,9 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                   canUndo:
                       ref.read(choeaeColorNotifierProvider.notifier).canUndo,
                   onUndo: () {
-                    ref.read(choeaeColorNotifierProvider.notifier).undo();
+                    ref
+                        .read(choeaeColorNotifierProvider.notifier)
+                        .undo(persist: hasPickerIap);
                     setState(() {
                       _slidersInitialized = false;
                       _pickerResetCount++;
@@ -186,15 +188,26 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                       _editingSlotIndex = null;
                     });
                   },
-                  onSlotSave: (index) {
+                  onSlotSave: (index) async {
                     final slot = ThemeSlot.fromConfig(
                       slotList.length > index
                           ? slotList[index].name
                           : 'Slot ${index + 1}',
                       choeaeColor,
                     );
-                    slotNotifier.saveToSlot(index, slot);
-                    _showSlotSaveHint(context);
+                    final saved =
+                        await slotNotifier.saveToSlot(index, slot);
+                    if (!context.mounted) return;
+                    if (saved) {
+                      _showSlotSaveHint(context);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              L.of(context).themePickerCustomSaveLocked),
+                        ),
+                      );
+                    }
                   },
                   onRenameRequested: (index) {
                     setState(() => _editingSlotIndex = index);
@@ -297,7 +310,11 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                           : null;
                       ref
                           .read(choeaeColorNotifierProvider.notifier)
-                          .setCustomColor(color, textColor: existing);
+                          .setCustomColor(
+                            color,
+                            textColor: existing,
+                            persist: hasPickerIap,
+                          );
                     },
                   ),
                   const SizedBox(height: 16),
@@ -324,7 +341,10 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
                           onColorSelected: (color) {
                             ref
                                 .read(choeaeColorNotifierProvider.notifier)
-                                .setTextColorOverride(color);
+                                .setTextColorOverride(
+                                  color,
+                                  persist: hasPickerIap,
+                                );
                           },
                         ),
                         // 가독성 가드레일: surface + surfaceContainerHigh(Dialog 배경) 대비 체크

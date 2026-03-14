@@ -294,6 +294,7 @@
   "themePickerSlots": "テーマスロット",
   "themePickerSlotSave": "現在のテーマを保存",
   "themePickerSlotLocked": "スロットを解除",
+  "themePickerCustomSaveLocked": "このテーマを保存するにはカスタムカラーを購入してください",
   "themePickerSlotLongPressHint": "長押しで名前変更・上書きができます",
   "themePickerSlotName": "スロット名",
   "themePickerRecommended": "おすすめ",

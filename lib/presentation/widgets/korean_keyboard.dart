@@ -12,7 +12,7 @@ import 'package:fangeul/presentation/widgets/keyboard_key.dart';
 ///
 /// 3행 키 배열(문자 26키 + CAPS/DEL/SPACE 특수키)을 렌더링한다.
 /// [KeyboardNotifier]를 통해 CAPS 상태를 관리하며,
-/// DEL 키는 길게 누르면 가속 삭제(150ms -> 50ms)를 지원한다.
+/// DEL 키는 길게 누르면 가속 삭제(70ms -> 35ms)를 지원한다.
 class KoreanKeyboard extends ConsumerStatefulWidget {
   /// [KoreanKeyboard]를 생성한다.
   ///
@@ -115,13 +115,13 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
 
   // ── DEL 가속 삭제 ──
 
-  /// Phase 2: 길게 누르기 시작 -- 150ms 간격 삭제.
-  /// Phase 3: 1500ms 이후 -- 50ms 간격 가속.
+  /// Phase 2: 길게 누르기 시작 -- 70ms 간격 삭제.
+  /// Phase 3: 800ms 이후 -- 35ms 간격 가속.
   void _onDeleteLongPressStart() {
     _longPressStart = DateTime.now();
     _isAccelerated = false;
     _deleteTimer = Timer.periodic(
-      const Duration(milliseconds: 150),
+      const Duration(milliseconds: 70),
       (timer) {
         if (_isDisposed) {
           timer.cancel();
@@ -129,13 +129,13 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
         }
         widget.onBackspace();
         final elapsed = DateTime.now().difference(_longPressStart!);
-        if (!_isAccelerated && elapsed.inMilliseconds > 1500) {
+        if (!_isAccelerated && elapsed.inMilliseconds > 800) {
           _isAccelerated = true;
           HapticFeedback.heavyImpact();
           timer.cancel();
           if (_isDisposed) return;
           _deleteTimer = Timer.periodic(
-            const Duration(milliseconds: 50),
+            const Duration(milliseconds: 35),
             (t) {
               if (_isDisposed) {
                 t.cancel();

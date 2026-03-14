@@ -573,6 +573,9 @@ class LKo extends L {
   String get themePickerSlotLocked => '슬롯을 해금하세요';
 
   @override
+  String get themePickerCustomSaveLocked => '이 테마를 저장하려면 배경·글자색 자유선택을 구매하세요';
+
+  @override
   String get themePickerSlotLongPressHint => '길게 눌러서 이름 변경·덮어쓰기 가능해요';
 
   @override

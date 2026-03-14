@@ -190,7 +190,7 @@ final favoriteSlotLimitProvider = AutoDisposeProvider<int>.internal(
 // ignore: unused_element
 typedef FavoriteSlotLimitRef = AutoDisposeProviderRef<int>;
 String _$monetizationNotifierHash() =>
-    r'7484441a1ad8c0d0edcbe344f9b9744ac20f1022';
+    r'3bbd9f8875b7b05465e0799902c70b48c2b99455';
 
 /// 수익화 상태를 관리하는 중앙 Notifier.
 ///

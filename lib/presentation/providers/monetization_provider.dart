@@ -245,6 +245,34 @@ class MonetizationNotifier extends _$MonetizationNotifier {
         current.copyWith(hasThemePicker: true, hasThemeSlots: true));
   }
 
+  /// 자유 컬러 피커 엔타이틀먼트를 취소한다 (환불 처리용).
+  ///
+  /// 슬롯 데이터는 유지하되 기능만 차단 (소프트 락).
+  /// 재구매 시 즉시 복원된다.
+  /// hasAnyIap 파생 → 두 IAP 모두 false이면 즐겨찾기 무제한도 자동 해제.
+  Future<void> revokeThemePicker() async {
+    try {
+      await future;
+    } catch (_) {}
+    final current = state.valueOrNull;
+    if (current == null) return;
+
+    await _updateState(current.copyWith(hasThemePicker: false));
+  }
+
+  /// 테마 슬롯 엔타이틀먼트를 취소한다 (환불 처리용).
+  ///
+  /// 슬롯 데이터는 유지하되 슬롯 1~3 접근만 차단 (소프트 락).
+  Future<void> revokeThemeSlots() async {
+    try {
+      await future;
+    } catch (_) {}
+    final current = state.valueOrNull;
+    if (current == null) return;
+
+    await _updateState(current.copyWith(hasThemeSlots: false));
+  }
+
   /// 보상형 광고로 테마 팔레트를 영구 해금한다.
   Future<void> unlockThemePalettes() async {
     try {

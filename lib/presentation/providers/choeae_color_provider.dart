@@ -78,18 +78,28 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
   /// 커스텀 색상 설정.
   ///
   /// brightness는 seed tone에서 자동 유도 — 별도 설정 불필요.
-  Future<void> setCustomColor(Color seed, {Color? textColor}) async {
+  /// [persist]가 false이면 in-memory 상태만 변경하고 SharedPreferences에 쓰지 않는다.
+  /// 프리뷰 모드(IAP 미구매)에서 앱 킬 시 커스텀 색상이 영구 잔류하는 버그 방지.
+  Future<void> setCustomColor(
+    Color seed, {
+    Color? textColor,
+    bool persist = true,
+  }) async {
     _previousConfig = state;
     _canUndo = true;
     state = ChoeaeColorConfig.custom(
       seedColor: seed,
       textColorOverride: textColor,
     );
-    await _persistCurrentState();
+    if (persist) {
+      await _persistCurrentState();
+    }
   }
 
   /// 커스텀 글자색만 변경 (seed color + brightnessOverride 유지).
-  Future<void> setTextColorOverride(Color? color) async {
+  ///
+  /// [persist]가 false이면 in-memory 상태만 변경 (프리뷰 모드용).
+  Future<void> setTextColorOverride(Color? color, {bool persist = true}) async {
     final current = state;
     if (current is! ChoeaeColorCustom) return;
     _previousConfig = state;
@@ -99,7 +109,9 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
       textColorOverride: color,
       brightnessOverride: current.brightnessOverride,
     );
-    await _persistCurrentState();
+    if (persist) {
+      await _persistCurrentState();
+    }
   }
 
   /// Undo 기록 없이 설정을 복원한다 (프리뷰 복원용).
@@ -109,11 +121,16 @@ class ChoeaeColorNotifier extends _$ChoeaeColorNotifier {
   }
 
   /// 마지막 변경 되돌리기 (1단계).
-  Future<void> undo() async {
+  ///
+  /// [persist]가 false이면 in-memory 상태만 변경 (프리뷰 모드용).
+  /// 프리뷰 중 undo가 custom 상태를 영구 저장하는 IAP 우회 방지.
+  Future<void> undo({bool persist = true}) async {
     if (!_canUndo || _previousConfig == null) return;
     _canUndo = false;
     state = _previousConfig!;
-    await _persistCurrentState();
+    if (persist) {
+      await _persistCurrentState();
+    }
   }
 
   // setBrightnessOverride 제거 — brightness는 seed tone에서 자동 유도.

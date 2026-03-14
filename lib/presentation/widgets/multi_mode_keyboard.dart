@@ -206,6 +206,14 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
   }
 
   void _onBackspace() {
+    if (_mode == InputMode.korean &&
+        _jamoList.isEmpty &&
+        _committedText.isEmpty) {
+      return;
+    }
+    if (_mode != InputMode.korean && _committedText.isEmpty) {
+      return;
+    }
     setState(() {
       if (_mode == InputMode.korean && _jamoList.isNotEmpty) {
         _jamoList = _jamoList.sublist(0, _jamoList.length - 1);
@@ -222,7 +230,7 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
     _longPressStart = DateTime.now();
     _isAccelerated = false;
     _deleteTimer = Timer.periodic(
-      const Duration(milliseconds: 150),
+      const Duration(milliseconds: 70),
       (timer) {
         if (_isDisposed) {
           timer.cancel();
@@ -230,13 +238,13 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
         }
         _onBackspace();
         final elapsed = DateTime.now().difference(_longPressStart!);
-        if (!_isAccelerated && elapsed.inMilliseconds > 1500) {
+        if (!_isAccelerated && elapsed.inMilliseconds > 800) {
           _isAccelerated = true;
           HapticFeedback.heavyImpact();
           timer.cancel();
           if (_isDisposed) return;
           _deleteTimer = Timer.periodic(
-            const Duration(milliseconds: 50),
+            const Duration(milliseconds: 35),
             (t) {
               if (_isDisposed) {
                 t.cancel();
@@ -536,7 +544,7 @@ class _SimpleKey extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             splashColor: accentColor.withValues(alpha: 0.2),
             onTap: () {
-              HapticFeedback.selectionClick();
+              HapticFeedback.lightImpact();
               onTap(label);
             },
             child: Center(
@@ -580,7 +588,7 @@ class _ModeButton extends StatelessWidget {
           child: InkWell(
             borderRadius: BorderRadius.circular(8),
             onTap: () {
-              HapticFeedback.selectionClick();
+              HapticFeedback.lightImpact();
               onTap();
             },
             child: Center(

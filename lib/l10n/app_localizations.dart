@@ -1171,6 +1171,12 @@ abstract class L {
   /// **'슬롯을 해금하세요'**
   String get themePickerSlotLocked;
 
+  /// No description provided for @themePickerCustomSaveLocked.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 테마를 저장하려면 배경·글자색 자유선택을 구매하세요'**
+  String get themePickerCustomSaveLocked;
+
   /// No description provided for @themePickerSlotLongPressHint.
   ///
   /// In ko, this message translates to:

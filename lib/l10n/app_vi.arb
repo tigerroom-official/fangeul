@@ -223,6 +223,7 @@
   "themePickerSlots": "Slot chủ đề",
   "themePickerSlotSave": "Lưu chủ đề hiện tại",
   "themePickerSlotLocked": "Mở khóa slot",
+  "themePickerCustomSaveLocked": "Mua màu tùy chỉnh để lưu chủ đề này",
   "themePickerSlotLongPressHint": "Nhấn giữ slot để đổi tên hoặc ghi đè",
   "themePickerSlotName": "Tên slot",
   "themePickerRecommended": "Gợi ý",

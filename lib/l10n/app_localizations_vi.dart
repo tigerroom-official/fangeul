@@ -583,6 +583,10 @@ class LVi extends L {
   String get themePickerSlotLocked => 'Mở khóa slot';
 
   @override
+  String get themePickerCustomSaveLocked =>
+      'Mua màu tùy chỉnh để lưu chủ đề này';
+
+  @override
   String get themePickerSlotLongPressHint =>
       'Nhấn giữ slot để đổi tên hoặc ghi đè';
 

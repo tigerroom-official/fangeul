@@ -30,6 +30,7 @@ class _HctColorPickerState extends State<HctColorPicker> {
   late double _value; // 0-1
   ui.Image? _cachedImage;
   double? _cachedHue;
+  ScrollHoldController? _holdController;
 
   late final TextEditingController _hexController;
   bool _hexEditing = false;
@@ -48,8 +49,14 @@ class _HctColorPickerState extends State<HctColorPicker> {
     _regenerateImage();
   }
 
+  void _releaseScrollHold() {
+    _holdController?.cancel();
+    _holdController = null;
+  }
+
   @override
   void dispose() {
+    _releaseScrollHold();
     _hexController.dispose();
     _cachedImage?.dispose();
     super.dispose();
@@ -169,48 +176,59 @@ class _HctColorPickerState extends State<HctColorPicker> {
           final markerX = _saturation * areaWidth;
           final markerY = (1.0 - _value) * areaHeight;
 
-          return GestureDetector(
-            onPanDown: (d) =>
-                _onAreaGesture(d.localPosition, Size(areaWidth, areaHeight)),
-            onPanUpdate: (d) =>
-                _onAreaGesture(d.localPosition, Size(areaWidth, areaHeight)),
-            child: SizedBox(
-              width: areaWidth,
-              height: areaHeight,
-              child: Stack(
-                clipBehavior: Clip.hardEdge,
-                children: [
-                  Positioned.fill(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: CustomPaint(
-                        painter: _HsvAreaPainter(cachedImage: _cachedImage),
-                      ),
-                    ),
-                  ),
-                  // 마커
-                  Positioned(
-                    left: markerX - 10,
-                    top: markerY - 10,
-                    child: IgnorePointer(
-                      child: Container(
-                        width: 20,
-                        height: 20,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _currentColor,
-                          border: Border.all(color: Colors.white, width: 2),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black26,
-                              blurRadius: 4,
-                            ),
-                          ],
+          return Listener(
+            onPointerDown: (_) {
+              // 터치 시작 시 부모 스크롤 차단.
+              final scrollable = Scrollable.maybeOf(context);
+              _holdController = scrollable?.position.hold(() {
+                _holdController = null;
+              });
+            },
+            onPointerUp: (_) => _releaseScrollHold(),
+            onPointerCancel: (_) => _releaseScrollHold(),
+            child: GestureDetector(
+              onPanDown: (d) =>
+                  _onAreaGesture(d.localPosition, Size(areaWidth, areaHeight)),
+              onPanUpdate: (d) =>
+                  _onAreaGesture(d.localPosition, Size(areaWidth, areaHeight)),
+              child: SizedBox(
+                width: areaWidth,
+                height: areaHeight,
+                child: Stack(
+                  clipBehavior: Clip.hardEdge,
+                  children: [
+                    Positioned.fill(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: CustomPaint(
+                          painter: _HsvAreaPainter(cachedImage: _cachedImage),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    // 마커
+                    Positioned(
+                      left: markerX - 10,
+                      top: markerY - 10,
+                      child: IgnorePointer(
+                        child: Container(
+                          width: 20,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: _currentColor,
+                            border: Border.all(color: Colors.white, width: 2),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 4,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );

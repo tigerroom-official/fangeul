@@ -583,6 +583,10 @@ class LEn extends L {
   String get themePickerSlotLocked => 'Unlock slots';
 
   @override
+  String get themePickerCustomSaveLocked =>
+      'Purchase custom colors to save this theme';
+
+  @override
   String get themePickerSlotLongPressHint =>
       'Long press a slot to rename or overwrite';
 

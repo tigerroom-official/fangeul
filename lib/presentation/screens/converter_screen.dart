@@ -79,6 +79,9 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
     _tabController = TabController(length: _modes.length, vsync: this);
     _tabController.addListener(_onTabChanged);
     _restoreSavedTab();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && !_focusNode.hasFocus) _focusNode.requestFocus();
+    });
   }
 
   /// SharedPreferences에서 저장된 탭 인덱스를 복원한다.

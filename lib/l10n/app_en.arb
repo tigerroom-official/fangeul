@@ -223,6 +223,7 @@
   "themePickerSlots": "Theme Slots",
   "themePickerSlotSave": "Save current theme",
   "themePickerSlotLocked": "Unlock slots",
+  "themePickerCustomSaveLocked": "Purchase custom colors to save this theme",
   "themePickerSlotLongPressHint": "Long press a slot to rename or overwrite",
   "themePickerSlotName": "Slot name",
   "themePickerRecommended": "Recommended",
