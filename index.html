@@ -52,13 +52,20 @@
   }
   .nav-brand img { width: 36px; height: 36px; border-radius: 8px; }
   .nav-brand span { font-weight: 700; font-size: 1.1rem; }
-  .nav-links { display: flex; gap: 2rem; }
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
   .nav-links a {
     color: var(--text-dim); text-decoration: none;
     font-size: 0.9rem; font-weight: 500;
     transition: color 0.2s;
   }
   .nav-links a:hover { color: var(--accent); }
+  .lang-btn {
+    background: none; border: 1px solid rgba(139, 155, 176, 0.3);
+    color: var(--text-dim); font-size: 0.8rem; font-weight: 500;
+    padding: 0.3rem 0.75rem; border-radius: 6px; cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .lang-btn:hover { border-color: var(--accent); color: var(--accent); }
 
   /* --- HERO --- */
   .hero {
@@ -360,10 +367,11 @@
     <span>Fangeul</span>
   </a>
   <div class="nav-links">
-    <a href="#features">Features</a>
-    <a href="#screenshots">Screenshots</a>
-    <a href="#bubble">Bubble</a>
-    <a href="privacy-policy.html">Privacy</a>
+    <a href="#features" data-i18n="nav_features">Features</a>
+    <a href="#screenshots" data-i18n="nav_screenshots">Screenshots</a>
+    <a href="#bubble" data-i18n="nav_bubble">Bubble</a>
+    <a href="privacy-policy.html" data-i18n="nav_privacy">Privacy</a>
+    <button class="lang-btn" onclick="toggleLang()">한국어</button>
   </div>
 </nav>
 
@@ -371,17 +379,17 @@
 <section class="hero">
   <div class="hero-content">
     <div class="hero-text">
-      <div class="hero-badge">Android App</div>
-      <h1>Korean made easy<br>for <span class="gradient-text">K-pop fans</span></h1>
-      <p class="hero-desc">
+      <div class="hero-badge" data-i18n="hero_badge">Android App</div>
+      <h1 data-i18n-html="hero_title">Korean made easy<br>for <span class="gradient-text">K-pop fans</span></h1>
+      <p class="hero-desc" data-i18n="hero_desc">
         Type Korean with your English keyboard, convert between scripts, get pronunciation, and share fan phrases — all from a floating bubble on your screen.
       </p>
       <div class="cta-group">
         <a class="btn-primary" href="https://play.google.com/store/apps/details?id=com.tigerroom.fangeul">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.144 1.24a1 1 0 0 1 0 1.724l-2.144 1.24-2.53-2.53 2.53-2.53zM5.864 2.658L16.8 8.99l-2.302 2.302-8.635-8.635z"/></svg>
-          Get on Google Play
+          <span data-i18n="cta_play">Get on Google Play</span>
         </a>
-        <a class="btn-secondary" href="#features">Learn more</a>
+        <a class="btn-secondary" href="#features" data-i18n="cta_learn">Learn more</a>
       </div>
     </div>
     <div class="hero-visual">
@@ -393,46 +401,46 @@
 
 <!-- FEATURES -->
 <section class="features" id="features">
-  <p class="section-label">Features</p>
-  <h2 class="section-title">Everything you need to type Korean like a fan</h2>
+  <p class="section-label" data-i18n="features_label">Features</p>
+  <h2 class="section-title" data-i18n="features_title">Everything you need to type Korean like a fan</h2>
   <div class="feature-grid">
     <div class="feature-card">
       <div class="feature-icon teal">&#x2328;</div>
-      <h3>English &rarr; Korean</h3>
-      <p>Type on your English keyboard and see Korean appear instantly. <code>gksrmf</code> becomes <code>한글</code>. No keyboard switching needed.</p>
+      <h3 data-i18n="f1_title">English &rarr; Korean</h3>
+      <p data-i18n-html="f1_desc">Type on your English keyboard and see Korean appear instantly. <code>gksrmf</code> becomes <code>한글</code>. No keyboard switching needed.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon purple">&#x21C4;</div>
-      <h3>Korean &rarr; English</h3>
-      <p>Reverse mode for when you accidentally type Korean. See which English keys make up any Korean text.</p>
+      <h3 data-i18n="f2_title">Korean &rarr; English</h3>
+      <p data-i18n="f2_desc">Reverse mode for when you accidentally type Korean. See which English keys make up any Korean text.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon pink">&#x1F524;</div>
-      <h3>Romanizer</h3>
-      <p>Get standard romanized pronunciation for any Korean text. <code>사랑해요</code> &rarr; <code>saranghaeyo</code>. Official government rules applied.</p>
+      <h3 data-i18n="f3_title">Romanizer</h3>
+      <p data-i18n-html="f3_desc">Get standard romanized pronunciation for any Korean text. <code>사랑해요</code> &rarr; <code>saranghaeyo</code>. Official government rules applied.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon blue">&#x1F4AC;</div>
-      <h3>Fan Phrases</h3>
-      <p>Ready-to-use Korean phrases with pronunciation and translation. Personalized with your favorite group's name.</p>
+      <h3 data-i18n="f4_title">Fan Phrases</h3>
+      <p data-i18n="f4_desc">Ready-to-use Korean phrases with pronunciation and translation. Personalized with your favorite group's name.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon teal">&#x1F3A8;</div>
-      <h3>Custom Themes</h3>
-      <p>Pick your own colors with a full HSL picker. Match your bias group's aesthetic. Save your favorite palettes to slots.</p>
+      <h3 data-i18n="f5_title">Custom Themes</h3>
+      <p data-i18n="f5_desc">Pick your own colors with a full HSL picker. Match your bias group's aesthetic. Save your favorite palettes to slots.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon purple">&#x2B50;</div>
-      <h3>Favorites &amp; Copy</h3>
-      <p>Save phrases you love and copy them with one tap. Share to Twitter, Weverse, or any app instantly.</p>
+      <h3 data-i18n="f6_title">Favorites &amp; Copy</h3>
+      <p data-i18n="f6_desc">Save phrases you love and copy them with one tap. Share to Twitter, Weverse, or any app instantly.</p>
     </div>
   </div>
 </section>
 
 <!-- SCREENSHOTS -->
 <section class="screenshots" id="screenshots">
-  <p class="section-label">See it in action</p>
-  <h2 class="section-title">Designed for your fandom life</h2>
+  <p class="section-label" data-i18n="ss_label">See it in action</p>
+  <h2 class="section-title" data-i18n="ss_title">Designed for your fandom life</h2>
   <div class="scroll-container">
     <img src="assets/screen-shot-v1/s1.png" alt="Home — daily fan phrase" loading="lazy">
     <img src="assets/screen-shot-v1/s2.png" alt="Key Swap — English to Korean" loading="lazy">
@@ -449,14 +457,14 @@
   <div class="bubble-content">
     <img class="bubble-img" src="assets/screen-shot-v1/s8.png" alt="Floating bubble on screen">
     <div class="bubble-text">
-      <p class="section-label">Floating Bubble</p>
-      <h2>Use it <span class="gradient-text">anywhere</span></h2>
-      <p>A floating bubble sits on top of any app. Convert, type, and browse phrases without leaving Twitter, Weverse, or your chat app.</p>
+      <p class="section-label" data-i18n="bubble_label">Floating Bubble</p>
+      <h2 data-i18n-html="bubble_title">Use it <span class="gradient-text">anywhere</span></h2>
+      <p data-i18n="bubble_desc">A floating bubble sits on top of any app. Convert, type, and browse phrases without leaving Twitter, Weverse, or your chat app.</p>
       <ul class="bubble-features">
-        <li>Works over any app — no switching</li>
-        <li>Compact mini-converter popup</li>
-        <li>Quick access to your favorite phrases</li>
-        <li>Tap to expand, swipe to dismiss</li>
+        <li data-i18n="b1">Works over any app — no switching</li>
+        <li data-i18n="b2">Compact mini-converter popup</li>
+        <li data-i18n="b3">Quick access to your favorite phrases</li>
+        <li data-i18n="b4">Tap to expand, swipe to dismiss</li>
       </ul>
     </div>
   </div>
@@ -464,11 +472,11 @@
 
 <!-- FINAL CTA -->
 <section class="final-cta">
-  <h2>Ready to <span class="gradient-text">level up</span> your fan game?</h2>
-  <p>Free on Google Play. No account needed.</p>
+  <h2 data-i18n-html="cta_title">Ready to <span class="gradient-text">level up</span> your fan game?</h2>
+  <p data-i18n="cta_sub">Free on Google Play. No account needed.</p>
   <a class="btn-primary" href="https://play.google.com/store/apps/details?id=com.tigerroom.fangeul" style="font-size:1.1rem; padding:1rem 2.5rem;">
     <svg viewBox="0 0 24 24" fill="currentColor" style="width:22px;height:22px;"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.144 1.24a1 1 0 0 1 0 1.724l-2.144 1.24-2.53-2.53 2.53-2.53zM5.864 2.658L16.8 8.99l-2.302 2.302-8.635-8.635z"/></svg>
-    Download Fangeul
+    <span data-i18n="cta_download">Download Fangeul</span>
   </a>
 </section>
 
@@ -479,10 +487,82 @@
     <span>&copy; 2026 Tiger Room</span>
   </div>
   <div class="footer-links">
-    <a href="privacy-policy.html">Privacy Policy</a>
-    <a href="terms.html">Terms of Service</a>
+    <a href="privacy-policy.html" data-i18n="footer_privacy">Privacy Policy</a>
+    <a href="terms.html" data-i18n="footer_terms">Terms of Service</a>
   </div>
 </footer>
+
+<script>
+var lang = 'en';
+var T = {
+  ko: {
+    nav_features: '기능',
+    nav_screenshots: '스크린샷',
+    nav_bubble: '버블',
+    nav_privacy: '개인정보',
+    hero_badge: 'Android 앱',
+    hero_title: '한국어가 쉬워지는<br><span class="gradient-text">K-pop 팬</span> 필수 앱',
+    hero_desc: '영어 키보드로 한글 입력, 영한 변환, 발음 확인, 팬 문구 공유까지 — 플로팅 버블로 어디서든.',
+    cta_play: 'Google Play에서 받기',
+    cta_learn: '더 알아보기',
+    features_label: '기능',
+    features_title: '팬이라면 필요한 한국어 도구 모음',
+    f1_title: '영어 → 한글',
+    f1_desc: '영어 키보드로 타이핑하면 한글이 바로 나타납니다. <code>gksrmf</code> → <code>한글</code>. 키보드 전환 필요 없음.',
+    f2_title: '한글 → 영어',
+    f2_desc: '실수로 한글로 타이핑했을 때, 어떤 영어 키로 구성되어 있는지 확인할 수 있습니다.',
+    f3_title: '로마자 발음',
+    f3_desc: '한국어 텍스트의 표준 로마자 발음을 확인하세요. <code>사랑해요</code> → <code>saranghaeyo</code>. 국립국어원 규정 적용.',
+    f4_title: '팬 문구',
+    f4_desc: '발음과 번역이 함께 제공되는 한국어 팬 문구. 좋아하는 그룹 이름으로 개인화됩니다.',
+    f5_title: '커스텀 테마',
+    f5_desc: 'HSL 컬러 피커로 나만의 색상을 선택하세요. 최애 그룹 감성에 맞게 꾸미고, 팔레트를 슬롯에 저장하세요.',
+    f6_title: '즐겨찾기 & 복사',
+    f6_desc: '좋아하는 문구를 저장하고 한 번 탭으로 복사하세요. 트위터, 위버스 등 어디든 바로 공유.',
+    ss_label: '직접 확인하세요',
+    ss_title: '팬덤 생활을 위한 디자인',
+    bubble_label: '플로팅 버블',
+    bubble_title: '<span class="gradient-text">어디서든</span> 사용하세요',
+    bubble_desc: '플로팅 버블이 모든 앱 위에 떠 있습니다. 트위터, 위버스, 채팅 앱을 벗어나지 않고 변환하고 문구를 탐색하세요.',
+    b1: '모든 앱 위에서 동작 — 전환 불필요',
+    b2: '컴팩트 미니 변환기 팝업',
+    b3: '즐겨찾기 문구에 빠른 접근',
+    b4: '탭으로 열고, 스와이프로 닫기',
+    cta_title: '<span class="gradient-text">팬 생활</span>을 레벨업 할 준비 되셨나요?',
+    cta_sub: 'Google Play에서 무료. 계정 필요 없음.',
+    cta_download: 'Fangeul 다운로드',
+    footer_privacy: '개인정보처리방침',
+    footer_terms: '이용약관',
+  }
+};
+
+function setLang(l) {
+  lang = l;
+  document.documentElement.lang = l;
+  document.querySelector('.lang-btn').textContent = l === 'en' ? '한국어' : 'English';
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    el.textContent = l === 'ko' ? T.ko[key] : el.getAttribute('data-en');
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n-html');
+    el.innerHTML = l === 'ko' ? T.ko[key] : el.getAttribute('data-en-html');
+  });
+}
+
+function toggleLang() { setLang(lang === 'en' ? 'ko' : 'en'); }
+
+// Save English defaults on load
+document.querySelectorAll('[data-i18n]').forEach(function(el) {
+  el.setAttribute('data-en', el.textContent);
+});
+document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+  el.setAttribute('data-en-html', el.innerHTML);
+});
+
+// Auto-detect Korean browser
+if (navigator.language.startsWith('ko')) setLang('ko');
+</script>
 
 </body>
 </html>
