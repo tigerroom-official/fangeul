@@ -199,8 +199,9 @@ function showLang(lang) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.lang-toggle button').forEach(b => b.classList.remove('active'));
   document.getElementById(lang).classList.add('active');
-  event.target.classList.add('active');
+  document.querySelector('[onclick*="' + lang + '"]').classList.add('active');
 }
+if (navigator.language.startsWith('ko')) showLang('ko');
 </script>
 </body>
 </html>
