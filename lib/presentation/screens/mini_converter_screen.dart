@@ -54,6 +54,9 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
   final _focusNode = FocusNode();
   String _engBuffer = '';
   List<String> _jamoList = [];
+  List<String> _pendingJamo = [];
+  int _pendingStart = -1;
+  int _pendingLen = 0;
   double _dragDelta = 0;
 
   static const _modes = ConvertMode.values;
@@ -151,52 +154,177 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
   }
 
   void _updateText(String text) {
-    _textController.text = text;
-    _textController.selection = TextSelection.collapsed(offset: text.length);
+    _textController.value = TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
   }
 
-  void _onCharacterTap(String eng, String kor) {
-    if (_isEngToKor) {
-      _engBuffer += eng;
-      _updateText(_engBuffer);
+  // ── 커서 위치 ──
+
+  int get _cursorPos {
+    final sel = _textController.selection;
+    if (!sel.isValid || sel.baseOffset < 0) return _engBuffer.length;
+    return sel.baseOffset.clamp(0, _engBuffer.length);
+  }
+
+  bool get _isCursorAtEnd {
+    final sel = _textController.selection;
+    if (!sel.isValid || sel.baseOffset < 0) return true;
+    return sel.baseOffset >= _textController.text.length;
+  }
+
+  void _insertAtCursor(String char) {
+    final pos = _cursorPos;
+    _engBuffer =
+        _engBuffer.substring(0, pos) + char + _engBuffer.substring(pos);
+    _textController.value = TextEditingValue(
+      text: _engBuffer,
+      selection: TextSelection.collapsed(offset: pos + char.length),
+    );
+  }
+
+  void _deleteAtCursor() {
+    final pos = _cursorPos;
+    if (pos <= 0 || _engBuffer.isEmpty) return;
+    _engBuffer =
+        _engBuffer.substring(0, pos - 1) + _engBuffer.substring(pos);
+    _textController.value = TextEditingValue(
+      text: _engBuffer,
+      selection: TextSelection.collapsed(offset: pos - 1),
+    );
+  }
+
+  // ── pending 자모 조합 ──
+
+  void _commitEndJamo() {
+    if (_jamoList.isNotEmpty) {
+      _engBuffer = _textController.text;
+      _jamoList = [];
+    }
+  }
+
+  void _commitPending() {
+    _pendingJamo = [];
+    _pendingStart = -1;
+    _pendingLen = 0;
+  }
+
+  void _checkPendingCommit() {
+    if (_pendingJamo.isEmpty) return;
+    final sel = _textController.selection;
+    if (!sel.isValid || sel.baseOffset != _pendingStart + _pendingLen) {
+      _commitPending();
+    }
+  }
+
+  void _addPendingJamo(String jamo) {
+    final text = _textController.text;
+    if (_pendingJamo.isEmpty) {
+      final sel = _textController.selection;
+      _pendingStart = (sel.isValid && sel.baseOffset >= 0)
+          ? sel.baseOffset.clamp(0, text.length)
+          : text.length;
+      _pendingLen = 0;
+    }
+    _pendingJamo.add(jamo);
+    final assembled = KeyboardConverter.assembleJamos(_pendingJamo);
+    final before = text.substring(0, _pendingStart);
+    final after = text.substring(_pendingStart + _pendingLen);
+    final newText = before + assembled + after;
+    _pendingLen = assembled.length;
+    _engBuffer = newText;
+    _textController.value = TextEditingValue(
+      text: newText,
+      selection: TextSelection.collapsed(offset: _pendingStart + _pendingLen),
+    );
+  }
+
+  void _backspacePending() {
+    if (_pendingJamo.isEmpty) return;
+    _pendingJamo.removeLast();
+    final text = _textController.text;
+    final before = text.substring(0, _pendingStart);
+    final after = text.substring(_pendingStart + _pendingLen);
+    if (_pendingJamo.isEmpty) {
+      final newText = before + after;
+      _engBuffer = newText;
+      _textController.value = TextEditingValue(
+        text: newText,
+        selection: TextSelection.collapsed(offset: _pendingStart),
+      );
+      _commitPending();
     } else {
-      _jamoList = [..._jamoList, kor];
+      final assembled = KeyboardConverter.assembleJamos(_pendingJamo);
+      final newText = before + assembled + after;
+      _pendingLen = assembled.length;
+      _engBuffer = newText;
+      _textController.value = TextEditingValue(
+        text: newText,
+        selection:
+            TextSelection.collapsed(offset: _pendingStart + _pendingLen),
+      );
+    }
+  }
+
+  // ── 키보드 입력 핸들러 ──
+
+  void _onCharacterTap(String eng, String kor) {
+    _checkPendingCommit();
+    if (_isEngToKor) {
+      _insertAtCursor(eng);
+    } else if (_isCursorAtEnd && _engBuffer.isEmpty) {
+      _jamoList.add(kor);
       _updateText(KeyboardConverter.assembleJamos(_jamoList));
+    } else {
+      _commitEndJamo();
+      _addPendingJamo(kor);
     }
     _convert();
   }
 
   void _onBackspace() {
+    _checkPendingCommit();
     if (_isEngToKor) {
-      if (_engBuffer.isEmpty) return;
-      _engBuffer = _engBuffer.substring(0, _engBuffer.length - 1);
-      _updateText(_engBuffer);
-    } else {
-      if (_jamoList.isEmpty) return;
-      _jamoList = _jamoList.sublist(0, _jamoList.length - 1);
+      _deleteAtCursor();
+    } else if (_pendingJamo.isNotEmpty) {
+      _backspacePending();
+    } else if (_isCursorAtEnd && _engBuffer.isEmpty && _jamoList.isNotEmpty) {
+      _jamoList.removeLast();
       _updateText(KeyboardConverter.assembleJamos(_jamoList));
+    } else {
+      _commitEndJamo();
+      _deleteAtCursor();
     }
     _convert();
   }
 
   void _onSymbolTap(String char) {
+    _checkPendingCommit();
     if (_isEngToKor) {
-      _engBuffer += char;
-      _updateText(_engBuffer);
-    } else {
+      _insertAtCursor(char);
+    } else if (_isCursorAtEnd && _engBuffer.isEmpty) {
       _jamoList.add(char);
       _updateText(KeyboardConverter.assembleJamos(_jamoList));
+    } else {
+      _commitEndJamo();
+      _commitPending();
+      _insertAtCursor(char);
     }
     _convert();
   }
 
   void _onSpace() {
+    _checkPendingCommit();
     if (_isEngToKor) {
-      _engBuffer += ' ';
-      _updateText(_engBuffer);
-    } else {
-      _jamoList = [..._jamoList, ' '];
+      _insertAtCursor(' ');
+    } else if (_isCursorAtEnd && _engBuffer.isEmpty) {
+      _jamoList.add(' ');
       _updateText(KeyboardConverter.assembleJamos(_jamoList));
+    } else {
+      _commitEndJamo();
+      _commitPending();
+      _insertAtCursor(' ');
     }
     _convert();
   }
@@ -213,6 +341,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
   void _clearConverter() {
     _engBuffer = '';
     _jamoList = [];
+    _commitPending();
     _textController.clear();
     ref.read(converterNotifierProvider.notifier).clear();
   }

@@ -41,8 +41,13 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
   /// 영->한 모드에서 누적된 영문 입력.
   String _engBuffer = '';
 
-  /// 한->영/발음 모드에서 누적된 자모 리스트.
+  /// 한->영/발음 모드에서 누적된 자모 리스트 (끝 조합용).
   List<String> _jamoList = [];
+
+  /// 중간 삽입 시 pending 자모 조합.
+  List<String> _pendingJamo = [];
+  int _pendingStart = -1;
+  int _pendingLen = 0;
 
   static const _modes = ConvertMode.values;
 
@@ -188,41 +193,118 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
     return sel.baseOffset >= _textController.text.length;
   }
 
-  /// 한→영/발음 모드에서 커서가 중간이면 자모 조합을 커밋하고
-  /// 표시 텍스트 기반 편집으로 전환한다.
-  void _commitJamoIfMidCursor() {
+  /// 한→영/발음 모드에서 끝 조합 자모를 커밋하고 표시 텍스트 기반으로 전환.
+  void _commitEndJamo() {
     if (_jamoList.isNotEmpty) {
       _engBuffer = _textController.text;
       _jamoList = [];
     }
   }
 
+  /// pending 자모 조합을 커밋한다 (커서 이동/비자모 입력 시).
+  void _commitPending() {
+    _pendingJamo = [];
+    _pendingStart = -1;
+    _pendingLen = 0;
+  }
+
+  /// 커서가 pending 영역을 벗어났으면 커밋한다.
+  void _checkPendingCommit() {
+    if (_pendingJamo.isEmpty) return;
+    final sel = _textController.selection;
+    if (!sel.isValid || sel.baseOffset != _pendingStart + _pendingLen) {
+      _commitPending();
+    }
+  }
+
+  /// 중간 삽입: pending 자모 조합에 추가하고 표시 텍스트를 갱신한다.
+  void _addPendingJamo(String jamo) {
+    final text = _textController.text;
+
+    if (_pendingJamo.isEmpty) {
+      final sel = _textController.selection;
+      _pendingStart = (sel.isValid && sel.baseOffset >= 0)
+          ? sel.baseOffset.clamp(0, text.length)
+          : text.length;
+      _pendingLen = 0;
+    }
+
+    _pendingJamo.add(jamo);
+    final assembled = KeyboardConverter.assembleJamos(_pendingJamo);
+
+    final before = text.substring(0, _pendingStart);
+    final after = text.substring(_pendingStart + _pendingLen);
+    final newText = before + assembled + after;
+
+    _pendingLen = assembled.length;
+    _engBuffer = newText;
+    _textController.value = TextEditingValue(
+      text: newText,
+      selection: TextSelection.collapsed(offset: _pendingStart + _pendingLen),
+    );
+  }
+
+  /// pending 자모 백스페이스.
+  void _backspacePending() {
+    if (_pendingJamo.isEmpty) return;
+    _pendingJamo.removeLast();
+    final text = _textController.text;
+    final before = text.substring(0, _pendingStart);
+    final after = text.substring(_pendingStart + _pendingLen);
+
+    if (_pendingJamo.isEmpty) {
+      final newText = before + after;
+      _engBuffer = newText;
+      _textController.value = TextEditingValue(
+        text: newText,
+        selection: TextSelection.collapsed(offset: _pendingStart),
+      );
+      _commitPending();
+    } else {
+      final assembled = KeyboardConverter.assembleJamos(_pendingJamo);
+      final newText = before + assembled + after;
+      _pendingLen = assembled.length;
+      _engBuffer = newText;
+      _textController.value = TextEditingValue(
+        text: newText,
+        selection:
+            TextSelection.collapsed(offset: _pendingStart + _pendingLen),
+      );
+    }
+  }
+
+  // ── 키보드 입력 핸들러 ──
+
   /// 문자 키 입력 처리.
   ///
-  /// 커서가 끝이면 기존 버퍼 로직(자모 조합 포함).
-  /// 커서가 중간이면 표시 텍스트에 직접 삽입.
+  /// 커서 끝 + 자모 조합 모드: _jamoList 사용.
+  /// 커서 중간: pending 자모 조합으로 실시간 조합.
   void _onCharacterTap(String eng, String kor) {
+    _checkPendingCommit();
     if (_isEngToKor) {
       _insertAtCursor(eng);
     } else if (_isCursorAtEnd && _engBuffer.isEmpty) {
       _jamoList.add(kor);
       _updateText(KeyboardConverter.assembleJamos(_jamoList));
     } else {
-      _commitJamoIfMidCursor();
-      _insertAtCursor(kor);
+      _commitEndJamo();
+      _addPendingJamo(kor);
     }
     _convert();
   }
 
   /// 백스페이스 입력 처리.
   void _onBackspace() {
+    _checkPendingCommit();
     if (_isEngToKor) {
       _deleteAtCursor();
+    } else if (_pendingJamo.isNotEmpty) {
+      _backspacePending();
     } else if (_isCursorAtEnd && _engBuffer.isEmpty && _jamoList.isNotEmpty) {
       _jamoList.removeLast();
       _updateText(KeyboardConverter.assembleJamos(_jamoList));
     } else {
-      _commitJamoIfMidCursor();
+      _commitEndJamo();
       _deleteAtCursor();
     }
     _convert();
@@ -230,13 +312,15 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
 
   /// 숫자/특수문자 입력 처리.
   void _onSymbolTap(String char) {
+    _checkPendingCommit();
     if (_isEngToKor) {
       _insertAtCursor(char);
     } else if (_isCursorAtEnd && _engBuffer.isEmpty) {
       _jamoList.add(char);
       _updateText(KeyboardConverter.assembleJamos(_jamoList));
     } else {
-      _commitJamoIfMidCursor();
+      _commitEndJamo();
+      _commitPending();
       _insertAtCursor(char);
     }
     _convert();
@@ -244,13 +328,15 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
 
   /// 스페이스바 입력 처리.
   void _onSpace() {
+    _checkPendingCommit();
     if (_isEngToKor) {
       _insertAtCursor(' ');
     } else if (_isCursorAtEnd && _engBuffer.isEmpty) {
       _jamoList.add(' ');
       _updateText(KeyboardConverter.assembleJamos(_jamoList));
     } else {
-      _commitJamoIfMidCursor();
+      _commitEndJamo();
+      _commitPending();
       _insertAtCursor(' ');
     }
     _convert();
@@ -337,6 +423,7 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
   void _clear() {
     _engBuffer = '';
     _jamoList = [];
+    _commitPending();
     _textController.clear();
     ref.read(converterNotifierProvider.notifier).clear();
   }
