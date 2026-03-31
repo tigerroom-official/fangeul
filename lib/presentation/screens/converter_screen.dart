@@ -147,36 +147,97 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
     );
   }
 
+  // ── 커서 위치 ──
+
+  /// 현재 커서 위치를 반환한다. 유효하지 않으면 버퍼 끝.
+  int get _cursorPos {
+    final sel = _textController.selection;
+    if (!sel.isValid || sel.baseOffset < 0) return _engBuffer.length;
+    return sel.baseOffset.clamp(0, _engBuffer.length);
+  }
+
+  /// _engBuffer의 커서 위치에 [char]를 삽입하고 커서를 진행한다.
+  void _insertAtCursor(String char) {
+    final pos = _cursorPos;
+    _engBuffer =
+        _engBuffer.substring(0, pos) + char + _engBuffer.substring(pos);
+    _textController.value = TextEditingValue(
+      text: _engBuffer,
+      selection: TextSelection.collapsed(offset: pos + char.length),
+    );
+  }
+
+  /// _engBuffer의 커서 앞 1글자를 삭제하고 커서를 후퇴한다.
+  void _deleteAtCursor() {
+    final pos = _cursorPos;
+    if (pos <= 0 || _engBuffer.isEmpty) return;
+    _engBuffer =
+        _engBuffer.substring(0, pos - 1) + _engBuffer.substring(pos);
+    _textController.value = TextEditingValue(
+      text: _engBuffer,
+      selection: TextSelection.collapsed(offset: pos - 1),
+    );
+  }
+
   // ── 키보드 입력 핸들러 ──
+
+  /// 커서가 텍스트 끝에 있는지 여부.
+  bool get _isCursorAtEnd {
+    final sel = _textController.selection;
+    if (!sel.isValid || sel.baseOffset < 0) return true;
+    return sel.baseOffset >= _textController.text.length;
+  }
+
+  /// 한→영/발음 모드에서 커서가 중간이면 자모 조합을 커밋하고
+  /// 표시 텍스트 기반 편집으로 전환한다.
+  void _commitJamoIfMidCursor() {
+    if (_jamoList.isNotEmpty) {
+      _engBuffer = _textController.text;
+      _jamoList = [];
+    }
+  }
 
   /// 문자 키 입력 처리.
   ///
-  /// 영->한 모드: 영문 문자를 _engBuffer에 축적하고 controller에 표시.
-  /// 한->영/발음 모드: 한글 자모를 _jamoList에 축적하고 assembleJamos로 조합하여 표시.
+  /// 커서가 끝이면 기존 버퍼 로직(자모 조합 포함).
+  /// 커서가 중간이면 표시 텍스트에 직접 삽입.
   void _onCharacterTap(String eng, String kor) {
     if (_isEngToKor) {
-      _engBuffer += eng;
-      _updateText(_engBuffer);
-    } else {
+      _insertAtCursor(eng);
+    } else if (_isCursorAtEnd && _engBuffer.isEmpty) {
       _jamoList.add(kor);
       _updateText(KeyboardConverter.assembleJamos(_jamoList));
+    } else {
+      _commitJamoIfMidCursor();
+      _insertAtCursor(kor);
     }
     _convert();
   }
 
   /// 백스페이스 입력 처리.
-  ///
-  /// 영->한 모드: _engBuffer에서 마지막 문자 제거.
-  /// 한->영/발음 모드: _jamoList에서 마지막 자모 제거 후 재조합.
   void _onBackspace() {
     if (_isEngToKor) {
-      if (_engBuffer.isEmpty) return;
-      _engBuffer = _engBuffer.substring(0, _engBuffer.length - 1);
-      _updateText(_engBuffer);
-    } else {
-      if (_jamoList.isEmpty) return;
+      _deleteAtCursor();
+    } else if (_isCursorAtEnd && _engBuffer.isEmpty && _jamoList.isNotEmpty) {
       _jamoList.removeLast();
       _updateText(KeyboardConverter.assembleJamos(_jamoList));
+    } else {
+      _commitJamoIfMidCursor();
+      _deleteAtCursor();
+    }
+    _convert();
+  }
+
+  /// 숫자/특수문자 입력 처리.
+  void _onSymbolTap(String char) {
+    if (_isEngToKor) {
+      _insertAtCursor(char);
+    } else if (_isCursorAtEnd && _engBuffer.isEmpty) {
+      _jamoList.add(char);
+      _updateText(KeyboardConverter.assembleJamos(_jamoList));
+    } else {
+      _commitJamoIfMidCursor();
+      _insertAtCursor(char);
     }
     _convert();
   }
@@ -184,11 +245,13 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
   /// 스페이스바 입력 처리.
   void _onSpace() {
     if (_isEngToKor) {
-      _engBuffer += ' ';
-      _updateText(_engBuffer);
-    } else {
+      _insertAtCursor(' ');
+    } else if (_isCursorAtEnd && _engBuffer.isEmpty) {
       _jamoList.add(' ');
       _updateText(KeyboardConverter.assembleJamos(_jamoList));
+    } else {
+      _commitJamoIfMidCursor();
+      _insertAtCursor(' ');
     }
     _convert();
   }
@@ -338,6 +401,7 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
             builder: (context, _) => KoreanKeyboard(
               isEngToKor: _isEngToKor,
               onCharacterTap: _onCharacterTap,
+              onSymbolTap: _onSymbolTap,
               onBackspace: _onBackspace,
               onSpace: _onSpace,
             ),

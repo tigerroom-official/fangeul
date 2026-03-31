@@ -179,6 +179,17 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
     _convert();
   }
 
+  void _onSymbolTap(String char) {
+    if (_isEngToKor) {
+      _engBuffer += char;
+      _updateText(_engBuffer);
+    } else {
+      _jamoList.add(char);
+      _updateText(KeyboardConverter.assembleJamos(_jamoList));
+    }
+    _convert();
+  }
+
   void _onSpace() {
     if (_isEngToKor) {
       _engBuffer += ' ';
@@ -417,6 +428,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
           builder: (context, _) => KoreanKeyboard(
             isEngToKor: _isEngToKor,
             onCharacterTap: _onCharacterTap,
+            onSymbolTap: _onSymbolTap,
             onBackspace: _onBackspace,
             onSpace: _onSpace,
           ),

@@ -21,6 +21,7 @@ void main() {
           body: KoreanKeyboard(
             isEngToKor: isEngToKor,
             onCharacterTap: onCharacterTap,
+            onSymbolTap: (_) {},
             onBackspace: onBackspace ?? () {},
             onSpace: onSpace ?? () {},
           ),

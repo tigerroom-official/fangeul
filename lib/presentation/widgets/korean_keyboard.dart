@@ -14,12 +14,14 @@ import 'package:fangeul/presentation/widgets/keyboard_key.dart';
 /// 키보드 전체가 하나의 터치 영역이며, 터치 좌표에서 가장 가까운 키를
 /// 찾아 콜백을 발화한다. 키 사이 데드존이 존재하지 않는다.
 ///
-/// 개별 [KeyboardKey] 위젯은 순수 렌더링만 담당한다.
+/// 숫자/특수문자 토글 모드를 지원한다. Row 4 좌측의 [!#1] 버튼으로
+/// 문자↔숫자/특수문자 모드를 전환한다.
 class KoreanKeyboard extends ConsumerStatefulWidget {
   /// [KoreanKeyboard]를 생성한다.
   const KoreanKeyboard({
     required this.isEngToKor,
     required this.onCharacterTap,
+    required this.onSymbolTap,
     required this.onBackspace,
     required this.onSpace,
     super.key,
@@ -30,6 +32,9 @@ class KoreanKeyboard extends ConsumerStatefulWidget {
 
   /// 문자 키 탭 콜백. 영문과 한글을 함께 전달.
   final void Function(String eng, String kor) onCharacterTap;
+
+  /// 숫자/특수문자 탭 콜백. 문자를 직접 전달.
+  final void Function(String char) onSymbolTap;
 
   /// 백스페이스 콜백.
   final VoidCallback onBackspace;
@@ -55,7 +60,7 @@ class _KeyHitArea {
 }
 
 class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
-  // ── Row 데이터 ──
+  // ── 문자 모드 Row 데이터 ──
 
   static const _row1 = [
     KeyData(eng: 'q', kor: 'ㅂ', korShift: 'ㅃ'),
@@ -92,20 +97,37 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
     KeyData(eng: 'm', kor: 'ㅡ'),
   ];
 
+  // ── 숫자/특수문자 모드 Row 데이터 ──
+
+  static const _numRow1 = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+  static const _numRow2 = ['@', '#', '\$', '%', '&', '-', '+', '(', ')'];
+  static const _numRow3 = ['!', '"', "'", ':', ';', '/', '?'];
+
+  // ── 상태 ──
+
+  bool _isNumberMode = false;
+
   // ── 히트 영역 ──
 
-  late final List<_KeyHitArea> _hitAreas;
-  // GlobalKeys — 각 키 위젯에 부여하여 RenderBox 위치를 추적한다.
+  late List<_KeyHitArea> _hitAreas;
+  // 문자 모드 GlobalKeys
   final _row1Keys = List.generate(10, (_) => GlobalKey());
   final _row2Keys = List.generate(9, (_) => GlobalKey());
   final _capsKey = GlobalKey();
   final _row3Keys = List.generate(7, (_) => GlobalKey());
   final _bsKey = GlobalKey();
   final _spaceKey = GlobalKey();
+  final _toggleKey = GlobalKey();
+  // 숫자 모드 GlobalKeys
+  final _numRow1Keys = List.generate(10, (_) => GlobalKey());
+  final _numRow2Keys = List.generate(9, (_) => GlobalKey());
+  final _numRow3Keys = List.generate(7, (_) => GlobalKey());
+  final _numBsKey = GlobalKey();
+  final _numSpaceKey = GlobalKey();
+  final _numToggleKey = GlobalKey();
 
   // ── 이중 입력 방지 ──
 
-  /// 마지막 포인터 이벤트 시각. 40ms 이내 재입력은 무시한다.
   DateTime _lastPointerDown = DateTime(0);
   static const _minInterval = Duration(milliseconds: 40);
 
@@ -131,8 +153,13 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
     super.dispose();
   }
 
-  /// 모든 키의 히트 영역을 생성한다. initState에서 1회 호출.
+  /// 현재 모드에 맞는 히트 영역을 구성한다.
   List<_KeyHitArea> _buildHitAreas() {
+    if (_isNumberMode) return _buildNumberHitAreas();
+    return _buildCharHitAreas();
+  }
+
+  List<_KeyHitArea> _buildCharHitAreas() {
     final areas = <_KeyHitArea>[];
     for (var i = 0; i < _row1.length; i++) {
       areas.add(_KeyHitArea(
@@ -152,16 +179,44 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
     }
     areas.add(_KeyHitArea(
         globalKey: _bsKey, onTap: widget.onBackspace, isBackspace: true));
+    areas.add(_KeyHitArea(globalKey: _toggleKey, onTap: _toggleMode));
     areas.add(_KeyHitArea(globalKey: _spaceKey, onTap: widget.onSpace));
     return areas;
   }
 
+  List<_KeyHitArea> _buildNumberHitAreas() {
+    final areas = <_KeyHitArea>[];
+    for (var i = 0; i < _numRow1.length; i++) {
+      areas.add(_KeyHitArea(
+          globalKey: _numRow1Keys[i],
+          onTap: () => widget.onSymbolTap(_numRow1[i])));
+    }
+    for (var i = 0; i < _numRow2.length; i++) {
+      areas.add(_KeyHitArea(
+          globalKey: _numRow2Keys[i],
+          onTap: () => widget.onSymbolTap(_numRow2[i])));
+    }
+    for (var i = 0; i < _numRow3.length; i++) {
+      areas.add(_KeyHitArea(
+          globalKey: _numRow3Keys[i],
+          onTap: () => widget.onSymbolTap(_numRow3[i])));
+    }
+    areas.add(_KeyHitArea(
+        globalKey: _numBsKey, onTap: widget.onBackspace, isBackspace: true));
+    areas.add(_KeyHitArea(globalKey: _numToggleKey, onTap: _toggleMode));
+    areas.add(_KeyHitArea(globalKey: _numSpaceKey, onTap: widget.onSpace));
+    return areas;
+  }
+
+  void _toggleMode() {
+    setState(() {
+      _isNumberMode = !_isNumberMode;
+      _hitAreas = _buildHitAreas();
+    });
+  }
+
   // ── 최근접 키 해석 ──
 
-  /// 터치 좌표(글로벌)에서 가장 가까운 키를 찾는다.
-  ///
-  /// 1. 직접 히트: 터치가 키 영역 안이면 즉시 반환.
-  /// 2. 최근접 폴백: 어느 키에도 포함되지 않으면 중심 거리가 최소인 키 반환.
   _KeyHitArea? _findNearest(Offset globalPos) {
     _KeyHitArea? nearest;
     double minDist = double.infinity;
@@ -197,7 +252,6 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
     HapticFeedback.lightImpact();
     area.onTap();
 
-    // 백스페이스 길게 누르기: 300ms 대기 → 70ms 연속 삭제 → 800ms 후 35ms 가속
     if (area.isBackspace) {
       _bsActive = true;
       _longPressStart = DateTime.now();
@@ -235,13 +289,9 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
     }
   }
 
-  void _onPointerUp(PointerUpEvent event) {
-    _cancelBackspace();
-  }
+  void _onPointerUp(PointerUpEvent event) => _cancelBackspace();
 
-  void _onPointerCancel(PointerCancelEvent event) {
-    _cancelBackspace();
-  }
+  void _onPointerCancel(PointerCancelEvent event) => _cancelBackspace();
 
   void _cancelBackspace() {
     _deleteTimer?.cancel();
@@ -285,12 +335,9 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
                 left: 4, right: 4, top: 8, bottom: 8 + bottomInset),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildRow(_row1, kbState, _row1Keys),
-                _buildRow2(kbState),
-                _buildRow3(kbState),
-                _buildRow4(),
-              ],
+              children: _isNumberMode
+                  ? _buildNumberRows()
+                  : _buildCharRows(kbState),
             ),
           ),
         ),
@@ -298,9 +345,18 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
     );
   }
 
-  // ── Row builders ──
+  // ── 문자 모드 Rows ──
 
-  Widget _buildRow(
+  List<Widget> _buildCharRows(KeyboardState kbState) {
+    return [
+      _buildCharRow(_row1, kbState, _row1Keys),
+      _buildCharRow2(kbState),
+      _buildCharRow3(kbState),
+      _buildRow4(),
+    ];
+  }
+
+  Widget _buildCharRow(
       List<KeyData> keys, KeyboardState kbState, List<GlobalKey> gks) {
     return Row(
       children: [
@@ -318,7 +374,7 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
     );
   }
 
-  Widget _buildRow2(KeyboardState kbState) {
+  Widget _buildCharRow2(KeyboardState kbState) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -338,7 +394,7 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
     );
   }
 
-  Widget _buildRow3(KeyboardState kbState) {
+  Widget _buildCharRow3(KeyboardState kbState) {
     return Row(
       children: [
         Expanded(
@@ -363,28 +419,161 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
           ),
         Expanded(
           flex: 15,
-          child: KeyboardKey(
-            key: _bsKey,
-            keyType: KeyType.backspace,
-          ),
+          child: KeyboardKey(key: _bsKey, keyType: KeyType.backspace),
         ),
       ],
     );
   }
 
-  Widget _buildRow4() {
+  // ── 숫자/특수문자 모드 Rows ──
+
+  List<Widget> _buildNumberRows() {
+    return [
+      _buildSymRow(_numRow1, _numRow1Keys),
+      _buildSymRow2(),
+      _buildSymRow3(),
+      _buildRow4(),
+    ];
+  }
+
+  Widget _buildSymRow(List<String> chars, List<GlobalKey> gks) {
     return Row(
       children: [
-        const Spacer(flex: 2),
+        for (var i = 0; i < chars.length; i++)
+          Expanded(child: _SymbolKey(key: gks[i], label: chars[i])),
+      ],
+    );
+  }
+
+  Widget _buildSymRow2() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: [
+          for (var i = 0; i < _numRow2.length; i++)
+            Expanded(child: _SymbolKey(key: _numRow2Keys[i], label: _numRow2[i])),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSymRow3() {
+    return Row(
+      children: [
+        // 좌측 여백 (Caps 위치와 동일)
+        const Expanded(flex: 15, child: SizedBox(height: 52)),
+        for (var i = 0; i < _numRow3.length; i++)
+          Expanded(
+            flex: 10,
+            child: _SymbolKey(key: _numRow3Keys[i], label: _numRow3[i]),
+          ),
+        Expanded(
+          flex: 15,
+          child: KeyboardKey(key: _numBsKey, keyType: KeyType.backspace),
+        ),
+      ],
+    );
+  }
+
+  // ── 공통 Row 4: 토글 + 스페이스 ──
+
+  Widget _buildRow4() {
+    final toggleGk = _isNumberMode ? _numToggleKey : _toggleKey;
+    final spaceGk = _isNumberMode ? _numSpaceKey : _spaceKey;
+
+    return Row(
+      children: [
+        Expanded(
+          flex: 2,
+          child: _ToggleKey(
+            key: toggleGk,
+            label: _isNumberMode ? 'ABC' : '!#1',
+            isActive: _isNumberMode,
+          ),
+        ),
         Expanded(
           flex: 6,
-          child: KeyboardKey(
-            key: _spaceKey,
-            keyType: KeyType.space,
-          ),
+          child: KeyboardKey(key: spaceGk, keyType: KeyType.space),
         ),
         const Spacer(flex: 2),
       ],
+    );
+  }
+}
+
+// ── 숫자/특수문자 키 (순수 렌더링) ──
+
+class _SymbolKey extends StatelessWidget {
+  const _SymbolKey({required this.label, super.key});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return SizedBox(
+      height: 52,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 3),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: cs.surfaceContainer,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontFamily: 'NotoSansKR',
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: cs.onSurface,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── 토글 키 (순수 렌더링) ──
+
+class _ToggleKey extends StatelessWidget {
+  const _ToggleKey({
+    required this.label,
+    required this.isActive,
+    super.key,
+  });
+
+  final String label;
+  final bool isActive;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return SizedBox(
+      height: 52,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 3),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: isActive ? cs.primaryContainer : cs.surfaceContainer,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontFamily: 'NotoSansKR',
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: isActive ? cs.onPrimaryContainer : cs.onSurfaceVariant,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
