@@ -1,7 +1,7 @@
 name: fangeul
 description: "Korean utility app for K-pop fans — Hangul keypad, keyboard converter, romanizer, fan phrases."
 publish_to: 'none'
-version: 1.0.0+9
+version: 1.0.0+10
 
 environment:
   sdk: ^3.6.0

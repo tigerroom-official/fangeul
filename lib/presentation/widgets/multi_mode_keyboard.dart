@@ -404,8 +404,7 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
           ),
         ),
         Expanded(
-          child: KeyboardKey(
-            keyType: KeyType.backspace,
+          child: _BackspaceKeyCompat(
             onTap: _onBackspace,
             onLongPressStart: _onDeleteLongPressStart,
             onLongPressEnd: _onDeleteLongPressEnd,
@@ -475,8 +474,7 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
           (ch) => Expanded(child: _SimpleKey(label: ch, onTap: _onNumChar)),
         ),
         Expanded(
-          child: KeyboardKey(
-            keyType: KeyType.backspace,
+          child: _BackspaceKeyCompat(
             onTap: _onBackspace,
             onLongPressStart: _onDeleteLongPressStart,
             onLongPressEnd: _onDeleteLongPressEnd,
@@ -601,6 +599,75 @@ class _ModeButton extends StatelessWidget {
                   color: textColor,
                 ),
               ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// MultiModeKeyboard용 백스페이스 키 (Listener 기반).
+class _BackspaceKeyCompat extends StatefulWidget {
+  const _BackspaceKeyCompat({
+    required this.onTap,
+    required this.onLongPressStart,
+    required this.onLongPressEnd,
+  });
+
+  final VoidCallback onTap;
+  final VoidCallback onLongPressStart;
+  final VoidCallback onLongPressEnd;
+
+  @override
+  State<_BackspaceKeyCompat> createState() => _BackspaceKeyCompatState();
+}
+
+class _BackspaceKeyCompatState extends State<_BackspaceKeyCompat> {
+  Timer? _timer;
+  bool _longFired = false;
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return SizedBox(
+      height: 52,
+      child: Listener(
+        onPointerDown: (_) {
+          _longFired = false;
+          HapticFeedback.lightImpact();
+          widget.onTap();
+          _timer = Timer(const Duration(milliseconds: 300), () {
+            _longFired = true;
+            widget.onLongPressStart();
+          });
+        },
+        onPointerUp: (_) {
+          _timer?.cancel();
+          if (_longFired) widget.onLongPressEnd();
+          _longFired = false;
+        },
+        onPointerCancel: (_) {
+          _timer?.cancel();
+          if (_longFired) widget.onLongPressEnd();
+          _longFired = false;
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 3),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: cs.surfaceContainer,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Center(
+              child: Icon(Icons.backspace_outlined, size: 20,
+                  color: cs.onSurfaceVariant),
             ),
           ),
         ),

@@ -40,25 +40,27 @@ enum KeyType {
   space,
 }
 
-/// 커스텀 한글 키보드의 개별 키 위젯.
+/// 한글 자음 집합. 모음과 시각적으로 구분하기 위해 사용.
+const _consonants = {
+  '\u3131', '\u3132', '\u3134', '\u3137', '\u3138', '\u3139',
+  '\u3141', '\u3142', '\u3143', '\u3145', '\u3146', '\u3147',
+  '\u3148', '\u3149', '\u314A', '\u314B', '\u314C', '\u314D', '\u314E',
+};
+
+/// 커스텀 한글 키보드의 개별 키 위젯 (순수 렌더링용).
 ///
-/// [KeyType]에 따라 문자 키(이중 라벨), Caps 키, 백스페이스, 스페이스바를 렌더링한다.
-/// 문자 키는 영문/한글 두 줄 라벨을 표시하며,
-/// 자음(consonant)과 모음(vowel)에 서로 다른 불투명도를 적용해 시각적 구분을 돕는다.
-/// 모든 키에 햅틱 피드백을 제공한다.
+/// 제스처 처리는 부모 키보드 위젯이 단일 [Listener]로 수행한다.
+/// 개별 키는 시각적 렌더링만 담당하며, 터치 이벤트를 직접 받지 않는다.
+/// 이 방식은 시스템 키보드(Gboard)와 동일한 데드존 제로 터치를 구현한다.
 class KeyboardKey extends StatelessWidget {
   /// 키보드 키를 생성한다.
-  ///
-  /// [keyType]이 [KeyType.character]이면 [keyData]가 필수이다.
   const KeyboardKey({
     required this.keyType,
-    required this.onTap,
+    this.onTap,
     this.keyData,
     this.isShifted = false,
     this.isCapsLocked = false,
     this.isEngToKor = true,
-    this.onLongPressStart,
-    this.onLongPressEnd,
     super.key,
   }) : assert(
           keyType != KeyType.character || keyData != null,
@@ -68,10 +70,11 @@ class KeyboardKey extends StatelessWidget {
   /// 키의 종류.
   final KeyType keyType;
 
-  /// 탭 콜백.
-  final VoidCallback onTap;
+  /// 탭 콜백 (multi_mode_keyboard 등 개별 제스처 처리 시 사용).
+  /// KoreanKeyboard에서는 키보드 레벨 Listener가 처리하므로 null.
+  final VoidCallback? onTap;
 
-  /// 문자 키 메타데이터. [keyType] == [KeyType.character]일 때 필수.
+  /// 문자 키 메타데이터.
   final KeyData? keyData;
 
   /// Shift 활성 여부.
@@ -80,37 +83,8 @@ class KeyboardKey extends StatelessWidget {
   /// Caps Lock 활성 여부.
   final bool isCapsLocked;
 
-  /// 영->한 모드 여부. true이면 영문이 주 라벨, false이면 한글이 주 라벨.
+  /// 영->한 모드 여부.
   final bool isEngToKor;
-
-  /// 길게 누르기 시작 콜백 (백스페이스 연속 삭제 등).
-  final VoidCallback? onLongPressStart;
-
-  /// 길게 누르기 종료 콜백.
-  final VoidCallback? onLongPressEnd;
-
-  /// 한글 자음 집합. 모음과 시각적으로 구분하기 위해 사용.
-  static const _consonants = {
-    '\u3131', // ㄱ
-    '\u3132', // ㄲ
-    '\u3134', // ㄴ
-    '\u3137', // ㄷ
-    '\u3138', // ㄸ
-    '\u3139', // ㄹ
-    '\u3141', // ㅁ
-    '\u3142', // ㅂ
-    '\u3143', // ㅃ
-    '\u3145', // ㅅ
-    '\u3146', // ㅆ
-    '\u3147', // ㅇ
-    '\u3148', // ㅈ
-    '\u3149', // ㅉ
-    '\u314A', // ㅊ
-    '\u314B', // ㅋ
-    '\u314C', // ㅌ
-    '\u314D', // ㅍ
-    '\u314E', // ㅎ
-  };
 
   @override
   Widget build(BuildContext context) {
@@ -121,50 +95,32 @@ class KeyboardKey extends StatelessWidget {
     final bgColor = colorScheme.surfaceContainer;
     final subColor = colorScheme.onSurfaceVariant;
 
-    return SizedBox(
-      height: 48,
-      child: Padding(
-        padding: const EdgeInsets.all(2),
-        child: Material(
+    Widget visual = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 3),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(8),
-          child: GestureDetector(
-            onLongPressStart: onLongPressStart != null
-                ? (_) {
-                    _triggerHaptic();
-                    onLongPressStart!();
-                  }
-                : null,
-            onLongPressEnd:
-                onLongPressEnd != null ? (_) => onLongPressEnd!() : null,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(8),
-              splashColor: accentColor.withValues(alpha: 0.2),
-              onTap: () {
-                _triggerHaptic();
-                onTap();
-              },
-              child: Center(
-                child: _buildContent(l, subColor, accentColor),
-              ),
-            ),
-          ),
+        ),
+        child: Center(
+          child: _buildContent(l, subColor, accentColor),
         ),
       ),
     );
-  }
 
-  void _triggerHaptic() {
-    switch (keyType) {
-      case KeyType.character:
-        HapticFeedback.lightImpact();
-      case KeyType.backspace:
-        HapticFeedback.lightImpact();
-      case KeyType.caps:
-        HapticFeedback.mediumImpact();
-      case KeyType.space:
-        HapticFeedback.lightImpact();
+    // onTap이 있으면 개별 Listener 추가 (multi_mode_keyboard 호환).
+    // KoreanKeyboard에서는 키보드 레벨 Listener가 처리하므로 onTap=null.
+    if (onTap != null) {
+      visual = Listener(
+        onPointerDown: (_) {
+          HapticFeedback.lightImpact();
+          onTap!();
+        },
+        child: visual,
+      );
     }
+
+    return SizedBox(height: 52, child: visual);
   }
 
   Widget _buildContent(L l, Color subColor, Color accentColor) {
@@ -174,11 +130,7 @@ class KeyboardKey extends StatelessWidget {
       case KeyType.caps:
         return _buildCapsContent(subColor, accentColor);
       case KeyType.backspace:
-        return Icon(
-          Icons.backspace_outlined,
-          size: 20,
-          color: subColor,
-        );
+        return Icon(Icons.backspace_outlined, size: 20, color: subColor);
       case KeyType.space:
         return Text(
           l.keyboardSpace,
@@ -205,13 +157,11 @@ class KeyboardKey extends StatelessWidget {
     final Color subLabelColor;
 
     if (isEngToKor) {
-      // 영->한 모드: 영문이 주 라벨, 한글이 보조 라벨
       mainLabel = engLabel;
       mainColor = subColor;
       subLabel = korLabel;
       subLabelColor = accentColor.withValues(alpha: korOpacity);
     } else {
-      // 한->영/발음 모드: 한글이 주 라벨, 영문이 보조 라벨
       mainLabel = korLabel;
       mainColor = accentColor;
       subLabel = engLabel;

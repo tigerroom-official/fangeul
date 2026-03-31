@@ -10,16 +10,13 @@ import 'package:fangeul/presentation/widgets/keyboard_key.dart';
 
 /// QWERTY 두벌식 한글 키보드 위젯.
 ///
-/// 3행 키 배열(문자 26키 + CAPS/DEL/SPACE 특수키)을 렌더링한다.
-/// [KeyboardNotifier]를 통해 CAPS 상태를 관리하며,
-/// DEL 키는 길게 누르면 가속 삭제(70ms -> 35ms)를 지원한다.
+/// 시스템 키보드(Gboard)와 동일한 **단일 Listener + 최근접 키 해석** 방식.
+/// 키보드 전체가 하나의 터치 영역이며, 터치 좌표에서 가장 가까운 키를
+/// 찾아 콜백을 발화한다. 키 사이 데드존이 존재하지 않는다.
+///
+/// 개별 [KeyboardKey] 위젯은 순수 렌더링만 담당한다.
 class KoreanKeyboard extends ConsumerStatefulWidget {
   /// [KoreanKeyboard]를 생성한다.
-  ///
-  /// [isEngToKor]가 true이면 영문이 주 라벨, false이면 한글이 주 라벨.
-  /// [onCharacterTap]은 문자 키 입력 시 영문/한글 쌍을 전달한다.
-  /// [onBackspace]는 백스페이스(삭제) 콜백이다.
-  /// [onSpace]는 스페이스바 콜백이다.
   const KoreanKeyboard({
     required this.isEngToKor,
     required this.onCharacterTap,
@@ -44,8 +41,21 @@ class KoreanKeyboard extends ConsumerStatefulWidget {
   ConsumerState<KoreanKeyboard> createState() => _KoreanKeyboardState();
 }
 
+/// 키 하나의 히트 영역 정보.
+class _KeyHitArea {
+  _KeyHitArea({
+    required this.globalKey,
+    required this.onTap,
+    this.isBackspace = false,
+  });
+
+  final GlobalKey globalKey;
+  final VoidCallback onTap;
+  final bool isBackspace;
+}
+
 class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
-  // ── Row 1: 10 keys ──
+  // ── Row 데이터 ──
 
   static const _row1 = [
     KeyData(eng: 'q', kor: 'ㅂ', korShift: 'ㅃ'),
@@ -60,8 +70,6 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
     KeyData(eng: 'p', kor: 'ㅔ', korShift: 'ㅖ'),
   ];
 
-  // ── Row 2: 9 keys (DEL은 별도 처리) ──
-
   static const _row2 = [
     KeyData(eng: 'a', kor: 'ㅁ'),
     KeyData(eng: 's', kor: 'ㄴ'),
@@ -74,8 +82,6 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
     KeyData(eng: 'l', kor: 'ㅣ'),
   ];
 
-  // ── Row 3: 7 keys (CAPS, SPACE는 별도 처리) ──
-
   static const _row3 = [
     KeyData(eng: 'z', kor: 'ㅋ'),
     KeyData(eng: 'x', kor: 'ㅌ'),
@@ -86,18 +92,163 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
     KeyData(eng: 'm', kor: 'ㅡ'),
   ];
 
-  // ── DEL 가속 삭제 상태 ──
+  // ── 히트 영역 ──
+
+  late final List<_KeyHitArea> _hitAreas;
+  // GlobalKeys — 각 키 위젯에 부여하여 RenderBox 위치를 추적한다.
+  final _row1Keys = List.generate(10, (_) => GlobalKey());
+  final _row2Keys = List.generate(9, (_) => GlobalKey());
+  final _capsKey = GlobalKey();
+  final _row3Keys = List.generate(7, (_) => GlobalKey());
+  final _bsKey = GlobalKey();
+  final _spaceKey = GlobalKey();
+
+  // ── 이중 입력 방지 ──
+
+  /// 마지막 포인터 이벤트 시각. 40ms 이내 재입력은 무시한다.
+  DateTime _lastPointerDown = DateTime(0);
+  static const _minInterval = Duration(milliseconds: 40);
+
+  // ── 백스페이스 가속 삭제 ──
 
   Timer? _deleteTimer;
   bool _isAccelerated = false;
   bool _isDisposed = false;
   DateTime? _longPressStart;
+  bool _bsActive = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _isDisposed = false;
+    _hitAreas = _buildHitAreas();
+  }
 
   @override
   void dispose() {
     _isDisposed = true;
     _deleteTimer?.cancel();
     super.dispose();
+  }
+
+  /// 모든 키의 히트 영역을 생성한다. initState에서 1회 호출.
+  List<_KeyHitArea> _buildHitAreas() {
+    final areas = <_KeyHitArea>[];
+    for (var i = 0; i < _row1.length; i++) {
+      areas.add(_KeyHitArea(
+          globalKey: _row1Keys[i], onTap: () => _onCharTap(_row1[i])));
+    }
+    for (var i = 0; i < _row2.length; i++) {
+      areas.add(_KeyHitArea(
+          globalKey: _row2Keys[i], onTap: () => _onCharTap(_row2[i])));
+    }
+    areas.add(_KeyHitArea(
+      globalKey: _capsKey,
+      onTap: () => ref.read(keyboardNotifierProvider.notifier).toggleCaps(),
+    ));
+    for (var i = 0; i < _row3.length; i++) {
+      areas.add(_KeyHitArea(
+          globalKey: _row3Keys[i], onTap: () => _onCharTap(_row3[i])));
+    }
+    areas.add(_KeyHitArea(
+        globalKey: _bsKey, onTap: widget.onBackspace, isBackspace: true));
+    areas.add(_KeyHitArea(globalKey: _spaceKey, onTap: widget.onSpace));
+    return areas;
+  }
+
+  // ── 최근접 키 해석 ──
+
+  /// 터치 좌표(글로벌)에서 가장 가까운 키를 찾는다.
+  ///
+  /// 1. 직접 히트: 터치가 키 영역 안이면 즉시 반환.
+  /// 2. 최근접 폴백: 어느 키에도 포함되지 않으면 중심 거리가 최소인 키 반환.
+  _KeyHitArea? _findNearest(Offset globalPos) {
+    _KeyHitArea? nearest;
+    double minDist = double.infinity;
+
+    for (final area in _hitAreas) {
+      final box =
+          area.globalKey.currentContext?.findRenderObject() as RenderBox?;
+      if (box == null || !box.hasSize) continue;
+      final topLeft = box.localToGlobal(Offset.zero);
+      final rect = topLeft & box.size;
+
+      if (rect.contains(globalPos)) return area;
+
+      final dist = (rect.center - globalPos).distanceSquared;
+      if (dist < minDist) {
+        minDist = dist;
+        nearest = area;
+      }
+    }
+    return nearest;
+  }
+
+  // ── 포인터 이벤트 ──
+
+  void _onPointerDown(PointerDownEvent event) {
+    final now = DateTime.now();
+    if (now.difference(_lastPointerDown) < _minInterval) return;
+    _lastPointerDown = now;
+
+    final area = _findNearest(event.position);
+    if (area == null) return;
+
+    HapticFeedback.lightImpact();
+    area.onTap();
+
+    // 백스페이스 길게 누르기: 300ms 대기 → 70ms 연속 삭제 → 800ms 후 35ms 가속
+    if (area.isBackspace) {
+      _bsActive = true;
+      _longPressStart = DateTime.now();
+      _isAccelerated = false;
+      _deleteTimer = Timer(const Duration(milliseconds: 300), () {
+        if (_isDisposed || !_bsActive) return;
+        _deleteTimer = Timer.periodic(
+          const Duration(milliseconds: 70),
+          (timer) {
+            if (_isDisposed || !_bsActive) {
+              timer.cancel();
+              return;
+            }
+            widget.onBackspace();
+            final elapsed = DateTime.now().difference(_longPressStart!);
+            if (!_isAccelerated && elapsed.inMilliseconds > 800) {
+              _isAccelerated = true;
+              HapticFeedback.heavyImpact();
+              timer.cancel();
+              if (_isDisposed) return;
+              _deleteTimer = Timer.periodic(
+                const Duration(milliseconds: 35),
+                (t) {
+                  if (_isDisposed || !_bsActive) {
+                    t.cancel();
+                    return;
+                  }
+                  widget.onBackspace();
+                },
+              );
+            }
+          },
+        );
+      });
+    }
+  }
+
+  void _onPointerUp(PointerUpEvent event) {
+    _cancelBackspace();
+  }
+
+  void _onPointerCancel(PointerCancelEvent event) {
+    _cancelBackspace();
+  }
+
+  void _cancelBackspace() {
+    _deleteTimer?.cancel();
+    _deleteTimer = null;
+    _isAccelerated = false;
+    _longPressStart = null;
+    _bsActive = false;
   }
 
   // ── 문자 키 탭 ──
@@ -113,161 +264,114 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
     ref.read(keyboardNotifierProvider.notifier).consumeOneShot();
   }
 
-  // ── DEL 가속 삭제 ──
-
-  /// Phase 2: 길게 누르기 시작 -- 70ms 간격 삭제.
-  /// Phase 3: 800ms 이후 -- 35ms 간격 가속.
-  void _onDeleteLongPressStart() {
-    _longPressStart = DateTime.now();
-    _isAccelerated = false;
-    _deleteTimer = Timer.periodic(
-      const Duration(milliseconds: 70),
-      (timer) {
-        if (_isDisposed) {
-          timer.cancel();
-          return;
-        }
-        widget.onBackspace();
-        final elapsed = DateTime.now().difference(_longPressStart!);
-        if (!_isAccelerated && elapsed.inMilliseconds > 800) {
-          _isAccelerated = true;
-          HapticFeedback.heavyImpact();
-          timer.cancel();
-          if (_isDisposed) return;
-          _deleteTimer = Timer.periodic(
-            const Duration(milliseconds: 35),
-            (t) {
-              if (_isDisposed) {
-                t.cancel();
-                return;
-              }
-              widget.onBackspace();
-            },
-          );
-        }
-      },
-    );
-  }
-
-  /// Phase 4: 길게 누르기 종료 -- 타이머 정리.
-  void _onDeleteLongPressEnd() {
-    _deleteTimer?.cancel();
-    _deleteTimer = null;
-    _isAccelerated = false;
-    _longPressStart = null;
-  }
-
   // ── 빌드 ──
 
   @override
   Widget build(BuildContext context) {
     final kbState = ref.watch(keyboardNotifierProvider);
     final bgColor = Theme.of(context).colorScheme.surfaceContainerLowest;
-
     final bottomInset = MediaQuery.of(context).viewPadding.bottom;
 
-    return Container(
-      color: bgColor,
-      padding:
-          EdgeInsets.only(left: 4, right: 4, top: 8, bottom: 8 + bottomInset),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildRow(_row1, kbState),
-          const SizedBox(height: 4),
-          _buildRow2(kbState),
-          const SizedBox(height: 4),
-          _buildRow3(kbState),
-          const SizedBox(height: 4),
-          _buildRow4(),
-        ],
+    return RepaintBoundary(
+      child: Listener(
+        behavior: HitTestBehavior.opaque,
+        onPointerDown: _onPointerDown,
+        onPointerUp: _onPointerUp,
+        onPointerCancel: _onPointerCancel,
+        child: AbsorbPointer(
+          child: Container(
+            color: bgColor,
+            padding: EdgeInsets.only(
+                left: 4, right: 4, top: 8, bottom: 8 + bottomInset),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildRow(_row1, kbState, _row1Keys),
+                _buildRow2(kbState),
+                _buildRow3(kbState),
+                _buildRow4(),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
 
   // ── Row builders ──
 
-  /// 일반 행: 모든 키가 동일 너비(Expanded).
-  Widget _buildRow(List<KeyData> keys, KeyboardState kbState) {
-    return Row(
-      children: keys
-          .map(
-            (data) => Expanded(
-              child: KeyboardKey(
-                keyType: KeyType.character,
-                keyData: data,
-                isShifted: kbState.isShifted,
-                isEngToKor: widget.isEngToKor,
-                onTap: () => _onCharTap(data),
-              ),
-            ),
-          )
-          .toList(),
-    );
-  }
-
-  /// Row 2: 9개 문자 키 (중앙 정렬, 반 키 너비 인덴트).
-  Widget _buildRow2(KeyboardState kbState) {
+  Widget _buildRow(
+      List<KeyData> keys, KeyboardState kbState, List<GlobalKey> gks) {
     return Row(
       children: [
-        const Spacer(),
-        ..._row2.map(
-          (data) => Expanded(
-            flex: 2,
+        for (var i = 0; i < keys.length; i++)
+          Expanded(
             child: KeyboardKey(
+              key: gks[i],
               keyType: KeyType.character,
-              keyData: data,
+              keyData: keys[i],
               isShifted: kbState.isShifted,
               isEngToKor: widget.isEngToKor,
-              onTap: () => _onCharTap(data),
             ),
           ),
-        ),
-        const Spacer(),
       ],
     );
   }
 
-  /// Row 3: CAPS (flex 15) + 7개 문자 키 (flex 10) + DEL (flex 15).
+  Widget _buildRow2(KeyboardState kbState) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: [
+          for (var i = 0; i < _row2.length; i++)
+            Expanded(
+              child: KeyboardKey(
+                key: _row2Keys[i],
+                keyType: KeyType.character,
+                keyData: _row2[i],
+                isShifted: kbState.isShifted,
+                isEngToKor: widget.isEngToKor,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildRow3(KeyboardState kbState) {
     return Row(
       children: [
         Expanded(
           flex: 15,
           child: KeyboardKey(
+            key: _capsKey,
             keyType: KeyType.caps,
             isShifted: kbState.isShifted,
             isCapsLocked: kbState.capsMode == CapsMode.locked,
-            onTap: () =>
-                ref.read(keyboardNotifierProvider.notifier).toggleCaps(),
           ),
         ),
-        ..._row3.map(
-          (data) => Expanded(
+        for (var i = 0; i < _row3.length; i++)
+          Expanded(
             flex: 10,
             child: KeyboardKey(
+              key: _row3Keys[i],
               keyType: KeyType.character,
-              keyData: data,
+              keyData: _row3[i],
               isShifted: kbState.isShifted,
               isEngToKor: widget.isEngToKor,
-              onTap: () => _onCharTap(data),
             ),
           ),
-        ),
         Expanded(
           flex: 15,
           child: KeyboardKey(
+            key: _bsKey,
             keyType: KeyType.backspace,
-            onTap: widget.onBackspace,
-            onLongPressStart: _onDeleteLongPressStart,
-            onLongPressEnd: _onDeleteLongPressEnd,
           ),
         ),
       ],
     );
   }
 
-  /// Row 4: 중앙 정렬 스페이스바.
   Widget _buildRow4() {
     return Row(
       children: [
@@ -275,8 +379,8 @@ class _KoreanKeyboardState extends ConsumerState<KoreanKeyboard> {
         Expanded(
           flex: 6,
           child: KeyboardKey(
+            key: _spaceKey,
             keyType: KeyType.space,
-            onTap: widget.onSpace,
           ),
         ),
         const Spacer(flex: 2),

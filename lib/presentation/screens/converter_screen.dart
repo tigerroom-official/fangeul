@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -34,6 +36,7 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
   late final TabController _tabController;
   final _textController = TextEditingController();
   final _focusNode = FocusNode();
+  Timer? _convertDebounce;
 
   /// 영->한 모드에서 누적된 영문 입력.
   String _engBuffer = '';
@@ -113,6 +116,7 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
 
   @override
   void dispose() {
+    _convertDebounce?.cancel();
     _tabController.removeListener(_onTabChanged);
     _tabController.dispose();
     _focusNode.dispose();
@@ -134,11 +138,13 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
 
   /// 컨트롤러 텍스트를 갱신하고 커서를 끝으로 이동한다.
   ///
-  /// `controller.text = ...` 만 하면 커서가 position 0으로 리셋되므로,
-  /// 반드시 이 메서드를 통해 selection도 함께 설정한다.
+  /// `controller.value` 단일 할당으로 리스너 알림을 1회로 줄인다.
+  /// `.text` + `.selection` 개별 설정 시 2회 알림이 발생하여 리빌드가 2배.
   void _updateText(String text) {
-    _textController.text = text;
-    _textController.selection = TextSelection.collapsed(offset: text.length);
+    _textController.value = TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
   }
 
   // ── 키보드 입력 핸들러 ──
@@ -152,7 +158,7 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
       _engBuffer += eng;
       _updateText(_engBuffer);
     } else {
-      _jamoList = [..._jamoList, kor];
+      _jamoList.add(kor);
       _updateText(KeyboardConverter.assembleJamos(_jamoList));
     }
     _convert();
@@ -169,7 +175,7 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
       _updateText(_engBuffer);
     } else {
       if (_jamoList.isEmpty) return;
-      _jamoList = _jamoList.sublist(0, _jamoList.length - 1);
+      _jamoList.removeLast();
       _updateText(KeyboardConverter.assembleJamos(_jamoList));
     }
     _convert();
@@ -181,7 +187,7 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
       _engBuffer += ' ';
       _updateText(_engBuffer);
     } else {
-      _jamoList = [..._jamoList, ' '];
+      _jamoList.add(' ');
       _updateText(KeyboardConverter.assembleJamos(_jamoList));
     }
     _convert();
@@ -248,13 +254,20 @@ class _ConverterScreenState extends ConsumerState<ConverterScreen>
   // ── 변환 & 초기화 ──
 
   /// 현재 입력을 변환기에 전달한다.
+  ///
+  /// 150ms 디바운스 적용 — 빠른 타이핑 시 중간 변환을 건너뛰어
+  /// UI 리빌드 부하를 줄인다. 입력 텍스트 표시는 즉시, 변환 결과만 지연.
   void _convert() {
+    _convertDebounce?.cancel();
     final text = _textController.text;
     if (text.isEmpty) {
       ref.read(converterNotifierProvider.notifier).clear();
-    } else {
-      ref.read(converterNotifierProvider.notifier).convert(text, _currentMode);
+      return;
     }
+    _convertDebounce = Timer(const Duration(milliseconds: 150), () {
+      if (!mounted) return;
+      ref.read(converterNotifierProvider.notifier).convert(text, _currentMode);
+    });
   }
 
   /// 모든 버퍼, 컨트롤러, 변환 상태를 초기화한다.

@@ -66,6 +66,8 @@ class ConverterInput extends StatelessWidget {
           focusNode: focusNode,
           readOnly: true,
           showCursor: true,
+          maxLines: null,
+          minLines: 1,
           style: theme.textTheme.bodyLarge,
           decoration: InputDecoration(
             hintText: hintText,
