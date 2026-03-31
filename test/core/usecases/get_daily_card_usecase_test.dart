@@ -131,6 +131,154 @@ void main() {
       expect(card, isNull);
     });
 
+    test('should exclude template phrases when no group name', () async {
+      when(() => mockRepository.getAllPacks()).thenAnswer((_) async => [
+            const PhrasePack(
+              id: 'template_pack',
+              name: 'Templates',
+              nameKo: '템플릿',
+              isFree: true,
+              phrases: [
+                Phrase(
+                  ko: '{{group_name}} 오래오래 함께해요',
+                  roman: '{{group_name}} oraeorae hamkkehaeyo',
+                  context: 'Forever',
+                  isTemplate: true,
+                ),
+                Phrase(
+                  ko: '사랑해요',
+                  roman: 'saranghaeyo',
+                  context: 'Love',
+                ),
+              ],
+            ),
+          ]);
+
+      final card = await useCase.execute(date: '2026-02-27');
+
+      expect(card, isNotNull);
+      expect(card!.phrase.isTemplate, isFalse);
+      expect(card.phrase.ko, '사랑해요');
+    });
+
+    test('should include group templates when hasGroupName is true', () async {
+      when(() => mockRepository.getAllPacks()).thenAnswer((_) async => [
+            const PhrasePack(
+              id: 'only_template',
+              name: 'Only Template',
+              nameKo: '템플릿만',
+              isFree: true,
+              phrases: [
+                Phrase(
+                  ko: '{{group_name}} 사랑해',
+                  roman: '{{group_name}} saranghae',
+                  context: 'Love',
+                  isTemplate: true,
+                ),
+              ],
+            ),
+          ]);
+
+      final card = await useCase.execute(
+        date: '2026-02-27',
+        hasGroupName: true,
+      );
+
+      expect(card, isNotNull);
+      expect(card!.phrase.isTemplate, isTrue);
+      expect(card.phrase.ko, contains('{{group_name}}'));
+    });
+
+    test('should exclude member templates when hasMemberName is false',
+        () async {
+      when(() => mockRepository.getAllPacks()).thenAnswer((_) async => [
+            const PhrasePack(
+              id: 'member_pack',
+              name: 'Member Templates',
+              nameKo: '멤버 템플릿',
+              isFree: true,
+              phrases: [
+                Phrase(
+                  ko: '{{member_name}} 생일 축하해',
+                  roman: '{{member_name}} saengil chukahae',
+                  context: 'Birthday',
+                  isTemplate: true,
+                ),
+                Phrase(
+                  ko: '{{group_name}} 파이팅',
+                  roman: '{{group_name}} paiting',
+                  context: 'Cheer',
+                  isTemplate: true,
+                ),
+              ],
+            ),
+          ]);
+
+      final card = await useCase.execute(
+        date: '2026-02-27',
+        hasGroupName: true,
+        hasMemberName: false,
+      );
+
+      expect(card, isNotNull);
+      // member_name 템플릿은 제외, group_name만 포함
+      expect(card!.phrase.ko, contains('{{group_name}}'));
+      expect(card.phrase.ko, isNot(contains('{{member_name}}')));
+    });
+
+    test('should include member templates when hasMemberName is true',
+        () async {
+      when(() => mockRepository.getAllPacks()).thenAnswer((_) async => [
+            const PhrasePack(
+              id: 'member_pack',
+              name: 'Member Only',
+              nameKo: '멤버 전용',
+              isFree: true,
+              phrases: [
+                Phrase(
+                  ko: '{{member_name}} 사랑해',
+                  roman: '{{member_name}} saranghae',
+                  context: 'Love',
+                  isTemplate: true,
+                ),
+              ],
+            ),
+          ]);
+
+      final card = await useCase.execute(
+        date: '2026-02-27',
+        hasGroupName: true,
+        hasMemberName: true,
+      );
+
+      expect(card, isNotNull);
+      expect(card!.phrase.ko, contains('{{member_name}}'));
+    });
+
+    test('should return null when only template phrases and no group name',
+        () async {
+      when(() => mockRepository.getAllPacks()).thenAnswer((_) async => [
+            const PhrasePack(
+              id: 'all_template',
+              name: 'All Templates',
+              nameKo: '전부 템플릿',
+              isFree: true,
+              phrases: [
+                Phrase(
+                  ko: '{{group_name}} 사랑해',
+                  roman: '{{group_name}} saranghae',
+                  context: 'Love',
+                  isTemplate: true,
+                ),
+              ],
+            ),
+          ]);
+
+      final card = await useCase.execute(date: '2026-02-27');
+
+      expect(card, isNull);
+    });
+
     test('should set isCompleted to false by default', () async {
       when(() => mockRepository.getAllPacks())
           .thenAnswer((_) async => freePacks);

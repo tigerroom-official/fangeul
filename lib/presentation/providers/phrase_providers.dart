@@ -10,6 +10,8 @@ import 'package:fangeul/core/usecases/get_daily_card_usecase.dart';
 import 'package:fangeul/core/entities/daily_card.dart';
 import 'package:fangeul/data/datasources/phrase_local_datasource.dart';
 import 'package:fangeul/data/repositories/phrase_repository_impl.dart';
+import 'package:fangeul/presentation/providers/my_idol_provider.dart';
+import 'package:fangeul/presentation/providers/template_phrase_provider.dart';
 
 part 'phrase_providers.g.dart';
 
@@ -64,7 +66,23 @@ Future<List<Phrase>> phrasesBySituation(
 }
 
 /// 오늘의 카드
+///
+/// 아이돌/멤버 설정 상태에 따라 템플릿 문구를 풀에 포함하고,
+/// 선택된 템플릿은 치환하여 반환한다.
 @riverpod
-Future<DailyCard?> dailyCard(DailyCardRef ref, String date) {
-  return ref.read(getDailyCardUseCaseProvider).execute(date: date);
+Future<DailyCard?> dailyCard(DailyCardRef ref, String date) async {
+  final groupName = await ref.watch(myIdolDisplayNameProvider.future);
+  final memberName = await ref.watch(myIdolMemberNameProvider.future);
+
+  final card = await ref.read(getDailyCardUseCaseProvider).execute(
+        date: date,
+        hasGroupName: groupName != null,
+        hasMemberName: memberName != null,
+      );
+
+  if (card == null || !card.phrase.isTemplate || groupName == null) return card;
+
+  final resolved =
+      resolveTemplatePhrase(card.phrase, groupName, memberName: memberName);
+  return card.copyWith(phrase: resolved);
 }

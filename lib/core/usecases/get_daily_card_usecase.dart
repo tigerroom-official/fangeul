@@ -19,7 +19,15 @@ class GetDailyCardUseCase {
   /// [date]에 해당하는 오늘의 카드를 반환한다.
   ///
   /// 무료 팩에서만 선정. 팩이 비어있으면 null 반환.
-  Future<DailyCard?> execute({required String date}) async {
+  ///
+  /// [hasGroupName]이 true이면 `{{group_name}}` 템플릿 문구를 풀에 포함한다.
+  /// [hasMemberName]이 true이면 `{{member_name}}` 템플릿 문구도 포함한다.
+  /// 미설정 슬롯이 있는 템플릿은 원문 노출 방지를 위해 제외된다.
+  Future<DailyCard?> execute({
+    required String date,
+    bool hasGroupName = false,
+    bool hasMemberName = false,
+  }) async {
     final packs = await _repository.getAllPacks();
     final freePacks = packs.where((p) => p.isFree).toList();
 
@@ -27,7 +35,12 @@ class GetDailyCardUseCase {
     final allPhrases = <({String packId, int index, Phrase phrase})>[];
     for (final pack in freePacks) {
       for (var i = 0; i < pack.phrases.length; i++) {
-        allPhrases.add((packId: pack.id, index: i, phrase: pack.phrases[i]));
+        final p = pack.phrases[i];
+        if (p.isTemplate) {
+          if (!hasGroupName) continue;
+          if (!hasMemberName && p.ko.contains('{{member_name}}')) continue;
+        }
+        allPhrases.add((packId: pack.id, index: i, phrase: p));
       }
     }
 

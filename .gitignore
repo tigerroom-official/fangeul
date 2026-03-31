@@ -49,3 +49,6 @@ android/app/google-services.json
 
 # Git worktrees
 .worktrees/
+
+# Google Search Console verification (lives in tigerroom-official repo)
+docs/google*.html

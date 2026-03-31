@@ -447,9 +447,12 @@ class _PhrasesBySituationProviderElement
   String get situation => (origin as PhrasesBySituationProvider).situation;
 }
 
-String _$dailyCardHash() => r'2717a654a80fce36116cc175dab30242e7c95869';
+String _$dailyCardHash() => r'901a928b8e4ec5c9e58b2411dd0eb8cb7b8ab0af';
 
 /// 오늘의 카드
+///
+/// 아이돌/멤버 설정 상태에 따라 템플릿 문구를 풀에 포함하고,
+/// 선택된 템플릿은 치환하여 반환한다.
 ///
 /// Copied from [dailyCard].
 @ProviderFor(dailyCard)
@@ -457,14 +460,23 @@ const dailyCardProvider = DailyCardFamily();
 
 /// 오늘의 카드
 ///
+/// 아이돌/멤버 설정 상태에 따라 템플릿 문구를 풀에 포함하고,
+/// 선택된 템플릿은 치환하여 반환한다.
+///
 /// Copied from [dailyCard].
 class DailyCardFamily extends Family<AsyncValue<DailyCard?>> {
   /// 오늘의 카드
+  ///
+  /// 아이돌/멤버 설정 상태에 따라 템플릿 문구를 풀에 포함하고,
+  /// 선택된 템플릿은 치환하여 반환한다.
   ///
   /// Copied from [dailyCard].
   const DailyCardFamily();
 
   /// 오늘의 카드
+  ///
+  /// 아이돌/멤버 설정 상태에 따라 템플릿 문구를 풀에 포함하고,
+  /// 선택된 템플릿은 치환하여 반환한다.
   ///
   /// Copied from [dailyCard].
   DailyCardProvider call(
@@ -501,9 +513,15 @@ class DailyCardFamily extends Family<AsyncValue<DailyCard?>> {
 
 /// 오늘의 카드
 ///
+/// 아이돌/멤버 설정 상태에 따라 템플릿 문구를 풀에 포함하고,
+/// 선택된 템플릿은 치환하여 반환한다.
+///
 /// Copied from [dailyCard].
 class DailyCardProvider extends AutoDisposeFutureProvider<DailyCard?> {
   /// 오늘의 카드
+  ///
+  /// 아이돌/멤버 설정 상태에 따라 템플릿 문구를 풀에 포함하고,
+  /// 선택된 템플릿은 치환하여 반환한다.
   ///
   /// Copied from [dailyCard].
   DailyCardProvider(

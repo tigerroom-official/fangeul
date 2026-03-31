@@ -7,7 +7,7 @@ part of 'choeae_color_provider.dart';
 // **************************************************************************
 
 String _$choeaeColorNotifierHash() =>
-    r'526f7b703e9b860b5bec45f3548bc7a0460b62a4';
+    r'bc3ab6e90d83abcba6f7e58c9b970c465279c162';
 
 /// 최애색 상태 관리.
 ///
