@@ -1,7 +1,7 @@
 # Fangeul — Session Handoff
 
-BASE_COMMIT: b421e53 (이전 핸드오프)
-HANDOFF_COMMIT: 1f711e8
+BASE_COMMIT: 1f711e8 (이전 핸드오프)
+HANDOFF_COMMIT: 54e6f25
 BRANCH: main
 
 ---
@@ -9,156 +9,133 @@ BRANCH: main
 ## 프로젝트 상태 (누적)
 
 ### 완료된 마일스톤
-- Phase 1~4: Core 엔진 + 데이터 레이어 + UI 완료
-- Phase 5: 플로팅 버블 전체 구현 + 리뷰 수정 + MEDIUM/UX 수정
-- Sprint 1 MVP UX: 간편모드 높이 43% + 팩 자동 복원 + 복사 confetti/진동 + OEM 배터리 대응
-- Sprint 2: 상황태그 + K-pop 캘린더(69이벤트) + 분석 계측(NoOp) (2026-03-02)
-- MVP 통합: 마이아이돌 + 템플릿 문구 + 온보딩 + 크로스엔진 연동 (2026-03-03)
-- PhrasesScreen 마이아이돌 개인화 + MyIdolNotifier race condition 수정 (2026-03-03)
-- Phase B: 멤버 레벨 개인화 완료 + Codex 리뷰 수정 (2026-03-04)
-- Phase 6 수익화 설계+구현: 18 tasks + 2라운드 Claude×Codex 교차 리뷰 (2026-03-04)
-- 멀티모드 키보드 + 패널 개선 + 버블 버그 수정 (2026-03-04)
-- i18n 인프라 (7개 언어) + Firebase Remote Config 통합 (2026-03-05)
-- Firebase Crashlytics/Analytics 통합 + 버블 UX 대폭 개선 (2026-03-05)
-- 로케일 자동 감지 + 문구 번역 표시 + edge-to-edge 내비바 수정 (2026-03-05)
-- 설정 화면: 언어 변경 + 리뷰/문의 메뉴 + overflow 수정 + 스플래시 깜빡임 수정 + AGP 업그레이드 (2026-03-06)
-- 로케일별 번역 표시 수정 + 컨버터 힌트 탭별 전환 + 스마트 기본 필터 + v1.0.0 (2026-03-06)
-- AdMob 광고 배치 + 팬 컬러 테마 커스터마이징 13 tasks (2026-03-07)
-- 최애색(Choeae Color) UX 오버홀 — 15 tasks + 5 review fixes (2026-03-07)
-- HSL→HCT 엔진 교체 P0 완료 (2026-03-07)
-- 테마 커스터마이징 전면 업그레이드 (2026-03-08): 2D HCT 피커, 슬롯, 3-SKU IAP, brightnessOverride, chroma 85%, 804 tests
-- 보상형 광고 피벗 (2026-03-09): TTS/즐겨찾기 시간제 해금 폐지 → 프리미엄 테마 24h 체험 전용
-- IAP UI 마무리 (2026-03-09): subtitle 설명 추가, 번들 "추천" 뱃지, Codex 리뷰 수정
-- 즐겨찾기 제한 UX 개선 (2026-03-09): 다이얼로그 직접적 메시지, SnackBar CTA 개선, 버블 해결 경로 추가
-- 릴리즈 준비 (2026-03-11): AdMob 프로덕션 ID + T-rating + targetSdk 35 + ProGuard + privacy/terms + 서명 설정
-- 변환기 UX 개선 (2026-03-11): autofocus + paste + 중앙 space bar + empty state 예시 + "Key Swap" 영문 리네이밍
-- 릴리즈 버그 수정 (2026-03-11): Done 버튼 silent failure (FlutterSecureStorage try-catch) + debug progress panel
-- v1.0.0+4 AAB 빌드 완료 (2026-03-11)
-- **FlutterSecureStorage BadPaddingException 크래시 수정** (2026-03-12): UserProgress + Monetization 양쪽 방어 + 8 테스트
-- **전문가 패널 토론** (2026-03-12): 일일카드 TTS + 스트릭 BM + 카드 컬렉션 설계 합의
-- **v1.0.0+5 내부 테스트 빌드** (2026-03-12): AAB 빌드 + Play Console 업로드
-- **Play Store 에셋** (2026-03-12): 아이콘 512x512 + 그래픽 이미지 1024x500 제작
-- **app-ads.txt 배포** (2026-03-12): `tigerroom-official.github.io` 별도 레포 생성 + GitHub Pages 활성화
+- Phase 1~6: Core 엔진 + 데이터 + UI + 버블 + 수익화 전체 완료
+- **v1.0.0+10 프로덕션 빌드 → Play Store 심사 중** (2026-04-01)
+- 14일 비공개 테스트 통과 → 프로덕션 출시 제출
+- GitHub Pages 랜딩페이지: `tigerroom-official.github.io/fangeul/` (다국어 en/ko)
+- Google Search Console 소유권 인증 완료
+- Testers Community Google 그룹 등록
+- IAP bypass 수정 (persist gate, slot guard, undo guard, restoreConfig clear)
+- 데일리 카드 템플릿 치환 (아이돌/멤버 설정 반영)
+- **키보드 전면 리팩토링**: 시스템 키보드(Gboard) 방식 단일 Listener + 최근접 키 해석
+- **숫자/특수문자 토글** (!#1 ↔ ABC)
+- **커서 위치 편집**: 영→한 전모드 + 한→영/로마자 pending 자모 조합
+- **변환기 입력 최적화**: 150ms 디바운스, controller.value 단일 할당, 뮤터블 jamoList
+- 앱 버전 하드코딩 → PackageInfo 런타임 표시
 
 ### 활성 작업
-- Play Console 스토어 등록정보 완성 (아이콘/그래픽 업로드됨, 스크린샷 미등록)
-- 다국어 스토어 등록 (ja/zh/id/th/vi) — 다음 세션 즉시 작업
+- Play Store 프로덕션 심사 대기 중 (1~7일)
+- 심사 통과 후 스크린샷 갱신 예정 (숫자 키보드 포함)
 
-### 보류/백로그 — MVP 출시 후
+### 보류/백로그 — 출시 후
+- **v1.1 TTS**: 카드 문구 탭에서 한글 TTS 재생 (GPU 서버 자체 생성, Qwen 등)
 - **v1.1 기능**: 한글 퍼즐(Wordle 스타일), 한글 카드 컬렉션(가챠)
 - **v1.1+ 기능**: 푸시 알림(firebase_messaging), 구독 모델
 - LOW 이슈 잔여: L3(자동닫기 설정), L4(펄스 애니메이션), L5(복사 기록 암호화)
 - 리뷰 연기 이슈: I1(IdolSelectScreen setState→Riverpod), I6(즐겨찾기 템플릿 메타데이터)
-- todaySuggestedPhrases에 memberName 미전달 (멤버 템플릿 "오늘" 추천 미포함)
-- share_card_painter.dart + Provider 내 UiStrings 잔류 (BuildContext 없음)
 - P1: 핸들 좌측 멤버 이름 노출 (버블 UX)
-- **P1: 버블 딥링크** — openMainApp 시 ThemePickerSheet 자동 오픈 (intent extra `open_theme_picker`)
-- Play Integrity API (서버사이드 검증)
-- AdMob SSV (Server-Side Verification)
-- converter_screen 배너 = 리텐션 데이터로 결정 (v1.1)
-- 즐겨찾기 포화/TTS 한도 FanPassButton 트리거 (v1.1)
-- IAP "테마 슬롯 3개" → "최애 테마 3개 저장" 문구 리프레이밍 (P2)
-- P2: "팬글 서포터" 리프레이밍 — IAP를 "응원" 프레이밍으로 (Phase 7.1)
-- 일일카드 TTS 번들 통합 ₩1,900 (전문가 패널 합의, v1.1)
-- 스트릭 "축하" 감성 보상 + 마일스톤 시스템 (v1.1)
+- P1: 버블 딥링크 — openMainApp → ThemePickerSheet 자동 오픈
+- Play Integrity API / AdMob SSV
+- PaletteRegistry 20-25개 확장
+- IAP "팬글 서포터" 리프레이밍 (Phase 7.1)
 
 ---
 
 ## 작업 요약
 
-Crashlytics 크래시(FlutterSecureStorage BadPaddingException) 양쪽 DataSource 수정 + 전문가 패널 토론(TTS/스트릭 BM) + v1.0.0+5 AAB 빌드 + Play Store 에셋 제작 + app-ads.txt 배포. 812 tests pass.
+IAP bypass 수정 + 데일리 카드 템플릿 치환 + 키보드 전면 리팩토링(Gboard 방식 데드존 제로) + 숫자/특수문자 토글 + 커서 위치 편집 + pending 자모 조합 + 변환기 입력 최적화 + 랜딩페이지 배포 + 프로덕션 빌드(v1.0.0+10) Play Store 제출. 807+ tests pass.
 
 ## 완료된 작업
 
-- [x] FlutterSecureStorage BadPaddingException crash recovery — UserProgress + Monetization 양쪽 `PlatformException` 방어 + `_deleteCorruptedKeys()` + save 재시도 + 8 테스트 (b297225)
-- [x] 전문가 패널 토론 기록 — 일일카드 TTS + 스트릭 BM + 카드 컬렉션 (b874957)
-- [x] IAP 테스트 가이드 + Firebase Analytics 가이드 작성 (b874957)
-- [x] v1.0.0+5 AAB 빌드 — 내부 테스트용 (d46f235)
-- [x] app-ads.txt 배포 — `tigerroom-official.github.io` 별도 레포 + GitHub Pages
-- [x] Play Store 에셋 제작 — 아이콘 512x512 + 그래픽 이미지 1024x500 (b0ee999)
-- [x] 812 tests pass + flutter analyze clean
+- [x] IAP bypass 5건 수정 — persist gate, slot guard, undo guard, revoke methods, restoreConfig undo clear (ed2b197, 14f9634)
+- [x] 앱 버전 하드코딩 수정 → PackageInfo 런타임 (bfd491f)
+- [x] 데일리 카드 템플릿 치환 — hasGroupName/hasMemberName 플래그 + provider 치환 (3bc6dcf)
+- [x] GitHub Pages 랜딩페이지 — 다국어(en/ko) + 버블 폰 모형 + Google Search Console 인증
+- [x] 정책 페이지 영어 기본 + 한국어 자동감지
+- [x] **키보드 Gboard 방식 리팩토링** — 단일 Listener + AbsorbPointer + _findNearest() (ed1e1be)
+- [x] 백스페이스 즉시 반응 (Listener 기반) + 300ms→70ms→35ms 가속 삭제
+- [x] 40ms 이중입력 방지 가드
+- [x] **숫자/특수문자 토글** — !#1/ABC, 3행 배치 (6c864fc)
+- [x] **커서 위치 편집** — 영→한 insertAtCursor/deleteAtCursor (6c864fc)
+- [x] **pending 자모 조합** — 한→영/로마자 중간삽입 시 실시간 조합 (54e6f25)
+- [x] 변환기 최적화 — 150ms 디바운스, controller.value 단일 할당, 뮤터블 jamoList
+- [x] 변환기 입력 필드 maxLines: null (다중 행 확장)
+- [x] mini_converter_screen 동일 로직 적용
+- [x] v1.0.0+10 프로덕션 AAB 빌드 + Play Store 제출
+- [x] 807+ tests pass
 
 ## 진행 중인 작업
-없음. 다음 세션에서 스토어 등록 계속.
+없음. Play Store 심사 대기.
 
 ## 핵심 교훈
 
-- ★ `MonetizationLocalDataSource.load()`는 원래 `_storage.read()` 호출에 try-catch 없었음 → PlatformException이 직접 전파되어 크래시
-- ★ BadPaddingException 수정: catch만으론 부족 → `_deleteCorruptedKeys()` + 재시도까지 해야 반복 크래시 방지
-- ★ app-ads.txt는 도메인 루트 필수 — `domain.github.io/app-ads.txt` (하위 경로 불가)
-- ★ Play Console IAP 메뉴: 스토어 등록정보 완성 + 내부 테스트 배포 후 노출
-- ★ 앱 아이콘: 단순한 디자인이 48px 작은 사이즈에서 가독성 좋음 — 장식(반짝이 등) 지양
-- 스크린샷 IP 주의: 특정 그룹/팬덤명 노출 금지 → "Fangeul"을 기타 설정으로 사용
+- ★ GestureDetector + InkWell 중첩 시 tap/longPress 판별 지연으로 백스페이스 씹힘 → Listener 기반 즉시 반응
+- ★ 키 사이 Padding이 Listener 바깥이면 데드존 발생 → Listener를 Padding 바깥으로 이동
+- ★ 행 간 SizedBox 간격도 데드존 → 근본 해결은 키보드 레벨 단일 Listener + 최근접 키 해석 (Gboard 패턴)
+- ★ AbsorbPointer로 개별 키 제스처 차단 + 키보드 Listener가 모든 터치 처리
+- ★ GlobalKey로 각 키 RenderBox 위치 추적 → _findNearest()로 직접 히트 or 최소 거리 폴백
+- ★ controller.text + controller.selection 개별 설정 = 리빌드 2회 → controller.value 단일 할당 = 1회
+- ★ _jamoList = [...list, item] spread 복사 O(n²) → .add() 뮤터블 O(1)
+- ★ 한→영 모드 중간 편집: _jamoList 커밋 후 _engBuffer 기반 + pending 자모 조합으로 실시간 조합 유지
+- ★ 비공개 테스트 14일 통과 → 프로덕션 직행 가능 (공개 테스트는 선택)
+- ★ 프로덕션 트랙은 국가/지역 별도 설정 필요 (비공개와 공유 안 됨)
+- ★ EU 지역 차단 규정: 무료앱 + Google 자동 환산이면 해당 없음
+- ★ Testers Community Google 그룹 + 앱 크레딧 시스템으로 12명 테스터 확보
 
 ## 다음 단계
 
-### 1순위: Play Console 다국어 스토어 등록
-1. **번역 관리** — ko/en 외 5개 언어(ja, zh, id, th, vi) 스토어 소개 등록
-2. **스크린샷 촬영** — 영어 시스템 언어 + 기본 테마 + "Fangeul" 그룹명 + device frame, 최소 4장 (홈/Key Swap/문구/테마)
-3. **스토어 등록정보 완성** — 아이콘+그래픽 업로드 + 스크린샷 + 설명 → 임시저장 해제
+### 1순위: v1.1 TTS 구현
+1. **TTS 음성 생산** — GPU 서버에서 Qwen/오픈소스 TTS로 전체 문구 음성 생성
+2. **Cloudflare R2 업로드** — mp3/ogg 파일 CDN 캐싱
+3. **카드 문구 탭 TTS UI** — 재생 버튼 + just_audio 재생
+4. **하단 배너 광고 노출** — 문구 탭 상주 시 자연스러운 광고 노출
 
-### 2순위: IAP + QA + 출시
-4. **IAP 상품 등록** — 3 SKU (₩990/₩990/₩1,500) + 동남아 현지가
-5. **내부 테스트 QA** — 전체 기능 + IAP 플로우 검증
-6. **프로덕션 출시**
-
-### 3순위: 출시 후 빠른 개선
-- P1: 버블 딥링크 — openMainApp → ThemePickerSheet 자동 오픈
-- P1: 핸들 좌측 멤버 이름 노출
-- PaletteRegistry 20-25개 확장
+### 2순위: 출시 후 즉시
+- 스크린샷 갱신 (숫자 키보드, 최신 UI)
 - Firebase Analytics 대시보드 구성
+- 유저 피드백 수집 → 버그 수정
 
-### 4순위: v1.1 로드맵
+### 3순위: v1.1 로드맵
 - 일일카드 TTS 번들 ₩1,900 (패널 합의)
 - 스트릭 "축하" 감성 보상 + 마일스톤 시스템
-- 한글 카드 컬렉션 (가챠) — Phase 2로 연기 (패널 합의)
-- 한글 퍼즐 (Wordle 스타일)
-- 구독 모델
+- PaletteRegistry 20-25개 확장
+- 버블 딥링크 (ThemePickerSheet 자동 오픈)
 
 ## 핵심 결정사항
 
 | 결정 | 이유 |
 |------|------|
-| BadPaddingException 양쪽 DataSource 방어 | Crashlytics에서 실제 크래시 발생 — Monetization은 catch 자체가 없었음 |
-| app-ads.txt 별도 레포 | GitHub Pages는 루트 도메인 레포에서만 루트 경로 제공 |
-| 아이콘 hu.png 선택 (반짝이 없는 심플 버전) | 48px 앱 서랍에서 가독성 우선 |
-| TTS 번들 ₩1,900 (패널 합의) | TTS 단독 SKU는 가치 불명확 → 기존 IAP에 통합이 전환율 유리 |
-| 카드 컬렉션 v1.1 연기 | IP 제약 하 차별화 어려움 + 개발 비용 큼 → v1.0 출시 우선 |
+| Gboard 방식 키보드 리팩토링 | 개별 키 Listener로는 데드존 완전 제거 불가 → 키보드 레벨 단일 Listener + 최근접 해석 |
+| 숫자/특수문자 토글 추가 | 시스템 키보드 대비 기능 부족 → !#1/ABC 토글로 기본 UX 확보 |
+| pending 자모 조합 | 중간 삽입 시 개별 자모 노출은 UX 문제 → IME 방식 pending composition |
+| 프로덕션 전세계 출시 | 국가 제한 = 잠재 유저 차단, 미지원 언어는 영어 fallback |
+| TTS 자체 GPU 서버 생산 | 오픈소스 모델(Qwen 등) 상업적 사용 가능 → 외부 API 비용 제거 + 차별화 |
 
 ## 참고 컨텍스트
 
-- 크래시 원본: `~/Develop/com_tigerroom_fangeul_issue_46b28dba04ac686b4183b6e3fded0c69_crash.txt`
-- 전문가 패널 토론: `docs/discussions/2026-03-12-daily-tts-streak-bm.md`
-- IAP 테스트 가이드: `docs/guides/iap-testing-guide.md`
-- Firebase Analytics 가이드: `docs/guides/firebase-analytics-guide.md`
-- 스토어 에셋: `docs/assets/store/` (app-icon-512.png, feature-graphic.png)
-- app-ads.txt: `tigerroom-official.github.io` 레포
+- 랜딩페이지: `tigerroom-official.github.io/fangeul/` (별도 레포)
+- 랜딩페이지 소스: `docs/index.html` (개발 레포 동기화)
+- 정책 페이지: `docs/privacy-policy.html`, `docs/terms.html`
+- 프로덕션 출시 노트: `/tmp/release-notes-v1.txt`
+- IAP bypass 토론: `docs/discussions/2026-03-15-theme-slot-iap-bypass-fix.md`
 
 ## 커밋 히스토리 (이번 세션)
 
 ```
-b0ee999 chore: add Play Store assets (icon 512x512 + feature graphic 1024x500)
-d46f235 chore: bump version to 1.0.0+5 for internal test
-b874957 docs: 일일카드 TTS+스트릭 토론 기록, IAP/Analytics 가이드 추가
-b297225 fix: FlutterSecureStorage BadPaddingException crash recovery
-```
-
-## 수정한 파일
-
-```
-11 files changed, 2081 insertions(+), 23 deletions(-)
-
-주요 수정:
- lib/data/datasources/monetization_local_datasource.dart (PlatformException 방어 + deleteCorruptedKeys)
- lib/data/datasources/user_progress_local_datasource.dart (PlatformException 방어 + deleteCorruptedKeys + save 재시도)
- test/data/datasources/monetization_local_datasource_test.dart (+69 lines 테스트)
- test/data/datasources/user_progress_local_datasource_test.dart (NEW, 151 lines)
- docs/discussions/2026-03-12-daily-tts-streak-bm.md (NEW, 패널 토론 기록)
- docs/guides/iap-testing-guide.md (NEW, 583 lines)
- docs/guides/firebase-analytics-guide.md (NEW, 937 lines)
- docs/assets/store/app-icon-512.png (NEW, 512x512)
- docs/assets/store/feature-graphic.png (NEW, 1024x500)
- pubspec.yaml (v1.0.0+5)
+54e6f25 feat: pending jamo composition for mid-text editing
+6c864fc feat: number/symbol toggle + cursor-aware mid-text editing
+ed1e1be fix: keyboard zero dead zone + input optimizations
+3bc6dcf fix: daily card template substitution based on idol/member settings
+4872dc8 feat: replace bubble screenshot with phone mockup + floating icon
+b8ab842 feat: add Korean language support to landing page
+7da5f18 feat: auto-detect Korean browser language for policy pages
+e33b787 fix: set English as default language for privacy policy and terms
+5e5ca59 feat: add landing page for GitHub Pages
+177b030 chore: bump version to 1.0.0+9 for closed testing
+14f9634 fix: restoreConfig clears undo history to prevent preview bypass
+bfd491f fix: replace hardcoded appVersion with runtime PackageInfo
+d573578 chore: bump version to 1.0.0+8 for closed testing
+ed2b197 fix: IAP bypass — persist gate, slot guard, undo guard, revoke methods
 ```
 
 ## 세션 히스토리
@@ -167,26 +144,12 @@ b297225 fix: FlutterSecureStorage BadPaddingException crash recovery
 |------|------|
 | P1~P3 | Core 엔진 + 데이터 레이어 완료 |
 | P4 | UI 화면 구현 (홈, 변환기, 문구, 설정) |
-| P5-구현 | Phase 5 플로팅 버블 16 tasks 구현 |
-| P5-리뷰 | C1~C3/H1~H4 리뷰 수정 → 215 tests |
-| P5.1-MEDIUM | M1/M3/M4/M5 수정 |
-| P5.2-UX | 팩 문구 탐색 + AsyncNotifier 전환 + 버블/키보드 UX 수정 → 247 tests |
-| Sprint 1 | MVP UX 기반 다듬기 → 252 tests |
-| Sprint 2 | 상황태그 + K-pop 캘린더 + 분석 계측 → 280 tests |
-| MVP 통합 | 마이아이돌 + 템플릿 문구 + 온보딩 + 교차리뷰 → 314 tests |
-| PhrasesScreen 아이돌 | MyIdolNotifier race fix + 아이돌 칩 + 태그 뷰 버그 수정 → 337 tests |
-| Phase B 멤버 | 멤버 개인화 7 tasks + Codex 리뷰 Critical 수정 → 383 tests |
-| Phase 6 설계 | 전문가 패널 5토픽 토론 + Claude×Codex 교차 리뷰 → 수익화 합의 문서 |
-| Phase 6 구현 | 18 tasks + 2라운드 교차 리뷰 19건 수정 → 573 tests |
-| 키보드+패널+버블 | 멀티모드 키보드 + 패널 UX 개선 + 버블 버그 4건 수정 → 616 tests |
-| i18n+Firebase RC | 7개 언어 i18n + Firebase Remote Config + 3인 번역 QA → 627 tests |
-| Crashlytics+버블UX | Firebase Crashlytics/Analytics + 버블 헤더 UX 통일 → 627 tests |
-| 로케일+번역+내비바 | 시스템 로케일 자동 감지 + 문구 번역 표시 + edge-to-edge 내비바 수정 → 627 tests |
-| 설정+UX수정 | 언어 변경/리뷰/문의 메뉴 + overflow 수정 + 스플래시 깜빡임 수정 + AGP 업그레이드 → 627 tests |
-| 번역+필터+실기기 | 로케일별 번역 수정 + 스마트 필터 + 간편모드 번역 + 실기기 테스트 → 624 tests |
-| AdMob+테마 | AdMob 배치 + 팬 컬러 테마 커스터마이징 13 tasks → 641 tests |
-| 최애색+HCT | 최애색 UX 오버홀 15 tasks + HSL→HCT P0 엔진 교체 + Codex 4-domain 리뷰 → 741 tests |
-| 테마 오버홀 | 2D HCT 피커 + 슬롯 + 3-SKU IAP + brightnessOverride + chroma 85% + hex 크래시 수정 → 804 tests |
-| 보상형피벗+즐겨찾기UX | 보상형→테마 체험 전용 + IAP subtitle/추천 + 즐겨찾기 UX 개선 + Codex 리뷰 → 812 tests |
-| 릴리즈준비+UX수정 | AdMob prod + ProGuard + Key Swap + autofocus + Done 버튼 수정 + debug panel → 812 tests, v1.0.0+4 |
-| **크래시수정+스토어** | BadPaddingException 방어 + 패널 토론 + v1.0.0+5 + Play Store 에셋 + app-ads.txt → 812 tests |
+| P5 | 플로팅 버블 전체 구현 + 리뷰 수정 |
+| Sprint 1~2 | MVP UX + 상황태그 + K-pop 캘린더 |
+| MVP 통합 | 마이아이돌 + 템플릿 + 온보딩 |
+| Phase B~6 | 멤버 개인화 + 수익화 설계+구현 |
+| i18n~설정 | 7개 언어 + Firebase + 버블 UX + 설정 |
+| AdMob~테마 | 광고 + 팬 컬러 + HCT + 슬롯 + IAP |
+| 릴리즈준비 | ProGuard + 서명 + UX 수정 + v1.0.0+4 |
+| 크래시+스토어 | BadPaddingException + 에셋 + v1.0.0+5 |
+| **프로덕션 출시** | IAP bypass 수정 + 키보드 리팩토링(Gboard 방식) + 숫자 토글 + 커서 편집 + 랜딩페이지 + v1.0.0+10 프로덕션 제출 |
