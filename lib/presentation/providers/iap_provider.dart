@@ -53,6 +53,11 @@ IapService iapService(IapServiceRef ref) {
     },
     onProductsLoaded: () {
       ref.read(iapProductsLoadedProvider.notifier).state = true;
+      // 상품 로드 완료 후 구매 복원 — 재설치/기기 변경 시 엔타이틀먼트 복구.
+      // purchaseStream 리스너가 PurchaseStatus.restored를 처리한다.
+      service.restorePurchases().catchError((Object e) {
+        debugPrint('[IapProvider] auto-restore failed: $e');
+      });
     },
   );
 
