@@ -1,7 +1,7 @@
 # Fangeul — Session Handoff
 
 BASE_COMMIT: 8cc2d80 (이전 핸드오프)
-HANDOFF_COMMIT: (미커밋 — v1.0.0+13 AAB 빌드 완료)
+HANDOFF_COMMIT: 962072f
 BRANCH: main
 
 ---
@@ -16,7 +16,7 @@ BRANCH: main
 - 키보드 전면 리팩토링 (Gboard 방식) + 숫자/특수문자 토글 + 커서 편집
 
 ### 활성 작업
-- **v1.0.0+13 Play Store 검토 대기** — 배너 정책 변경 포함
+- **v1.0.0+14 Play Store 검토 대기** — 배너 정책 + 팩 i18n + edge-to-edge
 - 검토 완료 후 프로덕션 공개
 
 ### 보류/백로그 — 출시 후
@@ -36,7 +36,7 @@ BRANCH: main
 
 ## 작업 요약
 
-배너 광고 정책 전면 변경: Day 7 지연 → 온보딩 완료 후 즉시 노출 (RC `banner_delay_days` 기본 0). 보상형 시청/세션 기반 배너 숨김 완전 제거 → IAP 구매 시만 배너 숨김. `sessionBannerHiddenProvider` 코드 완전 삭제. Firebase Console `unlock_duration_hours` 4→24 수정, `banner_delay_days=0` 추가. 전문가 패널 2회 + Codex 교차 리뷰 2회로 검증.
+배너 광고 정책 전면 변경: Day 7 지연 → 온보딩 완료 후 즉시 노출 (RC `banner_delay_days` 기본 0). 보상형 시청/세션 기반 배너 숨김 완전 제거 → IAP 구매 시만 배너 숨김. `sessionBannerHiddenProvider` 코드 완전 삭제. Firebase Console `unlock_duration_hours` 4→24 수정, `banner_delay_days=0` 추가. 팩 필터 칩 8개 언어 다국어 대응 (arb 키 매핑). Android 15 edge-to-edge 대응 (WindowCompat). 랜딩페이지 모바일 너비 수정 + 문구 개선 (결과 중심). Tiger Room 대표 홈페이지 생성 (tigerroom.app). r/BeginnerKorean 레딧 홍보 포스트 작성. 전문가 패널 2회 + Codex 교차 리뷰 4회로 검증.
 
 ## 완료된 작업
 
