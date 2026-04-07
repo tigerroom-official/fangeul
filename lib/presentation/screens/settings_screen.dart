@@ -185,11 +185,11 @@ class SettingsScreen extends ConsumerWidget {
             onTap: () async {
               try {
                 final inAppReview = InAppReview.instance;
-                if (await inAppReview.isAvailable()) {
-                  await inAppReview.requestReview();
-                }
+                await inAppReview.openStoreListing(
+                  appStoreId: 'com.tigerroom.fangeul',
+                );
               } catch (e) {
-                debugPrint('[Settings] InAppReview failed: $e');
+                debugPrint('[Settings] openStoreListing failed: $e');
               }
             },
           ),
