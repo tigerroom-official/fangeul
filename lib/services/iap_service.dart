@@ -93,12 +93,21 @@ class IapService {
     }
 
     final purchaseParam = PurchaseParam(productDetails: product);
-    return _iap.buyNonConsumable(purchaseParam: purchaseParam);
+    try {
+      return await _iap.buyNonConsumable(purchaseParam: purchaseParam);
+    } catch (e) {
+      debugPrint('[IapService] buyNonConsumable failed: $e');
+      return false;
+    }
   }
 
   /// 구매 복원 (기기 변경 대응).
   Future<void> restorePurchases() async {
-    await _iap.restorePurchases();
+    try {
+      await _iap.restorePurchases();
+    } catch (e) {
+      debugPrint('[IapService] restorePurchases failed: $e');
+    }
   }
 
   /// 개별 구매 처리.

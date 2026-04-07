@@ -26,6 +26,18 @@ const _privacyPolicyUrl = 'https://tigerroom-official.github.io/fangeul/privacy-
 /// 이용약관 URL — 호스팅 후 실제 URL로 교체.
 const _termsUrl = 'https://tigerroom-official.github.io/fangeul/terms.html';
 
+/// URL을 안전하게 실행한다. 이메일 앱 미설치 등 ACTIVITY_NOT_FOUND 방어.
+Future<void> _safeLaunch(BuildContext context, Uri url) async {
+  try {
+    await launchUrl(url, mode: LaunchMode.externalApplication);
+  } catch (_) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Could not open link')),
+    );
+  }
+}
+
 /// 지원 언어 목록 — null은 시스템 기본.
 const _supportedLocaleOptions = <Locale?>[
   null,
@@ -183,12 +195,10 @@ class SettingsScreen extends ConsumerWidget {
             leading: const Icon(Icons.mail_outline),
             title: Text(l.contactLabel),
             subtitle: Text(l.contactSubtitle),
-            onTap: () {
-              launchUrl(
-                Uri.parse('mailto:tigerroom.official@gmail.com'),
-                mode: LaunchMode.externalApplication,
-              );
-            },
+            onTap: () => _safeLaunch(
+              context,
+              Uri.parse('mailto:tigerroom.official@gmail.com'),
+            ),
           ),
           const Divider(),
           // 8. 개인정보처리방침
@@ -196,12 +206,10 @@ class SettingsScreen extends ConsumerWidget {
             leading: const Icon(Icons.privacy_tip_outlined),
             title: Text(l.privacyPolicyLabel),
             subtitle: Text(l.privacyPolicySubtitle),
-            onTap: () {
-              launchUrl(
-                Uri.parse(_privacyPolicyUrl),
-                mode: LaunchMode.externalApplication,
-              );
-            },
+            onTap: () => _safeLaunch(
+              context,
+              Uri.parse(_privacyPolicyUrl),
+            ),
           ),
           const Divider(),
           // 9. 이용약관
@@ -209,12 +217,10 @@ class SettingsScreen extends ConsumerWidget {
             leading: const Icon(Icons.description_outlined),
             title: Text(l.termsLabel),
             subtitle: Text(l.termsSubtitle),
-            onTap: () {
-              launchUrl(
-                Uri.parse(_termsUrl),
-                mode: LaunchMode.externalApplication,
-              );
-            },
+            onTap: () => _safeLaunch(
+              context,
+              Uri.parse(_termsUrl),
+            ),
           ),
           const Divider(),
           // 10. 앱 정보 — 런타임 버전 표시 (pubspec.yaml version)
