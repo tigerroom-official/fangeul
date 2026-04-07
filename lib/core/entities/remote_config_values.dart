@@ -12,6 +12,7 @@ class RemoteConfigValues {
     this.unlockDurationHours = 24,
     this.dailyTtsLimit = 5,
     this.conversionTriggerAdCount = 3,
+    this.bannerDelayDays = 0,
   });
 
   /// 허니문(무료 체험) 기간 일수. Day 0부터 시작.
@@ -34,4 +35,10 @@ class RemoteConfigValues {
 
   /// 전환 트리거 발동에 필요한 광고 시청 횟수.
   final int conversionTriggerAdCount;
+
+  /// 배너 광고 노출 시작까지의 지연 일수.
+  ///
+  /// 기본값 0 = 온보딩 완료 후 즉시 배너 노출.
+  /// Firebase Console에서 값을 올리면 Day N 지연으로 즉시 롤백 가능.
+  final int bannerDelayDays;
 }

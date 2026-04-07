@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:fangeul/core/entities/monetization_state.dart';
+import 'package:fangeul/core/entities/remote_config_values.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
-import 'package:fangeul/presentation/providers/session_state_provider.dart';
+import 'package:fangeul/presentation/providers/onboarding_providers.dart';
+import 'package:fangeul/presentation/providers/remote_config_providers.dart';
 import 'package:fangeul/presentation/widgets/banner_ad_widget.dart';
 
 /// 설치 N일 전 날짜 문자열 생성.
@@ -22,11 +24,11 @@ void main() {
   /// BannerAd는 네이티브 SDK가 필요하므로 테스트 환경에서 로드 불가.
   /// Provider override로 조건부 표시 로직만 검증한다.
   Widget buildTestWidget({
-    bool isThemeTrialActive = false,
-    bool sessionBannerHidden = false,
+    bool isOnboardingDone = true,
+    int bannerDelayDays = 0,
     MonetizationState? monetizationState,
   }) {
-    // 기본: 설치 7일 이상 + 허니문 비활성 (배너 표시 상태)
+    // 기본: 온보딩 완료 + 설치 10일 + 허니문 비활성 (배너 표시 상태)
     final monState = monetizationState ??
         MonetizationState(
           honeymoonActive: false,
@@ -35,12 +37,10 @@ void main() {
 
     return ProviderScope(
       overrides: [
-        isThemeTrialActiveProvider
-            .overrideWithValue(isThemeTrialActive),
-        sessionBannerHiddenProvider.overrideWith(() {
-          final notifier = _TestSessionBannerHidden(sessionBannerHidden);
-          return notifier;
-        }),
+        isOnboardingDoneProvider.overrideWithValue(isOnboardingDone),
+        remoteConfigValuesProvider.overrideWithValue(
+          RemoteConfigValues(bannerDelayDays: bannerDelayDays),
+        ),
         monetizationNotifierProvider.overrideWith(() {
           return _TestMonetizationNotifier(monState);
         }),
@@ -53,78 +53,68 @@ void main() {
     );
   }
 
+  // -- 헬퍼: SizedBox.shrink 존재 확인 ---------------------------------
+  void expectShrink(WidgetTester tester) {
+    final sizedBoxes = tester.widgetList<SizedBox>(find.byType(SizedBox));
+    final shrink = sizedBoxes.where(
+      (sb) => sb.width == 0.0 && sb.height == 0.0,
+    );
+    expect(shrink, isNotEmpty);
+  }
+
+  // -- 헬퍼: 50dp placeholder 존재 확인 --------------------------------
+  void expectPlaceholder(WidgetTester tester) {
+    final sizedBoxes = tester.widgetList<SizedBox>(find.byType(SizedBox));
+    final placeholder = sizedBoxes.where(
+      (sb) => sb.height == 50.0 && sb.width == null,
+    );
+    expect(placeholder, isNotEmpty);
+  }
+
   group('BannerAdWidget — hide conditions', () {
     testWidgets(
-      'should render SizedBox.shrink when install date is less than 7 days ago',
+      'should hide when onboarding is not done',
+      (tester) async {
+        await tester.pumpWidget(
+          buildTestWidget(isOnboardingDone: false),
+        );
+        await tester.pump();
+        expectShrink(tester);
+      },
+    );
+
+    testWidgets(
+      'should hide when onboarding not done even with installDate set',
       (tester) async {
         await tester.pumpWidget(buildTestWidget(
+          isOnboardingDone: false,
           monetizationState: MonetizationState(
-            honeymoonActive: true,
+            honeymoonActive: false,
+            installDate: _installDateDaysAgo(30),
+          ),
+        ));
+        await tester.pump();
+        expectShrink(tester);
+      },
+    );
+
+    testWidgets(
+      'should hide when daysSince < RC bannerDelayDays',
+      (tester) async {
+        await tester.pumpWidget(buildTestWidget(
+          bannerDelayDays: 5,
+          monetizationState: MonetizationState(
+            honeymoonActive: false,
             installDate: _installDateDaysAgo(3),
           ),
         ));
         await tester.pump();
-
-        final sizedBoxes = tester.widgetList<SizedBox>(find.byType(SizedBox));
-        final shrink = sizedBoxes.where(
-          (sb) => sb.width == 0.0 && sb.height == 0.0,
-        );
-        expect(shrink, isNotEmpty);
+        expectShrink(tester);
       },
     );
 
     testWidgets(
-      'should render SizedBox.shrink when installDate is null (Day 0)',
-      (tester) async {
-        await tester.pumpWidget(buildTestWidget(
-          monetizationState: const MonetizationState(
-            honeymoonActive: true,
-          ),
-        ));
-        await tester.pump();
-
-        final sizedBoxes = tester.widgetList<SizedBox>(find.byType(SizedBox));
-        final shrink = sizedBoxes.where(
-          (sb) => sb.width == 0.0 && sb.height == 0.0,
-        );
-        expect(shrink, isNotEmpty);
-      },
-    );
-
-    testWidgets(
-      'should render SizedBox.shrink when theme trial is active',
-      (tester) async {
-        await tester.pumpWidget(
-          buildTestWidget(isThemeTrialActive: true),
-        );
-        await tester.pump();
-
-        final sizedBoxes = tester.widgetList<SizedBox>(find.byType(SizedBox));
-        final shrink = sizedBoxes.where(
-          (sb) => sb.width == 0.0 && sb.height == 0.0,
-        );
-        expect(shrink, isNotEmpty);
-      },
-    );
-
-    testWidgets(
-      'should render SizedBox.shrink when session banner is hidden',
-      (tester) async {
-        await tester.pumpWidget(
-          buildTestWidget(sessionBannerHidden: true),
-        );
-        await tester.pump();
-
-        final sizedBoxes = tester.widgetList<SizedBox>(find.byType(SizedBox));
-        final shrink = sizedBoxes.where(
-          (sb) => sb.width == 0.0 && sb.height == 0.0,
-        );
-        expect(shrink, isNotEmpty);
-      },
-    );
-
-    testWidgets(
-      'should render SizedBox.shrink when user has purchased theme IAP',
+      'should hide when user has purchased theme picker IAP',
       (tester) async {
         await tester.pumpWidget(buildTestWidget(
           monetizationState: MonetizationState(
@@ -134,20 +124,30 @@ void main() {
           ),
         ));
         await tester.pump();
-
-        final sizedBoxes = tester.widgetList<SizedBox>(find.byType(SizedBox));
-        final shrink = sizedBoxes.where(
-          (sb) => sb.width == 0.0 && sb.height == 0.0,
-        );
-        expect(shrink, isNotEmpty);
+        expectShrink(tester);
       },
     );
 
     testWidgets(
-      'should render SizedBox.shrink when multiple hide conditions are true',
+      'should hide when user has purchased theme slots IAP',
       (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          sessionBannerHidden: true,
+          monetizationState: MonetizationState(
+            honeymoonActive: false,
+            installDate: _installDateDaysAgo(10),
+            hasThemeSlots: true,
+          ),
+        ));
+        await tester.pump();
+        expectShrink(tester);
+      },
+    );
+
+    testWidgets(
+      'should hide when multiple conditions combine',
+      (tester) async {
+        await tester.pumpWidget(buildTestWidget(
+          isOnboardingDone: false,
           monetizationState: MonetizationState(
             honeymoonActive: true,
             installDate: _installDateDaysAgo(2),
@@ -155,60 +155,82 @@ void main() {
           ),
         ));
         await tester.pump();
-
-        final sizedBoxes = tester.widgetList<SizedBox>(find.byType(SizedBox));
-        final shrink = sizedBoxes.where(
-          (sb) => sb.width == 0.0 && sb.height == 0.0,
-        );
-        expect(shrink, isNotEmpty);
+        expectShrink(tester);
       },
     );
   });
 
   group('BannerAdWidget — show conditions', () {
     testWidgets(
-      'should render 50dp placeholder when Day 7+ and no hide conditions',
+      'should show when onboarding done and RC delay 0',
       (tester) async {
         await tester.pumpWidget(buildTestWidget());
         await tester.pump();
-
-        final sizedBoxes = tester.widgetList<SizedBox>(find.byType(SizedBox));
-        final placeholder = sizedBoxes.where(
-          (sb) => sb.height == 50.0 && sb.width == null,
-        );
-        expect(placeholder, isNotEmpty);
+        expectPlaceholder(tester);
       },
     );
 
     testWidgets(
-      'should render 50dp placeholder when exactly Day 7',
+      'should show when daysSince >= RC bannerDelayDays',
       (tester) async {
         await tester.pumpWidget(buildTestWidget(
+          bannerDelayDays: 3,
+          monetizationState: MonetizationState(
+            honeymoonActive: false,
+            installDate: _installDateDaysAgo(5),
+          ),
+        ));
+        await tester.pump();
+        expectPlaceholder(tester);
+      },
+    );
+
+    testWidgets(
+      'should show when daysSince == RC bannerDelayDays',
+      (tester) async {
+        await tester.pumpWidget(buildTestWidget(
+          bannerDelayDays: 7,
           monetizationState: MonetizationState(
             honeymoonActive: false,
             installDate: _installDateDaysAgo(7),
           ),
         ));
         await tester.pump();
+        expectPlaceholder(tester);
+      },
+    );
 
-        final sizedBoxes = tester.widgetList<SizedBox>(find.byType(SizedBox));
-        final placeholder = sizedBoxes.where(
-          (sb) => sb.height == 50.0 && sb.width == null,
-        );
-        expect(placeholder, isNotEmpty);
+    testWidgets(
+      'should show on Day 0 when onboarding done and RC delay is 0',
+      (tester) async {
+        await tester.pumpWidget(buildTestWidget(
+          monetizationState: MonetizationState(
+            honeymoonActive: true,
+            installDate: _installDateDaysAgo(0),
+          ),
+        ));
+        await tester.pump();
+        expectPlaceholder(tester);
+      },
+    );
+
+    testWidgets(
+      'should still show during theme trial (no longer hides banner)',
+      (tester) async {
+        final futureExpiry =
+            DateTime.now().millisecondsSinceEpoch + (3 * 60 * 60 * 1000);
+        await tester.pumpWidget(buildTestWidget(
+          monetizationState: MonetizationState(
+            honeymoonActive: false,
+            installDate: _installDateDaysAgo(10),
+            themeTrialExpiresAt: futureExpiry,
+          ),
+        ));
+        await tester.pump();
+        expectPlaceholder(tester);
       },
     );
   });
-}
-
-/// 테스트용 SessionBannerHidden Notifier.
-class _TestSessionBannerHidden extends SessionBannerHidden {
-  _TestSessionBannerHidden(this._initialValue);
-
-  final bool _initialValue;
-
-  @override
-  bool build() => _initialValue;
 }
 
 /// 테스트용 MonetizationNotifier.

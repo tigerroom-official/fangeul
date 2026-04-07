@@ -238,5 +238,10 @@
   "privacyPolicyLabel": "Kebijakan Privasi",
   "privacyPolicySubtitle": "Informasi yang kami kumpulkan dan cara penggunaannya",
   "termsLabel": "Ketentuan Layanan",
-  "termsSubtitle": "Syarat penggunaan layanan"
+  "termsSubtitle": "Syarat penggunaan layanan",
+
+  "packBasicLove": "Cinta & Dukungan",
+  "packDailyPack": "Harian",
+  "packBirthdayPack": "Ulang Tahun",
+  "packComebackPack": "Comeback"
 }

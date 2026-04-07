@@ -32,6 +32,7 @@ class FirebaseRemoteConfigService implements RemoteConfigService {
       'unlock_duration_hours': 24,
       'daily_tts_limit': 5,
       'conversion_trigger_ad_count': 3,
+      'banner_delay_days': 0,
     });
 
     try {
@@ -48,6 +49,7 @@ class FirebaseRemoteConfigService implements RemoteConfigService {
       unlockDurationHours: _rc.getInt('unlock_duration_hours'),
       dailyTtsLimit: _rc.getInt('daily_tts_limit'),
       conversionTriggerAdCount: _rc.getInt('conversion_trigger_ad_count'),
+      bannerDelayDays: _rc.getInt('banner_delay_days'),
     );
   }
 

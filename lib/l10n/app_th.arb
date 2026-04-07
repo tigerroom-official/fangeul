@@ -238,5 +238,10 @@
   "privacyPolicyLabel": "นโยบายความเป็นส่วนตัว",
   "privacyPolicySubtitle": "ข้อมูลที่เราเก็บรวบรวมและวิธีการใช้งาน",
   "termsLabel": "เงื่อนไขการให้บริการ",
-  "termsSubtitle": "เงื่อนไขการใช้บริการ"
+  "termsSubtitle": "เงื่อนไขการใช้บริการ",
+
+  "packBasicLove": "รักและเชียร์",
+  "packDailyPack": "ประจำวัน",
+  "packBirthdayPack": "วันเกิด",
+  "packComebackPack": "คัมแบ็ก"
 }

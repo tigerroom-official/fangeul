@@ -631,4 +631,16 @@ class LVi extends L {
 
   @override
   String get termsSubtitle => 'Điều kiện sử dụng dịch vụ';
+
+  @override
+  String get packBasicLove => 'Yêu thương & Cổ vũ';
+
+  @override
+  String get packDailyPack => 'Hàng ngày';
+
+  @override
+  String get packBirthdayPack => 'Sinh nhật';
+
+  @override
+  String get packComebackPack => 'Comeback';
 }

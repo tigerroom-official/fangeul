@@ -174,7 +174,7 @@ class PackFilterChips extends StatelessWidget {
         !isMyIdolSelected &&
         !isTodaySelected &&
         selectedPackId == pack.id;
-    final label = pack.nameKo;
+    final label = _localizedPackName(context, pack);
 
     return FilterChip(
       label: Text(
@@ -197,5 +197,18 @@ class PackFilterChips extends StatelessWidget {
       visualDensity: VisualDensity.compact,
       onSelected: (_) => onPackSelected?.call(pack.id),
     );
+  }
+
+  /// pack id → arb 다국어 이름. 매핑 없으면 영문 name fallback.
+  // TODO(fangeul): 새 팩 추가 시 arb 키 + 여기 매핑 추가 필요
+  static String _localizedPackName(BuildContext context, PhrasePack pack) {
+    final l = L.of(context);
+    return switch (pack.id) {
+      'basic_love' => l.packBasicLove,
+      'daily_pack' => l.packDailyPack,
+      'birthday_pack' => l.packBirthdayPack,
+      'comeback_pack' => l.packComebackPack,
+      _ => pack.name,
+    };
   }
 }

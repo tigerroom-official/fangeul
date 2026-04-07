@@ -319,5 +319,10 @@
   "privacyPolicyLabel": "개인정보처리방침",
   "privacyPolicySubtitle": "수집 정보 및 이용 목적 안내",
   "termsLabel": "이용약관",
-  "termsSubtitle": "서비스 이용 조건 안내"
+  "termsSubtitle": "서비스 이용 조건 안내",
+
+  "packBasicLove": "사랑 & 응원",
+  "packDailyPack": "일상",
+  "packBirthdayPack": "생일",
+  "packComebackPack": "컴백"
 }

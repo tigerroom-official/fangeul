@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fangeul/core/entities/idol_group.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
+import 'package:fangeul/presentation/providers/onboarding_providers.dart';
 import 'package:fangeul/presentation/widgets/multi_mode_keyboard.dart';
 
 /// 마이 아이돌 선택 화면.
@@ -381,5 +382,6 @@ class _IdolSelectScreenState extends ConsumerState<IdolSelectScreen> {
   Future<void> _markOnboardingDone() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('onboarding_done', true);
+    ref.invalidate(isOnboardingDoneProvider);
   }
 }

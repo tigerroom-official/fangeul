@@ -8,7 +8,6 @@ import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/ad_service_provider.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
-import 'package:fangeul/presentation/providers/session_state_provider.dart';
 import 'package:fangeul/presentation/widgets/fan_pass_button.dart';
 import 'package:fangeul/presentation/widgets/fan_pass_popup.dart';
 import 'package:fangeul/services/ad_service.dart';
@@ -26,16 +25,6 @@ class _TestMonetizationNotifier extends MonetizationNotifier {
   Future<MonetizationState> build() async => _initialState;
 }
 
-/// 테스트용 SessionBannerHidden Notifier.
-class _TestSessionBannerHidden extends SessionBannerHidden {
-  _TestSessionBannerHidden(this._initialValue);
-
-  final bool _initialValue;
-
-  @override
-  bool build() => _initialValue;
-}
-
 void main() {
   late MockAdService mockAdService;
 
@@ -46,7 +35,6 @@ void main() {
   /// 테스트용 위젯 빌더.
   Widget buildTestWidget({
     MonetizationState? monetizationState,
-    bool sessionBannerHidden = false,
     MockAdService? adService,
   }) {
     final monState =
@@ -58,9 +46,6 @@ void main() {
         adServiceProvider.overrideWithValue(ad),
         monetizationNotifierProvider.overrideWith(() {
           return _TestMonetizationNotifier(monState);
-        }),
-        sessionBannerHiddenProvider.overrideWith(() {
-          return _TestSessionBannerHidden(sessionBannerHidden);
         }),
       ],
       child: MaterialApp(
@@ -518,34 +503,7 @@ void main() {
     );
   });
 
-  group('FanPassButton — session banner integration', () {
-    test(
-      'should hide session banner when ad reward flow completes',
-      () async {
-        // Test the session banner hiding behavior at the provider level.
-        // The full ad→reward→hide flow involves native async callbacks that
-        // are difficult to test end-to-end in a widget test with FakeAsync.
-        // Instead, verify that calling hide() on sessionBannerHidden works.
-        final container = ProviderContainer(
-          overrides: [
-            sessionBannerHiddenProvider.overrideWith(() {
-              return _TestSessionBannerHidden(false);
-            }),
-          ],
-        );
-        addTearDown(container.dispose);
-
-        // Initially not hidden
-        expect(container.read(sessionBannerHiddenProvider), isFalse);
-
-        // Simulate what onRewarded does: call hide()
-        container.read(sessionBannerHiddenProvider.notifier).hide();
-
-        // Should now be hidden
-        expect(container.read(sessionBannerHiddenProvider), isTrue);
-      },
-    );
-
+  group('FanPassButton — rewarded ad integration', () {
     testWidgets(
       'should pass onRewarded callback to showRewarded on tap',
       (tester) async {

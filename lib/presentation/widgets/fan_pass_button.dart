@@ -7,7 +7,7 @@ import 'package:fangeul/core/entities/monetization_state.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/ad_service_provider.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
-import 'package:fangeul/presentation/providers/session_state_provider.dart';
+
 import 'package:fangeul/presentation/widgets/fan_pass_popup.dart';
 
 /// 보상형 "팬 패스" 버튼.
@@ -140,7 +140,6 @@ class FanPassButtonState extends ConsumerState<FanPassButton> {
     if (!success) return;
 
     await notifier.activateThemeTrial();
-    ref.read(sessionBannerHiddenProvider.notifier).hide();
 
     if (!mounted) return;
 

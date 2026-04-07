@@ -238,5 +238,10 @@
   "privacyPolicyLabel": "Privacy Policy",
   "privacyPolicySubtitle": "Information we collect and how we use it",
   "termsLabel": "Terms of Service",
-  "termsSubtitle": "Conditions for using the service"
+  "termsSubtitle": "Conditions for using the service",
+
+  "packBasicLove": "Love & Support",
+  "packDailyPack": "Daily",
+  "packBirthdayPack": "Birthday",
+  "packComebackPack": "Comeback"
 }

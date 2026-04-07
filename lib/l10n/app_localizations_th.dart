@@ -624,4 +624,16 @@ class LTh extends L {
 
   @override
   String get termsSubtitle => 'เงื่อนไขการใช้บริการ';
+
+  @override
+  String get packBasicLove => 'รักและเชียร์';
+
+  @override
+  String get packDailyPack => 'ประจำวัน';
+
+  @override
+  String get packBirthdayPack => 'วันเกิด';
+
+  @override
+  String get packComebackPack => 'คัมแบ็ก';
 }

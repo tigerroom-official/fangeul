@@ -617,4 +617,16 @@ class LJa extends L {
 
   @override
   String get termsSubtitle => 'サービスのご利用条件';
+
+  @override
+  String get packBasicLove => '愛 & 応援';
+
+  @override
+  String get packDailyPack => '日常';
+
+  @override
+  String get packBirthdayPack => '誕生日';
+
+  @override
+  String get packComebackPack => 'カムバック';
 }

@@ -616,4 +616,16 @@ class LKo extends L {
 
   @override
   String get termsSubtitle => '서비스 이용 조건 안내';
+
+  @override
+  String get packBasicLove => '사랑 & 응원';
+
+  @override
+  String get packDailyPack => '일상';
+
+  @override
+  String get packBirthdayPack => '생일';
+
+  @override
+  String get packComebackPack => '컴백';
 }

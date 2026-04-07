@@ -630,4 +630,16 @@ class LEn extends L {
 
   @override
   String get termsSubtitle => 'Conditions for using the service';
+
+  @override
+  String get packBasicLove => 'Love & Support';
+
+  @override
+  String get packDailyPack => 'Daily';
+
+  @override
+  String get packBirthdayPack => 'Birthday';
+
+  @override
+  String get packComebackPack => 'Comeback';
 }

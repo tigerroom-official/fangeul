@@ -113,7 +113,7 @@ class PhrasesScreen extends ConsumerWidget {
                         ? _buildAllPhrases(ref, l)
                         : _buildFilteredPhrases(ref, selectedTag!, l),
           ),
-          // 하단 배너 광고 (Day 7+, 조건부 숨김)
+          // 하단 배너 광고 (온보딩 완료 후, 조건부 숨김)
           const BannerAdWidget(),
         ],
       ),

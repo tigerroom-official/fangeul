@@ -634,4 +634,16 @@ class LPt extends L {
 
   @override
   String get termsSubtitle => 'Condições de uso do serviço';
+
+  @override
+  String get packBasicLove => 'Amor e Apoio';
+
+  @override
+  String get packDailyPack => 'Diário';
+
+  @override
+  String get packBirthdayPack => 'Aniversário';
+
+  @override
+  String get packComebackPack => 'Comeback';
 }

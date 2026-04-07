@@ -559,7 +559,7 @@ class _DebugMonetizationPanel extends ConsumerWidget {
                 onTap: () => _setInstallDaysAgo(ref, 0),
               ),
               _DebugChip(
-                label: 'Day 7 (ads)',
+                label: 'Day 7',
                 onTap: () => _setInstallDaysAgo(ref, 7),
               ),
               _DebugChip(

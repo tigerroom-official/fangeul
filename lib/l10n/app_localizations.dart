@@ -1260,6 +1260,30 @@ abstract class L {
   /// In ko, this message translates to:
   /// **'서비스 이용 조건 안내'**
   String get termsSubtitle;
+
+  /// No description provided for @packBasicLove.
+  ///
+  /// In ko, this message translates to:
+  /// **'사랑 & 응원'**
+  String get packBasicLove;
+
+  /// No description provided for @packDailyPack.
+  ///
+  /// In ko, this message translates to:
+  /// **'일상'**
+  String get packDailyPack;
+
+  /// No description provided for @packBirthdayPack.
+  ///
+  /// In ko, this message translates to:
+  /// **'생일'**
+  String get packBirthdayPack;
+
+  /// No description provided for @packComebackPack.
+  ///
+  /// In ko, this message translates to:
+  /// **'컴백'**
+  String get packComebackPack;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

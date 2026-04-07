@@ -238,5 +238,10 @@
   "privacyPolicyLabel": "Chính sách Bảo mật",
   "privacyPolicySubtitle": "Thông tin chúng tôi thu thập và cách sử dụng",
   "termsLabel": "Điều khoản Dịch vụ",
-  "termsSubtitle": "Điều kiện sử dụng dịch vụ"
+  "termsSubtitle": "Điều kiện sử dụng dịch vụ",
+
+  "packBasicLove": "Yêu thương & Cổ vũ",
+  "packDailyPack": "Hàng ngày",
+  "packBirthdayPack": "Sinh nhật",
+  "packComebackPack": "Comeback"
 }

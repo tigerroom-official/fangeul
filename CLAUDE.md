@@ -53,6 +53,6 @@ dart format --set-exit-if-changed .  # 포맷 검증
 | `docs/HANDOFF.md` | 세션 핸드오프 (최신 작업 상태) |
 
 ## 현재 작업 상태
-> 마지막 핸드오프: 2026-03-12 23:15
+> 마지막 핸드오프: 2026-04-07
 > 상세: `docs/HANDOFF.md` 참조
-> 요약: BadPaddingException 크래시 수정 + v1.0.0+5 빌드 + Play Store 에셋 + app-ads.txt. 다음: 다국어 스토어 등록 → IAP → 스크린샷 → QA → 출시.
+> 요약: 배너 Day 7→Day 0(온보딩 후) + 보상형 배너숨김 제거 + sessionBanner 삭제 + v1.0.0+13 Play Store 검토 대기. 다음: 검토 완료 확인 → TTS 구현.

@@ -633,4 +633,16 @@ class LId extends L {
 
   @override
   String get termsSubtitle => 'Syarat penggunaan layanan';
+
+  @override
+  String get packBasicLove => 'Cinta & Dukungan';
+
+  @override
+  String get packDailyPack => 'Harian';
+
+  @override
+  String get packBirthdayPack => 'Ulang Tahun';
+
+  @override
+  String get packComebackPack => 'Comeback';
 }

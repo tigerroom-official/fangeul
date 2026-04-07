@@ -4,7 +4,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'package:fangeul/core/entities/monetization_state.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
-import 'package:fangeul/presentation/providers/session_state_provider.dart';
+import 'package:fangeul/presentation/providers/onboarding_providers.dart';
+import 'package:fangeul/presentation/providers/remote_config_providers.dart';
 import 'package:fangeul/services/ad_ids.dart';
 
 /// installDate 기반 설치 후 경과 일수. 파싱 실패 시 0 (방어적 코딩).
@@ -20,7 +21,7 @@ int _daysSinceInstall(MonetizationState? state) {
 
 /// 조건부 배너 광고 위젯.
 ///
-/// Day 7 미만, 보상형 해금, 세션 숨김, IAP 구매 시 자동 숨김.
+/// 온보딩 미완료, RC banner_delay_days 지연, IAP 구매 시 자동 숨김.
 /// 높이 50dp 고정 (AdMob 배너 표준).
 class BannerAdWidget extends ConsumerStatefulWidget {
   /// 조건부 배너 광고 위젯을 생성한다.
@@ -55,7 +56,7 @@ class BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
     });
   }
 
-  /// 조건 충족 시 배너 광고를 로드한다. Day 7 미만/해금/구매 시 로드 생략.
+  /// 조건 충족 시 배너 광고를 로드한다. 온보딩 미완료/RC 지연/IAP 구매 시 로드 생략.
   ///
   /// 조건 변경(디버그 패널, 허니문 종료 등) 후 재시도 가능하도록
   /// 조건 미충족 시 플래그를 세팅하지 않는다.
@@ -64,18 +65,22 @@ class BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
 
     final monState = ref.read(monetizationNotifierProvider).valueOrNull;
     final daysSince = _daysSinceInstall(monState);
-    final isUnlocked = ref.read(isThemeTrialActiveProvider);
-    final sessionHidden = ref.read(sessionBannerHiddenProvider);
+    final onboardingDone = ref.read(isOnboardingDoneProvider);
+    final bannerDelayDays =
+        ref.read(remoteConfigValuesProvider).bannerDelayDays;
     final hasPurchase =
         (monState?.hasThemePicker ?? false) || (monState?.hasThemeSlots ?? false);
 
     debugPrint(
-      'BannerAd: tryLoad — day=$daysSince, trial=$isUnlocked, '
-      'sessionHide=$sessionHidden, hasPurchase=$hasPurchase, '
-      'picker=${monState?.hasThemePicker}, slots=${monState?.hasThemeSlots}',
+      'BannerAd: tryLoad — onboarding=$onboardingDone, day=$daysSince, '
+      'rcDelay=$bannerDelayDays, hasPurchase=$hasPurchase',
     );
 
-    if (daysSince < 7 || isUnlocked || sessionHidden || hasPurchase) return;
+    if (!onboardingDone ||
+        daysSince < bannerDelayDays ||
+        hasPurchase) {
+      return;
+    }
 
     _adLoadAttempted = true;
     _loadAd();
@@ -109,24 +114,30 @@ class BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
   @override
   Widget build(BuildContext context) {
     final monState = ref.watch(monetizationNotifierProvider).valueOrNull;
-    final isUnlocked = ref.watch(isThemeTrialActiveProvider);
-    final sessionHidden = ref.watch(sessionBannerHiddenProvider);
+    final onboardingDone = ref.watch(isOnboardingDoneProvider);
+    final bannerDelayDays =
+        ref.watch(remoteConfigValuesProvider).bannerDelayDays;
     final hasPurchase =
         (monState?.hasThemePicker ?? false) || (monState?.hasThemeSlots ?? false);
 
-    // Day 7 미만이면 배너 숨김 (허니문 중 배너 미노출)
-    final daysSince = _daysSinceInstall(monState);
-    if (daysSince < 7) {
-      debugPrint('BannerAd: hidden — daysSince=$daysSince < 7');
+    // 온보딩 미완료 시 배너 숨김
+    if (!onboardingDone) {
+      debugPrint('BannerAd: hidden — onboarding not done');
       return const SizedBox.shrink();
     }
 
-    // 보상형 해금 / 세션 숨김 / IAP 구매 시 배너 숨김
-    if (isUnlocked || sessionHidden || hasPurchase) {
+    // RC banner_delay_days 기반 지연 (기본값 0 = 즉시 노출)
+    final daysSince = _daysSinceInstall(monState);
+    if (daysSince < bannerDelayDays) {
       debugPrint(
-        'BannerAd: hidden — trial=$isUnlocked, '
-        'sessionHide=$sessionHidden, hasPurchase=$hasPurchase',
+        'BannerAd: hidden — daysSince=$daysSince < rcDelay=$bannerDelayDays',
       );
+      return const SizedBox.shrink();
+    }
+
+    // IAP 구매 시 배너 숨김
+    if (hasPurchase) {
+      debugPrint('BannerAd: hidden — hasPurchase=$hasPurchase');
       return const SizedBox.shrink();
     }
 

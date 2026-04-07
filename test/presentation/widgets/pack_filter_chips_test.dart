@@ -14,12 +14,12 @@ void main() {
       nameKo: '사랑 & 응원',
     ),
     const PhrasePack(
-      id: 'daily',
+      id: 'daily_pack',
       name: 'Daily',
       nameKo: '일상',
     ),
     const PhrasePack(
-      id: 'birthday',
+      id: 'birthday_pack',
       name: 'Birthday',
       nameKo: '생일',
       isFree: false,
@@ -124,7 +124,7 @@ void main() {
       await tester.pumpWidget(
         buildTestWidget(
           isFavoritesSelected: false,
-          selectedPackId: 'daily',
+          selectedPackId: 'daily_pack',
         ),
       );
       await tester.pumpAndSettle();
@@ -289,6 +289,33 @@ void main() {
         // skip 즐찾+오늘
         expect(chip.selected, isFalse);
       }
+    });
+  });
+
+  group('PackFilterChips — l10n', () {
+    testWidgets('should show English pack names when locale is en',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: L.localizationsDelegates,
+          supportedLocales: L.supportedLocales,
+          locale: const Locale('en'),
+          home: Scaffold(
+            body: PackFilterChips(
+              packs: testPacks,
+              isFavoritesSelected: true,
+              selectedPackId: null,
+              onFavoritesSelected: () {},
+              onPackSelected: (_) {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Love & Support'), findsOneWidget);
+      expect(find.text('Daily'), findsOneWidget);
+      expect(find.text('Birthday'), findsOneWidget);
     });
   });
 }

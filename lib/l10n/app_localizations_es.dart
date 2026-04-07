@@ -634,4 +634,16 @@ class LEs extends L {
 
   @override
   String get termsSubtitle => 'Condiciones de uso del servicio';
+
+  @override
+  String get packBasicLove => 'Amor y Apoyo';
+
+  @override
+  String get packDailyPack => 'Diario';
+
+  @override
+  String get packBirthdayPack => 'Cumpleaños';
+
+  @override
+  String get packComebackPack => 'Comeback';
 }
