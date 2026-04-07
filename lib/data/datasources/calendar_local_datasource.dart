@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'package:fangeul/core/entities/kpop_event.dart';
@@ -21,15 +22,20 @@ class CalendarLocalDataSource {
   Future<List<KpopEvent>> getAllEvents() async {
     if (_cache != null) return _cache!;
 
-    final jsonStr =
-        await _assetBundle.loadString('assets/calendar/kpop_events.json');
-    final json = jsonDecode(jsonStr) as Map<String, dynamic>;
-    final events = (json['events'] as List<dynamic>)
-        .map((e) => KpopEvent.fromJson(e as Map<String, dynamic>))
-        .toList();
+    try {
+      final jsonStr =
+          await _assetBundle.loadString('assets/calendar/kpop_events.json');
+      final json = jsonDecode(jsonStr) as Map<String, dynamic>;
+      final events = (json['events'] as List<dynamic>)
+          .map((e) => KpopEvent.fromJson(e as Map<String, dynamic>))
+          .toList();
 
-    _cache = events;
-    return events;
+      _cache = events;
+      return events;
+    } catch (e) {
+      debugPrint('[CalendarDataSource] getAllEvents failed: $e');
+      return [];
+    }
   }
 
   /// MM-DD 형식 날짜로 이벤트를 필터링한다.

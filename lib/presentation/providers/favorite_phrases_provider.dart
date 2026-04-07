@@ -27,7 +27,12 @@ class FavoritePhrasesNotifier extends _$FavoritePhrasesNotifier {
     await prefs.reload();
     final json = prefs.getString(_key);
     if (json != null) {
-      return (jsonDecode(json) as List).cast<String>().toSet();
+      try {
+        return (jsonDecode(json) as List).cast<String>().toSet();
+      } catch (e) {
+        debugPrint('[FavoritePhrasesNotifier] jsonDecode failed: $e');
+        await prefs.remove(_key);
+      }
     }
     return {};
   }

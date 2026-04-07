@@ -183,9 +183,13 @@ class SettingsScreen extends ConsumerWidget {
             title: Text(l.reviewLabel),
             subtitle: Text(l.reviewSubtitle),
             onTap: () async {
-              final inAppReview = InAppReview.instance;
-              if (await inAppReview.isAvailable()) {
-                await inAppReview.requestReview();
+              try {
+                final inAppReview = InAppReview.instance;
+                if (await inAppReview.isAvailable()) {
+                  await inAppReview.requestReview();
+                }
+              } catch (e) {
+                debugPrint('[Settings] InAppReview failed: $e');
               }
             },
           ),

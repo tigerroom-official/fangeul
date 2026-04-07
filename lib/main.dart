@@ -19,24 +19,34 @@ import 'package:fangeul/services/firebase_remote_config_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp();
+  try {
+    await Firebase.initializeApp();
+  } catch (e) {
+    debugPrint('[main] Firebase.initializeApp failed: $e');
+  }
 
   // Crashlytics: Flutter 프레임워크 에러 캡처
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-
-  // Crashlytics: 비동기 에러(플랫폼 디스패처) 캡처
-  PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    return true;
-  };
-
-  // 디버그 빌드에서는 Crashlytics 비활성화 (노이즈 방지)
-  if (kDebugMode) {
-    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+  try {
+    FlutterError.onError =
+        FirebaseCrashlytics.instance.recordFlutterFatalError;
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+    if (kDebugMode) {
+      await FirebaseCrashlytics.instance
+          .setCrashlyticsCollectionEnabled(false);
+    }
+  } catch (e) {
+    debugPrint('[main] Crashlytics setup failed: $e');
   }
 
   final configService = FirebaseRemoteConfigService();
-  await configService.initialize();
+  try {
+    await configService.initialize();
+  } catch (e) {
+    debugPrint('[main] RemoteConfig initialize failed: $e');
+  }
 
   final prefs = await SharedPreferences.getInstance();
 

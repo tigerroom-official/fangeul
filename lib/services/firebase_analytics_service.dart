@@ -1,4 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:fangeul/services/analytics_service.dart';
 
@@ -17,14 +18,19 @@ class FirebaseAnalyticsService implements AnalyticsService {
 
   @override
   Future<void> logEvent(String name, [Map<String, Object>? params]) async {
-    await _analytics.logEvent(
-      name: name,
-      parameters: params,
-    );
+    try {
+      await _analytics.logEvent(name: name, parameters: params);
+    } catch (e) {
+      debugPrint('[Analytics] logEvent failed: $e');
+    }
   }
 
   @override
   Future<void> setUserProperty(String name, String value) async {
-    await _analytics.setUserProperty(name: name, value: value);
+    try {
+      await _analytics.setUserProperty(name: name, value: value);
+    } catch (e) {
+      debugPrint('[Analytics] setUserProperty failed: $e');
+    }
   }
 }

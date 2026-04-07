@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:fangeul/platform/bubble_state.dart';
@@ -44,6 +45,9 @@ class BubbleNotifier extends _$BubbleNotifier {
   void _listenToEvents() {
     _eventSubscription = _channel.stateStream.listen(
       (newState) => state = newState,
+      onError: (Object error) {
+        debugPrint('[BubbleNotifier] stateStream error: $error');
+      },
     );
   }
 

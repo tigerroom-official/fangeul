@@ -1,4 +1,5 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:fangeul/core/entities/remote_config_values.dart';
 import 'package:fangeul/services/remote_config_service.dart';
@@ -19,12 +20,17 @@ class FirebaseRemoteConfigService implements RemoteConfigService {
 
   @override
   Future<void> initialize() async {
-    await _rc.setConfigSettings(RemoteConfigSettings(
-      fetchTimeout: const Duration(seconds: 10),
-      minimumFetchInterval: const Duration(hours: 1),
-    ));
+    try {
+      await _rc.setConfigSettings(RemoteConfigSettings(
+        fetchTimeout: const Duration(seconds: 10),
+        minimumFetchInterval: const Duration(hours: 1),
+      ));
+    } catch (e) {
+      debugPrint('[RemoteConfig] setConfigSettings failed: $e');
+    }
 
-    await _rc.setDefaults({
+    try {
+      await _rc.setDefaults({
       'honeymoon_days': 14,
       'default_slot_limit': 5,
       'daily_ad_limit': 3,
@@ -34,6 +40,9 @@ class FirebaseRemoteConfigService implements RemoteConfigService {
       'conversion_trigger_ad_count': 3,
       'banner_delay_days': 0,
     });
+    } catch (e) {
+      debugPrint('[RemoteConfig] setDefaults failed: $e');
+    }
 
     try {
       await _rc.fetchAndActivate();

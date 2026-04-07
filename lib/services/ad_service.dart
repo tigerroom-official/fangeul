@@ -84,9 +84,17 @@ class AdService {
       },
     );
 
-    await ad.show(
-      onUserEarnedReward: (ad, reward) => onRewarded(),
-    );
+    try {
+      await ad.show(
+        onUserEarnedReward: (ad, reward) => onRewarded(),
+      );
+    } catch (e) {
+      debugPrint('[AdService] ad.show failed: $e');
+      ad.dispose();
+      _rewardedAd = null;
+      onDismissed?.call();
+      preloadRewarded();
+    }
   }
 
   /// 리소스 해제.

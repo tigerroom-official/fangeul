@@ -30,7 +30,12 @@ class IapService {
     required void Function(String error) onError,
     void Function()? onProductsLoaded,
   }) async {
-    _isAvailable = await _iap.isAvailable();
+    try {
+      _isAvailable = await _iap.isAvailable();
+    } catch (e) {
+      debugPrint('[IapService] isAvailable failed: $e');
+      _isAvailable = false;
+    }
     if (!_isAvailable) {
       debugPrint('[IapService] IAP not available');
       onProductsLoaded?.call();
@@ -40,11 +45,15 @@ class IapService {
     _subscription = _iap.purchaseStream.listen(
       (purchases) async {
         for (final purchase in purchases) {
-          await _handlePurchase(
-            purchase,
-            onPurchased: onPurchased,
-            onError: onError,
-          );
+          try {
+            await _handlePurchase(
+              purchase,
+              onPurchased: onPurchased,
+              onError: onError,
+            );
+          } catch (e) {
+            debugPrint('[IapService] handlePurchase failed: $e');
+          }
         }
       },
       onError: (Object error) {
@@ -58,17 +67,21 @@ class IapService {
 
   /// 상품 정보 로드.
   Future<void> _loadProducts() async {
-    final response = await _iap.queryProductDetails(
-      IapProducts.allIds.toSet(),
-    );
+    try {
+      final response = await _iap.queryProductDetails(
+        IapProducts.allIds.toSet(),
+      );
 
-    if (response.notFoundIDs.isNotEmpty) {
-      debugPrint(
-          '[IapService] not found SKUs: ${response.notFoundIDs.join(', ')}');
-    }
+      if (response.notFoundIDs.isNotEmpty) {
+        debugPrint(
+            '[IapService] not found SKUs: ${response.notFoundIDs.join(', ')}');
+      }
 
-    for (final product in response.productDetails) {
-      _products[product.id] = product;
+      for (final product in response.productDetails) {
+        _products[product.id] = product;
+      }
+    } catch (e) {
+      debugPrint('[IapService] queryProductDetails failed: $e');
     }
   }
 
@@ -123,21 +136,15 @@ class IapService {
         if (!IapProducts.allIds.contains(purchase.productID)) {
           debugPrint(
               '[IapService] unknown SKU: ${purchase.productID} — skipping');
-          if (purchase.pendingCompletePurchase) {
-            await _iap.completePurchase(purchase);
-          }
+          await _safeComplete(purchase);
           return;
         }
         // 구매/복원 성공 — 상태 저장 먼저, completePurchase 후
         await onPurchased(purchase.productID);
-        if (purchase.pendingCompletePurchase) {
-          await _iap.completePurchase(purchase);
-        }
+        await _safeComplete(purchase);
 
       case PurchaseStatus.error:
-        if (purchase.pendingCompletePurchase) {
-          await _iap.completePurchase(purchase);
-        }
+        await _safeComplete(purchase);
         onError(purchase.error?.message ?? 'purchase_failed');
 
       case PurchaseStatus.pending:
@@ -145,6 +152,16 @@ class IapService {
 
       case PurchaseStatus.canceled:
         debugPrint('[IapService] purchase canceled: ${purchase.productID}');
+    }
+  }
+
+  /// completePurchase를 안전하게 호출한다.
+  Future<void> _safeComplete(PurchaseDetails purchase) async {
+    if (!purchase.pendingCompletePurchase) return;
+    try {
+      await _iap.completePurchase(purchase);
+    } catch (e) {
+      debugPrint('[IapService] completePurchase failed: $e');
     }
   }
 
