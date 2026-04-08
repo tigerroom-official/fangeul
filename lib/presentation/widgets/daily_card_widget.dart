@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:fangeul/core/entities/daily_card.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/theme/fangeul_text_styles.dart';
+import 'package:fangeul/presentation/widgets/tts_play_button.dart';
 
 /// 데일리 카드 -- 큰 한글 중앙 배치 + 발음 + 번역.
 ///
@@ -64,13 +65,28 @@ class DailyCardWidget extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 12),
-          // 로마자 발음
-          Text(
-            card.phrase.roman,
-            style: FangeulTextStyles.koreanSubtitle.copyWith(
-              color: theme.colorScheme.primary,
-            ),
-            textAlign: TextAlign.center,
+          // 로마자 발음 + TTS
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: Text(
+                  card.phrase.roman,
+                  style: FangeulTextStyles.koreanSubtitle.copyWith(
+                    color: theme.colorScheme.primary,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              if (card.phrase.audioId != null) ...[
+                const SizedBox(width: 4),
+                TtsPlayButton(
+                  audioId: card.phrase.audioId!,
+                  freePlay: true,
+                ),
+              ],
+            ],
           ),
           const SizedBox(height: 8),
           // 번역

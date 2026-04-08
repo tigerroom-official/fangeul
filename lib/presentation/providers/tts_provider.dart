@@ -9,14 +9,17 @@ import 'package:fangeul/services/tts_service.dart';
 
 part 'tts_provider.g.dart';
 
-/// 이번 세션에서 이미 카운트된 audioId 목록 (재재생 시 카운트 스킵).
-final _sessionPlayedIds = <String>{};
+/// 이번 세션에서 이미 재생된 audioId 목록 (재재생 시 카운트 스킵 + UI 표시).
+final sessionPlayedIds = <String>{};
+
+/// 특정 audioId가 이번 세션에서 재생된 적 있는지 확인한다.
+bool hasPlayedInSession(String audioId) => sessionPlayedIds.contains(audioId);
 
 /// 세션 재생 이력을 초기화한다.
 ///
 /// 보상형 광고로 보너스 재생 횟수를 받은 뒤 호출하여
 /// 이전에 재생한 문구도 다시 재생할 수 있게 한다.
-void clearSessionPlayedIds() => _sessionPlayedIds.clear();
+void clearSessionPlayedIds() => sessionPlayedIds.clear();
 
 /// TtsService 인스턴스 Provider.
 ///
@@ -69,7 +72,7 @@ Future<bool> playTts(PlayTtsRef ref, String audioId) async {
 
   // 1. 제한 확인 (카운트 증가 없이)
   final needsCount =
-      !isHoneymoon && !hasIap && !_sessionPlayedIds.contains(audioId);
+      !isHoneymoon && !hasIap && !sessionPlayedIds.contains(audioId);
   if (needsCount && notifier.isTtsLimitReached) return false;
 
   // 2. 재생
@@ -83,7 +86,7 @@ Future<bool> playTts(PlayTtsRef ref, String audioId) async {
   // 3. 성공 후에만 카운트 소모
   if (needsCount) {
     await notifier.recordTtsPlay();
-    _sessionPlayedIds.add(audioId);
+    sessionPlayedIds.add(audioId);
   }
   return true;
 }

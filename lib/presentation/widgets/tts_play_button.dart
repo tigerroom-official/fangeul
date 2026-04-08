@@ -9,6 +9,9 @@ import 'package:fangeul/presentation/providers/tts_provider.dart';
 ///
 /// 재생 중 펄스 애니메이션으로 시각 피드백을 제공한다.
 /// [playTtsProvider]가 false를 반환하면 [onLimitReached]를 호출한다.
+///
+/// [freePlay]가 true이면 일일 재생 카운트를 소모하지 않고
+/// [TtsService.playById]를 직접 호출한다 (데일리 카드 등 무료 재생용).
 class TtsPlayButton extends ConsumerStatefulWidget {
   /// Creates a [TtsPlayButton].
   const TtsPlayButton({
@@ -16,6 +19,7 @@ class TtsPlayButton extends ConsumerStatefulWidget {
     required this.audioId,
     this.onLimitReached,
     this.size = 20.0,
+    this.freePlay = false,
   });
 
   /// TTS 오디오 ID.
@@ -26,6 +30,9 @@ class TtsPlayButton extends ConsumerStatefulWidget {
 
   /// 아이콘 크기.
   final double size;
+
+  /// true이면 일일 카운트를 소모하지 않고 직접 재생한다.
+  final bool freePlay;
 
   @override
   ConsumerState<TtsPlayButton> createState() => _TtsPlayButtonState();
@@ -57,9 +64,15 @@ class _TtsPlayButtonState extends ConsumerState<TtsPlayButton>
     _pulseController.repeat(reverse: true);
 
     try {
-      final success = await ref.read(playTtsProvider(widget.audioId).future);
-      if (!success && mounted) {
-        widget.onLimitReached?.call();
+      if (widget.freePlay) {
+        // 카운트 없이 직접 재생 (데일리 카드 등 무료 재생)
+        await ref.read(ttsServiceProvider).playById(widget.audioId);
+        sessionPlayedIds.add(widget.audioId);
+      } else {
+        final success = await ref.read(playTtsProvider(widget.audioId).future);
+        if (!success && mounted) {
+          widget.onLimitReached?.call();
+        }
       }
     } catch (e) {
       debugPrint('[TtsPlayButton] play error: $e');
@@ -79,17 +92,20 @@ class _TtsPlayButtonState extends ConsumerState<TtsPlayButton>
     final monState = ref.watch(monetizationNotifierProvider).valueOrNull;
     final isHoneymoon = ref.watch(isHoneymoonProvider);
     final hasIap = ref.watch(hasAnyIapProvider);
-    final showCounter = !isHoneymoon && !hasIap;
+    final showCounter = !widget.freePlay && !isHoneymoon && !hasIap;
 
     final limit = ref.watch(remoteConfigValuesProvider).dailyTtsLimit;
     final used = monState?.ttsPlayCount ?? 0;
     final remaining = (limit - used).clamp(0, 99);
 
-    final iconColor = (showCounter && remaining == 0)
+    final hasPlayed = hasPlayedInSession(widget.audioId);
+    final iconColor = (showCounter && remaining == 0 && !hasPlayed)
         ? theme.colorScheme.onSurface.withValues(alpha: 0.3)
         : _isPlaying
             ? theme.colorScheme.primary
-            : theme.colorScheme.onSurfaceVariant;
+            : hasPlayed
+                ? theme.colorScheme.primary.withValues(alpha: 0.7)
+                : theme.colorScheme.onSurfaceVariant;
 
     return AnimatedBuilder(
       animation: _pulseController,
@@ -99,7 +115,9 @@ class _TtsPlayButtonState extends ConsumerState<TtsPlayButton>
           icon: Transform.scale(
             scale: _isPlaying ? scale : 1.0,
             child: Icon(
-              _isPlaying ? Icons.volume_up : Icons.volume_up_outlined,
+              (_isPlaying || hasPlayed)
+                  ? Icons.volume_up
+                  : Icons.volume_up_outlined,
               size: widget.size,
               color: iconColor,
             ),
