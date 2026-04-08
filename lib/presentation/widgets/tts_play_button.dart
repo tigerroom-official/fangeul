@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:fangeul/presentation/providers/monetization_provider.dart';
+import 'package:fangeul/presentation/providers/remote_config_providers.dart';
 import 'package:fangeul/presentation/providers/tts_provider.dart';
 
 /// TTS 재생 버튼 -- 탭하면 audioId의 음성을 재생한다.
@@ -73,24 +75,73 @@ class _TtsPlayButtonState extends ConsumerState<TtsPlayButton>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    final monState = ref.watch(monetizationNotifierProvider).valueOrNull;
+    final isHoneymoon = ref.watch(isHoneymoonProvider);
+    final hasIap = ref.watch(hasAnyIapProvider);
+    final showCounter = !isHoneymoon && !hasIap;
+
+    final limit = ref.watch(remoteConfigValuesProvider).dailyTtsLimit;
+    final used = monState?.ttsPlayCount ?? 0;
+    final remaining = (limit - used).clamp(0, 99);
+
+    final iconColor = (showCounter && remaining == 0)
+        ? theme.colorScheme.onSurface.withValues(alpha: 0.3)
+        : _isPlaying
+            ? theme.colorScheme.primary
+            : theme.colorScheme.onSurfaceVariant;
+
     return AnimatedBuilder(
       animation: _pulseController,
       builder: (context, child) {
         final scale = 1.0 + (_pulseController.value * 0.15);
-        return IconButton(
+        final iconButton = IconButton(
           icon: Transform.scale(
             scale: _isPlaying ? scale : 1.0,
             child: Icon(
               _isPlaying ? Icons.volume_up : Icons.volume_up_outlined,
               size: widget.size,
-              color: _isPlaying
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.onSurfaceVariant,
+              color: iconColor,
             ),
           ),
           tooltip: 'Play',
           onPressed: _play,
           visualDensity: VisualDensity.compact,
+        );
+
+        if (!showCounter) return iconButton;
+
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [
+            iconButton,
+            Positioned(
+              right: -2,
+              top: -2,
+              child: Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  color: remaining > 0
+                      ? theme.colorScheme.primaryContainer
+                      : theme.colorScheme.errorContainer,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                constraints:
+                    const BoxConstraints(minWidth: 16, minHeight: 16),
+                child: Text(
+                  '$remaining',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: remaining > 0
+                        ? theme.colorScheme.onPrimaryContainer
+                        : theme.colorScheme.onErrorContainer,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ],
         );
       },
     );
