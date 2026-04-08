@@ -10,6 +10,7 @@ import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
 import 'package:fangeul/presentation/providers/iap_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/widgets/favorite_limit_feedback.dart';
+import 'package:fangeul/presentation/widgets/tts_play_button.dart';
 import 'package:fangeul/services/analytics_events.dart';
 
 /// 문구 카드 -- 한글 원문 + 발음 + 번역.
@@ -76,6 +77,13 @@ class PhraseCard extends ConsumerWidget {
           // 액션 버튼
           Row(
             children: [
+              if (phrase.audioId != null)
+                TtsPlayButton(
+                  audioId: phrase.audioId!,
+                  onLimitReached: () {
+                    // TODO(fangeul): showTtsLimitPopup — Task 6에서 추가
+                  },
+                ),
               IconButton(
                 icon: Icon(
                   isFavorite ? Icons.star_rounded : Icons.star_outline_rounded,
@@ -115,7 +123,6 @@ class PhraseCard extends ConsumerWidget {
                 },
                 tooltip: L.of(context).copyTooltip,
               ),
-              // TODO(fangeul): TTS 버튼 (Phase 5 서비스 연동)
             ],
           ),
         ],
