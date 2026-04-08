@@ -33,7 +33,9 @@ TtsService ttsService(TtsServiceRef ref) {
 /// 해금 경로는 IAP만.
 @riverpod
 bool canPlayTts(CanPlayTtsRef ref) {
-  if (ref.watch(isHoneymoonProvider)) return true;
+  final isHoneymoon = ref.watch(isHoneymoonProvider);
+  final hasIap = ref.watch(hasAnyIapProvider);
+  if (isHoneymoon || hasIap) return true;
 
   final state = ref.watch(monetizationNotifierProvider).valueOrNull;
   if (state == null) return false;
@@ -59,12 +61,13 @@ bool canPlayTts(CanPlayTtsRef ref) {
 @riverpod
 Future<bool> playTts(PlayTtsRef ref, String audioId) async {
   final isHoneymoon = ref.read(isHoneymoonProvider);
+  final hasIap = ref.read(hasAnyIapProvider);
   final tts = ref.read(ttsServiceProvider);
   final notifier = ref.read(monetizationNotifierProvider.notifier);
 
   // 1. 제한 확인 (카운트 증가 없이)
   final needsCount =
-      !isHoneymoon && !_sessionPlayedIds.contains(audioId);
+      !isHoneymoon && !hasIap && !_sessionPlayedIds.contains(audioId);
   if (needsCount && notifier.isTtsLimitReached) return false;
 
   // 2. 재생

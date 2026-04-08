@@ -173,6 +173,42 @@ void main() {
 
       expect(container.read(canPlayTtsProvider), true);
     });
+
+    test('should return true when TTS limit reached but hasThemePicker',
+        () async {
+      setUpWithState(MonetizationState(
+        installDate: todayStr(),
+        honeymoonActive: false,
+        hasThemePicker: true,
+        ttsPlayCount: 5,
+        ttsLastResetDate: todayStr(),
+      ));
+
+      await container.read(monetizationNotifierProvider.future);
+
+      final sub = container.listen(canPlayTtsProvider, (_, __) {});
+      addTearDown(sub.close);
+
+      expect(container.read(canPlayTtsProvider), true);
+    });
+
+    test('should return true when TTS limit reached but hasThemeSlots',
+        () async {
+      setUpWithState(MonetizationState(
+        installDate: todayStr(),
+        honeymoonActive: false,
+        hasThemeSlots: true,
+        ttsPlayCount: 5,
+        ttsLastResetDate: todayStr(),
+      ));
+
+      await container.read(monetizationNotifierProvider.future);
+
+      final sub = container.listen(canPlayTtsProvider, (_, __) {});
+      addTearDown(sub.close);
+
+      expect(container.read(canPlayTtsProvider), true);
+    });
   });
 
   group('playTtsProvider', () {
@@ -328,6 +364,52 @@ void main() {
 
       final state = await container.read(monetizationNotifierProvider.future);
       expect(state.ttsPlayCount, 2);
+    });
+
+    test('should play without counting when IAP purchased (hasThemePicker)',
+        () async {
+      setUpWithState(MonetizationState(
+        installDate: todayStr(),
+        honeymoonActive: false,
+        hasThemePicker: true,
+        ttsPlayCount: 5,
+        ttsLastResetDate: todayStr(),
+      ));
+
+      await container.read(monetizationNotifierProvider.future);
+
+      final result =
+          await container.read(playTtsProvider('love_01').future);
+
+      expect(result, true);
+      verify(() => mockTts.playById('love_01')).called(1);
+
+      // IAP 구매 시 카운트 소모 없이 재생 성공
+      final state = await container.read(monetizationNotifierProvider.future);
+      expect(state.ttsPlayCount, 5);
+    });
+
+    test('should play without counting when IAP purchased (hasThemeSlots)',
+        () async {
+      setUpWithState(MonetizationState(
+        installDate: todayStr(),
+        honeymoonActive: false,
+        hasThemeSlots: true,
+        ttsPlayCount: 5,
+        ttsLastResetDate: todayStr(),
+      ));
+
+      await container.read(monetizationNotifierProvider.future);
+
+      final result =
+          await container.read(playTtsProvider('bday_05').future);
+
+      expect(result, true);
+      verify(() => mockTts.playById('bday_05')).called(1);
+
+      // IAP 구매 시 카운트 소모 없이 재생 성공
+      final state = await container.read(monetizationNotifierProvider.future);
+      expect(state.ttsPlayCount, 5);
     });
 
     test('should not consume quota when play fails', () async {

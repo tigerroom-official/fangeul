@@ -27,7 +27,7 @@ final ttsServiceProvider = Provider<TtsService>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef TtsServiceRef = ProviderRef<TtsService>;
-String _$canPlayTtsHash() => r'94449ee49f4d9b8e2d63b93e4d51e9e58e380ddc';
+String _$canPlayTtsHash() => r'f37e98bbe2d9fafa49c8202d1bcec41255b282a9';
 
 /// TTS 재생 가능 여부 편의 Provider.
 ///
@@ -48,7 +48,7 @@ final canPlayTtsProvider = AutoDisposeProvider<bool>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef CanPlayTtsRef = AutoDisposeProviderRef<bool>;
-String _$playTtsHash() => r'77372899426690792894e67b49738f3c1e4a305a';
+String _$playTtsHash() => r'5ba014dbe5d6fdf41eaa7bc78a1d7a24c0ab11ec';
 
 /// Copied from Dart SDK
 class _SystemHash {
