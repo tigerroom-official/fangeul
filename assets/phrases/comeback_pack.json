@@ -21,7 +21,8 @@
         "vi": "Chúc mừng comeback!",
         "ja": "カムバおめでとう！"
       },
-      "situation": "comeback"
+      "situation": "comeback",
+      "audio_id": "cback_01"
     },
     {
       "ko": "신곡 너무 좋아요!",
@@ -40,7 +41,8 @@
         "vi": "Bài hát mới hay quá!",
         "ja": "新曲めっちゃいい！"
       },
-      "situation": "comeback"
+      "situation": "comeback",
+      "audio_id": "cback_02"
     },
     {
       "ko": "음원 1위 하자!",
@@ -59,7 +61,8 @@
         "vi": "Cùng đạt hạng 1 nhé!",
         "ja": "音源1位取ろう！"
       },
-      "situation": "comeback"
+      "situation": "comeback",
+      "audio_id": "cback_03"
     },
     {
       "ko": "뮤직비디오 대박이에요",
@@ -78,7 +81,8 @@
         "vi": "MV quá đỉnh luôn",
         "ja": "MVテバク！"
       },
-      "situation": "comeback"
+      "situation": "comeback",
+      "audio_id": "cback_04"
     },
     {
       "ko": "기다렸어요!",
@@ -97,7 +101,8 @@
         "vi": "Đã đợi rồi!",
         "ja": "待ってました！"
       },
-      "situation": "comeback"
+      "situation": "comeback",
+      "audio_id": "cback_05"
     },
     {
       "ko": "컨셉 완벽해요",
@@ -116,7 +121,8 @@
         "vi": "Concept hoàn hảo luôn",
         "ja": "コンセプト完璧です"
       },
-      "situation": "comeback"
+      "situation": "comeback",
+      "audio_id": "cback_06"
     },
     {
       "ko": "총공 준비됐어요!",
@@ -135,7 +141,8 @@
         "vi": "Sẵn sàng stream rồi!",
         "ja": "スミンの準備できた！"
       },
-      "situation": "comeback"
+      "situation": "comeback",
+      "audio_id": "cback_07"
     },
     {
       "ko": "안무가 미쳤어요",
@@ -154,7 +161,8 @@
         "vi": "Vũ đạo điên luôn",
         "ja": "振り付けやばすぎる"
       },
-      "situation": "comeback"
+      "situation": "comeback",
+      "audio_id": "cback_08"
     },
     {
       "ko": "이번 앨범 최고예요",
@@ -173,7 +181,8 @@
         "vi": "Album này là đỉnh nhất",
         "ja": "今回のアルバム最高です"
       },
-      "situation": "comeback"
+      "situation": "comeback",
+      "audio_id": "cback_09"
     },
     {
       "ko": "음원 스밍 가요!",
@@ -192,7 +201,8 @@
         "vi": "Đi stream nhạc thôi!",
         "ja": "スミン行くよ！"
       },
-      "situation": "comeback"
+      "situation": "comeback",
+      "audio_id": "cback_10"
     },
     {
       "ko": "티저부터 미쳤어요",
@@ -211,7 +221,8 @@
         "vi": "Từ teaser đã điên rồi",
         "ja": "ティザーからもうやばい"
       },
-      "situation": "comeback"
+      "situation": "comeback",
+      "audio_id": "cback_11"
     },
     {
       "ko": "사전예약 완료!",
@@ -230,7 +241,8 @@
         "vi": "Đặt trước xong rồi!",
         "ja": "予約完了！"
       },
-      "situation": "comeback"
+      "situation": "comeback",
+      "audio_id": "cback_12"
     },
     {
       "ko": "무대가 기대돼요",
@@ -249,7 +261,8 @@
         "vi": "Mong chờ sân khấu quá",
         "ja": "ステージが楽しみです"
       },
-      "situation": "comeback"
+      "situation": "comeback",
+      "audio_id": "cback_13"
     },
     {
       "ko": "올해의 앨범이에요",
@@ -268,7 +281,8 @@
         "vi": "Đây là album của năm",
         "ja": "今年のベストアルバムだよ"
       },
-      "situation": "comeback"
+      "situation": "comeback",
+      "audio_id": "cback_14"
     },
     {
       "ko": "대상 받자!",
@@ -287,7 +301,8 @@
         "vi": "Cùng nhận giải lớn nhé!",
         "ja": "大賞取ろう！"
       },
-      "situation": "comeback"
+      "situation": "comeback",
+      "audio_id": "cback_15"
     }
   ]
 }

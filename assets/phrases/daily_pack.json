@@ -21,7 +21,8 @@
         "vi": "Xin chào",
         "ja": "こんにちは"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "daily_01"
     },
     {
       "ko": "잘 자요",
@@ -40,7 +41,8 @@
         "vi": "Ngủ ngon nhé",
         "ja": "おやすみなさい"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "daily_02"
     },
     {
       "ko": "좋은 아침이에요",
@@ -59,7 +61,8 @@
         "vi": "Chào buổi sáng",
         "ja": "おはようございます"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "daily_03"
     },
     {
       "ko": "밥 먹었어요?",
@@ -78,7 +81,8 @@
         "vi": "Ăn cơm chưa?",
         "ja": "ごはん食べた？"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "daily_04"
     },
     {
       "ko": "오늘 뭐 했어요?",
@@ -96,7 +100,8 @@
         "vi": "Hôm nay làm gì vậy?",
         "ja": "今日は何してたの？"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "daily_05"
     },
     {
       "ko": "좋은 하루 보내세요",
@@ -115,7 +120,8 @@
         "vi": "Chúc một ngày tốt lành",
         "ja": "良い一日を過ごしてね"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "daily_06"
     },
     {
       "ko": "오늘도 수고했어요",
@@ -134,7 +140,8 @@
         "vi": "Hôm nay cũng vất vả rồi",
         "ja": "今日もお疲れさまでした"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "daily_07"
     },
     {
       "ko": "맛있게 드세요",
@@ -152,7 +159,8 @@
         "vi": "Ăn ngon nhé",
         "ja": "おいしく食べてね"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "daily_08"
     },
     {
       "ko": "기분이 어때요?",
@@ -171,7 +179,8 @@
         "vi": "Cảm thấy thế nào?",
         "ja": "気分はどうですか？"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "daily_09"
     },
     {
       "ko": "푹 쉬세요",
@@ -190,7 +199,8 @@
         "vi": "Nghỉ ngơi cho đầy đủ nhé",
         "ja": "ゆっくり休んでね"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "daily_10"
     },
     {
       "ko": "오늘 날씨가 좋아요",
@@ -208,7 +218,8 @@
         "vi": "Hôm nay thời tiết đẹp quá",
         "ja": "今日はいい天気ですね"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "daily_11"
     },
     {
       "ko": "오늘 기분 좋아 보여요",
@@ -227,7 +238,8 @@
         "vi": "Hôm nay trông vui quá",
         "ja": "今日はご機嫌ですね"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "daily_12"
     },
     {
       "ko": "재미있었어요",
@@ -245,7 +257,8 @@
         "vi": "Vui lắm",
         "ja": "楽しかったです"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "daily_13"
     },
     {
       "ko": "조심히 다녀오세요",
@@ -264,7 +277,8 @@
         "vi": "Đi cẩn thận nhé",
         "ja": "気をつけて行ってらっしゃい"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "daily_14"
     },
     {
       "ko": "기다리고 있을게요",
@@ -283,7 +297,8 @@
         "vi": "Sẽ đợi bạn",
         "ja": "待ってるからね"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "daily_15"
     },
     {
       "ko": "오늘도 고생했어요",
@@ -302,7 +317,8 @@
         "vi": "Hôm nay cũng mệt rồi nhỉ",
         "ja": "今日も大変だったね"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "daily_16"
     },
     {
       "ko": "행복한 하루 되세요",
@@ -321,7 +337,8 @@
         "vi": "Chúc một ngày vui vẻ",
         "ja": "幸せな一日になりますように"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "daily_17"
     },
     {
       "ko": "감사합니다",
@@ -340,7 +357,8 @@
         "vi": "Cảm ơn ạ",
         "ja": "ありがとうございます"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "daily_18"
     },
     {
       "ko": "또 만나요",
@@ -359,7 +377,8 @@
         "vi": "Hẹn gặp lại",
         "ja": "また会おうね"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "daily_19"
     },
     {
       "ko": "내일 봐요",
@@ -378,7 +397,8 @@
         "vi": "Mai gặp nhé",
         "ja": "明日会おうね"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "daily_20"
     }
   ]
 }

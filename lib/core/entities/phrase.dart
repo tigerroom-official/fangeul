@@ -30,6 +30,9 @@ class Phrase with _$Phrase {
 
     /// 템플릿 문구 여부. true이면 {{group_name}} 등 치환 슬롯 포함.
     @JsonKey(name: 'is_template') @Default(false) bool isTemplate,
+
+    /// TTS 오디오 ID (예: "love_01"). null이면 TTS 미지원.
+    @JsonKey(name: 'audio_id') String? audioId,
   }) = _Phrase;
 
   factory Phrase.fromJson(Map<String, dynamic> json) => _$PhraseFromJson(json);

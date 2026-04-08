@@ -8,7 +8,9 @@
       "ko": "{{group_name}} 사랑해요!",
       "roman": "{{group_name}} saranghaeyo!",
       "context": "Template: express love to your idol group",
-      "tags": ["love"],
+      "tags": [
+        "love"
+      ],
       "translations": {
         "en": "I love {{group_name}}!",
         "id": "Aku cinta {{group_name}}!",
@@ -19,13 +21,16 @@
         "ja": "{{group_name}}大好きです！"
       },
       "situation": "daily",
-      "is_template": true
+      "is_template": true,
+      "audio_id": "love_01"
     },
     {
       "ko": "{{group_name}} 화이팅!",
       "roman": "{{group_name}} hwaiting!",
       "context": "Template: cheer for your idol group",
-      "tags": ["cheer"],
+      "tags": [
+        "cheer"
+      ],
       "translations": {
         "en": "Go {{group_name}}!",
         "id": "Semangat {{group_name}}!",
@@ -36,13 +41,16 @@
         "ja": "{{group_name}}ファイティン！"
       },
       "situation": "support",
-      "is_template": true
+      "is_template": true,
+      "audio_id": "idol_02"
     },
     {
       "ko": "{{group_name}} 컴백 축하해요!",
       "roman": "{{group_name}} keombaek chukahaeyo!",
       "context": "Template: congratulate comeback",
-      "tags": ["comeback"],
+      "tags": [
+        "comeback"
+      ],
       "translations": {
         "en": "Congratulations on the comeback, {{group_name}}!",
         "id": "Selamat comeback {{group_name}}!",
@@ -53,13 +61,16 @@
         "ja": "{{group_name}}カムバおめでとう！"
       },
       "situation": "comeback",
-      "is_template": true
+      "is_template": true,
+      "audio_id": "cback_01"
     },
     {
       "ko": "{{group_name}} 생일 축하해요!",
       "roman": "{{group_name}} saengil chukahaeyo!",
       "context": "Template: birthday wishes",
-      "tags": ["birthday"],
+      "tags": [
+        "birthday"
+      ],
       "translations": {
         "en": "Happy birthday, {{group_name}}!",
         "id": "Selamat ulang tahun {{group_name}}!",
@@ -70,13 +81,17 @@
         "ja": "{{group_name}}センイルおめでとう！"
       },
       "situation": "birthday",
-      "is_template": true
+      "is_template": true,
+      "audio_id": "bday_01"
     },
     {
       "ko": "{{group_name}} 1위 축하해요!",
       "roman": "{{group_name}} irwi chukahaeyo!",
       "context": "Template: celebrate music show win",
-      "tags": ["comeback", "cheer"],
+      "tags": [
+        "comeback",
+        "cheer"
+      ],
       "translations": {
         "en": "Congrats on #1, {{group_name}}!",
         "id": "Selamat juara 1, {{group_name}}!",
@@ -87,13 +102,17 @@
         "ja": "{{group_name}}1位おめでとう！"
       },
       "situation": "comeback",
-      "is_template": true
+      "is_template": true,
+      "audio_id": "idol_05"
     },
     {
       "ko": "{{group_name}} 최고!",
       "roman": "{{group_name}} choego!",
       "context": "Template: express that your idol is the best",
-      "tags": ["cheer", "love"],
+      "tags": [
+        "cheer",
+        "love"
+      ],
       "translations": {
         "en": "{{group_name}} is the best!",
         "id": "{{group_name}} yang terbaik!",
@@ -104,13 +123,17 @@
         "ja": "{{group_name}}最高！"
       },
       "situation": "daily",
-      "is_template": true
+      "is_template": true,
+      "audio_id": "idol_06"
     },
     {
       "ko": "{{group_name}} 덕분에 행복해요",
       "roman": "{{group_name}} deokbune haengbokhaeyo",
       "context": "Template: express gratitude and happiness",
-      "tags": ["love", "daily"],
+      "tags": [
+        "love",
+        "daily"
+      ],
       "translations": {
         "en": "I'm happy because of {{group_name}}",
         "id": "Aku bahagia karena {{group_name}}",
@@ -121,13 +144,16 @@
         "ja": "{{group_name}}のおかげで幸せです"
       },
       "situation": "daily",
-      "is_template": true
+      "is_template": true,
+      "audio_id": "love_25"
     },
     {
       "ko": "{{group_name}} 오래오래 함께해요",
       "roman": "{{group_name}} oraeorae hamkkehaeyo",
       "context": "Template: wish to stay together forever",
-      "tags": ["love"],
+      "tags": [
+        "love"
+      ],
       "translations": {
         "en": "Let's be together forever, {{group_name}}",
         "id": "Mari bersama selamanya, {{group_name}}",
@@ -138,13 +164,16 @@
         "ja": "{{group_name}}とずっと一緒にいようね"
       },
       "situation": "daily",
-      "is_template": true
+      "is_template": true,
+      "audio_id": "idol_08"
     },
     {
       "ko": "{{group_name}} 콘서트 가고 싶어요!",
       "roman": "{{group_name}} konseoteu gago sipeoyo!",
       "context": "Template: express desire to attend concert",
-      "tags": ["fandom"],
+      "tags": [
+        "fandom"
+      ],
       "translations": {
         "en": "I want to go to {{group_name}} concert!",
         "id": "Aku mau nonton konser {{group_name}}!",
@@ -155,13 +184,16 @@
         "ja": "{{group_name}}のコンサート行きたい！"
       },
       "situation": "daily",
-      "is_template": true
+      "is_template": true,
+      "audio_id": "idol_09"
     },
     {
       "ko": "{{group_name}} 노래 또 듣고 있어요",
       "roman": "{{group_name}} norae tto deutgo isseoyo",
       "context": "Template: express listening to their music again",
-      "tags": ["daily"],
+      "tags": [
+        "daily"
+      ],
       "translations": {
         "en": "I'm listening to {{group_name}} again",
         "id": "Aku dengerin lagu {{group_name}} lagi",
@@ -172,13 +204,16 @@
         "ja": "また{{group_name}}の曲聴いてる"
       },
       "situation": "daily",
-      "is_template": true
+      "is_template": true,
+      "audio_id": "idol_10"
     },
     {
       "ko": "{{member_name}} 사랑해!",
       "roman": "{{member_name}} saranghae!",
       "context": "Template: express love to specific member",
-      "tags": ["love"],
+      "tags": [
+        "love"
+      ],
       "translations": {
         "en": "I love you, {{member_name}}!",
         "id": "Aku cinta {{member_name}}!",
@@ -189,13 +224,16 @@
         "ja": "{{member_name}}大好き！"
       },
       "situation": "daily",
-      "is_template": true
+      "is_template": true,
+      "audio_id": "idol_11"
     },
     {
       "ko": "{{member_name}} 생일 축하해!",
       "roman": "{{member_name}} saengil chukahae!",
       "context": "Template: birthday wishes to specific member",
-      "tags": ["birthday"],
+      "tags": [
+        "birthday"
+      ],
       "translations": {
         "en": "Happy birthday, {{member_name}}!",
         "id": "Selamat ulang tahun, {{member_name}}!",
@@ -206,13 +244,16 @@
         "ja": "{{member_name}}センイルおめでとう！"
       },
       "situation": "birthday",
-      "is_template": true
+      "is_template": true,
+      "audio_id": "idol_12"
     },
     {
       "ko": "{{member_name}} 오늘도 고마워",
       "roman": "{{member_name}} oneuldo gomawo",
       "context": "Template: thank specific member",
-      "tags": ["daily"],
+      "tags": [
+        "daily"
+      ],
       "translations": {
         "en": "Thank you as always, {{member_name}}",
         "id": "Terima kasih selalu, {{member_name}}",
@@ -223,13 +264,16 @@
         "ja": "{{member_name}}今日もありがとう"
       },
       "situation": "daily",
-      "is_template": true
+      "is_template": true,
+      "audio_id": "idol_13"
     },
     {
       "ko": "{{member_name}} 화이팅!",
       "roman": "{{member_name}} hwaiting!",
       "context": "Template: cheer for specific member",
-      "tags": ["cheer"],
+      "tags": [
+        "cheer"
+      ],
       "translations": {
         "en": "Go {{member_name}}!",
         "id": "Semangat {{member_name}}!",
@@ -240,13 +284,17 @@
         "ja": "{{member_name}}ファイティン！"
       },
       "situation": "support",
-      "is_template": true
+      "is_template": true,
+      "audio_id": "idol_02"
     },
     {
       "ko": "{{group_name}}의 {{member_name}} 최고!",
       "roman": "{{group_name}}ui {{member_name}} choego!",
       "context": "Template: member of group is the best",
-      "tags": ["cheer", "love"],
+      "tags": [
+        "cheer",
+        "love"
+      ],
       "translations": {
         "en": "{{member_name}} of {{group_name}} is the best!",
         "id": "{{member_name}} dari {{group_name}} yang terbaik!",
@@ -263,7 +311,10 @@
       "ko": "{{member_name}} 보고 싶어!",
       "roman": "{{member_name}} bogo sipeo!",
       "context": "Template: miss specific member",
-      "tags": ["love", "emotional"],
+      "tags": [
+        "love",
+        "emotional"
+      ],
       "translations": {
         "en": "I miss you, {{member_name}}!",
         "id": "Kangen {{member_name}}!",
@@ -274,7 +325,8 @@
         "ja": "{{member_name}}に会いたい！"
       },
       "situation": "daily",
-      "is_template": true
+      "is_template": true,
+      "audio_id": "idol_15"
     }
   ]
 }

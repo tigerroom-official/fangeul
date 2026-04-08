@@ -21,7 +21,8 @@
         "vi": "Tôi yêu bạn",
         "ja": "愛してます"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "love_01"
     },
     {
       "ko": "오늘도 화이팅!",
@@ -40,7 +41,8 @@
         "vi": "Hôm nay cũng cố lên nhé!",
         "ja": "今日もファイティン！"
       },
-      "situation": "support"
+      "situation": "support",
+      "audio_id": "love_02"
     },
     {
       "ko": "보고 싶어요",
@@ -59,7 +61,8 @@
         "vi": "Nhớ bạn lắm",
         "ja": "会いたいです"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "love_03"
     },
     {
       "ko": "항상 응원해요",
@@ -78,7 +81,8 @@
         "vi": "Luôn ủng hộ bạn",
         "ja": "いつも応援してます"
       },
-      "situation": "support"
+      "situation": "support",
+      "audio_id": "love_04"
     },
     {
       "ko": "최고예요!",
@@ -97,7 +101,8 @@
         "vi": "Bạn là tuyệt nhất!",
         "ja": "最高です！"
       },
-      "situation": "support"
+      "situation": "support",
+      "audio_id": "love_05"
     },
     {
       "ko": "너무 멋있어요",
@@ -116,7 +121,8 @@
         "vi": "Bạn thật tuyệt vời",
         "ja": "めちゃくちゃかっこいいです"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "love_06"
     },
     {
       "ko": "행복하세요",
@@ -135,7 +141,8 @@
         "vi": "Hãy hạnh phúc nhé",
         "ja": "幸せでいてください"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "love_07"
     },
     {
       "ko": "건강하세요",
@@ -154,7 +161,8 @@
         "vi": "Giữ gìn sức khỏe nhé",
         "ja": "健康でいてくださいね"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "love_08"
     },
     {
       "ko": "잘했어요!",
@@ -173,7 +181,8 @@
         "vi": "Làm tốt lắm!",
         "ja": "よく頑張ったね！"
       },
-      "situation": "support"
+      "situation": "support",
+      "audio_id": "love_09"
     },
     {
       "ko": "자랑스러워요",
@@ -192,7 +201,8 @@
         "vi": "Tự hào về bạn lắm",
         "ja": "誇りに思います"
       },
-      "situation": "support"
+      "situation": "support",
+      "audio_id": "love_10"
     },
     {
       "ko": "힘내세요!",
@@ -211,7 +221,8 @@
         "vi": "Cố lên nhé!",
         "ja": "頑張ってください！"
       },
-      "situation": "support"
+      "situation": "support",
+      "audio_id": "love_11"
     },
     {
       "ko": "고마워요",
@@ -230,7 +241,8 @@
         "vi": "Cảm ơn bạn",
         "ja": "ありがとう"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "love_12"
     },
     {
       "ko": "수고했어요",
@@ -249,7 +261,8 @@
         "vi": "Bạn đã vất vả rồi",
         "ja": "お疲れさまでした"
       },
-      "situation": "support"
+      "situation": "support",
+      "audio_id": "love_13"
     },
     {
       "ko": "너무 예뻐요",
@@ -268,7 +281,8 @@
         "vi": "Bạn đẹp quá",
         "ja": "すごくきれいです"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "love_14"
     },
     {
       "ko": "너무 귀여워요",
@@ -287,7 +301,8 @@
         "vi": "Bạn dễ thương quá",
         "ja": "めっちゃかわいいです"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "love_15"
     },
     {
       "ko": "우리가 있잖아요",
@@ -306,7 +321,8 @@
         "vi": "Chúng tôi ở đây vì bạn",
         "ja": "私たちがそばにいるよ"
       },
-      "situation": "support"
+      "situation": "support",
+      "audio_id": "love_16"
     },
     {
       "ko": "영원히 함께해요",
@@ -325,7 +341,8 @@
         "vi": "Hãy bên nhau mãi mãi nhé",
         "ja": "永遠に一緒にいようね"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "love_17"
     },
     {
       "ko": "꿈을 응원해요",
@@ -344,7 +361,8 @@
         "vi": "Ủng hộ ước mơ của bạn",
         "ja": "夢を応援してます"
       },
-      "situation": "support"
+      "situation": "support",
+      "audio_id": "love_18"
     },
     {
       "ko": "많이 사랑해요",
@@ -363,7 +381,8 @@
         "vi": "Yêu bạn nhiều lắm",
         "ja": "大好きです"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "love_19"
     },
     {
       "ko": "웃는 모습이 예뻐요",
@@ -382,7 +401,8 @@
         "vi": "Nụ cười của bạn thật đẹp",
         "ja": "笑顔がとてもきれいです"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "love_20"
     },
     {
       "ko": "오빠 사랑해요",
@@ -401,7 +421,8 @@
         "vi": "Em yêu oppa",
         "ja": "オッパ大好きです"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "love_21"
     },
     {
       "ko": "언니 사랑해요",
@@ -420,7 +441,8 @@
         "vi": "Em yêu unnie",
         "ja": "オンニ大好きです"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "love_22"
     },
     {
       "ko": "무대 찢었어요!",
@@ -439,7 +461,8 @@
         "vi": "Bạn quá đỉnh trên sân khấu!",
         "ja": "ステージ最高だった！"
       },
-      "situation": "support"
+      "situation": "support",
+      "audio_id": "love_23"
     },
     {
       "ko": "목소리가 너무 좋아요",
@@ -458,7 +481,8 @@
         "vi": "Giọng bạn hay quá",
         "ja": "声がすごく素敵です"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "love_24"
     },
     {
       "ko": "덕분에 행복해요",
@@ -477,7 +501,8 @@
         "vi": "Hạnh phúc nhờ có bạn",
         "ja": "おかげで幸せです"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "love_25"
     },
     {
       "ko": "항상 건강하세요",
@@ -496,7 +521,8 @@
         "vi": "Luôn giữ gìn sức khỏe nhé",
         "ja": "いつも健康でいてくださいね"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "love_26"
     },
     {
       "ko": "잘 먹고 잘 자요",
@@ -515,7 +541,8 @@
         "vi": "Ăn ngon ngủ ngon nhé",
         "ja": "いっぱい食べてよく寝てね"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "love_27"
     },
     {
       "ko": "팬이어서 행복해요",
@@ -534,7 +561,8 @@
         "vi": "Hạnh phúc vì được làm fan",
         "ja": "ファンでいられて幸せです"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "love_28"
     },
     {
       "ko": "노래 너무 좋아요",
@@ -553,7 +581,8 @@
         "vi": "Bài hát hay quá",
         "ja": "曲がめちゃくちゃいいです"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "love_29"
     },
     {
       "ko": "한국에서 꼭 보고 싶어요",
@@ -572,7 +601,8 @@
         "vi": "Muốn gặp bạn ở Hàn Quốc quá",
         "ja": "韓国で絶対会いたいです"
       },
-      "situation": "daily"
+      "situation": "daily",
+      "audio_id": "love_30"
     }
   ]
 }

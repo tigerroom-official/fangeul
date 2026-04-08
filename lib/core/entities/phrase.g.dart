@@ -19,6 +19,7 @@ _$PhraseImpl _$$PhraseImplFromJson(Map<String, dynamic> json) => _$PhraseImpl(
           const {},
       situation: json['situation'] as String?,
       isTemplate: json['is_template'] as bool? ?? false,
+      audioId: json['audio_id'] as String?,
     );
 
 Map<String, dynamic> _$$PhraseImplToJson(_$PhraseImpl instance) =>
@@ -30,4 +31,5 @@ Map<String, dynamic> _$$PhraseImplToJson(_$PhraseImpl instance) =>
       'translations': instance.translations,
       'situation': instance.situation,
       'is_template': instance.isTemplate,
+      'audio_id': instance.audioId,
     };

@@ -21,7 +21,8 @@
         "vi": "Chúc mừng sinh nhật!",
         "ja": "センイルおめでとう！"
       },
-      "situation": "birthday"
+      "situation": "birthday",
+      "audio_id": "bday_01"
     },
     {
       "ko": "태어나줘서 고마워요",
@@ -40,7 +41,8 @@
         "vi": "Cảm ơn vì đã được sinh ra",
         "ja": "生まれてきてくれてありがとう"
       },
-      "situation": "birthday"
+      "situation": "birthday",
+      "audio_id": "bday_02"
     },
     {
       "ko": "올해도 건강하고 행복하세요",
@@ -59,7 +61,8 @@
         "vi": "Năm nay cũng khỏe mạnh và hạnh phúc nhé",
         "ja": "今年も健康で幸せでいてね"
       },
-      "situation": "birthday"
+      "situation": "birthday",
+      "audio_id": "bday_03"
     },
     {
       "ko": "생일 축하합니다!",
@@ -77,7 +80,8 @@
         "vi": "Chúc mừng sinh nhật ạ!",
         "ja": "お誕生日おめでとうございます！"
       },
-      "situation": "birthday"
+      "situation": "birthday",
+      "audio_id": "bday_04"
     },
     {
       "ko": "오늘 하루 행복하세요",
@@ -96,7 +100,8 @@
         "vi": "Hôm nay hãy hạnh phúc nhé",
         "ja": "今日一日幸せでいてね"
       },
-      "situation": "birthday"
+      "situation": "birthday",
+      "audio_id": "bday_05"
     },
     {
       "ko": "세상에서 제일 빛나는 사람",
@@ -115,7 +120,8 @@
         "vi": "Người tỏa sáng nhất thế giới",
         "ja": "世界で一番輝いている人"
       },
-      "situation": "birthday"
+      "situation": "birthday",
+      "audio_id": "bday_06"
     },
     {
       "ko": "생일에 모든 소원이 이루어지길",
@@ -134,7 +140,8 @@
         "vi": "Mong mọi điều ước sinh nhật đều thành hiện thực",
         "ja": "センイルの願い事が全部叶いますように"
       },
-      "situation": "birthday"
+      "situation": "birthday",
+      "audio_id": "bday_07"
     },
     {
       "ko": "생일 선물은 우리 사랑이에요",
@@ -153,7 +160,8 @@
         "vi": "Tình yêu của chúng tôi là quà sinh nhật",
         "ja": "センイルのプレゼントは私たちの愛だよ"
       },
-      "situation": "birthday"
+      "situation": "birthday",
+      "audio_id": "bday_08"
     },
     {
       "ko": "앞으로도 행복한 일만 가득하길",
@@ -172,7 +180,8 @@
         "vi": "Mong tương lai chỉ toàn những điều hạnh phúc",
         "ja": "これからも幸せなことがたくさんありますように"
       },
-      "situation": "birthday"
+      "situation": "birthday",
+      "audio_id": "bday_09"
     },
     {
       "ko": "특별한 날 축하드려요",
@@ -190,7 +199,8 @@
         "vi": "Chúc mừng ngày đặc biệt",
         "ja": "特別な日おめでとうございます"
       },
-      "situation": "birthday"
+      "situation": "birthday",
+      "audio_id": "bday_10"
     },
     {
       "ko": "오래오래 건강하세요",
@@ -209,7 +219,8 @@
         "vi": "Khỏe mạnh thật lâu nhé",
         "ja": "ずっとずっと健康でいてね"
       },
-      "situation": "birthday"
+      "situation": "birthday",
+      "audio_id": "bday_11"
     },
     {
       "ko": "나이는 숫자일 뿐이에요",
@@ -227,7 +238,8 @@
         "vi": "Tuổi chỉ là con số",
         "ja": "年齢なんてただの数字だよ"
       },
-      "situation": "birthday"
+      "situation": "birthday",
+      "audio_id": "bday_12"
     },
     {
       "ko": "케이크 맛있게 드세요",
@@ -246,7 +258,8 @@
         "vi": "Ăn bánh ngon nhé",
         "ja": "ケーキおいしく食べてね"
       },
-      "situation": "birthday"
+      "situation": "birthday",
+      "audio_id": "bday_13"
     },
     {
       "ko": "세상의 모든 축복이 함께하길",
@@ -265,7 +278,8 @@
         "vi": "Mong mọi phước lành trên thế giới ở bên bạn",
         "ja": "世界中の祝福がありますように"
       },
-      "situation": "birthday"
+      "situation": "birthday",
+      "audio_id": "bday_14"
     },
     {
       "ko": "내년에도 같이 축하해요",
@@ -284,7 +298,8 @@
         "vi": "Năm sau cũng cùng nhau chúc mừng nhé",
         "ja": "来年も一緒にお祝いしようね"
       },
-      "situation": "birthday"
+      "situation": "birthday",
+      "audio_id": "bday_15"
     }
   ]
 }

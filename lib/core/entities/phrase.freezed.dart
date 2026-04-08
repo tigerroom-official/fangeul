@@ -42,6 +42,10 @@ mixin _$Phrase {
   @JsonKey(name: 'is_template')
   bool get isTemplate => throw _privateConstructorUsedError;
 
+  /// TTS 오디오 ID (예: "love_01"). null이면 TTS 미지원.
+  @JsonKey(name: 'audio_id')
+  String? get audioId => throw _privateConstructorUsedError;
+
   /// Serializes this Phrase to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
@@ -63,7 +67,8 @@ abstract class $PhraseCopyWith<$Res> {
       List<String> tags,
       Map<String, String> translations,
       String? situation,
-      @JsonKey(name: 'is_template') bool isTemplate});
+      @JsonKey(name: 'is_template') bool isTemplate,
+      @JsonKey(name: 'audio_id') String? audioId});
 }
 
 /// @nodoc
@@ -88,6 +93,7 @@ class _$PhraseCopyWithImpl<$Res, $Val extends Phrase>
     Object? translations = null,
     Object? situation = freezed,
     Object? isTemplate = null,
+    Object? audioId = freezed,
   }) {
     return _then(_value.copyWith(
       ko: null == ko
@@ -118,6 +124,10 @@ class _$PhraseCopyWithImpl<$Res, $Val extends Phrase>
           ? _value.isTemplate
           : isTemplate // ignore: cast_nullable_to_non_nullable
               as bool,
+      audioId: freezed == audioId
+          ? _value.audioId
+          : audioId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -136,7 +146,8 @@ abstract class _$$PhraseImplCopyWith<$Res> implements $PhraseCopyWith<$Res> {
       List<String> tags,
       Map<String, String> translations,
       String? situation,
-      @JsonKey(name: 'is_template') bool isTemplate});
+      @JsonKey(name: 'is_template') bool isTemplate,
+      @JsonKey(name: 'audio_id') String? audioId});
 }
 
 /// @nodoc
@@ -159,6 +170,7 @@ class __$$PhraseImplCopyWithImpl<$Res>
     Object? translations = null,
     Object? situation = freezed,
     Object? isTemplate = null,
+    Object? audioId = freezed,
   }) {
     return _then(_$PhraseImpl(
       ko: null == ko
@@ -189,6 +201,10 @@ class __$$PhraseImplCopyWithImpl<$Res>
           ? _value.isTemplate
           : isTemplate // ignore: cast_nullable_to_non_nullable
               as bool,
+      audioId: freezed == audioId
+          ? _value.audioId
+          : audioId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -203,7 +219,8 @@ class _$PhraseImpl implements _Phrase {
       final List<String> tags = const [],
       final Map<String, String> translations = const {},
       this.situation,
-      @JsonKey(name: 'is_template') this.isTemplate = false})
+      @JsonKey(name: 'is_template') this.isTemplate = false,
+      @JsonKey(name: 'audio_id') this.audioId})
       : _tags = tags,
         _translations = translations;
 
@@ -255,9 +272,14 @@ class _$PhraseImpl implements _Phrase {
   @JsonKey(name: 'is_template')
   final bool isTemplate;
 
+  /// TTS 오디오 ID (예: "love_01"). null이면 TTS 미지원.
+  @override
+  @JsonKey(name: 'audio_id')
+  final String? audioId;
+
   @override
   String toString() {
-    return 'Phrase(ko: $ko, roman: $roman, context: $context, tags: $tags, translations: $translations, situation: $situation, isTemplate: $isTemplate)';
+    return 'Phrase(ko: $ko, roman: $roman, context: $context, tags: $tags, translations: $translations, situation: $situation, isTemplate: $isTemplate, audioId: $audioId)';
   }
 
   @override
@@ -274,7 +296,8 @@ class _$PhraseImpl implements _Phrase {
             (identical(other.situation, situation) ||
                 other.situation == situation) &&
             (identical(other.isTemplate, isTemplate) ||
-                other.isTemplate == isTemplate));
+                other.isTemplate == isTemplate) &&
+            (identical(other.audioId, audioId) || other.audioId == audioId));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -287,7 +310,8 @@ class _$PhraseImpl implements _Phrase {
       const DeepCollectionEquality().hash(_tags),
       const DeepCollectionEquality().hash(_translations),
       situation,
-      isTemplate);
+      isTemplate,
+      audioId);
 
   /// Create a copy of Phrase
   /// with the given fields replaced by the non-null parameter values.
@@ -313,7 +337,8 @@ abstract class _Phrase implements Phrase {
       final List<String> tags,
       final Map<String, String> translations,
       final String? situation,
-      @JsonKey(name: 'is_template') final bool isTemplate}) = _$PhraseImpl;
+      @JsonKey(name: 'is_template') final bool isTemplate,
+      @JsonKey(name: 'audio_id') final String? audioId}) = _$PhraseImpl;
 
   factory _Phrase.fromJson(Map<String, dynamic> json) = _$PhraseImpl.fromJson;
 
@@ -345,6 +370,11 @@ abstract class _Phrase implements Phrase {
   @override
   @JsonKey(name: 'is_template')
   bool get isTemplate;
+
+  /// TTS 오디오 ID (예: "love_01"). null이면 TTS 미지원.
+  @override
+  @JsonKey(name: 'audio_id')
+  String? get audioId;
 
   /// Create a copy of Phrase
   /// with the given fields replaced by the non-null parameter values.
