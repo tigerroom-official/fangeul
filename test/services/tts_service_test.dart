@@ -48,4 +48,27 @@ void main() {
     // just_audio AudioPlayer는 네이티브 플랫폼 의존이므로
     // 유닛 테스트에서는 생성/dispose 안전성만 검증한다.
   });
+
+  group('TtsService.audioUrl', () {
+    test('should construct R2 URL with pack subfolder from audioId', () {
+      expect(
+        TtsService.audioUrl('birthday_hello'),
+        'https://tts.tigerroom.app/ko/birthday/birthday_hello.mp3',
+      );
+    });
+
+    test('should handle audioId with multiple underscores', () {
+      expect(
+        TtsService.audioUrl('comeback_cheer_up'),
+        'https://tts.tigerroom.app/ko/comeback/comeback_cheer_up.mp3',
+      );
+    });
+
+    test('should handle audioId with single segment (no underscore)', () {
+      expect(
+        TtsService.audioUrl('hello'),
+        'https://tts.tigerroom.app/ko/hello/hello.mp3',
+      );
+    });
+  });
 }
