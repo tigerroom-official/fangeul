@@ -12,8 +12,10 @@ part 'tts_provider.g.dart';
 /// 이번 세션에서 이미 카운트된 audioId 목록 (재재생 시 카운트 스킵).
 final _sessionPlayedIds = <String>{};
 
-/// 세션 재생 이력을 초기화한다. 테스트 전용.
-@visibleForTesting
+/// 세션 재생 이력을 초기화한다.
+///
+/// 보상형 광고로 보너스 재생 횟수를 받은 뒤 호출하여
+/// 이전에 재생한 문구도 다시 재생할 수 있게 한다.
 void clearSessionPlayedIds() => _sessionPlayedIds.clear();
 
 /// TtsService 인스턴스 Provider.

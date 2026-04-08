@@ -5,6 +5,8 @@ import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/ad_service_provider.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/presentation/providers/remote_config_providers.dart';
+import 'package:fangeul/presentation/providers/tts_provider.dart';
+import 'package:fangeul/presentation/widgets/theme_picker_sheet.dart';
 
 /// TTS 일일 제한 도달 팝업.
 ///
@@ -29,8 +31,7 @@ Future<void> showTtsLimitPopup(BuildContext context, WidgetRef ref) {
         FilledButton(
           onPressed: () {
             Navigator.pop(dialogContext);
-            // Open theme picker sheet for IAP purchase
-            // This navigates to the existing theme picker
+            ThemePickerSheet.show(context);
           },
           child: Text(l.ttsLimitIap),
         ),
@@ -47,6 +48,17 @@ Future<void> _showRewardedForTts(
   final adService = ref.read(adServiceProvider);
   if (!adService.isRewardedReady) {
     adService.preloadRewarded();
+    if (context.mounted) {
+      final l = L.of(context);
+      ScaffoldMessenger.of(context)
+        ..clearSnackBars()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(l.fanPassAdLoading),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+    }
     return;
   }
   try {
@@ -55,6 +67,7 @@ Future<void> _showRewardedForTts(
         ref
             .read(monetizationNotifierProvider.notifier)
             .addTtsRewardedBonus(bonus);
+        clearSessionPlayedIds();
       },
     );
   } catch (e) {

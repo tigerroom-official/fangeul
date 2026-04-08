@@ -91,19 +91,26 @@ class TtsService {
 
   /// [url]의 오디오를 백그라운드에서 로컬 캐시로 저장한다.
   ///
+  /// `.tmp` 파일에 먼저 쓴 뒤 atomic rename하여
+  /// 네트워크 실패 시 부분 기록된 mp3가 캐시에 남지 않도록 한다.
   /// 캐싱 실패는 무시한다 — 다음 재생 시 다시 스트리밍된다.
   Future<void> _cacheInBackground(String audioId, String url) async {
     try {
       final file = await _cachedFile(audioId);
       if (file.existsSync()) return;
       await file.parent.create(recursive: true);
+      final tmpFile = File('${file.path}.tmp');
       final client = HttpClient();
       try {
         final request = await client.getUrl(Uri.parse(url));
         final response = await request.close();
-        await response.pipe(file.openWrite());
+        await response.pipe(tmpFile.openWrite());
+        await tmpFile.rename(file.path);
       } finally {
         client.close();
+        try {
+          if (await tmpFile.exists()) await tmpFile.delete();
+        } catch (_) {}
       }
     } catch (_) {
       // 캐싱 실패는 무시 — 다음에 다시 스트리밍
