@@ -48,7 +48,7 @@ final canPlayTtsProvider = AutoDisposeProvider<bool>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef CanPlayTtsRef = AutoDisposeProviderRef<bool>;
-String _$playTtsHash() => r'5d3f7c08d16d0fc88ec1b510921f45dbc1f8302e';
+String _$playTtsHash() => r'492913537fc0691d6cbeada81be7c3f4165b4880';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -73,11 +73,10 @@ class _SystemHash {
 
 /// TTS 재생을 시도한다.
 ///
-/// 일일 제한 확인 → 카운트 기록 → 재생 순서로 진행.
+/// [audioId]를 alias 매핑으로 변환한 뒤 [TtsService.playById]로 재생한다.
 /// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
+/// 같은 세션 내 동일 audioId 재재생 시 카운트를 소모하지 않는다.
 /// 제한 도달 시 false를 반환하고 재생하지 않는다.
-///
-/// [source]는 에셋 경로('assets/audio/...')  또는 원격 URL.
 ///
 /// Copied from [playTts].
 @ProviderFor(playTts)
@@ -85,39 +84,36 @@ const playTtsProvider = PlayTtsFamily();
 
 /// TTS 재생을 시도한다.
 ///
-/// 일일 제한 확인 → 카운트 기록 → 재생 순서로 진행.
+/// [audioId]를 alias 매핑으로 변환한 뒤 [TtsService.playById]로 재생한다.
 /// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
+/// 같은 세션 내 동일 audioId 재재생 시 카운트를 소모하지 않는다.
 /// 제한 도달 시 false를 반환하고 재생하지 않는다.
-///
-/// [source]는 에셋 경로('assets/audio/...')  또는 원격 URL.
 ///
 /// Copied from [playTts].
 class PlayTtsFamily extends Family<AsyncValue<bool>> {
   /// TTS 재생을 시도한다.
   ///
-  /// 일일 제한 확인 → 카운트 기록 → 재생 순서로 진행.
+  /// [audioId]를 alias 매핑으로 변환한 뒤 [TtsService.playById]로 재생한다.
   /// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
+  /// 같은 세션 내 동일 audioId 재재생 시 카운트를 소모하지 않는다.
   /// 제한 도달 시 false를 반환하고 재생하지 않는다.
-  ///
-  /// [source]는 에셋 경로('assets/audio/...')  또는 원격 URL.
   ///
   /// Copied from [playTts].
   const PlayTtsFamily();
 
   /// TTS 재생을 시도한다.
   ///
-  /// 일일 제한 확인 → 카운트 기록 → 재생 순서로 진행.
+  /// [audioId]를 alias 매핑으로 변환한 뒤 [TtsService.playById]로 재생한다.
   /// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
+  /// 같은 세션 내 동일 audioId 재재생 시 카운트를 소모하지 않는다.
   /// 제한 도달 시 false를 반환하고 재생하지 않는다.
-  ///
-  /// [source]는 에셋 경로('assets/audio/...')  또는 원격 URL.
   ///
   /// Copied from [playTts].
   PlayTtsProvider call(
-    String source,
+    String audioId,
   ) {
     return PlayTtsProvider(
-      source,
+      audioId,
     );
   }
 
@@ -126,7 +122,7 @@ class PlayTtsFamily extends Family<AsyncValue<bool>> {
     covariant PlayTtsProvider provider,
   ) {
     return call(
-      provider.source,
+      provider.audioId,
     );
   }
 
@@ -147,29 +143,27 @@ class PlayTtsFamily extends Family<AsyncValue<bool>> {
 
 /// TTS 재생을 시도한다.
 ///
-/// 일일 제한 확인 → 카운트 기록 → 재생 순서로 진행.
+/// [audioId]를 alias 매핑으로 변환한 뒤 [TtsService.playById]로 재생한다.
 /// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
+/// 같은 세션 내 동일 audioId 재재생 시 카운트를 소모하지 않는다.
 /// 제한 도달 시 false를 반환하고 재생하지 않는다.
-///
-/// [source]는 에셋 경로('assets/audio/...')  또는 원격 URL.
 ///
 /// Copied from [playTts].
 class PlayTtsProvider extends AutoDisposeFutureProvider<bool> {
   /// TTS 재생을 시도한다.
   ///
-  /// 일일 제한 확인 → 카운트 기록 → 재생 순서로 진행.
+  /// [audioId]를 alias 매핑으로 변환한 뒤 [TtsService.playById]로 재생한다.
   /// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
+  /// 같은 세션 내 동일 audioId 재재생 시 카운트를 소모하지 않는다.
   /// 제한 도달 시 false를 반환하고 재생하지 않는다.
-  ///
-  /// [source]는 에셋 경로('assets/audio/...')  또는 원격 URL.
   ///
   /// Copied from [playTts].
   PlayTtsProvider(
-    String source,
+    String audioId,
   ) : this._internal(
           (ref) => playTts(
             ref as PlayTtsRef,
-            source,
+            audioId,
           ),
           from: playTtsProvider,
           name: r'playTtsProvider',
@@ -179,7 +173,7 @@ class PlayTtsProvider extends AutoDisposeFutureProvider<bool> {
                   : _$playTtsHash,
           dependencies: PlayTtsFamily._dependencies,
           allTransitiveDependencies: PlayTtsFamily._allTransitiveDependencies,
-          source: source,
+          audioId: audioId,
         );
 
   PlayTtsProvider._internal(
@@ -189,10 +183,10 @@ class PlayTtsProvider extends AutoDisposeFutureProvider<bool> {
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.source,
+    required this.audioId,
   }) : super.internal();
 
-  final String source;
+  final String audioId;
 
   @override
   Override overrideWith(
@@ -207,7 +201,7 @@ class PlayTtsProvider extends AutoDisposeFutureProvider<bool> {
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        source: source,
+        audioId: audioId,
       ),
     );
   }
@@ -219,13 +213,13 @@ class PlayTtsProvider extends AutoDisposeFutureProvider<bool> {
 
   @override
   bool operator ==(Object other) {
-    return other is PlayTtsProvider && other.source == source;
+    return other is PlayTtsProvider && other.audioId == audioId;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, source.hashCode);
+    hash = _SystemHash.combine(hash, audioId.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -234,8 +228,8 @@ class PlayTtsProvider extends AutoDisposeFutureProvider<bool> {
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 mixin PlayTtsRef on AutoDisposeFutureProviderRef<bool> {
-  /// The parameter `source` of this provider.
-  String get source;
+  /// The parameter `audioId` of this provider.
+  String get audioId;
 }
 
 class _PlayTtsProviderElement extends AutoDisposeFutureProviderElement<bool>
@@ -243,7 +237,7 @@ class _PlayTtsProviderElement extends AutoDisposeFutureProviderElement<bool>
   _PlayTtsProviderElement(super.provider);
 
   @override
-  String get source => (origin as PlayTtsProvider).source;
+  String get audioId => (origin as PlayTtsProvider).audioId;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

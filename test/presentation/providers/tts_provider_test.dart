@@ -40,6 +40,7 @@ void main() {
     when(() => mockStorage.write(
         key: any(named: 'key'),
         value: any(named: 'value'))).thenAnswer((_) async {});
+    when(() => mockTts.playById(any())).thenAnswer((_) async {});
     when(() => mockTts.play(any())).thenAnswer((_) async {});
     when(() => mockTts.stop()).thenAnswer((_) async {});
     when(() => mockTts.dispose()).thenAnswer((_) async {});
@@ -70,6 +71,7 @@ void main() {
     when(() => mockStorage.write(
         key: any(named: 'key'),
         value: any(named: 'value'))).thenAnswer((_) async {});
+    when(() => mockTts.playById(any())).thenAnswer((_) async {});
     when(() => mockTts.play(any())).thenAnswer((_) async {});
     when(() => mockTts.stop()).thenAnswer((_) async {});
     when(() => mockTts.dispose()).thenAnswer((_) async {});
@@ -85,7 +87,28 @@ void main() {
     );
   }
 
-  tearDown(() => container.dispose());
+  tearDown(() {
+    container.dispose();
+    clearSessionPlayedIds();
+  });
+
+  group('resolveAudioId', () {
+    test('should resolve alias to mapped audioId', () {
+      setUpDefault();
+      expect(resolveAudioId('idol_01'), 'love_01');
+      expect(resolveAudioId('idol_03'), 'cback_01');
+      expect(resolveAudioId('idol_04'), 'bday_01');
+      expect(resolveAudioId('idol_07'), 'love_25');
+      expect(resolveAudioId('idol_14'), 'idol_02');
+    });
+
+    test('should return original audioId when no alias exists', () {
+      setUpDefault();
+      expect(resolveAudioId('love_01'), 'love_01');
+      expect(resolveAudioId('bday_05'), 'bday_05');
+      expect(resolveAudioId('unknown_99'), 'unknown_99');
+    });
+  });
 
   group('canPlayTtsProvider', () {
     test('should return true during honeymoon', () async {
@@ -177,10 +200,10 @@ void main() {
       await container.read(monetizationNotifierProvider.future);
 
       final result =
-          await container.read(playTtsProvider('assets/audio/test.mp3').future);
+          await container.read(playTtsProvider('love_01').future);
 
       expect(result, true);
-      verify(() => mockTts.play('assets/audio/test.mp3')).called(1);
+      verify(() => mockTts.playById('love_01')).called(1);
 
       // 카운트가 증가하지 않아야 함
       final state = await container.read(monetizationNotifierProvider.future);
@@ -199,10 +222,10 @@ void main() {
       await container.read(monetizationNotifierProvider.future);
 
       final result = await container
-          .read(playTtsProvider('https://example.com/audio.mp3').future);
+          .read(playTtsProvider('bday_05').future);
 
       expect(result, true);
-      verify(() => mockTts.play('https://example.com/audio.mp3')).called(1);
+      verify(() => mockTts.playById('bday_05')).called(1);
 
       // 테마 체험 중에도 TTS 카운트 소모됨 (해금 경로 = IAP만)
       final state = await container.read(monetizationNotifierProvider.future);
@@ -219,10 +242,10 @@ void main() {
       await container.read(monetizationNotifierProvider.future);
 
       final result =
-          await container.read(playTtsProvider('assets/audio/test.mp3').future);
+          await container.read(playTtsProvider('love_01').future);
 
       expect(result, true);
-      verify(() => mockTts.play('assets/audio/test.mp3')).called(1);
+      verify(() => mockTts.playById('love_01')).called(1);
 
       final state = await container.read(monetizationNotifierProvider.future);
       expect(state.ttsPlayCount, 1);
@@ -239,10 +262,10 @@ void main() {
       await container.read(monetizationNotifierProvider.future);
 
       final result =
-          await container.read(playTtsProvider('assets/audio/test.mp3').future);
+          await container.read(playTtsProvider('love_01').future);
 
       expect(result, false);
-      verifyNever(() => mockTts.play(any()));
+      verifyNever(() => mockTts.playById(any()));
     });
 
     test('should return false but not throw when play fails', () async {
@@ -250,12 +273,12 @@ void main() {
         installDate: todayStr(),
         honeymoonActive: false,
       ));
-      when(() => mockTts.play(any())).thenThrow(Exception('audio error'));
+      when(() => mockTts.playById(any())).thenThrow(Exception('audio error'));
 
       await container.read(monetizationNotifierProvider.future);
 
       final result =
-          await container.read(playTtsProvider('assets/audio/bad.mp3').future);
+          await container.read(playTtsProvider('love_01').future);
 
       expect(result, false);
     });
@@ -263,37 +286,102 @@ void main() {
     test('should return false but not throw when play fails during honeymoon',
         () async {
       setUpDefault();
-      when(() => mockTts.play(any())).thenThrow(Exception('audio error'));
+      when(() => mockTts.playById(any())).thenThrow(Exception('audio error'));
 
       await container.read(monetizationNotifierProvider.future);
 
       final result =
-          await container.read(playTtsProvider('assets/audio/bad.mp3').future);
+          await container.read(playTtsProvider('love_01').future);
 
       expect(result, false);
     });
 
-    test('should pass URL source correctly to TtsService', () async {
+    test('should resolve alias and pass resolved audioId to TtsService',
+        () async {
       setUpDefault();
 
       await container.read(monetizationNotifierProvider.future);
 
-      await container
-          .read(playTtsProvider('https://cdn.example.com/ko/hello.mp3').future);
+      // idol_01은 love_01으로 alias됨
+      await container.read(playTtsProvider('idol_01').future);
 
-      verify(() => mockTts.play('https://cdn.example.com/ko/hello.mp3'))
-          .called(1);
+      verify(() => mockTts.playById('love_01')).called(1);
+      verifyNever(() => mockTts.playById('idol_01'));
     });
 
-    test('should pass asset source correctly to TtsService', () async {
+    test('should pass non-aliased audioId directly to TtsService', () async {
       setUpDefault();
 
       await container.read(monetizationNotifierProvider.future);
 
-      await container
-          .read(playTtsProvider('assets/audio/saranghaeyo.mp3').future);
+      await container.read(playTtsProvider('bday_05').future);
 
-      verify(() => mockTts.play('assets/audio/saranghaeyo.mp3')).called(1);
+      verify(() => mockTts.playById('bday_05')).called(1);
+    });
+
+    test('should skip counter on same audioId replay within session',
+        () async {
+      setUpWithState(MonetizationState(
+        installDate: todayStr(),
+        honeymoonActive: false,
+      ));
+
+      await container.read(monetizationNotifierProvider.future);
+
+      // 첫 재생 — 카운트 1
+      final result1 =
+          await container.read(playTtsProvider('love_01').future);
+      expect(result1, true);
+
+      // 같은 audioId 재재생 — 카운트 여전히 1
+      // Riverpod auto-dispose로 새 provider 인스턴스 필요
+      container.invalidate(playTtsProvider('love_01'));
+      final result2 =
+          await container.read(playTtsProvider('love_01').future);
+      expect(result2, true);
+
+      final state = await container.read(monetizationNotifierProvider.future);
+      expect(state.ttsPlayCount, 1);
+    });
+
+    test('should count each different audioId separately', () async {
+      setUpWithState(MonetizationState(
+        installDate: todayStr(),
+        honeymoonActive: false,
+      ));
+
+      await container.read(monetizationNotifierProvider.future);
+
+      // 첫 번째 audioId
+      await container.read(playTtsProvider('love_01').future);
+      // 두 번째 audioId
+      await container.read(playTtsProvider('bday_05').future);
+
+      final state = await container.read(monetizationNotifierProvider.future);
+      expect(state.ttsPlayCount, 2);
+    });
+
+    test(
+        'should skip counter when alias resolves to already-played audioId',
+        () async {
+      setUpWithState(MonetizationState(
+        installDate: todayStr(),
+        honeymoonActive: false,
+      ));
+
+      await container.read(monetizationNotifierProvider.future);
+
+      // love_01 재생 → 카운트 1
+      await container.read(playTtsProvider('love_01').future);
+
+      // idol_01은 love_01으로 resolve됨 → 이미 재생됨 → 카운트 스킵
+      await container.read(playTtsProvider('idol_01').future);
+
+      final state = await container.read(monetizationNotifierProvider.future);
+      expect(state.ttsPlayCount, 1);
+
+      // 그래도 재생은 됨
+      verify(() => mockTts.playById('love_01')).called(2);
     });
   });
 }
