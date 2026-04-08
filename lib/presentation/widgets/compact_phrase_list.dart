@@ -18,6 +18,7 @@ import 'package:fangeul/presentation/widgets/favorite_limit_feedback.dart';
 import 'package:fangeul/presentation/widgets/copy_feedback_overlay.dart';
 import 'package:fangeul/presentation/widgets/pack_filter_chips.dart';
 import 'package:fangeul/presentation/widgets/recent_copy_tile.dart';
+import 'package:fangeul/presentation/widgets/tts_play_button.dart';
 
 /// 간편모드 문구 리스트 (문구 탐색 + 최근 탭).
 ///
@@ -389,6 +390,14 @@ class _PhraseCard extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              if (phrase.audioId != null)
+                TtsPlayButton(
+                  audioId: phrase.audioId!,
+                  size: 18.0, // slightly smaller for compact view
+                  onLimitReached: () {
+                    // TODO(fangeul): showTtsLimitPopup — Task 6
+                  },
+                ),
               IconButton(
                 icon: Icon(
                   isFavorite ? Icons.star_rounded : Icons.star_border_rounded,
