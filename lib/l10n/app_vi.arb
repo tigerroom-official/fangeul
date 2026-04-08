@@ -141,7 +141,10 @@
   "ddayGiftMessage": "Hôm nay tất cả nội dung đều miễn phí",
   "ddayGiftButton": "Nhận quà",
 
-  "ttsLimitTitle": "Lượt nghe phát âm hôm nay đã hết!",
+  "ttsLimitTitle": "Đã hết lượt nghe hôm nay",
+  "ttsLimitBody": "Ngày mai bạn có thể nghe lại",
+  "ttsLimitRewarded": "Xem quảng cáo để nghe thêm {count} lần",
+  "ttsLimitIap": "Mở khóa không giới hạn",
 
   "ttsLimitMessage": "Ngày mai bạn có thể nghe thêm {limit} lần",
 

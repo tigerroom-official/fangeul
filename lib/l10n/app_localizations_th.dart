@@ -361,7 +361,18 @@ class LTh extends L {
   String get ddayGiftButton => 'รับของขวัญ';
 
   @override
-  String get ttsLimitTitle => 'หมดโควต้าฟังวันนี้แล้ว!';
+  String get ttsLimitTitle => 'ใช้สิทธิ์ฟังวันนี้หมดแล้ว';
+
+  @override
+  String get ttsLimitBody => 'พรุ่งนี้มาฟังใหม่ได้นะ';
+
+  @override
+  String ttsLimitRewarded(int count) {
+    return 'ดูโฆษณาเพื่อฟังเพิ่ม $count ครั้ง';
+  }
+
+  @override
+  String get ttsLimitIap => 'ปลดล็อกไม่จำกัด';
 
   @override
   String ttsLimitMessage(int limit) {

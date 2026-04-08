@@ -10,6 +10,7 @@ import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
 import 'package:fangeul/presentation/providers/iap_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/widgets/favorite_limit_feedback.dart';
+import 'package:fangeul/presentation/widgets/tts_limit_popup.dart';
 import 'package:fangeul/presentation/widgets/tts_play_button.dart';
 import 'package:fangeul/services/analytics_events.dart';
 
@@ -80,9 +81,7 @@ class PhraseCard extends ConsumerWidget {
               if (phrase.audioId != null)
                 TtsPlayButton(
                   audioId: phrase.audioId!,
-                  onLimitReached: () {
-                    // TODO(fangeul): showTtsLimitPopup — Task 6에서 추가
-                  },
+                  onLimitReached: () => showTtsLimitPopup(context, ref),
                 ),
               IconButton(
                 icon: Icon(

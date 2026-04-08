@@ -760,8 +760,26 @@ abstract class L {
   /// No description provided for @ttsLimitTitle.
   ///
   /// In ko, this message translates to:
-  /// **'오늘의 발음 듣기는 여기까지!'**
+  /// **'오늘 재생 횟수를 다 사용했어요'**
   String get ttsLimitTitle;
+
+  /// No description provided for @ttsLimitBody.
+  ///
+  /// In ko, this message translates to:
+  /// **'내일 다시 들을 수 있어요'**
+  String get ttsLimitBody;
+
+  /// No description provided for @ttsLimitRewarded.
+  ///
+  /// In ko, this message translates to:
+  /// **'광고 보고 {count}회 더 듣기'**
+  String ttsLimitRewarded(int count);
+
+  /// No description provided for @ttsLimitIap.
+  ///
+  /// In ko, this message translates to:
+  /// **'무제한 해금'**
+  String get ttsLimitIap;
 
   /// No description provided for @ttsLimitMessage.
   ///

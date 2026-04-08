@@ -365,7 +365,18 @@ class LPt extends L {
   String get ddayGiftButton => 'Receber presente';
 
   @override
-  String get ttsLimitTitle => 'As pronúncias de hoje acabaram!';
+  String get ttsLimitTitle => 'Você usou todas as reproduções de hoje';
+
+  @override
+  String get ttsLimitBody => 'Volte amanhã para ouvir mais';
+
+  @override
+  String ttsLimitRewarded(int count) {
+    return 'Assistir anúncio para mais $count';
+  }
+
+  @override
+  String get ttsLimitIap => 'Desbloquear ilimitado';
 
   @override
   String ttsLimitMessage(int limit) {

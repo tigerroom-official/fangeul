@@ -358,7 +358,18 @@ class LKo extends L {
   String get ddayGiftButton => '선물 받기';
 
   @override
-  String get ttsLimitTitle => '오늘의 발음 듣기는 여기까지!';
+  String get ttsLimitTitle => '오늘 재생 횟수를 다 사용했어요';
+
+  @override
+  String get ttsLimitBody => '내일 다시 들을 수 있어요';
+
+  @override
+  String ttsLimitRewarded(int count) {
+    return '광고 보고 $count회 더 듣기';
+  }
+
+  @override
+  String get ttsLimitIap => '무제한 해금';
 
   @override
   String ttsLimitMessage(int limit) {

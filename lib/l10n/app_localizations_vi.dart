@@ -364,7 +364,18 @@ class LVi extends L {
   String get ddayGiftButton => 'Nhận quà';
 
   @override
-  String get ttsLimitTitle => 'Lượt nghe phát âm hôm nay đã hết!';
+  String get ttsLimitTitle => 'Đã hết lượt nghe hôm nay';
+
+  @override
+  String get ttsLimitBody => 'Ngày mai bạn có thể nghe lại';
+
+  @override
+  String ttsLimitRewarded(int count) {
+    return 'Xem quảng cáo để nghe thêm $count lần';
+  }
+
+  @override
+  String get ttsLimitIap => 'Mở khóa không giới hạn';
 
   @override
   String ttsLimitMessage(int limit) {

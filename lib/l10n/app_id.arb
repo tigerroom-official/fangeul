@@ -141,7 +141,10 @@
   "ddayGiftMessage": "Semua konten gratis hari ini",
   "ddayGiftButton": "Ambil Hadiah",
 
-  "ttsLimitTitle": "Kuota mendengarkan hari ini habis!",
+  "ttsLimitTitle": "Jatah putar hari ini sudah habis",
+  "ttsLimitBody": "Besok bisa dengar lagi",
+  "ttsLimitRewarded": "Tonton iklan untuk {count} kali lagi",
+  "ttsLimitIap": "Buka tanpa batas",
 
   "ttsLimitMessage": "Besok kamu bisa mendengarkan {limit} kali lagi",
 

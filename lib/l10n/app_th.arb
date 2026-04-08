@@ -141,7 +141,10 @@
   "ddayGiftMessage": "วันนี้คอนเทนต์ทั้งหมดฟรี",
   "ddayGiftButton": "รับของขวัญ",
 
-  "ttsLimitTitle": "หมดโควต้าฟังวันนี้แล้ว!",
+  "ttsLimitTitle": "ใช้สิทธิ์ฟังวันนี้หมดแล้ว",
+  "ttsLimitBody": "พรุ่งนี้มาฟังใหม่ได้นะ",
+  "ttsLimitRewarded": "ดูโฆษณาเพื่อฟังเพิ่ม {count} ครั้ง",
+  "ttsLimitIap": "ปลดล็อกไม่จำกัด",
 
   "ttsLimitMessage": "พรุ่งนี้จะฟังได้อีก {limit} ครั้ง",
 

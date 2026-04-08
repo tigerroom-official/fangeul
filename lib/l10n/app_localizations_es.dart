@@ -365,7 +365,18 @@ class LEs extends L {
   String get ddayGiftButton => 'Recibir regalo';
 
   @override
-  String get ttsLimitTitle => '¡Las pronunciaciones de hoy se acabaron!';
+  String get ttsLimitTitle => 'Has usado todas las reproducciones de hoy';
+
+  @override
+  String get ttsLimitBody => 'Vuelve mañana para escuchar más';
+
+  @override
+  String ttsLimitRewarded(int count) {
+    return 'Ver anuncio para $count más';
+  }
+
+  @override
+  String get ttsLimitIap => 'Desbloquear ilimitado';
 
   @override
   String ttsLimitMessage(int limit) {

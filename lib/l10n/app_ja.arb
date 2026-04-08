@@ -202,7 +202,10 @@
   "ddayGiftMessage": "今日はすべてのコンテンツが無料です",
   "ddayGiftButton": "ギフトを受け取る",
 
-  "ttsLimitTitle": "今日の発音リスニングはここまで！",
+  "ttsLimitTitle": "今日の再生回数を使い切りました",
+  "ttsLimitBody": "明日またお聴きいただけます",
+  "ttsLimitRewarded": "広告を見て{count}回追加",
+  "ttsLimitIap": "無制限解除",
 
   "ttsLimitMessage": "明日また{limit}回聴けます",
   "@ttsLimitMessage": {

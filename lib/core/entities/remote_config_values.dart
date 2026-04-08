@@ -13,6 +13,7 @@ class RemoteConfigValues {
     this.dailyTtsLimit = 5,
     this.conversionTriggerAdCount = 3,
     this.bannerDelayDays = 0,
+    this.ttsRewardedBonus = 2,
   });
 
   /// 허니문(무료 체험) 기간 일수. Day 0부터 시작.
@@ -41,4 +42,7 @@ class RemoteConfigValues {
   /// 기본값 0 = 온보딩 완료 후 즉시 배너 노출.
   /// Firebase Console에서 값을 올리면 Day N 지연으로 즉시 롤백 가능.
   final int bannerDelayDays;
+
+  /// 보상형 광고 시청 시 추가되는 TTS 재생 횟수.
+  final int ttsRewardedBonus;
 }

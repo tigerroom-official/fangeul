@@ -39,6 +39,7 @@ class FirebaseRemoteConfigService implements RemoteConfigService {
       'daily_tts_limit': 5,
       'conversion_trigger_ad_count': 3,
       'banner_delay_days': 0,
+      'tts_rewarded_bonus': 2,
     });
     } catch (e) {
       debugPrint('[RemoteConfig] setDefaults failed: $e');
@@ -59,6 +60,7 @@ class FirebaseRemoteConfigService implements RemoteConfigService {
       dailyTtsLimit: _rc.getInt('daily_tts_limit'),
       conversionTriggerAdCount: _rc.getInt('conversion_trigger_ad_count'),
       bannerDelayDays: _rc.getInt('banner_delay_days'),
+      ttsRewardedBonus: _rc.getInt('tts_rewarded_bonus'),
     );
   }
 

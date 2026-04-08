@@ -365,7 +365,18 @@ class LId extends L {
   String get ddayGiftButton => 'Ambil Hadiah';
 
   @override
-  String get ttsLimitTitle => 'Kuota mendengarkan hari ini habis!';
+  String get ttsLimitTitle => 'Jatah putar hari ini sudah habis';
+
+  @override
+  String get ttsLimitBody => 'Besok bisa dengar lagi';
+
+  @override
+  String ttsLimitRewarded(int count) {
+    return 'Tonton iklan untuk $count kali lagi';
+  }
+
+  @override
+  String get ttsLimitIap => 'Buka tanpa batas';
 
   @override
   String ttsLimitMessage(int limit) {

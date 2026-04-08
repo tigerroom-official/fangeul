@@ -364,7 +364,19 @@ class LEn extends L {
   String get ddayGiftButton => 'Claim Gift';
 
   @override
-  String get ttsLimitTitle => 'That\'s all for today\'s listening!';
+  String get ttsLimitTitle => 'You\'ve used all plays for today';
+
+  @override
+  String get ttsLimitBody =>
+      'Come back tomorrow for more, or unlock unlimited plays';
+
+  @override
+  String ttsLimitRewarded(int count) {
+    return 'Watch ad for $count more';
+  }
+
+  @override
+  String get ttsLimitIap => 'Unlock unlimited';
 
   @override
   String ttsLimitMessage(int limit) {

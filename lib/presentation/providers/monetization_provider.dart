@@ -434,6 +434,21 @@ class MonetizationNotifier extends _$MonetizationNotifier {
     return true;
   }
 
+  /// 보상형 시청 후 TTS 보너스 횟수를 추가한다.
+  ///
+  /// ttsPlayCount를 [bonus]만큼 감소시켜 잔여 횟수를 늘린다.
+  Future<void> addTtsRewardedBonus(int bonus) async {
+    try {
+      await future;
+    } catch (_) {}
+    final current = state.valueOrNull;
+    if (current == null) return;
+    final updated = current.copyWith(
+      ttsPlayCount: (current.ttsPlayCount - bonus).clamp(0, 999),
+    );
+    await _updateState(updated);
+  }
+
   /// 일일 광고 시청 제한에 도달했는지 확인한다.
   ///
   /// 날짜가 바뀌었으면 카운트를 리셋된 것으로 간주하여 false 반환.

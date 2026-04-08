@@ -141,7 +141,10 @@
   "ddayGiftMessage": "Hoy todo el contenido es gratis",
   "ddayGiftButton": "Recibir regalo",
 
-  "ttsLimitTitle": "¡Las pronunciaciones de hoy se acabaron!",
+  "ttsLimitTitle": "Has usado todas las reproducciones de hoy",
+  "ttsLimitBody": "Vuelve mañana para escuchar más",
+  "ttsLimitRewarded": "Ver anuncio para {count} más",
+  "ttsLimitIap": "Desbloquear ilimitado",
 
   "ttsLimitMessage": "Mañana podrás escuchar {limit} veces más",
 

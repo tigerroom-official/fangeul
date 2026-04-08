@@ -359,7 +359,18 @@ class LJa extends L {
   String get ddayGiftButton => 'ギフトを受け取る';
 
   @override
-  String get ttsLimitTitle => '今日の発音リスニングはここまで！';
+  String get ttsLimitTitle => '今日の再生回数を使い切りました';
+
+  @override
+  String get ttsLimitBody => '明日またお聴きいただけます';
+
+  @override
+  String ttsLimitRewarded(int count) {
+    return '広告を見て$count回追加';
+  }
+
+  @override
+  String get ttsLimitIap => '無制限解除';
 
   @override
   String ttsLimitMessage(int limit) {

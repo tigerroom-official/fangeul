@@ -202,7 +202,15 @@
   "ddayGiftMessage": "오늘 하루 모든 콘텐츠가 무료예요",
   "ddayGiftButton": "선물 받기",
 
-  "ttsLimitTitle": "오늘의 발음 듣기는 여기까지!",
+  "ttsLimitTitle": "오늘 재생 횟수를 다 사용했어요",
+  "ttsLimitBody": "내일 다시 들을 수 있어요",
+  "ttsLimitRewarded": "광고 보고 {count}회 더 듣기",
+  "@ttsLimitRewarded": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "ttsLimitIap": "무제한 해금",
 
   "ttsLimitMessage": "내일 다시 {limit}회 들을 수 있어요",
   "@ttsLimitMessage": {

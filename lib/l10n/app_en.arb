@@ -141,7 +141,10 @@
   "ddayGiftMessage": "All content is free for today",
   "ddayGiftButton": "Claim Gift",
 
-  "ttsLimitTitle": "That's all for today's listening!",
+  "ttsLimitTitle": "You've used all plays for today",
+  "ttsLimitBody": "Come back tomorrow for more, or unlock unlimited plays",
+  "ttsLimitRewarded": "Watch ad for {count} more",
+  "ttsLimitIap": "Unlock unlimited",
 
   "ttsLimitMessage": "You'll get {limit} more listens tomorrow",
 
