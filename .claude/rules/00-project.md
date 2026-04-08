@@ -58,8 +58,10 @@ core/         → presentation/ ❌
 - 보상형 1회 시청 → 팔레트 영구 해금(`themeUnlocked`) 유지 (진입 장벽 낮추기)
 - 체험 시간: Firebase Remote Config (`unlock_duration_hours`, 기본 24) — A/B 테스트 가능
 - 배너: 온보딩 완료 후 즉시 노출 (RC `banner_delay_days` 기본 0) → **IAP 구매 시만** 숨김 (보상형 시청으로는 배너 숨김 안 함)
-- 전환 퍼널: Day 0~13 허니문(무제한) → Day 14~ 즐겨찾기 5슬롯+TTS 5회/일 제한 → IAP 직행
-- 즐겨찾기/TTS 제한 해금 경로 = **IAP만** (보상형으로 해금 불가)
+- 전환 퍼널: Day 0~13 허니문(무제한) → Day 14~ 즐겨찾기 5슬롯+TTS 5회/일 제한 → IAP/보상형
+- 즐겨찾기 제한 해금 = **IAP만**
+- TTS 제한 해금 = **IAP(영구 무제한) + 보상형(+2회/시청, RC `tts_rewarded_bonus`)** — 같은 문구 재재생은 카운트 안 함
+- IAP 아무 SKU 구매 → TTS 무제한 + 즐겨찾기 무제한 + 배너 제거 (공통 혜택)
 - D-day 선물 정책: 최애 생일/컴백 당일 24h 전면 해제 (단조증가 타임스탬프 검증 + 중복 방지)
 - 수익 구조 목표: 광고 70% + IAP 30% (안정화 후)
 - 상세: `docs/discussions/2026-03-08-rewarded-ad-strategy-pivot.md`

@@ -1,0 +1,9 @@
+Thanks so much for the detailed feedback. Really appreciate hearing from someone who actually went through that phase.
+
+Good news: I'm currently working on adding voice playback for phrases so you can hear how they sound and practice along. The keyboard layout hint idea is also very doable since the app already has a custom Korean keyboard. Highlighting which keys make up each character after conversion is something I can add.
+
+Once voice playback is in place, I'm planning to explore something like a daily typing challenge where you try to type out fan phrases from memory. Kind of what you described with the training toggle idea.
+
+The spaced repetition / daily deck concept is also on my radar. I'm thinking of a lighter version, like a few random phrases each day to keep things sticky without overcomplicating it.
+
+Really helpful input, thank you. I'll keep shaping it based on feedback like this.
