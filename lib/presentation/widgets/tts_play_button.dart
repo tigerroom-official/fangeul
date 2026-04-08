@@ -67,6 +67,7 @@ class _TtsPlayButtonState extends ConsumerState<TtsPlayButton>
       if (widget.freePlay) {
         // 카운트 없이 직접 재생 (데일리 카드 등 무료 재생)
         await ref.read(ttsServiceProvider).playById(widget.audioId);
+        // freePlay로 들은 문구는 이후 counted path에서도 무료 (의도된 동작)
         sessionPlayedIds.add(widget.audioId);
       } else {
         final success = await ref.read(playTtsProvider(widget.audioId).future);
@@ -90,9 +91,8 @@ class _TtsPlayButtonState extends ConsumerState<TtsPlayButton>
     final theme = Theme.of(context);
 
     final monState = ref.watch(monetizationNotifierProvider).valueOrNull;
-    final isHoneymoon = ref.watch(isHoneymoonProvider);
     final hasIap = ref.watch(hasAnyIapProvider);
-    final showCounter = !widget.freePlay && !isHoneymoon && !hasIap;
+    final showCounter = !widget.freePlay && !hasIap;
 
     final limit = ref.watch(remoteConfigValuesProvider).dailyTtsLimit;
     final used = monState?.ttsPlayCount ?? 0;

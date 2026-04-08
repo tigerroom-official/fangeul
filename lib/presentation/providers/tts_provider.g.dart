@@ -27,11 +27,11 @@ final ttsServiceProvider = Provider<TtsService>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef TtsServiceRef = ProviderRef<TtsService>;
-String _$canPlayTtsHash() => r'f37e98bbe2d9fafa49c8202d1bcec41255b282a9';
+String _$canPlayTtsHash() => r'8c1df6eabef849d6595e22c8cedf16f1f6a362fa';
 
 /// TTS 재생 가능 여부 편의 Provider.
 ///
-/// 허니문 중이면 무제한. 그 외에는 Remote Config의 일일 TTS 제한 적용.
+/// IAP 구매 시 무제한. 그 외에는 Remote Config의 일일 TTS 제한을 Day 0부터 적용.
 /// 해금 경로는 IAP만.
 ///
 /// Copied from [canPlayTts].
@@ -48,7 +48,7 @@ final canPlayTtsProvider = AutoDisposeProvider<bool>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef CanPlayTtsRef = AutoDisposeProviderRef<bool>;
-String _$playTtsHash() => r'5ba014dbe5d6fdf41eaa7bc78a1d7a24c0ab11ec';
+String _$playTtsHash() => r'db020b70741da2e6e9f558420606b9256547029b';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -74,7 +74,6 @@ class _SystemHash {
 /// TTS 재생을 시도한다.
 ///
 /// [TtsService.playById]로 재생한다.
-/// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
 /// 같은 세션 내 동일 audioId 재재생 시 카운트를 소모하지 않는다.
 /// 제한 도달 시 false를 반환하고 재생하지 않는다.
 /// 카운트는 재생 성공 후에만 소모된다 (네트워크 실패 시 쿼터 낭비 방지).
@@ -86,7 +85,6 @@ const playTtsProvider = PlayTtsFamily();
 /// TTS 재생을 시도한다.
 ///
 /// [TtsService.playById]로 재생한다.
-/// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
 /// 같은 세션 내 동일 audioId 재재생 시 카운트를 소모하지 않는다.
 /// 제한 도달 시 false를 반환하고 재생하지 않는다.
 /// 카운트는 재생 성공 후에만 소모된다 (네트워크 실패 시 쿼터 낭비 방지).
@@ -96,7 +94,6 @@ class PlayTtsFamily extends Family<AsyncValue<bool>> {
   /// TTS 재생을 시도한다.
   ///
   /// [TtsService.playById]로 재생한다.
-  /// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
   /// 같은 세션 내 동일 audioId 재재생 시 카운트를 소모하지 않는다.
   /// 제한 도달 시 false를 반환하고 재생하지 않는다.
   /// 카운트는 재생 성공 후에만 소모된다 (네트워크 실패 시 쿼터 낭비 방지).
@@ -107,7 +104,6 @@ class PlayTtsFamily extends Family<AsyncValue<bool>> {
   /// TTS 재생을 시도한다.
   ///
   /// [TtsService.playById]로 재생한다.
-  /// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
   /// 같은 세션 내 동일 audioId 재재생 시 카운트를 소모하지 않는다.
   /// 제한 도달 시 false를 반환하고 재생하지 않는다.
   /// 카운트는 재생 성공 후에만 소모된다 (네트워크 실패 시 쿼터 낭비 방지).
@@ -148,7 +144,6 @@ class PlayTtsFamily extends Family<AsyncValue<bool>> {
 /// TTS 재생을 시도한다.
 ///
 /// [TtsService.playById]로 재생한다.
-/// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
 /// 같은 세션 내 동일 audioId 재재생 시 카운트를 소모하지 않는다.
 /// 제한 도달 시 false를 반환하고 재생하지 않는다.
 /// 카운트는 재생 성공 후에만 소모된다 (네트워크 실패 시 쿼터 낭비 방지).
@@ -158,7 +153,6 @@ class PlayTtsProvider extends AutoDisposeFutureProvider<bool> {
   /// TTS 재생을 시도한다.
   ///
   /// [TtsService.playById]로 재생한다.
-  /// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
   /// 같은 세션 내 동일 audioId 재재생 시 카운트를 소모하지 않는다.
   /// 제한 도달 시 false를 반환하고 재생하지 않는다.
   /// 카운트는 재생 성공 후에만 소모된다 (네트워크 실패 시 쿼터 낭비 방지).

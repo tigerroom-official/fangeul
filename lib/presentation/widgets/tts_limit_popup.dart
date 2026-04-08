@@ -67,7 +67,7 @@ Future<void> _showRewardedForTts(
         ref
             .read(monetizationNotifierProvider.notifier)
             .addTtsRewardedBonus(bonus);
-        clearSessionPlayedIds();
+        // sessionPlayedIds는 유지 — 이미 들은 문구는 재재생 시 카운트 안 함
       },
     );
   } catch (e) {

@@ -89,20 +89,25 @@ void main() {
 
   tearDown(() {
     container.dispose();
-    clearSessionPlayedIds();
+    sessionPlayedIds.clear();
   });
 
   group('canPlayTtsProvider', () {
-    test('should return true during honeymoon', () async {
-      setUpDefault();
+    test('should apply daily limit from Day 0 (no honeymoon bypass)', () async {
+      setUpWithState(MonetizationState(
+        installDate: todayStr(),
+        honeymoonActive: true,
+        ttsPlayCount: 5,
+        ttsLastResetDate: todayStr(),
+      ));
 
-      // 기본 상태 = 허니문 활성
       await container.read(monetizationNotifierProvider.future);
 
       final sub = container.listen(canPlayTtsProvider, (_, __) {});
       addTearDown(sub.close);
 
-      expect(container.read(canPlayTtsProvider), true);
+      // 허니문이어도 TTS 제한 적용됨
+      expect(container.read(canPlayTtsProvider), false);
     });
 
     test('should respect TTS limit even during theme trial', () async {
@@ -157,7 +162,7 @@ void main() {
       expect(container.read(canPlayTtsProvider), false);
     });
 
-    test('should return true when TTS limit reached but honeymoon active',
+    test('should return false when TTS limit reached even if honeymoon active',
         () async {
       setUpWithState(MonetizationState(
         installDate: todayStr(),
@@ -171,7 +176,8 @@ void main() {
       final sub = container.listen(canPlayTtsProvider, (_, __) {});
       addTearDown(sub.close);
 
-      expect(container.read(canPlayTtsProvider), true);
+      // 허니문이어도 TTS 제한은 적용 (IAP만 해금)
+      expect(container.read(canPlayTtsProvider), false);
     });
 
     test('should return true when TTS limit reached but hasThemePicker',
@@ -212,7 +218,7 @@ void main() {
   });
 
   group('playTtsProvider', () {
-    test('should play without counting during honeymoon', () async {
+    test('should count TTS plays even during honeymoon', () async {
       setUpDefault();
 
       await container.read(monetizationNotifierProvider.future);
@@ -223,9 +229,9 @@ void main() {
       expect(result, true);
       verify(() => mockTts.playById('love_01')).called(1);
 
-      // 카운트가 증가하지 않아야 함
+      // 허니문이어도 카운트 소모됨
       final state = await container.read(monetizationNotifierProvider.future);
-      expect(state.ttsPlayCount, 0);
+      expect(state.ttsPlayCount, 1);
     });
 
     test('should count TTS plays during theme trial (not unlimited)', () async {
@@ -303,7 +309,10 @@ void main() {
 
     test('should return false but not throw when play fails during honeymoon',
         () async {
-      setUpDefault();
+      setUpWithState(MonetizationState(
+        installDate: todayStr(),
+        honeymoonActive: true,
+      ));
       when(() => mockTts.playById(any())).thenThrow(Exception('audio error'));
 
       await container.read(monetizationNotifierProvider.future);
