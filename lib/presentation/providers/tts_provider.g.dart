@@ -48,7 +48,7 @@ final canPlayTtsProvider = AutoDisposeProvider<bool>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef CanPlayTtsRef = AutoDisposeProviderRef<bool>;
-String _$playTtsHash() => r'492913537fc0691d6cbeada81be7c3f4165b4880';
+String _$playTtsHash() => r'77372899426690792894e67b49738f3c1e4a305a';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -73,10 +73,11 @@ class _SystemHash {
 
 /// TTS 재생을 시도한다.
 ///
-/// [audioId]를 alias 매핑으로 변환한 뒤 [TtsService.playById]로 재생한다.
+/// [TtsService.playById]로 재생한다.
 /// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
 /// 같은 세션 내 동일 audioId 재재생 시 카운트를 소모하지 않는다.
 /// 제한 도달 시 false를 반환하고 재생하지 않는다.
+/// 카운트는 재생 성공 후에만 소모된다 (네트워크 실패 시 쿼터 낭비 방지).
 ///
 /// Copied from [playTts].
 @ProviderFor(playTts)
@@ -84,29 +85,32 @@ const playTtsProvider = PlayTtsFamily();
 
 /// TTS 재생을 시도한다.
 ///
-/// [audioId]를 alias 매핑으로 변환한 뒤 [TtsService.playById]로 재생한다.
+/// [TtsService.playById]로 재생한다.
 /// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
 /// 같은 세션 내 동일 audioId 재재생 시 카운트를 소모하지 않는다.
 /// 제한 도달 시 false를 반환하고 재생하지 않는다.
+/// 카운트는 재생 성공 후에만 소모된다 (네트워크 실패 시 쿼터 낭비 방지).
 ///
 /// Copied from [playTts].
 class PlayTtsFamily extends Family<AsyncValue<bool>> {
   /// TTS 재생을 시도한다.
   ///
-  /// [audioId]를 alias 매핑으로 변환한 뒤 [TtsService.playById]로 재생한다.
+  /// [TtsService.playById]로 재생한다.
   /// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
   /// 같은 세션 내 동일 audioId 재재생 시 카운트를 소모하지 않는다.
   /// 제한 도달 시 false를 반환하고 재생하지 않는다.
+  /// 카운트는 재생 성공 후에만 소모된다 (네트워크 실패 시 쿼터 낭비 방지).
   ///
   /// Copied from [playTts].
   const PlayTtsFamily();
 
   /// TTS 재생을 시도한다.
   ///
-  /// [audioId]를 alias 매핑으로 변환한 뒤 [TtsService.playById]로 재생한다.
+  /// [TtsService.playById]로 재생한다.
   /// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
   /// 같은 세션 내 동일 audioId 재재생 시 카운트를 소모하지 않는다.
   /// 제한 도달 시 false를 반환하고 재생하지 않는다.
+  /// 카운트는 재생 성공 후에만 소모된다 (네트워크 실패 시 쿼터 낭비 방지).
   ///
   /// Copied from [playTts].
   PlayTtsProvider call(
@@ -143,19 +147,21 @@ class PlayTtsFamily extends Family<AsyncValue<bool>> {
 
 /// TTS 재생을 시도한다.
 ///
-/// [audioId]를 alias 매핑으로 변환한 뒤 [TtsService.playById]로 재생한다.
+/// [TtsService.playById]로 재생한다.
 /// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
 /// 같은 세션 내 동일 audioId 재재생 시 카운트를 소모하지 않는다.
 /// 제한 도달 시 false를 반환하고 재생하지 않는다.
+/// 카운트는 재생 성공 후에만 소모된다 (네트워크 실패 시 쿼터 낭비 방지).
 ///
 /// Copied from [playTts].
 class PlayTtsProvider extends AutoDisposeFutureProvider<bool> {
   /// TTS 재생을 시도한다.
   ///
-  /// [audioId]를 alias 매핑으로 변환한 뒤 [TtsService.playById]로 재생한다.
+  /// [TtsService.playById]로 재생한다.
   /// 허니문 활성 시 카운트를 소모하지 않고 무제한 재생.
   /// 같은 세션 내 동일 audioId 재재생 시 카운트를 소모하지 않는다.
   /// 제한 도달 시 false를 반환하고 재생하지 않는다.
+  /// 카운트는 재생 성공 후에만 소모된다 (네트워크 실패 시 쿼터 낭비 방지).
   ///
   /// Copied from [playTts].
   PlayTtsProvider(

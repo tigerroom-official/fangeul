@@ -92,24 +92,6 @@ void main() {
     clearSessionPlayedIds();
   });
 
-  group('resolveAudioId', () {
-    test('should resolve alias to mapped audioId', () {
-      setUpDefault();
-      expect(resolveAudioId('idol_01'), 'love_01');
-      expect(resolveAudioId('idol_03'), 'cback_01');
-      expect(resolveAudioId('idol_04'), 'bday_01');
-      expect(resolveAudioId('idol_07'), 'love_25');
-      expect(resolveAudioId('idol_14'), 'idol_02');
-    });
-
-    test('should return original audioId when no alias exists', () {
-      setUpDefault();
-      expect(resolveAudioId('love_01'), 'love_01');
-      expect(resolveAudioId('bday_05'), 'bday_05');
-      expect(resolveAudioId('unknown_99'), 'unknown_99');
-    });
-  });
-
   group('canPlayTtsProvider', () {
     test('should return true during honeymoon', () async {
       setUpDefault();
@@ -296,20 +278,7 @@ void main() {
       expect(result, false);
     });
 
-    test('should resolve alias and pass resolved audioId to TtsService',
-        () async {
-      setUpDefault();
-
-      await container.read(monetizationNotifierProvider.future);
-
-      // idol_01은 love_01으로 alias됨
-      await container.read(playTtsProvider('idol_01').future);
-
-      verify(() => mockTts.playById('love_01')).called(1);
-      verifyNever(() => mockTts.playById('idol_01'));
-    });
-
-    test('should pass non-aliased audioId directly to TtsService', () async {
+    test('should pass audioId directly to TtsService', () async {
       setUpDefault();
 
       await container.read(monetizationNotifierProvider.future);
@@ -361,27 +330,23 @@ void main() {
       expect(state.ttsPlayCount, 2);
     });
 
-    test(
-        'should skip counter when alias resolves to already-played audioId',
-        () async {
+    test('should not consume quota when play fails', () async {
       setUpWithState(MonetizationState(
         installDate: todayStr(),
         honeymoonActive: false,
       ));
+      when(() => mockTts.playById(any())).thenThrow(Exception('network error'));
 
       await container.read(monetizationNotifierProvider.future);
 
-      // love_01 재생 → 카운트 1
-      await container.read(playTtsProvider('love_01').future);
+      final result =
+          await container.read(playTtsProvider('love_01').future);
 
-      // idol_01은 love_01으로 resolve됨 → 이미 재생됨 → 카운트 스킵
-      await container.read(playTtsProvider('idol_01').future);
+      expect(result, false);
 
+      // 재생 실패했으므로 카운트가 증가하지 않아야 함
       final state = await container.read(monetizationNotifierProvider.future);
-      expect(state.ttsPlayCount, 1);
-
-      // 그래도 재생은 됨
-      verify(() => mockTts.playById('love_01')).called(2);
+      expect(state.ttsPlayCount, 0);
     });
   });
 }
