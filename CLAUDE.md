@@ -53,6 +53,6 @@ dart format --set-exit-if-changed .  # 포맷 검증
 | `docs/HANDOFF.md` | 세션 핸드오프 (최신 작업 상태) |
 
 ## 현재 작업 상태
-> 마지막 핸드오프: 2026-04-07
+> 마지막 핸드오프: 2026-04-10
 > 상세: `docs/HANDOFF.md` 참조
-> 요약: 배너 Day 7→Day 0(온보딩 후) + 보상형 배너숨김 제거 + sessionBanner 삭제 + v1.0.0+13 Play Store 검토 대기. 다음: 검토 완료 확인 → TTS 구현.
+> 요약: TTS 재생 완료(v1.1.0+19 출시) + Analytics 20개 이벤트 + 키보드 리팩토링 + 크래시 방어 9파일 + v1.1.1+20 검토 중. 다음: 팬 미션 + screen_view 추적.
