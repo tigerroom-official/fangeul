@@ -390,11 +390,12 @@ class _PhraseCard extends ConsumerWidget {
           // 액션 버튼
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 12,
             children: [
               if (phrase.audioId != null)
                 TtsPlayButton(
                   audioId: phrase.audioId!,
-                  size: 18.0, // slightly smaller for compact view
+                  size: 18.0,
                   onLimitReached: () => showTtsLimitPopup(context, ref),
                 ),
               IconButton(
@@ -418,7 +419,6 @@ class _PhraseCard extends ConsumerWidget {
                   }
                 },
               ),
-              const SizedBox(width: 16),
               IconButton(
                 icon: const Icon(Icons.copy_rounded),
                 tooltip: L.of(context).copyTooltip,
