@@ -1,0 +1,24 @@
+<en-US>
+Performance and stability improvements.
+</en-US>
+<es-419>
+Mejoras de rendimiento y estabilidad.
+</es-419>
+<id>
+Peningkatan performa dan stabilitas.
+</id>
+<ja-JP>
+パフォーマンスと安定性の改善。
+</ja-JP>
+<ko-KR>
+성능 및 안정성 개선.
+</ko-KR>
+<pt-BR>
+Melhorias de desempenho e estabilidade.
+</pt-BR>
+<th>
+ปรับปรุงประสิทธิภาพและความเสถียร
+</th>
+<vi>
+Cải thiện hiệu suất và độ ổn định.
+</vi>
