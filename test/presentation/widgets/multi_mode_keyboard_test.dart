@@ -6,8 +6,43 @@ import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/widgets/multi_mode_keyboard.dart';
 
+/// 포인터 ID 카운터. 매 테스트마다 초기화 불필요 — 고유성만 보장하면 된다.
+int _nextPointer = 100;
+
+/// 가상 시간 카운터(ms). 테스트 내에서 매 탭마다 100ms씩 증가한다.
+int _nextTimeMs = 100;
+
+/// AbsorbPointer 내부의 키를 탭한다.
+///
+/// [tester.tapAt]은 `PointerEvent.timeStamp`이 항상 [Duration.zero]이므로
+/// 이중 입력 방지 가드를 통과하지 못한다.
+/// `sendEventToBinding`으로 적절한 타임스탬프를 가진 포인터 이벤트를
+/// 직접 전송한다.
+Future<void> _tapKey(WidgetTester tester, Finder finder) async {
+  final center = tester.getCenter(finder);
+  final pointer = _nextPointer++;
+  final ts = Duration(milliseconds: _nextTimeMs);
+  _nextTimeMs += 100;
+
+  await tester.sendEventToBinding(
+    PointerDownEvent(pointer: pointer, position: center, timeStamp: ts),
+  );
+  await tester.sendEventToBinding(
+    PointerUpEvent(
+        pointer: pointer,
+        position: center,
+        timeStamp: ts + const Duration(milliseconds: 10)),
+  );
+  await tester.pump();
+}
+
 void main() {
   final keyboardKey = GlobalKey<MultiModeKeyboardState>();
+
+  setUp(() {
+    _nextPointer = 100;
+    _nextTimeMs = 100;
+  });
 
   Widget buildTestApp({
     required ValueChanged<String> onText,
@@ -41,14 +76,9 @@ void main() {
       );
 
       // 한글 모드에서 ㅎ(g키), ㅏ(k키), ㄴ(s키) 입력
-      // KeyData: g→ㅎ, k→ㅏ, s→ㄴ
-      // 한글 모드(isEngToKor: false)이므로 한글이 주 라벨
-      await tester.tap(find.text('ㅎ'));
-      await tester.pump();
-      await tester.tap(find.text('ㅏ'));
-      await tester.pump();
-      await tester.tap(find.text('ㄴ'));
-      await tester.pump();
+      await _tapKey(tester, find.text('ㅎ'));
+      await _tapKey(tester, find.text('ㅏ'));
+      await _tapKey(tester, find.text('ㄴ'));
 
       expect(emittedText, '한');
       expect(keyboardKey.currentState?.currentText, '한');
@@ -62,15 +92,12 @@ void main() {
       );
 
       // ㅎ+ㅏ 입력
-      await tester.tap(find.text('ㅎ'));
-      await tester.pump();
-      await tester.tap(find.text('ㅏ'));
-      await tester.pump();
+      await _tapKey(tester, find.text('ㅎ'));
+      await _tapKey(tester, find.text('ㅏ'));
       expect(emittedText, '하');
 
       // Backspace → ㅎ만 남음
-      await tester.tap(find.byIcon(Icons.backspace_outlined));
-      await tester.pump();
+      await _tapKey(tester, find.byIcon(Icons.backspace_outlined));
       expect(emittedText, 'ㅎ');
     });
 
@@ -81,14 +108,10 @@ void main() {
       );
 
       // ㅎ+ㅏ+ㄴ 입력 + 스페이스
-      await tester.tap(find.text('ㅎ'));
-      await tester.pump();
-      await tester.tap(find.text('ㅏ'));
-      await tester.pump();
-      await tester.tap(find.text('ㄴ'));
-      await tester.pump();
-      await tester.tap(find.text(UiStrings.keyboardSpace));
-      await tester.pump();
+      await _tapKey(tester, find.text('ㅎ'));
+      await _tapKey(tester, find.text('ㅏ'));
+      await _tapKey(tester, find.text('ㄴ'));
+      await _tapKey(tester, find.text(UiStrings.keyboardSpace));
 
       expect(emittedText, '한 ');
     });
@@ -105,12 +128,9 @@ void main() {
       );
 
       // ABC 모드(isEngToKor: true)이므로 영문이 주 라벨
-      await tester.tap(find.text('d'));
-      await tester.pump();
-      await tester.tap(find.text('a'));
-      await tester.pump();
-      await tester.tap(find.text('y'));
-      await tester.pump();
+      await _tapKey(tester, find.text('d'));
+      await _tapKey(tester, find.text('a'));
+      await _tapKey(tester, find.text('y'));
 
       expect(emittedText, 'day');
     });
@@ -125,17 +145,14 @@ void main() {
       );
 
       // CAPS 한번 탭 (oneShot) — 키 라벨이 대문자로 변경됨
-      await tester.tap(find.byIcon(Icons.arrow_upward));
-      await tester.pump();
+      await _tapKey(tester, find.byIcon(Icons.arrow_upward));
 
       // D (대문자) — CAPS 활성 시 주 라벨이 대문자
-      await tester.tap(find.text('D'));
-      await tester.pump();
+      await _tapKey(tester, find.text('D'));
       expect(emittedText, 'D');
 
       // 다음 글자는 소문자 (oneShot 소비됨)
-      await tester.tap(find.text('a'));
-      await tester.pump();
+      await _tapKey(tester, find.text('a'));
       expect(emittedText, 'Da');
     });
 
@@ -148,14 +165,11 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('a'));
-      await tester.pump();
-      await tester.tap(find.text('b'));
-      await tester.pump();
+      await _tapKey(tester, find.text('a'));
+      await _tapKey(tester, find.text('b'));
       expect(emittedText, 'ab');
 
-      await tester.tap(find.byIcon(Icons.backspace_outlined));
-      await tester.pump();
+      await _tapKey(tester, find.byIcon(Icons.backspace_outlined));
       expect(emittedText, 'a');
     });
   });
@@ -170,12 +184,9 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('1'));
-      await tester.pump();
-      await tester.tap(find.text('2'));
-      await tester.pump();
-      await tester.tap(find.text('3'));
-      await tester.pump();
+      await _tapKey(tester, find.text('1'));
+      await _tapKey(tester, find.text('2'));
+      await _tapKey(tester, find.text('3'));
 
       expect(emittedText, '123');
     });
@@ -189,10 +200,8 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('@'));
-      await tester.pump();
-      await tester.tap(find.text('#'));
-      await tester.pump();
+      await _tapKey(tester, find.text('@'));
+      await _tapKey(tester, find.text('#'));
 
       expect(emittedText, '@#');
     });
@@ -206,21 +215,17 @@ void main() {
       );
 
       // 한글 모드에서 "한" 입력
-      await tester.tap(find.text('ㅎ'));
-      await tester.pump();
-      await tester.tap(find.text('ㅏ'));
-      await tester.pump();
-      await tester.tap(find.text('ㄴ'));
-      await tester.pump();
+      await _tapKey(tester, find.text('ㅎ'));
+      await _tapKey(tester, find.text('ㅏ'));
+      await _tapKey(tester, find.text('ㄴ'));
       expect(emittedText, '한');
 
-      // ABC 모드로 전환
+      // ABC 모드로 전환 (toolbar의 SegmentedButton은 AbsorbPointer 밖)
       await tester.tap(find.text(UiStrings.keyboardModeAbc));
       await tester.pump();
 
       // ABC로 "a" 입력 → "한a"
-      await tester.tap(find.text('a'));
-      await tester.pump();
+      await _tapKey(tester, find.text('a'));
       expect(emittedText, '한a');
     });
 
@@ -232,8 +237,7 @@ void main() {
       );
 
       // 한글 모드에서 ㅎ만 입력 (조합 중)
-      await tester.tap(find.text('ㅎ'));
-      await tester.pump();
+      await _tapKey(tester, find.text('ㅎ'));
       expect(emittedText, 'ㅎ');
 
       // ABC 모드로 전환 → ㅎ flush됨
@@ -254,8 +258,7 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('5'));
-      await tester.pump();
+      await _tapKey(tester, find.text('5'));
 
       // 123 모드의 [ABC] 모드 전환 버튼
       // SegmentedButton의 ABC와 123 하단의 ABC 버튼이 둘 다 있으므로
@@ -263,8 +266,7 @@ void main() {
       await tester.tap(find.text(UiStrings.keyboardModeAbc).first);
       await tester.pump();
 
-      await tester.tap(find.text('x'));
-      await tester.pump();
+      await _tapKey(tester, find.text('x'));
       expect(emittedText, '5x');
     });
   });
@@ -283,8 +285,7 @@ void main() {
       expect(keyboardKey.currentState?.currentText, '외부텍스트');
 
       // 이후 입력은 기존 텍스트에 추가
-      await tester.tap(find.text('ㅎ'));
-      await tester.pump();
+      await _tapKey(tester, find.text('ㅎ'));
       expect(emittedText, '외부텍스트ㅎ');
     });
 
@@ -294,8 +295,7 @@ void main() {
       );
 
       // 한글 자모 입력
-      await tester.tap(find.text('ㅎ'));
-      await tester.pump();
+      await _tapKey(tester, find.text('ㅎ'));
 
       // setText로 덮어쓰기
       keyboardKey.currentState?.setText('새텍스트');
@@ -327,8 +327,7 @@ void main() {
       );
 
       // 한글 자모 입력 (조합 중)
-      await tester.tap(find.text('ㅎ'));
-      await tester.pump();
+      await _tapKey(tester, find.text('ㅎ'));
 
       // 완료 버튼 → jamo flush
       await tester.tap(find.text(UiStrings.keyboardDone));

@@ -29,6 +29,10 @@ enum InputMode {
 /// 한글/ABC 모드 모두 [KeyboardKey] + [KeyData] 를 재사용하며
 /// (`isEngToKor` 플래그로 주/보조 라벨 전환),
 /// 자모 조합은 [KeyboardConverter.assembleJamos]를 호출한다.
+///
+/// 시스템 키보드(Gboard)와 동일한 **단일 Listener + 최근접 키 해석** 방식.
+/// 키보드 전체가 하나의 터치 영역이며, 터치 좌표에서 가장 가까운 키를
+/// 찾아 콜백을 발화한다. 키 사이 데드존이 존재하지 않는다.
 class MultiModeKeyboard extends ConsumerStatefulWidget {
   /// Creates a [MultiModeKeyboard].
   const MultiModeKeyboard({
@@ -49,6 +53,24 @@ class MultiModeKeyboard extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<MultiModeKeyboard> createState() => MultiModeKeyboardState();
+}
+
+/// 키 하나의 히트 영역 정보.
+class _KeyHitArea {
+  _KeyHitArea({
+    required this.globalKey,
+    required this.onTap,
+    this.isBackspace = false,
+  });
+
+  /// 키 위젯에 부여된 [GlobalKey].
+  final GlobalKey globalKey;
+
+  /// 키를 탭했을 때 실행할 콜백.
+  final VoidCallback onTap;
+
+  /// 백스페이스 키 여부 (가속 삭제 판별용).
+  final bool isBackspace;
 }
 
 /// [MultiModeKeyboard]의 상태. GlobalKey로 외부 접근 가능.
@@ -103,17 +125,46 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
   static const _numRow1 = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
   static const _numRow2 = ['@', '#', '-', '_', '(', ')', '/', '.'];
 
-  // ── DEL 가속 삭제 ──
+  // ── 히트 영역 ──
+
+  late List<_KeyHitArea> _hitAreas;
+
+  // Korean/ABC 모드 GlobalKeys
+  final _qRow1Keys = List.generate(10, (_) => GlobalKey());
+  final _qRow2Keys = List.generate(9, (_) => GlobalKey());
+  final _qCapsKey = GlobalKey();
+  final _qRow3Keys = List.generate(7, (_) => GlobalKey());
+  final _qBsKey = GlobalKey();
+  final _qSpaceKey = GlobalKey();
+
+  // 123 모드 GlobalKeys
+  final _nRow1Keys = List.generate(10, (_) => GlobalKey());
+  final _nRow2Keys = List.generate(8, (_) => GlobalKey());
+  final _nBsKey = GlobalKey();
+  final _nModeKey = GlobalKey();
+  final _nSpaceKey = GlobalKey();
+
+  // ── 이중 입력 방지 ──
+  // 테스트 환경에서 DateTime.now()가 tester.pump()와 무관하게 실시간이므로
+  // PointerEvent.timeStamp 기반으로 비교한다.
+
+  Duration _lastPointerDownTs = Duration.zero;
+  static const _minInterval = Duration(milliseconds: 40);
+
+  // ── 백스페이스 가속 삭제 ──
 
   Timer? _deleteTimer;
   bool _isAccelerated = false;
   bool _isDisposed = false;
   DateTime? _longPressStart;
+  bool _bsActive = false;
 
   @override
   void initState() {
     super.initState();
+    _isDisposed = false;
     _mode = widget.initialMode;
+    _hitAreas = _buildHitAreas();
   }
 
   @override
@@ -138,6 +189,170 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
     });
   }
 
+  // ── 히트 영역 빌드 ──
+
+  /// 현재 모드에 맞는 히트 영역을 구성한다.
+  List<_KeyHitArea> _buildHitAreas() {
+    return switch (_mode) {
+      InputMode.korean => _buildQwertyHitAreas(isEngToKor: false),
+      InputMode.abc => _buildQwertyHitAreas(isEngToKor: true),
+      InputMode.numbers => _buildNumberHitAreas(),
+    };
+  }
+
+  List<_KeyHitArea> _buildQwertyHitAreas({required bool isEngToKor}) {
+    final onChar = isEngToKor ? _onAbcChar : _onKoreanChar;
+    final areas = <_KeyHitArea>[];
+
+    for (var i = 0; i < _row1.length; i++) {
+      areas.add(_KeyHitArea(
+        globalKey: _qRow1Keys[i],
+        onTap: () => onChar(_row1[i]),
+      ));
+    }
+    for (var i = 0; i < _row2.length; i++) {
+      areas.add(_KeyHitArea(
+        globalKey: _qRow2Keys[i],
+        onTap: () => onChar(_row2[i]),
+      ));
+    }
+    areas.add(_KeyHitArea(
+      globalKey: _qBsKey,
+      onTap: _onBackspace,
+      isBackspace: true,
+    ));
+    areas.add(_KeyHitArea(
+      globalKey: _qCapsKey,
+      onTap: () => ref.read(keyboardNotifierProvider.notifier).toggleCaps(),
+    ));
+    for (var i = 0; i < _row3.length; i++) {
+      areas.add(_KeyHitArea(
+        globalKey: _qRow3Keys[i],
+        onTap: () => onChar(_row3[i]),
+      ));
+    }
+    areas.add(_KeyHitArea(
+      globalKey: _qSpaceKey,
+      onTap: _onSpace,
+    ));
+    return areas;
+  }
+
+  List<_KeyHitArea> _buildNumberHitAreas() {
+    final areas = <_KeyHitArea>[];
+    for (var i = 0; i < _numRow1.length; i++) {
+      areas.add(_KeyHitArea(
+        globalKey: _nRow1Keys[i],
+        onTap: () => _onNumChar(_numRow1[i]),
+      ));
+    }
+    for (var i = 0; i < _numRow2.length; i++) {
+      areas.add(_KeyHitArea(
+        globalKey: _nRow2Keys[i],
+        onTap: () => _onNumChar(_numRow2[i]),
+      ));
+    }
+    areas.add(_KeyHitArea(
+      globalKey: _nBsKey,
+      onTap: _onBackspace,
+      isBackspace: true,
+    ));
+    areas.add(_KeyHitArea(
+      globalKey: _nModeKey,
+      onTap: () => _switchMode(InputMode.abc),
+    ));
+    areas.add(_KeyHitArea(
+      globalKey: _nSpaceKey,
+      onTap: _onSpace,
+    ));
+    return areas;
+  }
+
+  // ── 최근접 키 해석 ──
+
+  _KeyHitArea? _findNearest(Offset globalPos) {
+    _KeyHitArea? nearest;
+    double minDist = double.infinity;
+
+    for (final area in _hitAreas) {
+      final box =
+          area.globalKey.currentContext?.findRenderObject() as RenderBox?;
+      if (box == null || !box.hasSize) continue;
+      final topLeft = box.localToGlobal(Offset.zero);
+      final rect = topLeft & box.size;
+
+      if (rect.contains(globalPos)) return area;
+
+      final dist = (rect.center - globalPos).distanceSquared;
+      if (dist < minDist) {
+        minDist = dist;
+        nearest = area;
+      }
+    }
+    return nearest;
+  }
+
+  // ── 포인터 이벤트 ──
+
+  void _onPointerDown(PointerDownEvent event) {
+    if (event.timeStamp - _lastPointerDownTs < _minInterval) return;
+    _lastPointerDownTs = event.timeStamp;
+
+    final area = _findNearest(event.position);
+    if (area == null) return;
+
+    HapticFeedback.lightImpact();
+    area.onTap();
+
+    if (area.isBackspace) {
+      _bsActive = true;
+      _longPressStart = DateTime.now();
+      _isAccelerated = false;
+      _deleteTimer = Timer(const Duration(milliseconds: 300), () {
+        if (_isDisposed || !_bsActive) return;
+        _deleteTimer = Timer.periodic(
+          const Duration(milliseconds: 70),
+          (timer) {
+            if (_isDisposed || !_bsActive) {
+              timer.cancel();
+              return;
+            }
+            _onBackspace();
+            final elapsed = DateTime.now().difference(_longPressStart!);
+            if (!_isAccelerated && elapsed.inMilliseconds > 800) {
+              _isAccelerated = true;
+              HapticFeedback.heavyImpact();
+              timer.cancel();
+              if (_isDisposed) return;
+              _deleteTimer = Timer.periodic(
+                const Duration(milliseconds: 35),
+                (t) {
+                  if (_isDisposed || !_bsActive) {
+                    t.cancel();
+                    return;
+                  }
+                  _onBackspace();
+                },
+              );
+            }
+          },
+        );
+      });
+    }
+  }
+
+  void _onPointerUp(PointerUpEvent event) => _cancelBackspace();
+
+  void _onPointerCancel(PointerCancelEvent event) => _cancelBackspace();
+
+  void _cancelBackspace() {
+    _deleteTimer?.cancel();
+    _deleteTimer = null;
+    _isAccelerated = false;
+    _longPressStart = null;
+    _bsActive = false;
+  }
+
   // ── 내부 로직 ──
 
   /// 자모 버퍼를 flush하여 committedText에 합산.
@@ -153,6 +368,7 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
     setState(() {
       _flushJamo();
       _mode = newMode;
+      _hitAreas = _buildHitAreas();
     });
   }
 
@@ -224,47 +440,6 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
     _emitText();
   }
 
-  // ── DEL 가속 삭제 ──
-
-  void _onDeleteLongPressStart() {
-    _longPressStart = DateTime.now();
-    _isAccelerated = false;
-    _deleteTimer = Timer.periodic(
-      const Duration(milliseconds: 70),
-      (timer) {
-        if (_isDisposed) {
-          timer.cancel();
-          return;
-        }
-        _onBackspace();
-        final elapsed = DateTime.now().difference(_longPressStart!);
-        if (!_isAccelerated && elapsed.inMilliseconds > 800) {
-          _isAccelerated = true;
-          HapticFeedback.heavyImpact();
-          timer.cancel();
-          if (_isDisposed) return;
-          _deleteTimer = Timer.periodic(
-            const Duration(milliseconds: 35),
-            (t) {
-              if (_isDisposed) {
-                t.cancel();
-                return;
-              }
-              _onBackspace();
-            },
-          );
-        }
-      },
-    );
-  }
-
-  void _onDeleteLongPressEnd() {
-    _deleteTimer?.cancel();
-    _deleteTimer = null;
-    _isAccelerated = false;
-    _longPressStart = null;
-  }
-
   // ── Build ──
 
   @override
@@ -281,7 +456,18 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
         children: [
           _buildToolbar(theme),
           const SizedBox(height: 4),
-          ..._buildKeyRows(kbState),
+          Listener(
+            behavior: HitTestBehavior.opaque,
+            onPointerDown: _onPointerDown,
+            onPointerUp: _onPointerUp,
+            onPointerCancel: _onPointerCancel,
+            child: AbsorbPointer(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: _buildKeyRows(kbState),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -349,38 +535,35 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
     KeyboardState kbState, {
     required bool isEngToKor,
   }) {
-    void Function(KeyData) onChar = isEngToKor ? _onAbcChar : _onKoreanChar;
-
     return [
-      _buildCharRow(_row1, kbState, isEngToKor: isEngToKor, onChar: onChar),
+      _buildCharRow(_row1, kbState, _qRow1Keys, isEngToKor: isEngToKor),
       const SizedBox(height: 4),
-      _buildCharRow2(kbState, isEngToKor: isEngToKor, onChar: onChar),
+      _buildCharRow2(kbState, isEngToKor: isEngToKor),
       const SizedBox(height: 4),
-      _buildCharRow3(kbState, isEngToKor: isEngToKor, onChar: onChar),
+      _buildCharRow3(kbState, isEngToKor: isEngToKor),
     ];
   }
 
   /// Row 1: 10개 문자 키.
   Widget _buildCharRow(
     List<KeyData> keys,
-    KeyboardState kbState, {
+    KeyboardState kbState,
+    List<GlobalKey> gks, {
     required bool isEngToKor,
-    required void Function(KeyData) onChar,
   }) {
     return Row(
-      children: keys
-          .map(
-            (data) => Expanded(
-              child: KeyboardKey(
-                keyType: KeyType.character,
-                keyData: data,
-                isShifted: kbState.isShifted,
-                isEngToKor: isEngToKor,
-                onTap: () => onChar(data),
-              ),
+      children: [
+        for (var i = 0; i < keys.length; i++)
+          Expanded(
+            child: KeyboardKey(
+              key: gks[i],
+              keyType: KeyType.character,
+              keyData: keys[i],
+              isShifted: kbState.isShifted,
+              isEngToKor: isEngToKor,
             ),
-          )
-          .toList(),
+          ),
+      ],
     );
   }
 
@@ -388,27 +571,21 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
   Widget _buildCharRow2(
     KeyboardState kbState, {
     required bool isEngToKor,
-    required void Function(KeyData) onChar,
   }) {
     return Row(
       children: [
-        ..._row2.map(
-          (data) => Expanded(
+        for (var i = 0; i < _row2.length; i++)
+          Expanded(
             child: KeyboardKey(
+              key: _qRow2Keys[i],
               keyType: KeyType.character,
-              keyData: data,
+              keyData: _row2[i],
               isShifted: kbState.isShifted,
               isEngToKor: isEngToKor,
-              onTap: () => onChar(data),
             ),
           ),
-        ),
         Expanded(
-          child: _BackspaceKeyCompat(
-            onTap: _onBackspace,
-            onLongPressStart: _onDeleteLongPressStart,
-            onLongPressEnd: _onDeleteLongPressEnd,
-          ),
+          child: _BackspaceKeyVisual(key: _qBsKey),
         ),
       ],
     );
@@ -418,38 +595,32 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
   Widget _buildCharRow3(
     KeyboardState kbState, {
     required bool isEngToKor,
-    required void Function(KeyData) onChar,
   }) {
     return Row(
       children: [
         Expanded(
           flex: 13,
           child: KeyboardKey(
+            key: _qCapsKey,
             keyType: KeyType.caps,
             isShifted: kbState.isShifted,
             isCapsLocked: kbState.capsMode == CapsMode.locked,
-            onTap: () =>
-                ref.read(keyboardNotifierProvider.notifier).toggleCaps(),
           ),
         ),
-        ..._row3.map(
-          (data) => Expanded(
+        for (var i = 0; i < _row3.length; i++)
+          Expanded(
             flex: 10,
             child: KeyboardKey(
+              key: _qRow3Keys[i],
               keyType: KeyType.character,
-              keyData: data,
+              keyData: _row3[i],
               isShifted: kbState.isShifted,
               isEngToKor: isEngToKor,
-              onTap: () => onChar(data),
             ),
           ),
-        ),
         Expanded(
           flex: 20,
-          child: KeyboardKey(
-            keyType: KeyType.space,
-            onTap: _onSpace,
-          ),
+          child: KeyboardKey(key: _qSpaceKey, keyType: KeyType.space),
         ),
       ],
     );
@@ -459,7 +630,7 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
 
   List<Widget> _buildNumberRows() {
     return [
-      _buildSimpleRow(_numRow1, _onNumChar),
+      _buildSimpleRow(_numRow1, _nRow1Keys),
       const SizedBox(height: 4),
       _buildNumRow2(),
       const SizedBox(height: 4),
@@ -467,18 +638,24 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
     ];
   }
 
+  Widget _buildSimpleRow(List<String> chars, List<GlobalKey> gks) {
+    return Row(
+      children: [
+        for (var i = 0; i < chars.length; i++)
+          Expanded(child: _SimpleKeyVisual(key: gks[i], label: chars[i])),
+      ],
+    );
+  }
+
   Widget _buildNumRow2() {
     return Row(
       children: [
-        ..._numRow2.map(
-          (ch) => Expanded(child: _SimpleKey(label: ch, onTap: _onNumChar)),
-        ),
-        Expanded(
-          child: _BackspaceKeyCompat(
-            onTap: _onBackspace,
-            onLongPressStart: _onDeleteLongPressStart,
-            onLongPressEnd: _onDeleteLongPressEnd,
+        for (var i = 0; i < _numRow2.length; i++)
+          Expanded(
+            child: _SimpleKeyVisual(key: _nRow2Keys[i], label: _numRow2[i]),
           ),
+        Expanded(
+          child: _BackspaceKeyVisual(key: _nBsKey),
         ),
       ],
     );
@@ -489,71 +666,49 @@ class MultiModeKeyboardState extends ConsumerState<MultiModeKeyboard> {
       children: [
         Expanded(
           flex: 13,
-          child: _ModeButton(
+          child: _ModeButtonVisual(
+            key: _nModeKey,
             label: L.of(context).keyboardModeAbc,
-            onTap: () => _switchMode(InputMode.abc),
           ),
         ),
         Expanded(
           flex: 70,
-          child: KeyboardKey(
-            keyType: KeyType.space,
-            onTap: _onSpace,
-          ),
+          child: KeyboardKey(key: _nSpaceKey, keyType: KeyType.space),
         ),
       ],
     );
   }
-
-  Widget _buildSimpleRow(
-    List<String> chars,
-    void Function(String) onChar,
-  ) {
-    return Row(
-      children: chars
-          .map((ch) => Expanded(child: _SimpleKey(label: ch, onTap: onChar)))
-          .toList(),
-    );
-  }
 }
 
-/// 단일 라벨 키 (123 모드용).
-class _SimpleKey extends StatelessWidget {
-  const _SimpleKey({required this.label, required this.onTap});
+/// 단일 라벨 키 (123 모드용, 순수 렌더링).
+class _SimpleKeyVisual extends StatelessWidget {
+  const _SimpleKeyVisual({required this.label, super.key});
 
   final String label;
-  final void Function(String) onTap;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final bgColor = colorScheme.surfaceContainerHigh;
     final textColor = colorScheme.onSurface;
-    final accentColor = colorScheme.primary;
 
     return SizedBox(
       height: 48,
       child: Padding(
         padding: const EdgeInsets.all(2),
-        child: Material(
-          color: bgColor,
-          borderRadius: BorderRadius.circular(8),
-          child: InkWell(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: bgColor,
             borderRadius: BorderRadius.circular(8),
-            splashColor: accentColor.withValues(alpha: 0.2),
-            onTap: () {
-              HapticFeedback.lightImpact();
-              onTap(label);
-            },
-            child: Center(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontFamily: 'NotoSansKR',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: textColor,
-                ),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontFamily: 'NotoSansKR',
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: textColor,
               ),
             ),
           ),
@@ -563,12 +718,11 @@ class _SimpleKey extends StatelessWidget {
   }
 }
 
-/// 모드 전환 버튼 (123 모드의 ABC 전환).
-class _ModeButton extends StatelessWidget {
-  const _ModeButton({required this.label, required this.onTap});
+/// 모드 전환 버튼 (123 모드의 ABC 전환, 순수 렌더링).
+class _ModeButtonVisual extends StatelessWidget {
+  const _ModeButtonVisual({required this.label, super.key});
 
   final String label;
-  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -580,24 +734,19 @@ class _ModeButton extends StatelessWidget {
       height: 48,
       child: Padding(
         padding: const EdgeInsets.all(2),
-        child: Material(
-          color: bgColor,
-          borderRadius: BorderRadius.circular(8),
-          child: InkWell(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: bgColor,
             borderRadius: BorderRadius.circular(8),
-            onTap: () {
-              HapticFeedback.lightImpact();
-              onTap();
-            },
-            child: Center(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontFamily: 'NotoSansKR',
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: textColor,
-                ),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontFamily: 'NotoSansKR',
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: textColor,
               ),
             ),
           ),
@@ -607,68 +756,25 @@ class _ModeButton extends StatelessWidget {
   }
 }
 
-/// MultiModeKeyboard용 백스페이스 키 (Listener 기반).
-class _BackspaceKeyCompat extends StatefulWidget {
-  const _BackspaceKeyCompat({
-    required this.onTap,
-    required this.onLongPressStart,
-    required this.onLongPressEnd,
-  });
-
-  final VoidCallback onTap;
-  final VoidCallback onLongPressStart;
-  final VoidCallback onLongPressEnd;
-
-  @override
-  State<_BackspaceKeyCompat> createState() => _BackspaceKeyCompatState();
-}
-
-class _BackspaceKeyCompatState extends State<_BackspaceKeyCompat> {
-  Timer? _timer;
-  bool _longFired = false;
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
+/// 백스페이스 키 (순수 렌더링).
+class _BackspaceKeyVisual extends StatelessWidget {
+  const _BackspaceKeyVisual({super.key});
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return SizedBox(
       height: 52,
-      child: Listener(
-        onPointerDown: (_) {
-          _longFired = false;
-          HapticFeedback.lightImpact();
-          widget.onTap();
-          _timer = Timer(const Duration(milliseconds: 300), () {
-            _longFired = true;
-            widget.onLongPressStart();
-          });
-        },
-        onPointerUp: (_) {
-          _timer?.cancel();
-          if (_longFired) widget.onLongPressEnd();
-          _longFired = false;
-        },
-        onPointerCancel: (_) {
-          _timer?.cancel();
-          if (_longFired) widget.onLongPressEnd();
-          _longFired = false;
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 3),
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: cs.surfaceContainer,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Center(
-              child: Icon(Icons.backspace_outlined, size: 20,
-                  color: cs.onSurfaceVariant),
-            ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 3),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: cs.surfaceContainer,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Center(
+            child: Icon(Icons.backspace_outlined,
+                size: 20, color: cs.onSurfaceVariant),
           ),
         ),
       ),
