@@ -27,27 +27,6 @@ final ttsServiceProvider = Provider<TtsService>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef TtsServiceRef = ProviderRef<TtsService>;
-String _$canPlayTtsHash() => r'8c1df6eabef849d6595e22c8cedf16f1f6a362fa';
-
-/// TTS 재생 가능 여부 편의 Provider.
-///
-/// IAP 구매 시 무제한. 그 외에는 Remote Config의 일일 TTS 제한을 Day 0부터 적용.
-/// 해금 경로는 IAP만.
-///
-/// Copied from [canPlayTts].
-@ProviderFor(canPlayTts)
-final canPlayTtsProvider = AutoDisposeProvider<bool>.internal(
-  canPlayTts,
-  name: r'canPlayTtsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$canPlayTtsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef CanPlayTtsRef = AutoDisposeProviderRef<bool>;
 String _$playTtsHash() => r'db020b70741da2e6e9f558420606b9256547029b';
 
 /// Copied from Dart SDK

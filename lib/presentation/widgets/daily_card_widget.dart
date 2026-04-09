@@ -70,6 +70,13 @@ class DailyCardWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
+              if (card.phrase.audioId != null) ...[
+                TtsPlayButton(
+                  audioId: card.phrase.audioId!,
+                  freePlay: true,
+                ),
+                const SizedBox(width: 4),
+              ],
               Flexible(
                 child: Text(
                   card.phrase.roman,
@@ -79,13 +86,6 @@ class DailyCardWidget extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
               ),
-              if (card.phrase.audioId != null) ...[
-                const SizedBox(width: 4),
-                TtsPlayButton(
-                  audioId: card.phrase.audioId!,
-                  freePlay: true,
-                ),
-              ],
             ],
           ),
           const SizedBox(height: 8),

@@ -26,29 +26,6 @@ TtsService ttsService(TtsServiceRef ref) {
   return service;
 }
 
-/// TTS 재생 가능 여부 편의 Provider.
-///
-/// IAP 구매 시 무제한. 그 외에는 Remote Config의 일일 TTS 제한을 Day 0부터 적용.
-/// 해금 경로는 IAP만.
-@riverpod
-bool canPlayTts(CanPlayTtsRef ref) {
-  final hasIap = ref.watch(hasAnyIapProvider);
-  if (hasIap) return true;
-
-  final state = ref.watch(monetizationNotifierProvider).valueOrNull;
-  if (state == null) return false;
-
-  final config = ref.watch(remoteConfigValuesProvider);
-
-  // 날짜가 바뀌었으면 카운트 리셋된 것으로 간주
-  final now = DateTime.now();
-  final todayStr =
-      '${now.year.toString().padLeft(4, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
-  if (state.ttsLastResetDate != todayStr) return true;
-
-  return state.ttsPlayCount < config.dailyTtsLimit;
-}
-
 /// TTS 재생을 시도한다.
 ///
 /// [TtsService.playById]로 재생한다.

@@ -5,7 +5,6 @@ import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/ad_service_provider.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/presentation/providers/remote_config_providers.dart';
-import 'package:fangeul/presentation/providers/tts_provider.dart';
 import 'package:fangeul/presentation/widgets/theme_picker_sheet.dart';
 
 /// TTS 일일 제한 도달 팝업.

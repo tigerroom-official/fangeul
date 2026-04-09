@@ -13,6 +13,7 @@ import 'package:fangeul/platform/bubble_state.dart';
 import 'package:fangeul/presentation/providers/bubble_providers.dart';
 import 'package:fangeul/presentation/providers/choeae_color_provider.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
+import 'package:fangeul/presentation/providers/remote_config_providers.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/progress_providers.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
@@ -618,6 +619,15 @@ class _DebugMonetizationPanel extends ConsumerWidget {
                 onTap: () => _toggleThemeUnlocked(ref),
               ),
               _DebugChip(
+                label: 'TTS: ${monState?.ttsPlayCount ?? 0}/${ref.watch(remoteConfigValuesProvider).dailyTtsLimit}',
+                onTap: () => _resetTtsCount(ref),
+              ),
+              _DebugChip(
+                label: 'TTS: MAX',
+                color: Colors.orange,
+                onTap: () => _maxTtsCount(ref),
+              ),
+              _DebugChip(
                 label: isHoneymoon ? 'Honeymoon: ON' : 'Honeymoon: OFF',
                 color: isHoneymoon ? Colors.orange : null,
                 onTap: () => _toggleHoneymoon(ref, isHoneymoon),
@@ -711,6 +721,24 @@ class _DebugMonetizationPanel extends ConsumerWidget {
     final repo = ref.read(monetizationRepositoryProvider);
     await repo.save(current.copyWith(themeUnlocked: !current.themeUnlocked));
     ref.invalidate(monetizationNotifierProvider);
+  }
+
+  Future<void> _resetTtsCount(WidgetRef ref) async {
+    final notifier = ref.read(monetizationNotifierProvider.notifier);
+    await notifier.addTtsRewardedBonus(99);
+  }
+
+  Future<void> _maxTtsCount(WidgetRef ref) async {
+    final current =
+        ref.read(monetizationNotifierProvider).valueOrNull?.ttsPlayCount ?? 0;
+    final limit = ref.read(remoteConfigValuesProvider).dailyTtsLimit;
+    final remaining = limit - current;
+    if (remaining > 0) {
+      // recordTtsPlay를 remaining번 호출하여 카운트를 한도까지 채움
+      for (var i = 0; i < remaining; i++) {
+        await ref.read(monetizationNotifierProvider.notifier).recordTtsPlay();
+      }
+    }
   }
 
   Future<void> _toggleHoneymoon(WidgetRef ref, bool currentlyActive) async {
