@@ -3,14 +3,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/ad_service_provider.dart';
+import 'package:fangeul/presentation/providers/analytics_providers.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/presentation/providers/remote_config_providers.dart';
 import 'package:fangeul/presentation/widgets/theme_picker_sheet.dart';
+import 'package:fangeul/services/analytics_events.dart';
 
 /// TTS 일일 제한 도달 팝업.
 ///
 /// 보상형 광고(+N회) 또는 IAP(무제한) 두 가지 CTA를 제공한다.
 Future<void> showTtsLimitPopup(BuildContext context, WidgetRef ref) {
+  ref.read(analyticsServiceProvider).logEvent(
+    AnalyticsEvents.ttsLimitReached,
+  );
+  ref.read(analyticsServiceProvider).logEvent(
+    AnalyticsEvents.conversionTriggerShown,
+    {AnalyticsParams.source: 'tts_limit'},
+  );
   final l = L.of(context);
   final bonus = ref.read(remoteConfigValuesProvider).ttsRewardedBonus;
 
@@ -29,6 +38,10 @@ Future<void> showTtsLimitPopup(BuildContext context, WidgetRef ref) {
         ),
         FilledButton(
           onPressed: () {
+            ref.read(analyticsServiceProvider).logEvent(
+              AnalyticsEvents.conversionTriggerClicked,
+              {AnalyticsParams.source: 'tts_limit'},
+            );
             Navigator.pop(dialogContext);
             ThemePickerSheet.show(context);
           },
@@ -66,6 +79,9 @@ Future<void> _showRewardedForTts(
         ref
             .read(monetizationNotifierProvider.notifier)
             .addTtsRewardedBonus(bonus);
+        ref.read(analyticsServiceProvider).logEvent(
+          AnalyticsEvents.ttsRewardedWatch,
+        );
         // sessionPlayedIds는 유지 — 이미 들은 문구는 재재생 시 카운트 안 함
       },
     );

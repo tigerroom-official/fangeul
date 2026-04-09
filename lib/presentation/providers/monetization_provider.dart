@@ -9,7 +9,9 @@ import 'package:fangeul/core/repositories/monetization_repository.dart';
 import 'package:fangeul/core/usecases/check_honeymoon_usecase.dart';
 import 'package:fangeul/data/datasources/monetization_local_datasource.dart';
 import 'package:fangeul/data/repositories/monetization_repository_impl.dart';
+import 'package:fangeul/presentation/providers/analytics_providers.dart';
 import 'package:fangeul/presentation/providers/remote_config_providers.dart';
+import 'package:fangeul/services/analytics_events.dart';
 
 part 'monetization_provider.g.dart';
 
@@ -293,6 +295,10 @@ class MonetizationNotifier extends _$MonetizationNotifier {
     } catch (_) {}
     final current = state.valueOrNull;
     if (current == null) return;
+
+    ref.read(analyticsServiceProvider).logEvent(
+      AnalyticsEvents.honeymoonEnded,
+    );
 
     await _updateState(current.copyWith(
       honeymoonActive: false,

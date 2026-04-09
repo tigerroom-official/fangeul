@@ -2,7 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:fangeul/presentation/providers/analytics_providers.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
+import 'package:fangeul/services/analytics_events.dart';
 import 'package:fangeul/services/iap_products.dart';
 import 'package:fangeul/services/iap_service.dart';
 
@@ -38,6 +40,10 @@ IapService iapService(IapServiceRef ref) {
   service.initialize(
     onPurchased: (productId) async {
       debugPrint('[IapProvider] purchased: $productId');
+      ref.read(analyticsServiceProvider).logEvent(
+        AnalyticsEvents.iapPurchaseSuccess,
+        {AnalyticsParams.skuId: productId},
+      );
       final notifier = ref.read(monetizationNotifierProvider.notifier);
       switch (productId) {
         case IapProducts.themeCustomColor:
@@ -50,11 +56,17 @@ IapService iapService(IapServiceRef ref) {
     },
     onError: (error) {
       debugPrint('[IapProvider] error: $error');
+      ref.read(analyticsServiceProvider).logEvent(
+        AnalyticsEvents.iapPurchaseFailed,
+      );
     },
     onProductsLoaded: () {
       ref.read(iapProductsLoadedProvider.notifier).state = true;
       // 상품 로드 완료 후 구매 복원 — 재설치/기기 변경 시 엔타이틀먼트 복구.
       // purchaseStream 리스너가 PurchaseStatus.restored를 처리한다.
+      ref.read(analyticsServiceProvider).logEvent(
+        AnalyticsEvents.iapRestorePurchase,
+      );
       service.restorePurchases().catchError((Object e) {
         debugPrint('[IapProvider] auto-restore failed: $e');
       });

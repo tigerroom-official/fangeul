@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:fangeul/core/entities/daily_card.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
+import 'package:fangeul/presentation/providers/analytics_providers.dart';
 import 'package:fangeul/presentation/theme/fangeul_text_styles.dart';
 import 'package:fangeul/presentation/widgets/tts_play_button.dart';
+import 'package:fangeul/services/analytics_events.dart';
 
 /// 데일리 카드 -- 큰 한글 중앙 배치 + 발음 + 번역.
 ///
 /// 완료/공유/복사 액션을 제공한다.
-class DailyCardWidget extends StatelessWidget {
+class DailyCardWidget extends ConsumerWidget {
   /// Creates the [DailyCardWidget].
   const DailyCardWidget({
     super.key,
@@ -36,7 +40,7 @@ class DailyCardWidget extends StatelessWidget {
   final VoidCallback? onShare;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l = L.of(context);
     final theme = Theme.of(context);
     final translation = card.phrase.translations[translationLang] ?? '';
@@ -120,6 +124,10 @@ class DailyCardWidget extends StatelessWidget {
               IconButton(
                 onPressed: () {
                   Clipboard.setData(ClipboardData(text: card.phrase.ko));
+                  ref.read(analyticsServiceProvider).logEvent(
+                    AnalyticsEvents.phraseCopy,
+                    {AnalyticsParams.source: 'daily_card'},
+                  );
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(l.copied)),
                   );

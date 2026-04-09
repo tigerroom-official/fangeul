@@ -78,6 +78,13 @@ class AnalyticsEvents {
 
   /// 허니문 종료.
   static const honeymoonEnded = 'honeymoon_ended';
+
+  // TTS
+  /// TTS 재생.
+  static const ttsPlay = 'tts_play';
+
+  /// TTS 보상형 광고 시청.
+  static const ttsRewardedWatch = 'tts_rewarded_watch';
 }
 
 /// 분석 파라미터 키 상수.
@@ -98,4 +105,5 @@ class AnalyticsParams {
   static const revenue = 'revenue';
   static const unlockDurationMin = 'unlock_duration_min';
   static const daysSinceInstall = 'days_since_install';
+  static const audioId = 'audio_id';
 }

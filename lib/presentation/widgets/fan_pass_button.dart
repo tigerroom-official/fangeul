@@ -6,7 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fangeul/core/entities/monetization_state.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/ad_service_provider.dart';
+import 'package:fangeul/presentation/providers/analytics_providers.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
+import 'package:fangeul/services/analytics_events.dart';
 
 import 'package:fangeul/presentation/widgets/fan_pass_popup.dart';
 
@@ -140,6 +142,13 @@ class FanPassButtonState extends ConsumerState<FanPassButton> {
     if (!success) return;
 
     await notifier.activateThemeTrial();
+
+    ref.read(analyticsServiceProvider).logEvent(
+      AnalyticsEvents.adRewardedComplete,
+    );
+    ref.read(analyticsServiceProvider).logEvent(
+      AnalyticsEvents.fanPassActivated,
+    );
 
     if (!mounted) return;
 

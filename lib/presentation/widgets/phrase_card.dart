@@ -99,6 +99,7 @@ class PhraseCard extends ConsumerWidget {
                     showFavoriteLimitFeedback(
                       context,
                       startingPrice: price,
+                      ref: ref,
                     );
                   }
                 },

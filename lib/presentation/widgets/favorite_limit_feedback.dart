@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:fangeul/l10n/app_localizations.dart';
+import 'package:fangeul/presentation/providers/analytics_providers.dart';
 import 'package:fangeul/presentation/widgets/favorite_limit_dialog.dart';
 import 'package:fangeul/presentation/widgets/theme_picker_sheet.dart';
+import 'package:fangeul/services/analytics_events.dart';
 
 /// SharedPreferences 키 — 즐겨찾기 제한 다이얼로그를 이미 본 적 있는지.
 const _hasSeenFavLimitDialogKey = 'has_seen_fav_limit_dialog';
@@ -25,7 +28,15 @@ bool _dialogInFlight = false;
 Future<void> showFavoriteLimitFeedback(
   BuildContext context, {
   required String startingPrice,
+  required WidgetRef ref,
 }) async {
+  ref.read(analyticsServiceProvider).logEvent(
+    AnalyticsEvents.favLimitReached,
+  );
+  ref.read(analyticsServiceProvider).logEvent(
+    AnalyticsEvents.conversionTriggerShown,
+    {AnalyticsParams.source: 'favorite_limit'},
+  );
   final prefs = await SharedPreferences.getInstance();
   // 듀얼 엔진 환경: 다른 엔진에서 기록한 값을 읽기 위해 reload
   await prefs.reload();
@@ -73,6 +84,10 @@ Future<void> showFavoriteLimitFeedback(
         context,
         startingPrice: startingPrice,
         onViewThemeOptions: () {
+          ref.read(analyticsServiceProvider).logEvent(
+            AnalyticsEvents.conversionTriggerClicked,
+            {AnalyticsParams.source: 'favorite_limit'},
+          );
           if (context.mounted) {
             ThemePickerSheet.show(context);
           }
@@ -98,6 +113,10 @@ Future<void> showFavoriteLimitFeedback(
           action: SnackBarAction(
             label: l.favLimitButton,
             onPressed: () {
+              ref.read(analyticsServiceProvider).logEvent(
+                AnalyticsEvents.conversionTriggerClicked,
+                {AnalyticsParams.source: 'favorite_limit'},
+              );
               if (context.mounted) {
                 ThemePickerSheet.show(context);
               }

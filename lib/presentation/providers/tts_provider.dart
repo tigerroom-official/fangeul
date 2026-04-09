@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:fangeul/presentation/providers/analytics_providers.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/presentation/providers/remote_config_providers.dart';
+import 'package:fangeul/services/analytics_events.dart';
 import 'package:fangeul/services/tts_service.dart';
 
 part 'tts_provider.g.dart';
@@ -50,7 +52,13 @@ Future<bool> playTts(PlayTtsRef ref, String audioId) async {
     return false;
   }
 
-  // 3. 성공 후에만 카운트 소모
+  // 3. 성공 → 이벤트 기록
+  ref.read(analyticsServiceProvider).logEvent(
+    AnalyticsEvents.ttsPlay,
+    {AnalyticsParams.audioId: audioId},
+  );
+
+  // 4. 성공 후에만 카운트 소모
   if (needsCount) {
     await notifier.recordTtsPlay();
     sessionPlayedIds.add(audioId);

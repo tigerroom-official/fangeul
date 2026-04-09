@@ -3,10 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'package:fangeul/core/entities/monetization_state.dart';
+import 'package:fangeul/presentation/providers/analytics_providers.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/presentation/providers/onboarding_providers.dart';
 import 'package:fangeul/presentation/providers/remote_config_providers.dart';
 import 'package:fangeul/services/ad_ids.dart';
+import 'package:fangeul/services/analytics_events.dart';
 
 /// installDate 기반 설치 후 경과 일수. 파싱 실패 시 0 (방어적 코딩).
 int _daysSinceInstall(MonetizationState? state) {
@@ -94,6 +96,9 @@ class BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
       listener: BannerAdListener(
         onAdLoaded: (ad) {
           debugPrint('BannerAd: loaded successfully');
+          ref.read(analyticsServiceProvider).logEvent(
+            AnalyticsEvents.adBannerImpression,
+          );
           if (mounted) setState(() => isLoaded = true);
         },
         onAdFailedToLoad: (ad, error) {

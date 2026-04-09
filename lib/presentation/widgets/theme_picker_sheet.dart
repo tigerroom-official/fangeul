@@ -5,6 +5,8 @@ import 'package:material_color_utilities/material_color_utilities.dart';
 import 'package:fangeul/core/entities/monetization_state.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/ad_service_provider.dart';
+import 'package:fangeul/presentation/providers/analytics_providers.dart';
+import 'package:fangeul/services/analytics_events.dart';
 import 'package:fangeul/presentation/providers/choeae_color_provider.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
@@ -62,6 +64,7 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
   bool _isPreviewMode = false;
 
   static const _slotHintShownKey = 'theme_slot_hint_shown';
+  bool _viewShopLogged = false;
 
   @override
   void dispose() {
@@ -118,6 +121,12 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_viewShopLogged) {
+      _viewShopLogged = true;
+      ref.read(analyticsServiceProvider).logEvent(
+        AnalyticsEvents.iapViewShop,
+      );
+    }
     final choeaeColor = ref.watch(choeaeColorNotifierProvider);
     final monState = ref.watch(monetizationNotifierProvider).valueOrNull;
     final hasPickerIap = _hasPickerAccess(monState);
@@ -1546,7 +1555,13 @@ class _IapPurchaseSection extends ConsumerWidget {
               subtitle: l.iapThemeCustomColorSub,
               price: iapSvc.getProduct(IapProducts.themeCustomColor)?.price,
               onTap: iapSvc.getProduct(IapProducts.themeCustomColor) != null
-                  ? () => iapSvc.buyPack(IapProducts.themeCustomColor)
+                  ? () {
+                      ref.read(analyticsServiceProvider).logEvent(
+                        AnalyticsEvents.iapStartPurchase,
+                        {AnalyticsParams.skuId: IapProducts.themeCustomColor},
+                      );
+                      iapSvc.buyPack(IapProducts.themeCustomColor);
+                    }
                   : null,
               theme: theme,
             ),
@@ -1559,7 +1574,13 @@ class _IapPurchaseSection extends ConsumerWidget {
               subtitle: l.iapThemeSlotsSub,
               price: iapSvc.getProduct(IapProducts.themeSlots)?.price,
               onTap: iapSvc.getProduct(IapProducts.themeSlots) != null
-                  ? () => iapSvc.buyPack(IapProducts.themeSlots)
+                  ? () {
+                      ref.read(analyticsServiceProvider).logEvent(
+                        AnalyticsEvents.iapStartPurchase,
+                        {AnalyticsParams.skuId: IapProducts.themeSlots},
+                      );
+                      iapSvc.buyPack(IapProducts.themeSlots);
+                    }
                   : null,
               theme: theme,
             ),
@@ -1575,7 +1596,13 @@ class _IapPurchaseSection extends ConsumerWidget {
               isHighlighted: true,
               price: iapSvc.getProduct(IapProducts.themeBundle)?.price,
               onTap: iapSvc.getProduct(IapProducts.themeBundle) != null
-                  ? () => iapSvc.buyPack(IapProducts.themeBundle)
+                  ? () {
+                      ref.read(analyticsServiceProvider).logEvent(
+                        AnalyticsEvents.iapStartPurchase,
+                        {AnalyticsParams.skuId: IapProducts.themeBundle},
+                      );
+                      iapSvc.buyPack(IapProducts.themeBundle);
+                    }
                   : null,
               theme: theme,
             ),

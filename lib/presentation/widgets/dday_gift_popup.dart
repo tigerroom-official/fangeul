@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:fangeul/l10n/app_localizations.dart';
+import 'package:fangeul/presentation/providers/analytics_providers.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
+import 'package:fangeul/services/analytics_events.dart';
 
 /// D-day 선물 팝업을 표시한다.
 ///
@@ -99,6 +101,9 @@ class _DdayGiftPopupState extends ConsumerState<DdayGiftPopup>
           artist: widget.artist,
           eventType: widget.eventType,
         );
+    ref.read(analyticsServiceProvider).logEvent(
+      AnalyticsEvents.ddayGiftActivated,
+    );
     if (mounted) {
       Navigator.of(context).pop();
     }

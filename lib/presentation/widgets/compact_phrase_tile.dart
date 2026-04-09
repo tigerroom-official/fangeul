@@ -80,6 +80,7 @@ class CompactPhraseTile extends ConsumerWidget {
                 showFavoriteLimitFeedback(
                   context,
                   startingPrice: price,
+                  ref: ref,
                 );
               }
             },
