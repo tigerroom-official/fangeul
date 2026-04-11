@@ -669,5 +669,5 @@ class LPt extends L {
   String get iapErrorRetry => 'Tentar novamente';
 
   @override
-  String get iapErrorContact => 'Contato';
+  String get iapErrorContact => 'Fale conosco';
 }

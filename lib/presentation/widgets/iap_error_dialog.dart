@@ -41,10 +41,6 @@ Future<bool> showIapErrorDialog(BuildContext context) async {
       actionsAlignment: MainAxisAlignment.center,
       actions: [
         OutlinedButton(
-          onPressed: () => Navigator.pop(ctx, true),
-          child: Text(l.iapErrorRetry),
-        ),
-        FilledButton.tonal(
           onPressed: () {
             Navigator.pop(ctx, false);
             try {
@@ -55,6 +51,10 @@ Future<bool> showIapErrorDialog(BuildContext context) async {
             } catch (_) {}
           },
           child: Text(l.iapErrorContact),
+        ),
+        FilledButton.tonal(
+          onPressed: () => Navigator.pop(ctx, true),
+          child: Text(l.iapErrorRetry),
         ),
       ],
     ),

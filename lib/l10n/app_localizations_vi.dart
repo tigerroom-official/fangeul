@@ -666,5 +666,5 @@ class LVi extends L {
   String get iapErrorRetry => 'Thử lại';
 
   @override
-  String get iapErrorContact => 'Liên hệ';
+  String get iapErrorContact => 'Liên hệ chúng tôi';
 }

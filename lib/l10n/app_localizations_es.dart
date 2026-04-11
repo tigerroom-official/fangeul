@@ -669,5 +669,5 @@ class LEs extends L {
   String get iapErrorRetry => 'Intentar de nuevo';
 
   @override
-  String get iapErrorContact => 'Contactar';
+  String get iapErrorContact => 'Contáctanos';
 }

@@ -251,5 +251,5 @@
   "iapErrorTitle": "Não foi possível processar a compra",
   "iapErrorBody": "Atualize o app da Play Store para a versão mais recente e tente novamente. Se o problema persistir, entre em contato.",
   "iapErrorRetry": "Tentar novamente",
-  "iapErrorContact": "Contato"
+  "iapErrorContact": "Fale conosco"
 }
