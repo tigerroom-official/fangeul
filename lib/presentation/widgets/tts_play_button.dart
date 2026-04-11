@@ -68,7 +68,7 @@ class _TtsPlayButtonState extends ConsumerState<TtsPlayButton>
         // 카운트 없이 직접 재생 (데일리 카드 등 무료 재생)
         await ref.read(ttsServiceProvider).playById(widget.audioId);
         // freePlay로 들은 문구는 이후 counted path에서도 무료 (의도된 동작)
-        sessionPlayedIds.add(widget.audioId);
+        ref.read(ttsPlayedIdsProvider.notifier).add(widget.audioId);
       } else {
         final success = await ref.read(playTtsProvider(widget.audioId).future);
         if (!success && mounted) {
@@ -98,7 +98,7 @@ class _TtsPlayButtonState extends ConsumerState<TtsPlayButton>
     final used = monState?.ttsPlayCount ?? 0;
     final remaining = (limit - used).clamp(0, 99);
 
-    final hasPlayed = hasPlayedInSession(widget.audioId);
+    final hasPlayed = ref.watch(ttsPlayedIdsProvider).contains(widget.audioId);
     final iconColor = (showCounter && remaining == 0 && !hasPlayed)
         ? theme.colorScheme.onSurface.withValues(alpha: 0.3)
         : _isPlaying
@@ -144,8 +144,7 @@ class _TtsPlayButtonState extends ConsumerState<TtsPlayButton>
                       : theme.colorScheme.errorContainer,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                constraints:
-                    const BoxConstraints(minWidth: 16, minHeight: 16),
+                constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
                 child: Text(
                   '$remaining',
                   style: TextStyle(

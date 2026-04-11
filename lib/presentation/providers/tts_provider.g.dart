@@ -27,7 +27,7 @@ final ttsServiceProvider = Provider<TtsService>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef TtsServiceRef = ProviderRef<TtsService>;
-String _$playTtsHash() => r'db020b70741da2e6e9f558420606b9256547029b';
+String _$playTtsHash() => r'001e4b30235202187b0d0f46a2cd99d104f882bf';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -218,5 +218,26 @@ class _PlayTtsProviderElement extends AutoDisposeFutureProviderElement<bool>
   @override
   String get audioId => (origin as PlayTtsProvider).audioId;
 }
+
+String _$ttsPlayedIdsHash() => r'c48371d4c897d1afe4691c79012463e912a2394f';
+
+/// 오늘 이미 재생된 audioId 목록 — SharedPreferences에 영속화된다.
+///
+/// 앱 재시작 시에도 이미 들은 문구의 카운트를 다시 소모하지 않도록 보장한다.
+/// 날짜가 변경되면 `build()`에서 자동으로 클리어된다.
+///
+/// Copied from [TtsPlayedIds].
+@ProviderFor(TtsPlayedIds)
+final ttsPlayedIdsProvider =
+    NotifierProvider<TtsPlayedIds, Set<String>>.internal(
+  TtsPlayedIds.new,
+  name: r'ttsPlayedIdsProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$ttsPlayedIdsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$TtsPlayedIds = Notifier<Set<String>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -4,12 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:fangeul/core/entities/monetization_state.dart';
 import 'package:fangeul/core/entities/remote_config_values.dart';
 import 'package:fangeul/data/datasources/monetization_local_datasource.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/presentation/providers/remote_config_providers.dart';
+import 'package:fangeul/presentation/providers/theme_providers.dart';
 import 'package:fangeul/presentation/providers/tts_provider.dart';
 import 'package:fangeul/services/tts_service.dart';
 
@@ -21,6 +23,7 @@ void main() {
   late ProviderContainer container;
   late MockFlutterSecureStorage mockStorage;
   late MockTtsService mockTts;
+  late SharedPreferences prefs;
 
   String todayStr() {
     final now = DateTime.now();
@@ -30,10 +33,17 @@ void main() {
     return '$y-$m-$d';
   }
 
+  /// SharedPreferences 테스트 인스턴스를 생성한다.
+  Future<SharedPreferences> createTestPrefs() async {
+    SharedPreferences.setMockInitialValues({});
+    return SharedPreferences.getInstance();
+  }
+
   /// 기본 상태(저장 데이터 없음)로 컨테이너를 초기화한다.
-  void setUpDefault() {
+  Future<void> setUpDefault() async {
     mockStorage = MockFlutterSecureStorage();
     mockTts = MockTtsService();
+    prefs = await createTestPrefs();
 
     when(() => mockStorage.read(key: any(named: 'key')))
         .thenAnswer((_) async => null);
@@ -50,6 +60,7 @@ void main() {
       overrides: [
         monetizationStorageProvider.overrideWithValue(mockStorage),
         ttsServiceProvider.overrideWithValue(mockTts),
+        sharedPreferencesProvider.overrideWithValue(prefs),
         remoteConfigValuesProvider
             .overrideWithValue(const RemoteConfigValues()),
       ],
@@ -57,9 +68,10 @@ void main() {
   }
 
   /// 특정 [MonetizationState]로 컨테이너를 초기화한다.
-  void setUpWithState(MonetizationState initialState) {
+  Future<void> setUpWithState(MonetizationState initialState) async {
     mockStorage = MockFlutterSecureStorage();
     mockTts = MockTtsService();
+    prefs = await createTestPrefs();
     final dataSource = MonetizationLocalDataSource(mockStorage);
     final dataStr = jsonEncode(initialState.toJson());
     final sig = dataSource.computeHmac(dataStr);
@@ -81,6 +93,7 @@ void main() {
       overrides: [
         monetizationStorageProvider.overrideWithValue(mockStorage),
         ttsServiceProvider.overrideWithValue(mockTts),
+        sharedPreferencesProvider.overrideWithValue(prefs),
         remoteConfigValuesProvider
             .overrideWithValue(const RemoteConfigValues()),
       ],
@@ -89,17 +102,15 @@ void main() {
 
   tearDown(() {
     container.dispose();
-    sessionPlayedIds.clear();
   });
 
   group('playTtsProvider', () {
     test('should count TTS plays even during honeymoon', () async {
-      setUpDefault();
+      await setUpDefault();
 
       await container.read(monetizationNotifierProvider.future);
 
-      final result =
-          await container.read(playTtsProvider('love_01').future);
+      final result = await container.read(playTtsProvider('love_01').future);
 
       expect(result, true);
       verify(() => mockTts.playById('love_01')).called(1);
@@ -112,7 +123,7 @@ void main() {
     test('should count TTS plays during theme trial (not unlimited)', () async {
       final futureExpiry =
           DateTime.now().millisecondsSinceEpoch + (2 * 60 * 60 * 1000);
-      setUpWithState(MonetizationState(
+      await setUpWithState(MonetizationState(
         installDate: todayStr(),
         honeymoonActive: false,
         themeTrialExpiresAt: futureExpiry,
@@ -120,8 +131,7 @@ void main() {
 
       await container.read(monetizationNotifierProvider.future);
 
-      final result = await container
-          .read(playTtsProvider('bday_05').future);
+      final result = await container.read(playTtsProvider('bday_05').future);
 
       expect(result, true);
       verify(() => mockTts.playById('bday_05')).called(1);
@@ -133,15 +143,14 @@ void main() {
 
     test('should increment count when not honeymoon and not unlocked',
         () async {
-      setUpWithState(MonetizationState(
+      await setUpWithState(MonetizationState(
         installDate: todayStr(),
         honeymoonActive: false,
       ));
 
       await container.read(monetizationNotifierProvider.future);
 
-      final result =
-          await container.read(playTtsProvider('love_01').future);
+      final result = await container.read(playTtsProvider('love_01').future);
 
       expect(result, true);
       verify(() => mockTts.playById('love_01')).called(1);
@@ -151,7 +160,7 @@ void main() {
     });
 
     test('should return false when daily limit reached', () async {
-      setUpWithState(MonetizationState(
+      await setUpWithState(MonetizationState(
         installDate: todayStr(),
         honeymoonActive: false,
         ttsPlayCount: 5,
@@ -160,15 +169,14 @@ void main() {
 
       await container.read(monetizationNotifierProvider.future);
 
-      final result =
-          await container.read(playTtsProvider('love_01').future);
+      final result = await container.read(playTtsProvider('love_01').future);
 
       expect(result, false);
       verifyNever(() => mockTts.playById(any()));
     });
 
     test('should return false but not throw when play fails', () async {
-      setUpWithState(MonetizationState(
+      await setUpWithState(MonetizationState(
         installDate: todayStr(),
         honeymoonActive: false,
       ));
@@ -176,15 +184,14 @@ void main() {
 
       await container.read(monetizationNotifierProvider.future);
 
-      final result =
-          await container.read(playTtsProvider('love_01').future);
+      final result = await container.read(playTtsProvider('love_01').future);
 
       expect(result, false);
     });
 
     test('should return false but not throw when play fails during honeymoon',
         () async {
-      setUpWithState(MonetizationState(
+      await setUpWithState(MonetizationState(
         installDate: todayStr(),
         honeymoonActive: true,
       ));
@@ -192,14 +199,13 @@ void main() {
 
       await container.read(monetizationNotifierProvider.future);
 
-      final result =
-          await container.read(playTtsProvider('love_01').future);
+      final result = await container.read(playTtsProvider('love_01').future);
 
       expect(result, false);
     });
 
     test('should pass audioId directly to TtsService', () async {
-      setUpDefault();
+      await setUpDefault();
 
       await container.read(monetizationNotifierProvider.future);
 
@@ -208,9 +214,8 @@ void main() {
       verify(() => mockTts.playById('bday_05')).called(1);
     });
 
-    test('should skip counter on same audioId replay within session',
-        () async {
-      setUpWithState(MonetizationState(
+    test('should skip counter on same audioId replay within session', () async {
+      await setUpWithState(MonetizationState(
         installDate: todayStr(),
         honeymoonActive: false,
       ));
@@ -218,15 +223,13 @@ void main() {
       await container.read(monetizationNotifierProvider.future);
 
       // 첫 재생 — 카운트 1
-      final result1 =
-          await container.read(playTtsProvider('love_01').future);
+      final result1 = await container.read(playTtsProvider('love_01').future);
       expect(result1, true);
 
       // 같은 audioId 재재생 — 카운트 여전히 1
       // Riverpod auto-dispose로 새 provider 인스턴스 필요
       container.invalidate(playTtsProvider('love_01'));
-      final result2 =
-          await container.read(playTtsProvider('love_01').future);
+      final result2 = await container.read(playTtsProvider('love_01').future);
       expect(result2, true);
 
       final state = await container.read(monetizationNotifierProvider.future);
@@ -234,7 +237,7 @@ void main() {
     });
 
     test('should count each different audioId separately', () async {
-      setUpWithState(MonetizationState(
+      await setUpWithState(MonetizationState(
         installDate: todayStr(),
         honeymoonActive: false,
       ));
@@ -252,7 +255,7 @@ void main() {
 
     test('should play without counting when IAP purchased (hasThemePicker)',
         () async {
-      setUpWithState(MonetizationState(
+      await setUpWithState(MonetizationState(
         installDate: todayStr(),
         honeymoonActive: false,
         hasThemePicker: true,
@@ -262,8 +265,7 @@ void main() {
 
       await container.read(monetizationNotifierProvider.future);
 
-      final result =
-          await container.read(playTtsProvider('love_01').future);
+      final result = await container.read(playTtsProvider('love_01').future);
 
       expect(result, true);
       verify(() => mockTts.playById('love_01')).called(1);
@@ -275,7 +277,7 @@ void main() {
 
     test('should play without counting when IAP purchased (hasThemeSlots)',
         () async {
-      setUpWithState(MonetizationState(
+      await setUpWithState(MonetizationState(
         installDate: todayStr(),
         honeymoonActive: false,
         hasThemeSlots: true,
@@ -285,8 +287,7 @@ void main() {
 
       await container.read(monetizationNotifierProvider.future);
 
-      final result =
-          await container.read(playTtsProvider('bday_05').future);
+      final result = await container.read(playTtsProvider('bday_05').future);
 
       expect(result, true);
       verify(() => mockTts.playById('bday_05')).called(1);
@@ -297,7 +298,7 @@ void main() {
     });
 
     test('should not consume quota when play fails', () async {
-      setUpWithState(MonetizationState(
+      await setUpWithState(MonetizationState(
         installDate: todayStr(),
         honeymoonActive: false,
       ));
@@ -305,8 +306,7 @@ void main() {
 
       await container.read(monetizationNotifierProvider.future);
 
-      final result =
-          await container.read(playTtsProvider('love_01').future);
+      final result = await container.read(playTtsProvider('love_01').future);
 
       expect(result, false);
 
