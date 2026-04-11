@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/constants/app_constants.dart';
@@ -7,13 +6,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 /// IAP 결제 실패 시 유저 안내 다이얼로그.
 ///
-/// Play Store 업데이트 안내 + 재시도 + 문의하기 CTA.
-/// 반환값: true = 재시도, false/null = 닫힘/문의.
-Future<bool> showIapErrorDialog(BuildContext context) async {
+/// Play Store 업데이트 안내 + 문의하기 + 확인 버튼.
+Future<void> showIapErrorDialog(BuildContext context) async {
   final l = L.of(context);
   final theme = Theme.of(context);
 
-  final result = await showDialog<bool>(
+  await showDialog<void>(
     context: context,
     builder: (ctx) => AlertDialog(
       icon: Container(
@@ -43,40 +41,12 @@ Future<bool> showIapErrorDialog(BuildContext context) async {
       actionsAlignment: MainAxisAlignment.center,
       actions: [
         OutlinedButton(
-          onPressed: () async {
-            try {
-              final launched = await launchUrl(
-                AppConstants.supportEmailUri,
-                mode: LaunchMode.externalApplication,
-              );
-              if (!launched && ctx.mounted) {
-                // 이메일 앱 실행 실패 → 이메일 주소 복사 fallback
-                await Clipboard.setData(
-                  const ClipboardData(text: AppConstants.supportEmail),
-                );
-                if (ctx.mounted) {
-                  ScaffoldMessenger.of(ctx).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                          '${AppConstants.supportEmail} ${l.copied}'),
-                    ),
-                  );
-                }
-              }
-            } catch (_) {
-              // 예외 발생 시에도 클립보드 복사 fallback
-              await Clipboard.setData(
-                const ClipboardData(text: AppConstants.supportEmail),
-              );
-              if (ctx.mounted) {
-                ScaffoldMessenger.of(ctx).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                        '${AppConstants.supportEmail} copied'),
-                  ),
-                );
-              }
-            }
+          onPressed: () {
+            // async 없이 fire-and-forget — 첫 탭 이벤트 차단 방지
+            launchUrl(
+              AppConstants.supportEmailUri,
+              mode: LaunchMode.externalApplication,
+            ).catchError((_) => false);
           },
           child: Text(l.iapErrorContact),
         ),
@@ -87,6 +57,4 @@ Future<bool> showIapErrorDialog(BuildContext context) async {
       ],
     ),
   );
-
-  return result ?? false;
 }
