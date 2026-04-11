@@ -1302,6 +1302,30 @@ abstract class L {
   /// In ko, this message translates to:
   /// **'컴백'**
   String get packComebackPack;
+
+  /// IAP purchase failure dialog title
+  ///
+  /// In ko, this message translates to:
+  /// **'결제를 처리할 수 없어요'**
+  String get iapErrorTitle;
+
+  /// No description provided for @iapErrorBody.
+  ///
+  /// In ko, this message translates to:
+  /// **'Play Store 앱을 최신 버전으로 업데이트하고 다시 시도해주세요. 문제가 계속되면 문의해주세요.'**
+  String get iapErrorBody;
+
+  /// No description provided for @iapErrorRetry.
+  ///
+  /// In ko, this message translates to:
+  /// **'다시 시도'**
+  String get iapErrorRetry;
+
+  /// No description provided for @iapErrorContact.
+  ///
+  /// In ko, this message translates to:
+  /// **'문의하기'**
+  String get iapErrorContact;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

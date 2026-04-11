@@ -639,4 +639,17 @@ class LKo extends L {
 
   @override
   String get packComebackPack => '컴백';
+
+  @override
+  String get iapErrorTitle => '결제를 처리할 수 없어요';
+
+  @override
+  String get iapErrorBody =>
+      'Play Store 앱을 최신 버전으로 업데이트하고 다시 시도해주세요. 문제가 계속되면 문의해주세요.';
+
+  @override
+  String get iapErrorRetry => '다시 시도';
+
+  @override
+  String get iapErrorContact => '문의하기';
 }

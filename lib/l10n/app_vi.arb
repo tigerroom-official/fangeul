@@ -246,5 +246,10 @@
   "packBasicLove": "Yêu thương & Cổ vũ",
   "packDailyPack": "Hàng ngày",
   "packBirthdayPack": "Sinh nhật",
-  "packComebackPack": "Comeback"
+  "packComebackPack": "Comeback",
+
+  "iapErrorTitle": "Không thể xử lý giao dịch",
+  "iapErrorBody": "Vui lòng cập nhật ứng dụng Play Store lên phiên bản mới nhất và thử lại. Nếu vấn đề vẫn tiếp tục, hãy liên hệ với chúng tôi.",
+  "iapErrorRetry": "Thử lại",
+  "iapErrorContact": "Liên hệ"
 }

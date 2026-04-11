@@ -654,4 +654,17 @@ class LVi extends L {
 
   @override
   String get packComebackPack => 'Comeback';
+
+  @override
+  String get iapErrorTitle => 'Không thể xử lý giao dịch';
+
+  @override
+  String get iapErrorBody =>
+      'Vui lòng cập nhật ứng dụng Play Store lên phiên bản mới nhất và thử lại. Nếu vấn đề vẫn tiếp tục, hãy liên hệ với chúng tôi.';
+
+  @override
+  String get iapErrorRetry => 'Thử lại';
+
+  @override
+  String get iapErrorContact => 'Liên hệ';
 }

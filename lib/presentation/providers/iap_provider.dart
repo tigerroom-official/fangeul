@@ -16,6 +16,11 @@ part 'iap_provider.g.dart';
 /// 위젯에서 `ref.watch(iapProductsLoadedProvider)`로 리빌드 트리거.
 final iapProductsLoadedProvider = StateProvider<bool>((ref) => false);
 
+/// IAP 결제 실패 에러 메시지.
+///
+/// null이면 에러 없음. 위젯에서 listen하여 SnackBar 표시.
+final iapErrorProvider = StateProvider<String?>((ref) => null);
+
 /// 최저 테마 IAP 가격 (로컬라이즈된 문자열).
 ///
 /// 즐겨찾기 제한 메시지에서 "₩990부터" 대신 `ProductDetails.price` 사용.
@@ -59,6 +64,7 @@ IapService iapService(IapServiceRef ref) {
       ref.read(analyticsServiceProvider).logEvent(
         AnalyticsEvents.iapPurchaseFailed,
       );
+      ref.read(iapErrorProvider.notifier).state = error;
     },
     onProductsLoaded: () {
       ref.read(iapProductsLoadedProvider.notifier).state = true;

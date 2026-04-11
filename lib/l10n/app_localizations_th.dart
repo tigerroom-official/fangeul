@@ -647,4 +647,17 @@ class LTh extends L {
 
   @override
   String get packComebackPack => 'คัมแบ็ก';
+
+  @override
+  String get iapErrorTitle => 'ไม่สามารถดำเนินการซื้อได้';
+
+  @override
+  String get iapErrorBody =>
+      'กรุณาอัปเดตแอป Play Store เป็นเวอร์ชันล่าสุดแล้วลองอีกครั้ง หากปัญหายังคงอยู่ กรุณาติดต่อเรา';
+
+  @override
+  String get iapErrorRetry => 'ลองอีกครั้ง';
+
+  @override
+  String get iapErrorContact => 'ติดต่อเรา';
 }

@@ -654,4 +654,17 @@ class LEn extends L {
 
   @override
   String get packComebackPack => 'Comeback';
+
+  @override
+  String get iapErrorTitle => 'Unable to process purchase';
+
+  @override
+  String get iapErrorBody =>
+      'Please update your Play Store app to the latest version and try again. If the issue persists, contact us.';
+
+  @override
+  String get iapErrorRetry => 'Try again';
+
+  @override
+  String get iapErrorContact => 'Contact us';
 }

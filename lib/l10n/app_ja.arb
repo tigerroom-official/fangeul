@@ -317,5 +317,10 @@
   "packBasicLove": "愛 & 応援",
   "packDailyPack": "日常",
   "packBirthdayPack": "誕生日",
-  "packComebackPack": "カムバック"
+  "packComebackPack": "カムバック",
+
+  "iapErrorTitle": "購入を処理できません",
+  "iapErrorBody": "Play Storeアプリを最新バージョンにアップデートして、もう一度お試しください。問題が解決しない場合は、お問い合わせください。",
+  "iapErrorRetry": "もう一度試す",
+  "iapErrorContact": "お問い合わせ"
 }

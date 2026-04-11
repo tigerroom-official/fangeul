@@ -246,5 +246,10 @@
   "packBasicLove": "Cinta & Dukungan",
   "packDailyPack": "Harian",
   "packBirthdayPack": "Ulang Tahun",
-  "packComebackPack": "Comeback"
+  "packComebackPack": "Comeback",
+
+  "iapErrorTitle": "Tidak dapat memproses pembelian",
+  "iapErrorBody": "Perbarui aplikasi Play Store ke versi terbaru dan coba lagi. Jika masalah berlanjut, hubungi kami.",
+  "iapErrorRetry": "Coba lagi",
+  "iapErrorContact": "Hubungi kami"
 }

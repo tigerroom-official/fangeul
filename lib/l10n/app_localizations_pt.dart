@@ -657,4 +657,17 @@ class LPt extends L {
 
   @override
   String get packComebackPack => 'Comeback';
+
+  @override
+  String get iapErrorTitle => 'Não foi possível processar a compra';
+
+  @override
+  String get iapErrorBody =>
+      'Atualize o app da Play Store para a versão mais recente e tente novamente. Se o problema persistir, entre em contato.';
+
+  @override
+  String get iapErrorRetry => 'Tentar novamente';
+
+  @override
+  String get iapErrorContact => 'Contato';
 }

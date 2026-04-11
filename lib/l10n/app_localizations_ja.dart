@@ -640,4 +640,17 @@ class LJa extends L {
 
   @override
   String get packComebackPack => 'カムバック';
+
+  @override
+  String get iapErrorTitle => '購入を処理できません';
+
+  @override
+  String get iapErrorBody =>
+      'Play Storeアプリを最新バージョンにアップデートして、もう一度お試しください。問題が解決しない場合は、お問い合わせください。';
+
+  @override
+  String get iapErrorRetry => 'もう一度試す';
+
+  @override
+  String get iapErrorContact => 'お問い合わせ';
 }

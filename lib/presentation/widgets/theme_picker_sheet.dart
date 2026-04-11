@@ -20,6 +20,7 @@ import 'package:fangeul/presentation/providers/iap_provider.dart';
 import 'package:fangeul/presentation/providers/theme_slot_provider.dart';
 import 'package:fangeul/services/iap_products.dart';
 import 'package:fangeul/presentation/widgets/hct_color_picker.dart';
+import 'package:fangeul/presentation/widgets/iap_error_dialog.dart';
 import 'package:fangeul/presentation/widgets/text_color_picker_dialog.dart';
 
 /// 테마 색상 선택 바텀시트.
@@ -127,6 +128,14 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
         AnalyticsEvents.iapViewShop,
       );
     }
+    // IAP 결제 실패 시 다이얼로그 표시.
+    ref.listen<String?>(iapErrorProvider, (prev, next) {
+      if (next != null && context.mounted) {
+        ref.read(iapErrorProvider.notifier).state = null;
+        showIapErrorDialog(context);
+      }
+    });
+
     final choeaeColor = ref.watch(choeaeColorNotifierProvider);
     final monState = ref.watch(monetizationNotifierProvider).valueOrNull;
     final hasPickerIap = _hasPickerAccess(monState);

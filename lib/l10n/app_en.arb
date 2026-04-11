@@ -246,5 +246,10 @@
   "packBasicLove": "Love & Support",
   "packDailyPack": "Daily",
   "packBirthdayPack": "Birthday",
-  "packComebackPack": "Comeback"
+  "packComebackPack": "Comeback",
+
+  "iapErrorTitle": "Unable to process purchase",
+  "iapErrorBody": "Please update your Play Store app to the latest version and try again. If the issue persists, contact us.",
+  "iapErrorRetry": "Try again",
+  "iapErrorContact": "Contact us"
 }

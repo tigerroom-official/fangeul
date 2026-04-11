@@ -656,4 +656,17 @@ class LId extends L {
 
   @override
   String get packComebackPack => 'Comeback';
+
+  @override
+  String get iapErrorTitle => 'Tidak dapat memproses pembelian';
+
+  @override
+  String get iapErrorBody =>
+      'Perbarui aplikasi Play Store ke versi terbaru dan coba lagi. Jika masalah berlanjut, hubungi kami.';
+
+  @override
+  String get iapErrorRetry => 'Coba lagi';
+
+  @override
+  String get iapErrorContact => 'Hubungi kami';
 }

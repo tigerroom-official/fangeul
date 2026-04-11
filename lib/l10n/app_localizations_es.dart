@@ -657,4 +657,17 @@ class LEs extends L {
 
   @override
   String get packComebackPack => 'Comeback';
+
+  @override
+  String get iapErrorTitle => 'No se pudo procesar la compra';
+
+  @override
+  String get iapErrorBody =>
+      'Actualiza la app de Play Store a la última versión e inténtalo de nuevo. Si el problema persiste, contáctanos.';
+
+  @override
+  String get iapErrorRetry => 'Intentar de nuevo';
+
+  @override
+  String get iapErrorContact => 'Contactar';
 }

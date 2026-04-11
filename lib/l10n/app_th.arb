@@ -246,5 +246,10 @@
   "packBasicLove": "รักและเชียร์",
   "packDailyPack": "ประจำวัน",
   "packBirthdayPack": "วันเกิด",
-  "packComebackPack": "คัมแบ็ก"
+  "packComebackPack": "คัมแบ็ก",
+
+  "iapErrorTitle": "ไม่สามารถดำเนินการซื้อได้",
+  "iapErrorBody": "กรุณาอัปเดตแอป Play Store เป็นเวอร์ชันล่าสุดแล้วลองอีกครั้ง หากปัญหายังคงอยู่ กรุณาติดต่อเรา",
+  "iapErrorRetry": "ลองอีกครั้ง",
+  "iapErrorContact": "ติดต่อเรา"
 }
