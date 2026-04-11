@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'package:fangeul/presentation/constants/app_constants.dart';
+
 /// TTS 재생 서비스.
 ///
 /// just_audio [AudioPlayer]를 래핑하여 한국어 발음 재생을 관리한다.
@@ -12,7 +14,7 @@ import 'package:path_provider/path_provider.dart';
 /// 매 재생마다 새 [AudioPlayer] 인스턴스를 생성하여
 /// 이전 재생의 상태가 간섭하지 않도록 보장한다.
 class TtsService {
-  static const _baseUrl = 'https://tts.tigerroom.app/ko';
+  static const _baseUrl = AppConstants.ttsCdnBaseUrl;
 
   AudioPlayer? _player;
 

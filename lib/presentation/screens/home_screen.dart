@@ -4,13 +4,11 @@ import 'package:go_router/go_router.dart';
 
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/ad_service_provider.dart';
-import 'package:fangeul/presentation/providers/iap_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/phrase_providers.dart';
 import 'package:fangeul/presentation/providers/progress_providers.dart';
 import 'package:fangeul/presentation/widgets/celebration_overlay.dart';
 import 'package:fangeul/presentation/widgets/daily_card_widget.dart';
-import 'package:fangeul/presentation/widgets/iap_error_dialog.dart';
 import 'package:fangeul/presentation/widgets/share_card_painter.dart';
 import 'package:fangeul/presentation/widgets/streak_banner.dart';
 
@@ -47,15 +45,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // IAP 결제 실패 시 다이얼로그 표시 (앱-레벨 리스너).
-    // HomeScreen은 StatefulShellRoute.indexedStack으로 항상 마운트 상태이므로,
-    // ThemePickerSheet이 닫혀도 에러를 놓치지 않는다.
-    ref.listen<String?>(iapErrorProvider, (prev, next) {
-      if (next != null && context.mounted) {
-        ref.read(iapErrorProvider.notifier).state = null;
-        showIapErrorDialog(context);
-      }
-    });
+
 
     final today = _todayString();
     final dailyCard = ref.watch(dailyCardProvider(today));

@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
+import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/theme_providers.dart';
+import 'package:fangeul/presentation/providers/tts_provider.dart';
 
 /// 현재 활성 하단 네비게이션 탭 인덱스.
 ///
@@ -66,6 +68,8 @@ class _ShellScaffoldState extends ConsumerState<ShellScaffold>
     ref.invalidate(myIdolDisplayNameProvider);
     ref.invalidate(myIdolMemberNameProvider);
     ref.invalidate(themeModeNotifierProvider);
+    ref.invalidate(monetizationNotifierProvider);
+    ref.invalidate(ttsPlayedIdsProvider);
   }
 
   @override

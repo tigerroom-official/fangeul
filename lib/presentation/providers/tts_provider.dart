@@ -26,7 +26,7 @@ class TtsPlayedIds extends _$TtsPlayedIds {
 
   @override
   Set<String> build() {
-    final prefs = ref.watch(sharedPreferencesProvider);
+    final prefs = ref.read(sharedPreferencesProvider);
     final savedDate = prefs.getString(prefsDateKey);
     final today = _todayStr();
 

@@ -6,8 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/presentation/constants/ui_strings.dart';
 import 'package:fangeul/presentation/providers/choeae_color_provider.dart';
-import 'package:fangeul/presentation/providers/theme_providers.dart';
+import 'package:fangeul/presentation/providers/iap_provider.dart';
 import 'package:fangeul/presentation/router/app_router.dart';
+import 'package:fangeul/presentation/widgets/iap_error_dialog.dart';
+import 'package:fangeul/presentation/providers/theme_providers.dart';
 import 'package:fangeul/presentation/theme/choeae_color_config.dart';
 import 'package:fangeul/presentation/theme/fangeul_theme.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
@@ -104,7 +106,32 @@ class FangeulApp extends ConsumerWidget {
         themeMode: effectiveThemeMode,
         routerConfig: router,
         scrollBehavior: const _NoStretchScrollBehavior(),
+        builder: (context, child) => _IapErrorListener(child: child!),
       ),
     );
+  }
+}
+
+/// MaterialApp 내부에서 IAP 에러를 감지하여 다이얼로그를 표시한다.
+///
+/// [MaterialApp.builder]로 삽입된다.
+/// [rootNavigatorKey.currentContext]로 Navigator 아래 context를 확보.
+/// [useRootNavigator: false]로 GoRouter의 Navigator에서 직접 dialog를 표시.
+class _IapErrorListener extends ConsumerWidget {
+  const _IapErrorListener({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen<String?>(iapErrorProvider, (prev, next) {
+      if (next == null) return;
+      ref.read(iapErrorProvider.notifier).state = null;
+      final navContext = rootNavigatorKey.currentContext;
+      if (navContext != null && navContext.mounted) {
+        showIapErrorDialog(navContext);
+      }
+    });
+    return child;
   }
 }

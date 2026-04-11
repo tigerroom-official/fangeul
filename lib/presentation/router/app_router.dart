@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -12,6 +13,12 @@ import 'package:fangeul/presentation/screens/settings_screen.dart';
 import 'package:fangeul/presentation/widgets/shell_scaffold.dart';
 
 part 'app_router.g.dart';
+
+/// 루트 Navigator의 GlobalKey.
+///
+/// 앱 어디서든 다이얼로그를 띄울 수 있도록 전역으로 노출한다.
+/// [GoRouter.navigatorKey]에 할당되어 MaterialApp의 root Navigator를 참조.
+final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
 /// Kotlin [setInitialRoute]에서 설정된 경로 중 유효한 것만 사용.
 const _validInitialRoutes = {
@@ -39,6 +46,7 @@ GoRouter appRouter(AppRouterRef ref) {
       (_validInitialRoutes.contains(platformRoute) ? platformRoute : '/home');
 
   return GoRouter(
+    navigatorKey: rootNavigatorKey,
     initialLocation: initialLocation,
     routes: [
       StatefulShellRoute.indexedStack(

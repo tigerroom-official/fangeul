@@ -139,9 +139,7 @@ class _TtsPlayButtonState extends ConsumerState<TtsPlayButton>
               child: Container(
                 padding: const EdgeInsets.all(2),
                 decoration: BoxDecoration(
-                  color: remaining > 0
-                      ? theme.colorScheme.primaryContainer
-                      : theme.colorScheme.errorContainer,
+                  color: theme.colorScheme.primaryContainer,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
@@ -150,9 +148,7 @@ class _TtsPlayButtonState extends ConsumerState<TtsPlayButton>
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
-                    color: remaining > 0
-                        ? theme.colorScheme.onPrimaryContainer
-                        : theme.colorScheme.onErrorContainer,
+                    color: theme.colorScheme.onPrimaryContainer,
                   ),
                   textAlign: TextAlign.center,
                 ),

@@ -13,6 +13,7 @@ import 'package:fangeul/presentation/providers/compact_phrase_filter_provider.da
 import 'package:fangeul/presentation/providers/converter_providers.dart';
 import 'package:fangeul/presentation/providers/copy_history_provider.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
+import 'package:fangeul/presentation/providers/tts_provider.dart';
 import 'package:fangeul/presentation/providers/favorite_phrases_provider.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
 import 'package:fangeul/presentation/providers/choeae_color_provider.dart';
@@ -128,6 +129,7 @@ class _MiniConverterScreenState extends ConsumerState<MiniConverterScreen>
     ref.invalidate(copyHistoryNotifierProvider);
     ref.invalidate(compactPhraseFilterNotifierProvider);
     ref.invalidate(monetizationNotifierProvider);
+    ref.invalidate(ttsPlayedIdsProvider);
     ref.invalidate(themeModeNotifierProvider);
     ref.invalidate(localeNotifierProvider);
     ref.invalidate(choeaeColorNotifierProvider);

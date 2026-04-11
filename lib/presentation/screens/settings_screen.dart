@@ -7,11 +7,13 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:fangeul/core/entities/monetization_state.dart';
+import 'package:fangeul/presentation/constants/app_constants.dart';
 import 'package:fangeul/core/entities/user_progress.dart';
 import 'package:fangeul/l10n/app_localizations.dart';
 import 'package:fangeul/platform/bubble_state.dart';
 import 'package:fangeul/presentation/providers/bubble_providers.dart';
 import 'package:fangeul/presentation/providers/choeae_color_provider.dart';
+import 'package:fangeul/presentation/providers/iap_provider.dart';
 import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/presentation/providers/remote_config_providers.dart';
 import 'package:fangeul/presentation/providers/my_idol_provider.dart';
@@ -21,11 +23,6 @@ import 'package:fangeul/presentation/theme/choeae_color_config.dart';
 import 'package:fangeul/presentation/theme/palette_registry.dart';
 import 'package:fangeul/presentation/widgets/theme_picker_sheet.dart';
 
-/// 개인정보처리방침 URL — 호스팅 후 실제 URL로 교체.
-const _privacyPolicyUrl = 'https://tigerroom-official.github.io/fangeul/privacy-policy.html';
-
-/// 이용약관 URL — 호스팅 후 실제 URL로 교체.
-const _termsUrl = 'https://tigerroom-official.github.io/fangeul/terms.html';
 
 /// URL을 안전하게 실행한다. 이메일 앱 미설치 등 ACTIVITY_NOT_FOUND 방어.
 Future<void> _safeLaunch(BuildContext context, Uri url) async {
@@ -202,7 +199,7 @@ class SettingsScreen extends ConsumerWidget {
             subtitle: Text(l.contactSubtitle),
             onTap: () => _safeLaunch(
               context,
-              Uri.parse('mailto:tigerroom.official@gmail.com'),
+              AppConstants.supportEmailUri,
             ),
           ),
           const Divider(),
@@ -213,7 +210,7 @@ class SettingsScreen extends ConsumerWidget {
             subtitle: Text(l.privacyPolicySubtitle),
             onTap: () => _safeLaunch(
               context,
-              Uri.parse(_privacyPolicyUrl),
+              Uri.parse(AppConstants.privacyPolicyUrl),
             ),
           ),
           const Divider(),
@@ -224,7 +221,7 @@ class SettingsScreen extends ConsumerWidget {
             subtitle: Text(l.termsSubtitle),
             onTap: () => _safeLaunch(
               context,
-              Uri.parse(_termsUrl),
+              Uri.parse(AppConstants.termsUrl),
             ),
           ),
           const Divider(),
@@ -631,6 +628,20 @@ class _DebugMonetizationPanel extends ConsumerWidget {
                 label: isHoneymoon ? 'Honeymoon: ON' : 'Honeymoon: OFF',
                 color: isHoneymoon ? Colors.orange : null,
                 onTap: () => _toggleHoneymoon(ref, isHoneymoon),
+              ),
+              _DebugChip(
+                label: 'IAP Error 3s',
+                color: Colors.red,
+                onTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('IAP error in 3s...')),
+                  );
+                  final container = ProviderScope.containerOf(context);
+                  Future.delayed(const Duration(seconds: 3), () {
+                    container.read(iapErrorProvider.notifier).state =
+                        'test_error';
+                  });
+                },
               ),
               _DebugChip(
                 label: 'Reset All',

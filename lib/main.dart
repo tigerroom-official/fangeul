@@ -12,6 +12,7 @@ import 'package:fangeul/presentation/providers/theme_providers.dart';
 import 'package:fangeul/presentation/router/app_router.dart';
 import 'package:fangeul/presentation/providers/ad_service_provider.dart';
 import 'package:fangeul/presentation/providers/iap_provider.dart';
+import 'package:fangeul/presentation/providers/monetization_provider.dart';
 import 'package:fangeul/services/analytics_events.dart';
 import 'package:fangeul/services/firebase_analytics_service.dart';
 import 'package:fangeul/services/firebase_remote_config_service.dart';
@@ -70,6 +71,19 @@ void main() async {
 
   // AdMob SDK 초기화 (fire-and-forget, provider 인스턴스 사용)
   container.read(adServiceProvider).initialize();
+
+  // 일일 카운터(광고/TTS) 리셋 — 앱 시작 시 날짜 변경 확인
+  // AsyncNotifier build 완료 대기 후 리셋 호출
+  container.read(monetizationNotifierProvider.future).then((_) {
+    container
+        .read(monetizationNotifierProvider.notifier)
+        .checkDailyReset()
+        .catchError((Object e) {
+      debugPrint('[main] checkDailyReset failed: $e');
+    });
+  }).catchError((Object e) {
+    debugPrint('[main] monetization init failed: $e');
+  });
 
   // IAP 서비스 eager 초기화 — 상품 로드 후 iapProductsLoadedProvider가 true로 전환
   container.read(iapServiceProvider);
