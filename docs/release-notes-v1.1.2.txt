@@ -1,0 +1,24 @@
+<en-US>
+Now you can hear how Korean phrases sound! Tap the speaker icon to listen. 5 free plays daily, plus more with a quick ad. Performance and stability improvements.
+</en-US>
+<es-419>
+Ahora puedes escuchar cómo suenan las frases en coreano. Toca el icono del altavoz para escuchar. 5 reproducciones gratis al día. Mejoras de rendimiento y estabilidad.
+</es-419>
+<id>
+Sekarang kamu bisa dengar cara pengucapan frasa Korea! Ketuk ikon speaker untuk mendengarkan. 5 kali gratis setiap hari. Peningkatan performa dan stabilitas.
+</id>
+<ja-JP>
+韓国語フレーズの発音が聴けるようになりました！スピーカーアイコンをタップして聴いてみてください。毎日5回無料で再生できます。パフォーマンスと安定性の改善。
+</ja-JP>
+<ko-KR>
+이제 한국어 문구 발음을 들을 수 있어요! 스피커 아이콘을 탭해서 들어보세요. 매일 5회 무료 재생. 성능 및 안정성 개선.
+</ko-KR>
+<pt-BR>
+Agora você pode ouvir a pronúncia das frases em coreano! Toque no ícone do alto-falante para ouvir. 5 reproduções grátis por dia. Melhorias de desempenho e estabilidade.
+</pt-BR>
+<th>
+ตอนนี้คุณสามารถฟังการออกเสียงวลีภาษาเกาหลีได้แล้ว! แตะไอคอนลำโพงเพื่อฟัง ฟังฟรีวันละ 5 ครั้ง ปรับปรุงประสิทธิภาพและความเสถียร
+</th>
+<vi>
+Giờ bạn có thể nghe cách phát âm các cụm từ tiếng Hàn! Nhấn biểu tượng loa để nghe. Mỗi ngày 5 lần miễn phí. Cải thiện hiệu suất và độ ổn định.
+</vi>

@@ -53,6 +53,6 @@ dart format --set-exit-if-changed .  # 포맷 검증
 | `docs/HANDOFF.md` | 세션 핸드오프 (최신 작업 상태) |
 
 ## 현재 작업 상태
-> 마지막 핸드오프: 2026-04-10
+> 마지막 핸드오프: 2026-04-11
 > 상세: `docs/HANDOFF.md` 참조
-> 요약: TTS 재생 완료(v1.1.0+19 출시) + Analytics 20개 이벤트 + 키보드 리팩토링 + 크래시 방어 9파일 + v1.1.1+20 검토 중. 다음: 팬 미션 + screen_view 추적.
+> 요약: v1.1.2+21 검토 중 — IAP 에러 다이얼로그 + AppConstants + TTS persist + Flutter 3.41.6 + mp3 노멀라이즈. 다음: 팬 미션 + screen_view 추적.
