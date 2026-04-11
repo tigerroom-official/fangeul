@@ -17,6 +17,9 @@ class IapService {
   StreamSubscription<List<PurchaseDetails>>? _subscription;
   bool _isAvailable = false;
 
+  /// 에러 콜백 (구매 실패/스트림 에러/buyPack 실패 시 호출).
+  void Function(String)? _onError;
+
   /// 상품 정보 캐시.
   final Map<String, ProductDetails> _products = {};
 
@@ -36,6 +39,8 @@ class IapService {
       debugPrint('[IapService] isAvailable failed: $e');
       _isAvailable = false;
     }
+    _onError = onError;
+
     if (!_isAvailable) {
       debugPrint('[IapService] IAP not available');
       onProductsLoaded?.call();
@@ -58,6 +63,7 @@ class IapService {
       },
       onError: (Object error) {
         debugPrint('[IapService] purchaseStream error: $error');
+        onError(error.toString());
       },
     );
 
@@ -102,6 +108,7 @@ class IapService {
     final product = _products[skuId];
     if (product == null) {
       debugPrint('[IapService] product not found: $skuId');
+      _onError?.call('product_not_found');
       return false;
     }
 
@@ -110,6 +117,7 @@ class IapService {
       return await _iap.buyNonConsumable(purchaseParam: purchaseParam);
     } catch (e) {
       debugPrint('[IapService] buyNonConsumable failed: $e');
+      _onError?.call(e.toString());
       return false;
     }
   }
